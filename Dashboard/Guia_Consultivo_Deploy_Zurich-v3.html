@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Análise de Viabilidade Técnica e Alternativas de Deploy - Dashboard Zurich</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 15mm;
+            background-color: #ffffff;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #2D3748;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            font-size: 10.5pt;
+        }
+        .header-banner {
+            background-color: #1A365D;
+            color: #ffffff;
+            margin: -20mm -15mm 25px -15mm;
+            padding: 30px 15mm;
+        }
+        .header-banner h1 {
+            font-size: 20pt;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+        }
+        .header-banner p {
+            font-size: 11pt;
+            margin: 0;
+            opacity: 0.85;
+        }
+        h2 {
+            font-size: 14pt;
+            color: #1A365D;
+            border-left: 4px solid #3182CE;
+            padding-left: 10px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 11.5pt;
+            color: #2B6CB0;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        code, pre {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #F7FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 4px;
+        }
+        code {
+            padding: 2px 5px;
+            font-size: 9.5pt;
+            color: #C53030;
+        }
+        pre {
+            display: block;
+            padding: 12px;
+            margin: 15px 0;
+            white-space: pre-wrap;
+            font-size: 9pt;
+            color: #2D3748;
+            line-height: 1.4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        th, td {
+            padding: 10px 12px;
+            font-size: 10pt;
+            text-align: left;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        th {
+            background-color: #F7FAFC;
+            color: #1A365D;
+            font-weight: bold;
+            border-bottom: 2px solid #CBD5E0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 8.5pt;
+            font-weight: bold;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .badge-google {
+            background-color: #EBF8FF;
+            color: #2B6CB0;
+            border: 1px solid #BEE3F8;
+        }
+        .badge-local {
+            background-color: #FEFCBF;
+            color: #975A16;
+            border: 1px solid #FEF08A;
+        }
+        .badge-email {
+            background-color: #FAF5FF;
+            color: #553C9A;
+            border: 1px solid #D6BCFA;
+        }
+        .badge-ambos {
+            background-color: #F0FFF4;
+            color: #276749;
+            border: 1px solid #C6F6D5;
+        }
+        .footer-note {
+            margin-top: 30px;
+            padding: 12px;
+            background-color: #EDF2F7;
+            border-radius: 5px;
+            font-size: 9.5pt;
+            font-style: italic;
+        }
+        .alert-note {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background-color: #FFFBEB;
+            border-left: 4px solid #D69E2E;
+            border-radius: 4px;
+            font-size: 9.5pt;
+            color: #744210;
+        }
+        .alert-note strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #975A16;
+        }
+        .status-note {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background-color: #EBF8FF;
+            border-left: 4px solid #3182CE;
+            border-radius: 4px;
+            font-size: 9.5pt;
+            color: #2A4365;
+        }
+        .status-note strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #1A365D;
+        }
+        .parecer-box {
+            margin-top: 30px;
+            padding: 18px 20px;
+            background-color: #F7FAFC;
+            border: 1px solid #CBD5E0;
+            border-radius: 6px;
+        }
+        .parecer-box h2 {
+            border-left: 4px solid #68D391;
+            color: #276749;
+            margin-top: 0;
+        }
+        .parecer-box p {
+            font-size: 10pt;
+            color: #2D3748;
+        }
+        .parecer-item {
+            margin-bottom: 12px;
+            padding-left: 12px;
+            border-left: 3px solid #E2E8F0;
+        }
+        .parecer-item strong {
+            color: #1A365D;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-banner">
+        <h1>Análise de Viabilidade Técnica e Alternativas de Deploy</h1>
+        <p><strong>Projeto:</strong> Dashboard de Conformidade Zurich Airport &nbsp;|&nbsp; <strong>Autor:</strong> Gabriel Vital (CS Efcaz) &nbsp;|&nbsp; <strong>Atualizado:</strong> 03/06/2026</p>
+    </div>
+
+    <div class="status-note">
+        <strong>Status atual do deploy (jun/2026)</strong>
+        O servidor Efcaz está inacessível para hospedagem direta (ambiente controlado pela AZ). A alternativa em andamento é o Cenário C — envio por e-mail via N8N. João está investigando erro no nó <code>Execute Command</code>. Cenários A e B permanecem como opções de médio prazo.
+    </div>
+
+    <h2>1. Contexto Geral</h2>
+    <p>Estruturamos um relatório customizado em formato HTML estático para viabilizar uma visualização gráfica, interativa e executiva para as gestoras da Zurich Airport (Débora e Claudinha). Vale ressaltar que a base de dados do cliente permanece sob total gestão da Efcaz em nosso ambiente em nuvem, garantindo isolamento completo de segurança.</p>
+    <p>O objetivo deste documento é apresentar e submeter à sua avaliação técnica as três alternativas possíveis para a publicação automatizada deste painel. O Cenário C é a alternativa mais simples e está sendo operacionalizada agora — os Cenários A e B representam evoluções para quando o acesso ao servidor estiver disponível.</p>
+
+    <h2>2. Cenário A: Hospedagem via Google Cloud Storage (GCS)</h2>
+    <p>Nesta abordagem, o processamento pesado das regras de negócio permanece em nossa infraestrutura. O fluxo realiza apenas um upload de saída do arquivo HTML estático gerado para uma pasta privada na nuvem do Google.</p>
+
+    <div class="alert-note">
+        <strong>Pré-requisito a confirmar antes de escolher este cenário</strong>
+        A autenticação via IAM do Google exige que as usuárias possuam conta Google ativa — preferencialmente via Google Workspace corporativo. Se a Zurich Airport utilizar Microsoft 365 ou outro provedor de e-mail, as gestoras precisariam criar uma conta Google separada para acessar o dashboard, o que aumenta o atrito e reduz o benefício desta abordagem. <strong>Sugestão: confirmar com Débora ou Ricardo antes de avançar.</strong>
+    </div>
+
+    <h3>Pontos de Atenção para Alinhamento:</h3>
+    <ul>
+        <li><strong>Isolamento da Infraestrutura:</strong> O banco de dados e o servidor N8N continuam protegidos na nuvem atual da Efcaz. O ambiente externo consome apenas o output visual isolado.</li>
+        <li><strong>Gestão de Identidade Integrada:</strong> Elimina a necessidade de criar senhas de forma manual. O próprio Google cuida da autenticação corporativa via conta Workspace das usuárias.</li>
+        <li><strong>Acesso por Domínio:</strong> Conseguimos liberar o acesso de forma ilimitada para todos da organização Efcaz com e-mail corporativo, mantendo permissões estritas para os e-mails externos aprovados da Zurich.</li>
+    </ul>
+
+    <h3>Diretrizes Gerais de Configuração:</h3>
+    <ol>
+        <li><strong>Criação do Bucket:</strong> Criação de bucket privado com controle de acesso unificado e prevenção de acesso público ativada no console de nuvem do Google.</li>
+        <li><strong>Configuração do IAM (Controle de Acesso):</strong> Atribuição do papel de <code>Leitor de Objetos do Storage (Storage Object Viewer)</code> para o domínio interno e para os e-mails das gestoras da Zurich.</li>
+        <li><strong>Criação de Service Account para o N8N:</strong> Geração de uma Service Account no GCP com permissão de escrita no bucket (<code>Storage Object Creator</code>). A chave JSON gerada é configurada como credencial no nó do N8N — etapa necessária para que o fluxo consiga realizar o upload automatizado com segurança.</li>
+        <li><strong>Automação no Fluxo:</strong> Utilização do nó nativo do Google Cloud Storage no N8N. Para o navegador renderizar diretamente em formato de página da web, o arquivo é definido como <code>index.html</code> com Mime Type fixado em <code>text/html</code>.</li>
+    </ol>
+
+    <pre>URL Sugerida para Acesso Final (Cenário A):
+https://storage.cloud.google.com/efcaz-zurich-dashboard/index.html</pre>
+
+    <h2>3. Cenário B: Servidor Local com Servidor Web (Nginx)</h2>
+    <p>Caso a nossa arquitetura atual na nuvem tenha restrições ou facilidades operacionais que tornem mais prático servir os arquivos de forma interna pelo nosso próprio servidor web, mapeamos o fluxo tradicional de diretórios estáticos e restrição por rede.</p>
+
+    <h3>Diretrizes Gerais de Configuração:</h3>
+    <ol>
+        <li><strong>Estrutura de Diretório Local:</strong> Definição de uma pasta local no servidor e atribuição de permissões de escrita para o serviço do N8N.</li>
+        <li><strong>Bloco de Configuração Web (Nginx/Apache):</strong> Apontamento de rota ou subdomínio dedicado ao relatório, combinando proteção de senha básica para clientes e regras de rede interna. <em>Atenção: a barra final em</em> <code>location /zurich/</code> <em>é obrigatória para o</em> <code>alias</code> <em>funcionar corretamente — sem ela o nginx não resolve o caminho do arquivo.</em>
+            <pre>location /zurich/ {
+    alias /srv/static/zurich/;
+    index relatorio_fornecedores_zurich.html;
+
+    auth_basic "Acesso Restrito - Dashboard Zurich";
+    auth_basic_user_file /etc/nginx/.htpasswd_zurich;
+
+    satisfy any;
+    allow 10.0.0.0/8;       # Ranges de IP da Rede Interna / VPN Efcaz
+    allow 192.168.0.0/16;
+    deny all;
+}</pre>
+        </li>
+    </ol>
+
+    <h2>4. Cenário C: Entrega por E-mail via N8N (alternativa atual)</h2>
+    <p>Com o servidor Efcaz temporariamente inacessível, o fluxo N8N extrai os CSVs do Metabase, executa o script Python localmente e envia o HTML gerado como anexo por e-mail para Débora e Claudinha. É a solução de menor atrito para viabilizar a entrega imediata, sem dependência de infraestrutura de servidor.</p>
+
+    <h3>Fluxo N8N — Cenário C:</h3>
+    <pre>[Agendador] — 2x por semana (seg e qui, 08h)
+    ↓
+[5x HTTP Request — API Metabase]
+  GET /api/card/{id}/query/csv  → 4 CSVs + XLS fornecedores
+    ↓
+[Write Binary File × 5]
+  Salva CSVs em pasta data/ com nomes fixos
+    ↓
+[Execute Command]  ← João investigando erro neste nó
+  python relatorio_fornecedores_zurich.py
+    ↓
+[Read Binary File]
+  Lê o HTML gerado
+    ↓
+[Send Email]
+  Anexa relatorio_fornecedores_zurich.html
+  Para: debora@zurich / claudinha@zurich</pre>
+
+    <div class="alert-note">
+        <strong>Bloqueio atual — nó Execute Command</strong>
+        João está investigando o erro retornado pelo nó <code>Execute Command</code> no N8N ao tentar executar o script Python. Enquanto não resolvido, a atualização do dashboard é feita manualmente: exportar os 5 CSVs do Metabase → salvar em <code>data/</code> → rodar <code>python relatorio_fornecedores_zurich.py</code> → enviar o HTML por e-mail para Débora e Claudinha.
+    </div>
+
+    <h3>Vantagens do Cenário C:</h3>
+    <ul>
+        <li>Sem dependência de servidor web ou bucket na nuvem</li>
+        <li>Débora e Claudinha recebem diretamente no e-mail — sem precisar acessar URL</li>
+        <li>O HTML é standalone: abre no navegador sem internet, sem login</li>
+        <li>Transição suave: quando o servidor estiver disponível, basta substituir o nó Send Email pelo nó de upload (Cenário A ou B)</li>
+    </ul>
+
+    <h2>5. Visão Geral das Atividades de Infraestrutura</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Frentes de Trabalho Técnicas</th>
+                <th>Cenário</th>
+                <th>Foco da Implementação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Resolver erro no nó Execute Command do N8N</td>
+                <td><span class="badge badge-email">E-mail</span></td>
+                <td>Desbloqueador imediato — João responsável.</td>
+            </tr>
+            <tr>
+                <td>Configurar nó Send Email com HTML anexo</td>
+                <td><span class="badge badge-email">E-mail</span></td>
+                <td>Após Execute Command funcionar — entrega automática para Débora e Claudinha.</td>
+            </tr>
+            <tr>
+                <td>Confirmação do provedor de e-mail da Zurich (Google ou Microsoft)</td>
+                <td><span class="badge badge-google">Google Cloud</span></td>
+                <td>Pré-requisito para viabilizar autenticação via IAM do Cenário A.</td>
+            </tr>
+            <tr>
+                <td>Configuração de Bucket Privado e IAM de Segurança</td>
+                <td><span class="badge badge-google">Google Cloud</span></td>
+                <td>Apenas permissão de leitura nos e-mails corporativos definidos.</td>
+            </tr>
+            <tr>
+                <td>Geração de Service Account e ativação do nó GCS no N8N</td>
+                <td><span class="badge badge-google">Google Cloud</span></td>
+                <td>Habilitar envio seguro e automatizado do arquivo pelo fluxo.</td>
+            </tr>
+            <tr>
+                <td>Provisionamento de diretório e permissões de escrita local</td>
+                <td><span class="badge badge-local">Servidor Local</span></td>
+                <td>Criar caminho para o script Python salvar o HTML.</td>
+            </tr>
+            <tr>
+                <td>Configuração de regras no Nginx, rede interna e htpasswd</td>
+                <td><span class="badge badge-local">Servidor Local</span></td>
+                <td>Validar ranges de IPs internos e senhas criptografadas das clientes.</td>
+            </tr>
+            <tr>
+                <td>Alinhamento de variáveis no Script Python e homologação</td>
+                <td><span class="badge badge-ambos">Todos</span></td>
+                <td>Ajustar nomes de caminhos e rotas de saída de dados.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="parecer-box">
+        <h2>6. Parecer Técnico — Sugestão de Encaminhamento</h2>
+        <p>Com base na situação atual e nas três alternativas mapeadas, seguem as considerações em ordem de prioridade:</p>
+
+        <div class="parecer-item">
+            <strong>Prioridade imediata — Cenário C (E-mail via N8N)</strong>
+            <p>Resolver o erro no nó <code>Execute Command</code> com João é o único bloqueio para ter o fluxo automatizado funcionando já. Quando resolvido, Débora e Claudinha passam a receber o dashboard atualizado diretamente no e-mail — sem precisar de servidor, sem URL, sem login. É a entrega mais rápida e com menor dependência de infraestrutura.</p>
+        </div>
+
+        <div class="parecer-item">
+            <strong>Médio prazo — Cenário A (GCS) ou B (Nginx), conforme disponibilidade do servidor</strong>
+            <p>Quando o servidor Efcaz estiver acessível, o Cenário B (Nginx) é o mais direto de implementar — o passo a passo já está documentado. O Cenário A é mais elegante mas exige confirmar se a Zurich usa Google Workspace. Uma pergunta rápida à Débora — "vocês usam Google ou Microsoft no e-mail corporativo?" — já resolve essa dúvida e define qual caminho priorizar.</p>
+        </div>
+
+        <p style="margin-top: 16px; margin-bottom: 0;"><strong>Próximo passo imediato:</strong> João compartilhar o erro exato do nó <code>Execute Command</code> para diagnóstico e resolução.</p>
+    </div>
+
+    <div class="footer-note">
+        <strong>Nota de Consulta:</strong> O objetivo deste levantamento é puramente consultivo para entendermos o que se encaixa melhor na nossa rotina atual e na topologia da nossa nuvem. Todas as soluções garantem segurança total e isolamento dos dados originais da Efcaz. Fico à disposição para analisarmos qual arquitetura faz mais sentido priorizarmos.
+    </div>
+
+</body>
+</html>

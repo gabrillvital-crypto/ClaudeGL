@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\" -Force | Select-Object Name, @{Name='Type';Expression={if\\($_.PSIsContainer\\){'Dir'}else{'File'}}} | Sort-Object Type, Name)",
+      "PowerShell(ls -Path \"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\\" | Select-Object Name; Write-Host \"---\"; \\(Get-Location\\).Path)",
+      "PowerShell([System.IO.Directory]::GetFiles\\(\"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\"\\) | ForEach-Object { [System.IO.Path]::GetFileName\\($_\\) }; Write-Host \"---\"; [System.IO.Directory]::GetDirectories\\(\"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\"\\) | ForEach-Object { [System.IO.Path]::GetFileName\\($_\\) })",
+      "PowerShell([System.IO.Directory]::GetFiles\\(\"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\"\\) | ForEach-Object { [System.IO.Path]::GetFileName\\($_\\) }; Write-Host \"---\"; [System.IO.Directory]::GetDirectories\\(\"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\"\\) | ForEach-Object { [System.IO.Path]::GetFileName\\($_\\) })",
+      "PowerShell([System.IO.Directory]::GetFiles\\(\"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\.claude\"\\) | ForEach-Object { [System.IO.Path]::GetFileName\\($_\\) }; Write-Host \"---\"; [System.IO.Directory]::GetDirectories\\(\"c:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\.claude\"\\) | ForEach-Object { [System.IO.Path]::GetFileName\\($_\\) })",
+      "WebFetch(domain:www.linkedin.com)",
+      "WebFetch(domain:www.efcaz.com.br)",
+      "PowerShell(cmd /c \"dir C:\\\\Users\\\\gabriel.evangelista\\\\.claude /s /b\")",
+      "PowerShell(cmd /c \"dir C:\\\\Users\\\\gabriel.evangelista\\\\.claude\\\\commands /b\")",
+      "PowerShell(cmd /c \"dir C:\\\\Users\\\\gabriel.evangelista\\\\.claude\\\\projects\\\\c--Users-gabriel-evangelista-Documents-ClaudeGL\\\\memory /b\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\Reunioes\")",
+      "PowerShell(Remove-Item \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\TaskApp\\\\fix_clients_encoding.py\" -Confirm:$false)",
+      "PowerShell(Remove-Item \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\TaskApp\\\\add_cielo_task.py\" -Confirm:$false)",
+      "Bash(python dashboard_zurich.py)",
+      "Bash(pip install *)",
+      "Bash(start \"\" \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\dashboard_zurich_airport.html\")",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\gabriel.evangelista\\\\Downloads\" -Include \"*.csv\",\"*.xlsx\" -Recurse)",
+      "Bash(Sort-Object LastWriteTime -Descending)",
+      "Bash(Select-Object -First 10)",
+      "Bash(Format-Table Name, LastWriteTime -AutoSize)"
+    ]
+  }
+}

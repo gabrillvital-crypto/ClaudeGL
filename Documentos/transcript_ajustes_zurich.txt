@@ -1,0 +1,5472 @@
+Ajustes  ﬁnal  relatório  Zurich  (se  Deus  quiser)  
+Participantes  
+Gabriel  Lucas  Vital  Evangelista,  Ricardo  Pedroso  da  Silva,  Thais  Jayne  Biscaia  
+Transcrição  Thais  Jayne  Biscaia:  Eu  acho  que  dá  para  deixar  tudo  aberto  e  daí  vai  fechando  de  acordo  com  o  que  
+senti
+ 
+necessidade
+ 
+que
+ 
+já
+ 
+visualizou.
+ 
+Thais  Jayne  Biscaia:  Dá  para  fazer  isso.  
+Ricardo  Pedroso  da  Silva:  Mas  é  isso,  
+Thais  Jayne  Biscaia:  Eu  acho  que  Aham.  
+Ricardo  Pedroso  da  Silva:  é  coisa  só  que  eu  pensei  agora,  não  é  algo  
+Thais  Jayne  Biscaia:  Não  é  
+Gabriel  Lucas  Vital  Evangelista:  É,  ou  inicialmente  era,  
+Ricardo  Pedroso  da  Silva:  especial.  
+Gabriel  Lucas  Vital  Evangelista:  mas  só  que,  
+Thais  Jayne  Biscaia:  não.  
+Gabriel  Lucas  Vital  Evangelista:  por  exemplo,  quando  você  vem  aqui  para  eh  aqui,  ó,  isso  aqui  com  
+universo
+ 
+reduzido,
+ 
+ele
+ 
+tem
+ 
+tipo
+ 
+100s,
+ 
+Thais  Jayne  Biscaia:  Hum.  
+Gabriel  Lucas  Vital  Evangelista:  certo?  
+Thais  Jayne  Biscaia:  Onde  é  
+Gabriel  Lucas  Vital  Evangelista:  Então  ia  ﬁcar  meio  inﬁnito  tudo,  por  isso  que  eu  coloquei  para  
+Ricardo  Pedroso  da  Silva:  É,  eu  acho  que  é  mais  o  sentido  de  tipo,  ah,  
+Gabriel  Lucas  Vital  Evangelista:  recolher.  
+Thais  Jayne  Biscaia:  que  
+Ricardo  Pedroso  da  Silva:  eu  quero  eu  quero  pegar  um  fornecedor  em  especíﬁco  e  aí  eu  quero  ter  a  
+informação
+ 
+completa
+ 
+desse
+ 
+fornecedor
+ 
+em
+ 
+especíﬁco.
+ 
+Ricardo  Pedroso  da  Silva:  Quando  é  quando  é  todo  mundo,  né?  
+Ricardo  Pedroso  da  Silva:  Eu  concordo  contigo  que  é  muita  informação,  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  
+Ricardo  Pedroso  da  Silva:  mas  talvez  quando  é  um  fornecedor  especíﬁco,  
+Gabriel  Lucas  Vital  Evangelista:  tá.  
+Ricardo  Pedroso  da  Silva:  tipo  eu  fazendo  a  rolagem  ali  para  não  precisar  ﬁcar  clicando,  talvez  ﬁca  
+melhor
+ 
+para
+ 
+para
+ 
+ela
+ 
+lá,
+ 
+porque
+ 
+se
+ 
+comparar
+ 
+lá
+ 
+o
+ 
+sisteminha
+ 
+que
+ 
+ela
+ 
+tinha,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Tipo,  era  uma  páginazona  grandona  com  todo  mundo  
+Thais  Jayne  Biscaia:  Угу m.  
+Ricardo  Pedroso  da  Silva:  lá.  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  quando  a  gente  quando  a  gente  escolhe  um  fornecedor,  aí  eu  
+esse
+ 
+dash
+ 
+aqui
+ 
+todo
+ 
+se
+ 
+atualiza
+ 
+pra
+ 
+realidade
+ 
+dele,
+ 
+tá
+ 
+vendo?
+ 
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  E  os  debaixo  também.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  a  gente  pode  Ah,  
+Ricardo  Pedroso  da  Silva:  Os  os  acho  que  sim.  
+Gabriel  Lucas  Vital  Evangelista:  deixa  eu  ver.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  não,  Zé  Baixos  não.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  Z  baixos.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  Não.  
+Gabriel  Lucas  Vital  Evangelista:  na  verdade  assim,  esses  dois  não  porque  eles  são  gráﬁcos  gera.  
+Gabriel  Lucas  Vital  Evangelista:  Esses  esses  dois  primeiros  não,  porque  são  gráﬁcos  gerais  de  
+conformidade
+ 
+documental
+ 
+por
+ 
+fornecedor,
+ 
+que
+ 
+é
+ 
+aquele
+ 
+que
+ 
+vai
+ 
+virar
+ 
+pizza.
+ 
+Gabriel  Lucas  Vital  Evangelista:  É  o  taís  que  você  pediu,  
+Thais  Jayne  Biscaia:  Aha.  
+Gabriel  Lucas  Vital  Evangelista:  tá?  
+Gabriel  Lucas  Vital  Evangelista:  E  o  terceiros  cadastrados  por  fornecedor  também  não,  
+Thais  Jayne  Biscaia:  บ  
+Gabriel  Lucas  Vital  Evangelista:  mas  
+Ricardo  Pedroso  da  Silva:  Mas  esse  esse  esse  de  pizza  ali  eu  acho  que  vai  ﬁcar  ruim  a  visualização  
+por
+ 
+pizza,
+ 
+Gabriel  Lucas  Vital  Evangelista:  ele  
+Ricardo  Pedroso  da  Silva:  porque  vai  ﬁcar  uma  pizza  com  fatiazinhas  bem  pequenas  ali.  
+Gabriel  Lucas  Vital  Evangelista:  não,  
+Ricardo  Pedroso  da  Silva:  colocar  
+Gabriel  Lucas  Vital  Evangelista:  não.  
+Gabriel  Lucas  Vital  Evangelista:  É,  é  porque  esse  gráﬁco  aqui  na  real  ele  vai  e  a  ideia  é  ter  outros  
+Ricardo  Pedroso  da  Silva:  esse  
+Gabriel  Lucas  Vital  Evangelista:  fornecedores  de  um  lado  e  ela  tem  a  visualização  geral.  
+Gabriel  Lucas  Vital  Evangelista:  Isso  eu  tinha  entendido  que  a  Thaí  quer,  que  tipo,  ela  tem  um  gráﬁco  
+de
+ 
+pizza
+ 
+na
+ 
+tela
+ 
+onde
+ 
+ela
+ 
+consiga
+ 
+ver,
+ 
+por
+ 
+exemplo,
+ 
+que
+ 
+40%
+ 
+da
+ 
+base
+ 
+dela
+ 
+tem
+ 
+conformidade,
+ 
+30%
+ 
+em
+ 
+elaboração,
+ 
+Ricardo  Pedroso  da  Silva:  Ah,  tá,  tá,  tá,  tá.  
+Ricardo  Pedroso  da  Silva:  Não  é  o  especíﬁco  por  fornecedor.  
+Gabriel  Lucas  Vital  Evangelista:  entendeu?  
+Ricardo  Pedroso  da  Silva:  Eu  vou  agrupar  tipo  no  inconformidade  e  o  não  
+Gabriel  Lucas  Vital  Evangelista:  É,  não,  a  gente  vai  agrupar.  
+Gabriel  Lucas  Vital  Evangelista:  Exato.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  aí  vai  ter  aqueles  quatro  critérios,  
+Ricardo  Pedroso  da  Silva:  conforme.  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Em  análise,  eh,  aprovado,  reprovado  e  não  enviado.  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  é  isso,  isso  é  teste  também.  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  pode  mudar  aí  os  outros  que  são  que  a  gente  consegue  
+analisar
+ 
+e
+ 
+os
+ 
+outros
+ 
+quatro,
+ 
+né,
+ 
+que
+ 
+a
+ 
+gente
+ 
+analisa
+ 
+situação,
+ 
+aí
+ 
+ele
+ 
+atualiza
+ 
+junto
+ 
+com
+ 
+fornecedor.
+ 
+Gabriel  Lucas  Vital  Evangelista:  O  que  a  gente  pode  fazer  aqui  para  deixar  mais  claro  é  botar  uma  
+sulegenda
+ 
+aqui
+ 
+entre
+ 
+parênteses
+ 
+de
+ 
+repente
+ 
+gráﬁco
+ 
+gerais,
+ 
+alguma
+ 
+coisa
+ 
+assim,
+ 
+eh
+ 
+gráﬁco
+ 
+de
+ 
+todos
+ 
+os
+ 
+fornecedores,
+ 
+de
+ 
+eh
+ 
+gráﬁcos
+ 
+à
+ 
+base,
+ 
+não
+ 
+sei,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  nessa  linha,  eh,  
+Thais  Jayne  Biscaia:  M.  
+Gabriel  Lucas  Vital  Evangelista:  aquela  mudança  que  eu  até  tinha  adiantado  para  Thaís,  ô,  ô,  Ricardo,  
+eh,
+ 
+que
+ 
+a
+ 
+gente
+ 
+que
+ 
+a
+ 
+gente
+ 
+trouxe
+ 
+aqui,
+ 
+ó,
+ 
+eu
+ 
+trouxe
+ 
+a
+ 
+nomenclatura
+ 
+aguardando
+ 
+veriﬁcação,
+ 
+Gabriel  Lucas  Vital  Evangelista:  porque  a  gente  tinha  eh  eh  a  gente  não  tinha  fechado  uma  uma  
+nomenclatura,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Mas  isso  aqui  é  super  fácil  de  mudar.  
+Gabriel  Lucas  Vital  Evangelista:  Que  pega  aquele  critério  que  a  gente  tinha  conversado  ontem,  toda  
+vez
+ 
+que
+ 
+vier
+ 
+da
+ 
+plataforma
+ 
+que
+ 
+vier
+ 
+que
+ 
+vier
+ 
+da
+ 
+plataforma,
+ 
+né,
+ 
+eh,
+ 
+a
+ 
+vencer,
+ 
+vencido
+ 
+ou
+ 
+na
+ 
+se
+ 
+enquadra
+ 
+e
+ 
+e
+ 
+tiver
+ 
+com
+ 
+a
+ 
+unidade
+ 
+lá.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Vocês  estão  vendo  aqui,  
+Ricardo  Pedroso  da  Silva:  com  a  solização  e  elaboração.  
+Gabriel  Lucas  Vital  Evangelista:  ó?  
+Gabriel  Lucas  Vital  Evangelista:  Exatamente.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  vai  vir  pro  relatório.  
+Ricardo  Pedroso  da  Silva:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  Relatório.  
+Gabriel  Lucas  Vital  Evangelista:  Cadê  o  aqui?  
+Gabriel  Lucas  Vital  Evangelista:  Vai  vir  pro  relatório  como  aguardando  veriﬁcação,  que  é  uma  ação  
+interna
+ 
+nossa,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  acho  que  só  muda  talvez  a  nomenclatura  para  guardando,  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  aguardando  análise,  alguma  coisa  assim.  
+Gabriel  Lucas  Vital  Evangelista:  beleza.  
+Ricardo  Pedroso  da  Silva:  Tens  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Thais  Jayne  Biscaia:  Boa.  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Guardando  análise.  
+Thais  Jayne  Biscaia:  Só  que,  por  exemplo,  eh,  deixa  eu  te  fazer  uma  pergunta.  
+Thais  Jayne  Biscaia:  Esse  Eli,  esse  que  você  pegou  é  mais  atual?  
+Thais  Jayne  Biscaia:  Você  baixou  as  planilhas  ou  só  ajustou  os  
+Gabriel  Lucas  Vital  Evangelista:  Não,  
+Thais  Jayne  Biscaia:  nomes?  
+Gabriel  Lucas  Vital  Evangelista:  eu  não  consigo  baixar  a  planilha  dentro  da  
+Thais  Jayne  Biscaia:  Como  assim,  Gabriel?  
+Gabriel  Lucas  Vital  Evangelista:  plataforma.  
+Thais  Jayne  Biscaia:  É,  
+Gabriel  Lucas  Vital  Evangelista:  Eu  não  tenho  acesso  para  poder  baixar.  
+Thais  Jayne  Biscaia:  bora  lá.  
+Thais  Jayne  Biscaia:  Gestão  de  acessos.  
+Thais  Jayne  Biscaia:  A  cara  do  Ricardo  entra  em  gestão  de  
+00:05:00  
+Gabriel  Lucas  Vital  Evangelista:  Pera  aí  só  um  
+Thais  Jayne  Biscaia:  acessos  
+Gabriel  Lucas  Vital  Evangelista:  segundo.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  eu  ainda  tô  pegando,  eu  peg  essa  base  ainda  tá  com  a  planilha,  
+Thais  Jayne  Biscaia:  antiga  que  eu  te  mandei,  
+Gabriel  Lucas  Vital  Evangelista:  com  aquelas  planilhas  antigas  que  você  ainda  mandou.  
+Thais  Jayne  Biscaia:  tá?  
+Thais  Jayne  Biscaia:  Vai  lá.  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Thais  Jayne  Biscaia:  O  Ricardo  você  já  atualizou,  né,  uma  das  planilhas,  né,  Ricardo?  
+Thais  Jayne  Biscaia:  Hoje  aquela  do  que  você  mandou  mais  cedo.  
+Ricardo  Pedroso  da  Silva:  É,  a  gente  atualizou  lá  no  o  que  tá  aparecendo  lá  nos  relatórios  
+personalizados,
+ 
+Thais  Jayne  Biscaia:  Fechou?  
+Thais  Jayne  Biscaia:  Nossa.  
+Thais  Jayne  Biscaia:  Ótimo.  
+Ricardo  Pedroso  da  Silva:  mas  eu  não  baixei  ela.  
+Thais  Jayne  Biscaia:  Beleza.  
+Thais  Jayne  Biscaia:  Tá.  
+Thais  Jayne  Biscaia:  Entra  lá  na  gestão  de  acessos,  Gabs.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  eu  tô  entrando  na  outra  tela,  foi  mal.  
+Thais  Jayne  Biscaia:  Aí  Zurik,  
+Gabriel  Lucas  Vital  Evangelista:  Tava  
+Thais  Jayne  Biscaia:  pega  o  link  da  Zurik.  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Thais  Jayne  Biscaia:  Entra  como  se  fosse  admin.  
+Thais  Jayne  Biscaia:  relatórios  personalizados.  
+Thais  Jayne  Biscaia:  acessar  qualquer.  
+Gabriel  Lucas  Vital  Evangelista:  Qual  que  é  um?  
+Gabriel  Lucas  Vital  Evangelista:  São  esses  quatro  aqui,  né?  
+Thais  Jayne  Biscaia:  Isso  são  essas  
+Ricardo  Pedroso  da  Silva:  Mas  esse  aí  não  foi  mexido,  
+Thais  Jayne  Biscaia:  quatro.  
+Ricardo  Pedroso  da  Silva:  velho.  
+Ricardo  Pedroso  da  Silva:  Os  os  outros  dois  
+Thais  Jayne  Biscaia:  Não,  
+Ricardo  Pedroso  da  Silva:  ali.  
+Thais  Jayne  Biscaia:  mas  é  que  as  meninas,  a  Andriela  e  a  eh  já  atualizaram  documentos,  
+Gabriel  Lucas  Vital  Evangelista:  Qual?  
+Thais  Jayne  Biscaia:  então  pode  acessar  eles  aí  e  daí  baixar  todos  os  
+Ricardo  Pedroso  da  Silva:  Ah,  
+Thais  Jayne  Biscaia:  quatro.  
+Ricardo  Pedroso  da  Silva:  tá.  
+Thais  Jayne  Biscaia:  Demora?  
+Thais  Jayne  Biscaia:  Relaxa,  respira  aí.  
+Thais  Jayne  Biscaia:  Conﬁa  no  processo.  
+Thais  Jayne  Biscaia:  Aí  vai  lá  nos  três  pontinhos.  
+Gabriel  Lucas  Vital  Evangelista:  Nunca.  
+Thais  Jayne  Biscaia:  e  baixa.  
+Thais  Jayne  Biscaia:  Todo  mundo  tem  
+Gabriel  Lucas  Vital  Evangelista:  Me  liga.  
+Thais  Jayne  Biscaia:  acesso.  
+Gabriel  Lucas  Vital  Evangelista:  Não  fechou.  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Gabriel  Lucas  Vital  Evangelista:  Não  tinha  me  atentado  para  isso  
+Thais  Jayne  Biscaia:  Não,  
+Ricardo  Pedroso  da  Silva:  Ô  Gabriel,  
+Gabriel  Lucas  Vital  Evangelista:  não.  
+Ricardo  Pedroso  da  Silva:  a  gente  ensinou  a  Débora  a  semana  passada  a  fazer  esse  mesmo  
+Thais  Jayne  Biscaia:  relaxa.  
+Gabriel  Lucas  Vital  Evangelista:  Não  é  não,  na  real,  mas  eu  não  eu  não  tinha  
+Thais  Jayne  Biscaia:  Eu  acho  que  ele  não  tinha,  Ricardo.  
+Gabriel  Lucas  Vital  Evangelista:  visto.  
+Thais  Jayne  Biscaia:  Acho  que  ele  não  se  ligou  que  ele  pode  acessar  como  administrador  do  
+sistema.
+ 
+Gabriel  Lucas  Vital  Evangelista:  É,  eu  tava  só  visualizando.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  não,  mas  maravilha.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  pegar  essa.  
+Gabriel  Lucas  Vital  Evangelista:  Vou  pegar  em  CSV.  
+Gabriel  Lucas  Vital  Evangelista:  Esse  daqui  é  situação.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Gabriel  Lucas  Vital  Evangelista:  E  esse  aí  esse  daqui  também,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Então  esses  quatro  aqui  para  baixo,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Tirando  o  dashboard  de  Z.  
+Ricardo  Pedroso  da  Silva:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  maravilha.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  foi  o  cara,  tivemos  a  reunião  de  renovação  com  com  a  integral.  
+Gabriel  Lucas  Vital  Evangelista:  O  Ricardo,  o  Renato  botou  maior,  elas  falam  assim:  "Nossa,  elas  são  
+difíceis,
+ 
+choram
+ 
+muito,
+ 
+elas
+ 
+não
+ 
+choraram
+ 
+nada".
+ 
+Gabriel  Lucas  Vital  Evangelista:  Inclusive  pediram  uma  nova  eh  pediram  nossa  API  porque  eles  estão  
+pensando
+ 
+em
+ 
+em
+ 
+integral
+ 
+o
+ 
+Proteus,
+ 
+Ricardo  Pedroso  da  Silva:  Ei,  mas  essa  aí  já  tinha  pedido  ano  passado  já  para  nós,  
+Gabriel  Lucas  Vital  Evangelista:  mas  só  que  Mas  tá  na  lista,  
+Ricardo  Pedroso  da  Silva:  hein?  
+Gabriel  Lucas  Vital  Evangelista:  eh,  porque  a  Grou  essa  semana,  né,  de  essa  semana  não,  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Dá  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  licença.  
+Gabriel  Lucas  Vital  Evangelista:  Esse  mês  ele  fea  maternidade  e  eles  
+Ricardo  Pedroso  da  Silva:  Mas  eles  choram.  
+Gabriel  Lucas  Vital  Evangelista:  voltaram  pra  
+Ricardo  Pedroso  da  Silva:  Acho  que  para  renovação  eles  não  choram  não.  
+Ricardo  Pedroso  da  Silva:  Acho  que  é  mais  quando  precisam  de  customização.  
+Gabriel  Lucas  Vital  Evangelista:  gente.  
+Ricardo  Pedroso  da  Silva:  Mas  é  que  eles  são  mais  acostumados  porque  daí  o  pessoal  dá  50%  de  
+desconto
+ 
+para
+ 
+eles
+ 
+nas
+ 
+customização.
+ 
+Ricardo  Pedroso  da  Silva:  Eles  choram.  
+Gabriel  Lucas  Vital  Evangelista:  É,  eu  vi  que  tem  mais  de  80.000  aberto.  
+Ricardo  Pedroso  da  Silva:  Ah,  eu  também  ia  chorar.  
+Gabriel  Lucas  Vital  Evangelista:  É  80.000  aberto,  
+Ricardo  Pedroso  da  Silva:  tivesse  a  oportunidade  de  ganhar  um  desconto  desse.  
+Ricardo  Pedroso  da  Silva:  Meu  Deus  do  
+Gabriel  Lucas  Vital  Evangelista:  não  é?  
+Gabriel  Lucas  Vital  Evangelista:  Com  uma  já  com  uma  já  meio  que  liberada,  né,  na  real,  né?  
+Ricardo  Pedroso  da  Silva:  céu.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  deixa  eu  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  O  nome  das  planilhas.  
+Gabriel  Lucas  Vital  Evangelista:  Obrigado  a  elas.  
+Thais  Jayne  Biscaia:  Muito  obrigada,  Ricardo.  
+00:10:00  
+Thais  Jayne  Biscaia:  Vou  mandar  para  ela  já.  
+Gabriel  Lucas  Vital  Evangelista:  que  aí  a  gente  faz  o  ajuste  dos  critérios,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  mas  aí  quando  aí  aí  quando  tá  não  tem  nada,  
+Ricardo  Pedroso  da  Silva:  Eu  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Aí  tá  como  não  enviado  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Então  é  só  trocar  o  aguardando  delicação  para  aguardando  análise  
+nessa
+ 
+Ricardo  Pedroso  da  Silva:  acho  que  o  não  enviado.  
+Gabriel  Lucas  Vital  Evangelista:  daqui.  
+Ricardo  Pedroso  da  Silva:  Será  que  ﬁca  claro?  
+Ricardo  Pedroso  da  Silva:  Não  enviado  
+Gabriel  Lucas  Vital  Evangelista:  Ah  ah,  
+Ricardo  Pedroso  da  Silva:  ou  
+Gabriel  Lucas  Vital  Evangelista:  tá.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  tinha  você  tinha  falado  para  trocar  para  não  anexado,  
+Thais  Jayne  Biscaia:  Isso,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  isso  mesmo.  
+Ricardo  Pedroso  da  Silva:  é  não  conex.  
+Ricardo  Pedroso  da  Silva:  É.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  maravilha.  
+Thais  Jayne  Biscaia:  anexado.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  aí  a  gente  troca  para  não  anexar  então.  
+Ricardo  Pedroso  da  Silva:  Aí  a  gente  vai  ter  a  situação  de  solicitações  que  na  verdade  vai  ter  vai  ter,  
+vamos
+ 
+ver
+ 
+se
+ 
+nessa
+ 
+nessa
+ 
+tuanilha
+ 
+aí
+ 
+vai
+ 
+gerar
+ 
+solicitação
+ 
+com
+ 
+outro
+ 
+status,
+ 
+porque
+ 
+pode
+ 
+ser
+ 
+assim,
+ 
+a
+ 
+solicitação
+ 
+ela
+ 
+pode
+ 
+est
+ 
+em
+ 
+elaboração
+ 
+que
+ 
+elá
+ 
+o
+ 
+fornecedor
+ 
+iniciou
+ 
+a
+ 
+Ricardo  Pedroso  da  Silva:  alteração  dela.  
+Ricardo  Pedroso  da  Silva:  ela  pode  tá  em  análise,  né?  
+Ricardo  Pedroso  da  Silva:  Então  tá  com  o  nosso  time  aqui  analisando,  ela  pode  ter  o  resultado  
+aprovado
+ 
+lá
+ 
+que
+ 
+daí
+ 
+fechou
+ 
+o
+ 
+ﬂuxo
+ 
+e
+ 
+ela
+ 
+pode
+ 
+também
+ 
+tá
+ 
+como
+ 
+pendência
+ 
+ou
+ 
+resolvendo,
+ 
+que
+ 
+daí
+ 
+a
+ 
+Thaí
+ 
+foi
+ 
+lá
+ 
+indeferiu
+ 
+essa
+ 
+solicitação,
+ 
+aí
+ 
+passou
+ 
+o
+ 
+bastão
+ 
+de
+ 
+volta
+ 
+lá
+ 
+pro
+ 
+fornecedor.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Ricardo  Pedroso  da  Silva:  Então  acho  que  a  só  questão  de  pendência  eu  acho  que  não  vai  ter,  né,  
+Taís,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Aí,  
+Ricardo  Pedroso  da  Silva:  porque  vocês  hoje  só  vocês  aprovam  tudo  com  ressalva,  
+Thais  Jayne  Biscaia:  Isso  por  enquanto  não  tem  pendência.  
+Ricardo  Pedroso  da  Silva:  né?  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Eu  
+Gabriel  Lucas  Vital  Evangelista:  mas  aí  a  gente  pode  trazer  essa  visualização  aqui  para  dentro  que  
+vocês
+ 
+querem.
+ 
+Thais  Jayne  Biscaia:  Eu  acho  que  é  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  tá.  
+Gabriel  Lucas  Vital  Evangelista:  É  porque  por  
+Ricardo  Pedroso  da  Silva:  acho  que  para  elas,  assim  como  é  um  relatório  delas,  não  sei  se  elas  vão  
+querer
+ 
+isso.
+ 
+Thais  Jayne  Biscaia:  importante.  
+Gabriel  Lucas  Vital  Evangelista:  enquanto  
+Ricardo  Pedroso  da  Silva:  Acho  que  é,  pelo  que  eu  entendi,  elas  não  querem  saber  onde  é  que  tá,  tipo,  
+elas
+ 
+querem
+ 
+saber
+ 
+se
+ 
+se
+ 
+for
+ 
+se
+ 
+o
+ 
+fornecedor
+ 
+anexou,
+ 
+se
+ 
+ele
+ 
+anexou,
+ 
+o
+ 
+que
+ 
+que
+ 
+ele
+ 
+anexou
+ 
+e
+ 
+se
+ 
+tá
+ 
+pendente
+ 
+ou
+ 
+se
+ 
+a
+ 
+gente
+ 
+já
+ 
+analisou.
+ 
+Gabriel  Lucas  Vital  Evangelista:  é  porque  aqui  eu  já  tenho  o  critério  já  de,  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  por  exemplo,  eu  vou  eliminar  aqui  o  critério  vencido,  porque  pra  Eh,  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Não.  
+Gabriel  Lucas  Vital  Evangelista:  não  é  necessário.  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  vou  o  conforme  a  gente  muda  para  aprovado,  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  muda  o  nome  para  aprovado.  
+Thais  Jayne  Biscaia:  Isso.  
+Ricardo  Pedroso  da  Silva:  Tá.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  eu  aguardando  o  vídeo.  
+Ricardo  Pedroso  da  Silva:  Mas  o  o  conforme  a  gente  vai  agora,  a  gente  tem  uma  coluna  lá  do  status,  
+né?
+ 
+Thais  Jayne  Biscaia:  É  isso.  
+Ricardo  Pedroso  da  Silva:  status  dação  e  aprovação  do  documento.  
+Thais  Jayne  Biscaia:  O  status  eu  acho  que  daqui  ele  sai,  
+Ricardo  Pedroso  da  Silva:  Então,  
+Thais  Jayne  Biscaia:  né?  
+Thais  Jayne  Biscaia:  Daqui  o  conforme  sai  daqui,  tá?  
+Thais  Jayne  Biscaia:  Ele  sai  daqui.  
+Thais  Jayne  Biscaia:  Aqui  é  o  status  de  como  tá.  
+Thais  Jayne  Biscaia:  se,  tipo  assim,  
+Ricardo  Pedroso  da  Silva:  temos  
+Thais  Jayne  Biscaia:  se  foi  anexado  ou  não.  
+Thais  Jayne  Biscaia:  Essa  informação  que  tá  aqui  é  se  foi  anexado.  
+Thais  Jayne  Biscaia:  Então,  se  ele  tá  anexado,  ele  vai  ter  a  informa,  essa  informação,  por  exemplo,  
+não
+ 
+enviado,
+ 
+aguardando
+ 
+veriﬁcação
+ 
+e
+ 
+não
+ 
+anexado.
+ 
+Thais  Jayne  Biscaia:  Quando  tiver  aguardando  veriﬁcação,  é  porque  tem  documento.  
+Thais  Jayne  Biscaia:  Eu  tiraria  o  o  conforme  e  o  vencido,  porque  o  con  o  aprovado  e  o  reprovado  vai  
+vir
+ 
+em
+ 
+outra
+ 
+em
+ 
+outra
+ 
+visão
+ 
+aqui,
+ 
+pelo
+ 
+que
+ 
+a
+ 
+gente
+ 
+tinha
+ 
+conversado
+ 
+ontem.
+ 
+Ricardo  Pedroso  da  Silva:  Não,  mas  acho  que  é  isso.  
+Ricardo  Pedroso  da  Silva:  É  o  o  vencido  vai  sair,  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Ricardo  Pedroso  da  Silva:  né,  
+Gabriel  Lucas  Vital  Evangelista:  É,  o  vencido.  
+Ricardo  Pedroso  da  Silva:  Gab?  
+Gabriel  Lucas  Vital  Evangelista:  O  vencido  vai  sair.  
+Gabriel  Lucas  Vital  Evangelista:  O  vencido  com  certeza  sai.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  o  anexado,  o  enviado  sai  também,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  não  enviado  e  vencido  sai  e  conforme  em  tese  muda  para  
+aprovado,
+ 
+Ricardo  Pedroso  da  Silva:  Eh,  o  conforme  vai  ser  ah  vai  ser  documento  que  tem  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  aprovado  lá  na  situação.  
+Gabriel  Lucas  Vital  Evangelista:  E  é  no  status.  
+Ricardo  Pedroso  da  Silva:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  É  que  eh  não  o  o  conforme  tem  que  não,  
+Ricardo  Pedroso  da  Silva:  não.  
+Gabriel  Lucas  Vital  Evangelista:  o  conforme  tem  que  ser  igual.  
+Ricardo  Pedroso  da  Silva:  conforme  eu  tenho  que  ter  passado  pela  análise  do  BPO.  
+Ricardo  Pedroso  da  Silva:  Se  tiver  passado  a  análise  PU  e  tá  aprovado,  aí  ele  tá  
+Gabriel  Lucas  Vital  Evangelista:  Então,  
+Thais  Jayne  Biscaia:  É  que  eu  é  eu  mudaria  para  em  vez  de  de  como  é  que  
+Ricardo  Pedroso  da  Silva:  conforme.  
+Thais  Jayne  Biscaia:  fala?  
+Thais  Jayne  Biscaia:  Em  vez  de  como  posso  
+Ricardo  Pedroso  da  Silva:  Você  consegue  pegar  a  planilha  nova  agora,  
+Thais  Jayne  Biscaia:  explicar?  
+Ricardo  Pedroso  da  Silva:  Gabriel?  
+Gabriel  Lucas  Vital  Evangelista:  eh,  eu  baixei  ela  em  CSV.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  baixar  uma  aqui  em  Deixa  eu  baixar  ela  aqui  em  eh  em  
+Excel.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Mas  eh  quando  a  situação  da  última  solicitação  tiver  em  aprovado  e  
+o
+ 
+status
+ 
+conforme,
+ 
+aí
+ 
+sim
+ 
+seria
+ 
+igual
+ 
+a,
+ 
+né,
+ 
+conforme
+ 
+dentro
+ 
+do
+ 
+dash.
+ 
+Ricardo  Pedroso  da  Silva:  Ja.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  baixar  aqui.  
+00:15:00  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  já  tem  já  os  dados  atualizados,  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Você  
+Ricardo  Pedroso  da  Silva:  Tá  beleza.  
+Ricardo  Pedroso  da  Silva:  Vai  lá  mais  pro  ﬁnal.  
+Gabriel  Lucas  Vital  Evangelista:  quer  que  eu  mudo  alguma  coisa  
+Ricardo  Pedroso  da  Silva:  Não,  não.  
+Gabriel  Lucas  Vital  Evangelista:  aqui?  
+Ricardo  Pedroso  da  Silva:  Para  nós  olhar  as  colunas  novas  que  foram  adicionad  a  coluna  nova  que  foi  
+adicionada
+ 
+pro
+ 
+Gabriel  Lucas  Vital  Evangelista:  Ah,  
+Ricardo  Pedroso  da  Silva:  pro  lateral.  
+Gabriel  Lucas  Vital  Evangelista:  tá.  
+Ricardo  Pedroso  da  Silva:  Desculpa.  
+Ricardo  Pedroso  da  Silva:  Isso  é.  
+Ricardo  Pedroso  da  Silva:  Então,  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Ricardo  Pedroso  da  Silva:  por  exemplo,  aí,  ó,  você  tem  o  analisado.  
+Ricardo  Pedroso  da  Silva:  Então,  os  o  que  não  tá  analisado,  tá  certinho.  
+Ricardo  Pedroso  da  Silva:  Então,  ele  tá  entrando  nesse  nessa  situação.  
+Ricardo  Pedroso  da  Silva:  Aí,  pega  aí  um  faz  um  ﬁltro  por  um  eh  aprovado.  
+Ricardo  Pedroso  da  Silva:  Vamos  só  bater  como  é  que  ele  vai  trazer  as  informações  do  status.  
+Ricardo  Pedroso  da  Silva:  Vai  ter  que  colocar  o  ﬁo  de  novo.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  nesse  daqui,  situação  de  análise  de  documento,  certo?  
+Ricardo  Pedroso  da  Silva:  Isso,  ó.  
+Ricardo  Pedroso  da  Silva:  Então,  esses  que  estão  aprovados  aí,  quando  tiver  a  situação  aprovado  
+quer
+ 
+dizer
+ 
+que
+ 
+tá
+ 
+conforme.
+ 
+Ricardo  Pedroso  da  Silva:  Então,  eu  posso  ignorar  o  que  tá  colocado  no  status  ali  e  aí  eu  leio  essa  
+coluna,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Ricardo  Pedroso  da  Silva:  entendeu?  
+Gabriel  Lucas  Vital  Evangelista:  Então,  então  pegando  essa  essa  coluna  adicional,  situação  eh  
+situação
+ 
+de
+ 
+análise,
+ 
+Ricardo  Pedroso  da  Silva:  Por,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Situação,  análise  documento,  quando  tiver  eh  aprovado  ignora  a  
+situação
+ 
+da
+ 
+última
+ 
+solicitação,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  eu  vejo  que  sim.  
+Ricardo  Pedroso  da  Silva:  Não  sei  se  a  Taís  com  Corpion.  
+Thais  Jayne  Biscaia:  Sim.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  mas  por  que  que  ele  tá  em  elaboração  e  tá  aprovada  a  
+documentação?
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Tese  não  teria  que  mudar  o  status,  
+Thais  Jayne  Biscaia:  Não,  porque  já  tem  documento  aprovado.  
+Thais  Jayne  Biscaia:  Então,  por  exemplo,  tem  documentos  dos  meses  anteriores  que  estão  
+aprovados,
+ 
+Gabriel  Lucas  Vital  Evangelista:  não.  
+Ricardo  Pedroso  da  Silva:  É  
+Thais  Jayne  Biscaia:  tipo  as  a  pelo  menos  as  buscas  automáticas  já  estão  
+Ricardo  Pedroso  da  Silva:  a  
+Thais  Jayne  Biscaia:  aprovadas  se  não  tiver  nenhuma  pendência.  
+Thais  Jayne  Biscaia:  Claro.  
+Ricardo  Pedroso  da  Silva:  eu  acho  que  aí  vai  ter  que  tem  que  colocar  marcas  e  representações.  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Acho  importante  é  a  
+Gabriel  Lucas  Vital  Evangelista:  o  que  o  marca  das  representações  é  que  faz  o  é  a  competência,  né,  
+do
+ 
+Mess.
+ 
+Thais  Jayne  Biscaia:  competência.  
+Gabriel  Lucas  Vital  Evangelista:  Então,  nesse  eh  nesse  gráﬁco  a  gente  tem  que  acrescentar,  
+Ricardo  Pedroso  da  Silva:  Deixa  eu  só  ver  se  é  que  a  gente  tem  uma  situação  ali  no  banco,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  que  a  pendência  a  gente  não  consegue  trazer  pro  documento,  mas  deixa  eu  
+vercer
+ 
+a
+ 
+prestações
+ 
+se
+ 
+vai.
+ 
+Ricardo  Pedroso  da  Silva:  Deixa  eu  ver  conjunto.  
+Ricardo  Pedroso  da  Silva:  Porque  nesse  caso  aí,  tipo,  ele  tem  ali  documentos  que  são  relacionados  a  
+outro
+ 
+período,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Ou  a  outro  período  ou  são  documentos  que  não  precisa  de  atualização  
+frequente,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Tipo  ASO.  
+Ricardo  Pedroso  da  Silva:  As  documento  que  é  que  é  uma  vez  só  que  ele  coloca  o  anual,  
+Thais  Jayne  Biscaia:  É  isso,  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  Não  
+Thais  Jayne  Biscaia:  isso  mesmo.  
+Thais  Jayne  Biscaia:  Aham.  
+Thais  Jayne  Biscaia:  Pode  ser  anual  ou  semestral.  
+Ricardo  Pedroso  da  Silva:  lembro.  
+Thais  Jayne  Biscaia:  Vai  depender  do  PMSO,  mas  normalmente  é  anual.  
+Thais  Jayne  Biscaia:  Então  o  lazo,  por  exemplo,  ele  vai  ﬁcar  vai  ter  12  solicitações  no  mês  ou  até  24,  
+porque
+ 
+são
+ 
+duas
+ 
+são
+ 
+dois
+ 
+são
+ 
+duas
+ 
+duas
+ 
+datas,
+ 
+né,
+ 
+que
+ 
+eles
+ 
+têm
+ 
+ali.
+ 
+Thais  Jayne  Biscaia:  Então,  pode  ser  que  tenha  CNPJ,  que  o  ASO  ﬁque  24  eh  23  vezes  aprovado  
+dentro
+ 
+do
+ 
+sistema
+ 
+e
+ 
+uma
+ 
+vez
+ 
+ele
+ 
+vai
+ 
+ser
+ 
+aberto,
+ 
+entendeu?
+ 
+Thais  Jayne  Biscaia:  Serão  no  total  24  solicitações.  
+Thais  Jayne  Biscaia:  Por  quê?  
+Thais  Jayne  Biscaia:  que  são  duas  vezes  por  mês  que  eles  têm  abertura  de  de  solicitação  que  eles  
+podem
+ 
+mandar.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Ah,  eu  deixei  aqui  diferente,  mas  eu  tava  anotando  aqui  esse  esse  
+critério,
+ 
+porque
+ 
+a
+ 
+gente
+ 
+vai
+ 
+vai
+ 
+ter
+ 
+que
+ 
+escrever
+ 
+esse
+ 
+novo
+ 
+eh
+ 
+critério
+ 
+aqui.
+ 
+Gabriel  Lucas  Vital  Evangelista:  que  otimizar  isso  
+Thais  Jayne  Biscaia:  Так.  
+Gabriel  Lucas  Vital  Evangelista:  eh,  para  quando  a  situação  da  análise  do  documento  tiver  aprovada,  
+independente
+ 
+do
+ 
+status
+ 
+que
+ 
+estiver
+ 
+aqui,
+ 
+eh,
+ 
+e
+ 
+também
+ 
+independente
+ 
+da
+ 
+situação
+ 
+da
+ 
+última
+ 
+solicitação,
+ 
+00:20:00  
+Gabriel  Lucas  Vital  Evangelista:  ele  tem  que  aparecer  como  aprovado  do  Dash.  
+Gabriel  Lucas  Vital  Evangelista:  Seria  
+Thais  Jayne  Biscaia:  Isso  mesmo.  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  independente,  por  exemplo,  da  de  todo  o  restante,  
+Gabriel  Lucas  Vital  Evangelista:  isso.  
+Thais  Jayne  Biscaia:  porque,  por  exemplo,  se  ele  se  o  documento  tá  aprovado,  é  porque  o  documento  
+eh
+ 
+ele
+ 
+vai
+ 
+trazer
+ 
+outras
+ 
+eh
+ 
+como
+ 
+pode
+ 
+explicar,
+ 
+eh
+ 
+ele
+ 
+não
+ 
+vai
+ 
+voltar,
+ 
+entendeu?
+ 
+Thais  Jayne  Biscaia:  Por  exemplo,  ele  pode  ser  que  volte  numa  próxima  análise,  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Thais  Jayne  Biscaia:  mas  da  numa  atualização  do  dash,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  eu  vou  ter  que  colocar  isso  dentro  do  dentro  do  escopo  aqui  para  
+para
+ 
+poder
+ 
+atualizar.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  tô  só  terminando  de  atualizar  com  as  planilhas  pra  gente  ver  o  
+relatório
+ 
+atual
+ 
+Thais  Jayne  Biscaia:  F.  
+Gabriel  Lucas  Vital  Evangelista:  já  com  esses  novos  dados  aí,  ver  como  que  tá  vindo  a  quando  o  
+cenário
+ 
+é
+ 
+de
+ 
+quando
+ 
+eu
+ 
+tenho
+ 
+esse
+ 
+cenário
+ 
+aqui,
+ 
+se
+ 
+ele
+ 
+já
+ 
+tá
+ 
+previndo
+ 
+já.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  que  eu  posso  
+Gabriel  Lucas  Vital  Evangelista:  fechar  aí,  nessas  planilhas  que  eu  baixei,  
+Gabriel  Lucas  Vital  Evangelista:  veio  um  total  de  15  fornecedores.  
+Gabriel  Lucas  Vital  Evangelista:  É  isso  mesmo.  
+Thais  Jayne  Biscaia:  15.  Deixa  eu  dar  uma  olhada.  
+Gabriel  Lucas  Vital  Evangelista:  É  aberto  aqui.  
+Thais  Jayne  Biscaia:  Eu  acho  que  sim,  
+Gabriel  Lucas  Vital  Evangelista:  Ja.  
+Thais  Jayne  Biscaia:  porque  tem  são  34  análises  e  tem  fornecedor  que  ainda  não  mandou  nada.  
+Thais  Jayne  Biscaia:  Ele  estar  são  54  cadastrados,  mas  tem  15  an.  
+Thais  Jayne  Biscaia:  É,  é,  não  tem  muita  coisa  
+Ricardo  Pedroso  da  Silva:  Acho  que  dá  pra  gente  criar  um  indicador  ali  de  fornecedores.  
+Thais  Jayne  Biscaia:  para  
+Ricardo  Pedroso  da  Silva:  H,  sem,  sem,  eh,  alteração,  
+Thais  Jayne  Biscaia:  movimentação.  
+Ricardo  Pedroso  da  Silva:  é,  sem  movimentação.  
+Ricardo  Pedroso  da  Silva:  E  aí,  tipo,  todo  mundo  que  tiver,  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  a  gente  conta  lá,  quem  tiver  alguma  solicitação  em  aberto,  quer  dizer  que  é  
+um
+ 
+fornecedor
+ 
+que
+ 
+teve
+ 
+alguma
+ 
+interação,
+ 
+Thais  Jayne  Biscaia:  Que  tá  mexendo  alguma  coisa.  
+Thais  Jayne  Biscaia:  Aham.  
+Thais  Jayne  Biscaia:  E  o  que  não  tiver  
+Ricardo  Pedroso  da  Silva:  tá  aberto  ou  se  tá  aprovado,  azar.  
+Thais  Jayne  Biscaia:  nada.  
+Ricardo  Pedroso  da  Silva:  Mas  aí  os  que  não  tiverem  nenhuma  interação  tem  que  ter  nesse  indicador,  
+porque
+ 
+é
+ 
+o
+ 
+que
+ 
+provavelmente
+ 
+a
+ 
+Débora
+ 
+vai
+ 
+fazer.
+ 
+Ricardo  Pedroso  da  Silva:  Ah,  não,  essa  galerinha  aqui  tá  fazendo  alguma  coisa,  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  mas  tem  uma  um  belo  de  um  percentual  aqui  que  nem  acessaram  a  
+plataforma,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Nem  criaram  uma  solicitação.  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  O  indicador,  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  no  caso,  seria  aqui  ao  lado  desses  quadradinhos  que  você  tá  falando,  
+Ricardo  Pedroso  da  Silva:  É  porque  ela,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  provavelmente,  
+Thais  Jayne  Biscaia:  Ela  
+Ricardo  Pedroso  da  Silva:  um  dos  indicadores  que  ela  vai  querer  é  tipo,  ó,  o  percentual  de  
+conformidade.
+ 
+Ricardo  Pedroso  da  Silva:  Todo  esse  povo  que  não  fez  nenhuma  interação  ali  com  a  plataforma.  
+Thais  Jayne  Biscaia:  vai  ter  que  tratar  de  outra  forma.  
+Ricardo  Pedroso  da  Silva:  É,  é.  
+Ricardo  Pedroso  da  Silva:  E  ele  tem  que  entrar  num  percentual,  né?  
+Ricardo  Pedroso  da  Silva:  Então,  
+Thais  Jayne  Biscaia:  Isso,  
+Ricardo  Pedroso  da  Silva:  tipo,  é  aquilo  que  a  gente  tinha  colocado  lá  no  no  gráﬁco  lá  que  a  Ana  fez,  
+Thais  Jayne  Biscaia:  gente.  
+Ricardo  Pedroso  da  Silva:  que  era  a  gente  olhou  todo  mundo  que  tinha  pelo  menos  um  status  de  
+aprovação
+ 
+e
+ 
+todo
+ 
+mundo
+ 
+que
+ 
+tava
+ 
+sem.
+ 
+Ricardo  Pedroso  da  Silva:  Então,  todo  mundo  que  tava  sem,  eu  não  lembro  qual  que  é  o  percentual  
+que
+ 
+tinha
+ 
+lá
+ 
+no
+ 
+dashboard,
+ 
+mas
+ 
+é
+ 
+de
+ 
+fornecedores
+ 
+que
+ 
+nem
+ 
+passou
+ 
+por
+ 
+análise,
+ 
+Thais  Jayne  Biscaia:  Mhm.  
+Ricardo  Pedroso  da  Silva:  tipo  
+Gabriel  Lucas  Vital  Evangelista:  Aí  nessa  nesse  daqui,  ó,  situação  documental  terceiro,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  a  gente  ele  tem  também  que  tem  que  tem  que  ter  aquela  
+nomenclatura
+ 
+de
+ 
+aprovado
+ 
+e
+ 
+reprovado,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  respondu.  
+Thais  Jayne  Biscaia:  M.  
+Thais  Jayne  Biscaia:  Oh.  
+00:25:00  
+Gabriel  Lucas  Vital  Evangelista:  coluna  mandatória.  
+Thais  Jayne  Biscaia:  Isso  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  só  presentar  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Угу.  
+Gabriel  Lucas  Vital  Evangelista:  Ah.  
+Gabriel  Lucas  Vital  Evangelista:  M.  
+Gabriel  Lucas  Vital  Evangelista:  is  aqui  é  da  troca.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  esse  é  aquele  que  vem  o  análise  interativa  que  a  gente  escolhe  o  
+fornecedor
+ 
+com
+ 
+base
+ 
+no
+ 
+fornecedor
+ 
+escolhe
+ 
+o
+ 
+o
+ 
+terceiro
+ 
+e
+ 
+por
+ 
+aí
+ 
+Gabriel  Lucas  Vital  Evangelista:  vai,  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  então  esse  nesse  aqui  também  a  gente  vai  trocar.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  eles  estão  todos  não  conformes,  porque  a  gente  tem  que  pegar  a  
+nova
+ 
+regra,
+ 
+eh,
+ 
+situação
+ 
+documental
+ 
+da
+ 
+empresa.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Aí  a  gente  tem  aprovado,  reprovado  conforme  que  é  indica  quando  é  
+busca
+ 
+automática,
+ 
+vencido
+ 
+e
+ 
+não
+ 
+anexado.
+ 
+00:30:00  
+Gabriel  Lucas  Vital  Evangelista:  Nesse  cenário  aqui  para  você  tá  bom  ou  ou  tal,  você  precisa  de  algo  
+mais
+ 
+ou
+ 
+Thais  Jayne  Biscaia:  Não,  eu  acho  que  tem  tudo  já  que  é  aprovado,  reprovado,  
+Gabriel  Lucas  Vital  Evangelista:  muito  
+Thais  Jayne  Biscaia:  que  são  as  duas  as  únicas  opções  aí  a  informação  quando  teve  a  busca  
+automática
+ 
+e
+ 
+quando
+ 
+tá
+ 
+vencido
+ 
+e
+ 
+quando
+ 
+tá
+ 
+no
+ 
+anexado.
+ 
+Thais  Jayne  Biscaia:  Puxa  para  mim  esse  conforme  busca  automática,  por  favor,  
+Gabriel  Lucas  Vital  Evangelista:  veio  nenhum.  
+Thais  Jayne  Biscaia:  tá?  
+Thais  Jayne  Biscaia:  Por  quê?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  Qual  que  é  o  que  ele  disse?  
+Gabriel  Lucas  Vital  Evangelista:  tá.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  olhar  o  critéri  no  dentro  da  
+Thais  Jayne  Biscaia:  Ó,  dá  uma  olhada  no  porque  às  vezes  ele  tá  conforme,  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Thais  Jayne  Biscaia:  mas  é  outra  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Thais  Jayne  Biscaia:  coisa.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  eu  vou  ver  de  qual  planilha  ele  tá  puxando  essa  informação.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  como  é  que  tá  lá  a  informação  na  Ele  provavelmente  está  
+puxando
+ 
+essa
+ 
+informação
+ 
+desse
+ 
+relatório
+ 
+aqui,
+ 
+o
+ 
+situação
+ 
+de
+ 
+preenchimento
+ 
+documental
+ 
+do
+ 
+fornecedor.
+ 
+Thais  Jayne  Biscaia:  Так.  
+Gabriel  Lucas  Vital  Evangelista:  No.  
+Ricardo  Pedroso  da  Silva:  É  que  daí  vai  ter  que  só  setar  quais  são  os  documentos  especíﬁcos,  né?  
+Ricardo  Pedroso  da  Silva:  Tipo,  ah,  essa  TRF3,  essa  negativa  estadual,  essas  aí  tão  FGTS.  
+Gabriel  Lucas  Vital  Evangelista:  É,  mas  dentro  desse  relatório  que  a  gente  que  a  gente  pegou,  ele  não  
+tem
+ 
+nenhum
+ 
+ﬁltro
+ 
+especiﬁcando
+ 
+que
+ 
+é
+ 
+de
+ 
+que,
+ 
+tipo,
+ 
+ah,
+ 
+isso
+ 
+aqui
+ 
+foi
+ 
+de
+ 
+busca
+ 
+automática
+ 
+ou
+ 
+tem
+ 
+não
+ 
+tem.
+ 
+Ricardo  Pedroso  da  Silva:  Não,  não  
+Gabriel  Lucas  Vital  Evangelista:  Então,  
+Ricardo  Pedroso  da  Silva:  tem.  
+Gabriel  Lucas  Vital  Evangelista:  eh,  
+Thais  Jayne  Biscaia:  Угу m.  
+Gabriel  Lucas  Vital  Evangelista:  no  relatório  a  gente  não  consegue  fazer  essa  diferenciação,  né?  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  até  dá  para  fazer.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  eu  acho  que  nem  
+Ricardo  Pedroso  da  Silva:  É,  mas  acho  que  é,  
+Gabriel  Lucas  Vital  Evangelista:  precisa.  
+Ricardo  Pedroso  da  Silva:  talvez  a  gente  especiﬁca  nesse  momento  ali  quais  quais  são  as  
+documentos
+ 
+que
+ 
+a
+ 
+gente
+ 
+vai
+ 
+considerar
+ 
+como
+ 
+busca
+ 
+automática.
+ 
+Ricardo  Pedroso  da  Silva:  Aí  eu  acho  que  naqueles  status  lá,  eu  acho  que  tem  tenho  vencido  lá.  
+Ricardo  Pedroso  da  Silva:  É  que  o  vencido  daí  no  caso  da  da  empresa  aí  acho  que  faz  sentido,  né?  
+Thais  Jayne  Biscaia:  Faz  sentido.  
+Ricardo  Pedroso  da  Silva:  Tá  isso  só  paraa  terceira  sentido.  
+Gabriel  Lucas  Vital  Evangelista:  É,  não,  a  gente  só  tira  o  conforme.  
+Thais  Jayne  Biscaia:  Ja.  
+Ricardo  Pedroso  da  Silva:  M.  
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  só  tira  o  A  gente  só  tira  o  
+Gabriel  Lucas  Vital  Evangelista:  conforme.  
+Gabriel  Lucas  Vital  Evangelista:  G  posso  muito  explicar  ela  que  o  problema  também  aqui  tá  entre  a  
+cadeira
+ 
+e
+ 
+o
+ 
+e
+ 
+o
+ 
+teclado.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Agora  
+Gabriel  Lucas  Vital  Evangelista:  princípio,  eu  vou  ter  quear  e  a  esse  conforme  aqui  é  só  tirar  esse  esse  
+conforme,
+ 
+né?
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  é  que  conforme  tá  trazendo  os  documentos  que  estão  com  alguma  validade  e  
+anexados,
+ 
+entende?
+ 
+Thais  Jayne  Biscaia:  Por  isso  que  era  importante  tirar  o  conforme  e  manter  a  manclatura  assim,  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Thais  Jayne  Biscaia:  tipo  aprovada  e  reprovada.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Fí  as  notiﬁcações  que  a  gente  quer  agora.  
+00:35:00  
+Gabriel  Lucas  Vital  Evangelista:  Tá,  ó,  tem,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Aprovado,  reprovado,  não  aneixado.  
+Thais  Jayne  Biscaia:  Bo  aí.  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  Aguardando  
+Thais  Jayne  Biscaia:  Perf.  
+Thais  Jayne  Biscaia:  Nossa,  agora  ﬁcou  bom.  
+Gabriel  Lucas  Vital  Evangelista:  deixa  eu  ver  se  tirou  os  ﬁltros.  
+Thais  Jayne  Biscaia:  Tirou.  
+Gabriel  Lucas  Vital  Evangelista:  Aprovado,  reprovado,  não  anexado  e  aguardando  a  análise,  né?  
+Thais  Jayne  Biscaia:  Ótimo.  
+Thais  Jayne  Biscaia:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  Então  tá,  tá  bom,  
+Thais  Jayne  Biscaia:  Perfeito.  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Vamos  só  conferir  na  planilha  para  ver  se  tá  puxando  o  dado  
+certinho.
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  
+Thais  Jayne  Biscaia:  Mas  eu  acho  que  agora,  agora,  agora  sim.  
+Gabriel  Lucas  Vital  Evangelista:  pegar  
+Thais  Jayne  Biscaia:  Acho  que  agora,  não,  agora  foi.  
+Gabriel  Lucas  Vital  Evangelista:  que  foi  de  fato.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  para  o  momento,  puxa  um  Pai  Nosso  aqui  e  vamos  pra  
+próxima
+ 
+que
+ 
+Deus
+ 
+é
+ 
+mais.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Captiva  Felipe.  
+Gabriel  Lucas  Vital  Evangelista:  Avil.  
+Gabriel  Lucas  Vital  Evangelista:  Bom,  vamos  logo  na  primeira  aqui,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  excluir  essa  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  fui  subindo  na  base  também.  
+Gabriel  Lucas  Vital  Evangelista:  Felipe  provado.  
+Thais  Jayne  Biscaia:  Угу.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  provado.  
+Gabriel  Lucas  Vital  Evangelista:  Aprovado.  
+Gabriel  Lucas  Vital  Evangelista:  Aprovado.  
+Gabriel  Lucas  Vital  Evangelista:  Reprovado.  
+Gabriel  Lucas  Vital  Evangelista:  Aprovado.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  é  isso  mesmo.  
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Gabriel  Lucas  Vital  Evangelista:  Perfeito.  
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Gabriel  Lucas  Vital  Evangelista:  Então  essa  daqui  a  gente  não  tem  que  mexer  mais  nada,  
+Thais  Jayne  Biscaia:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  nessa  não.  
+Thais  Jayne  Biscaia:  Eu  eu  vejo  que  não.  
+Thais  Jayne  Biscaia:  O  que  que  você  acha,  Ricardo?  
+Thais  Jayne  Biscaia:  Eu  acho  que  dá  para  ver  bem  assim,  tipo,  entender  bem  ali  e  tal.  
+Ricardo  Pedroso  da  Silva:  Volta  ali,  por  favor,  de  novo.  
+Ricardo  Pedroso  da  Silva:  Só,  tá?  
+Ricardo  Pedroso  da  Silva:  adaptiva  tem  o  Felipe.  
+Ricardo  Pedroso  da  Silva:  Essa  adaptiva  só  tem  um  for  um  terceiro.  
+Ricardo  Pedroso  da  Silva:  Isso.  
+Ricardo  Pedroso  da  Silva:  Pega  a  Caruana  lá.  
+Ricardo  Pedroso  da  Silva:  Vamos  pegar  só  que  eu  não  sei  como  é  que  ele  vai  gerar  a  
+Thais  Jayne  Biscaia:  Nossa,  car,  tenho  muito  
+Ricardo  Pedroso  da  Silva:  lista.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  passar  aqui.  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  aquilo  que  a  gente  comentou  também,  tem  que  ter  o  ﬁltro  de  
+CNPJ
+ 
+ali.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Hum.  
+Ricardo  Pedroso  da  Silva:  Talvez  até  dá  para  mesclar  ali,  
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Ricardo  Pedroso  da  Silva:  tipo,  ah,  no  nome  do  fornecedor  coloca  CNPJ,  traço  nome  a  razão  social  do  
+fornecedor.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Você  
+Ricardo  Pedroso  da  Silva:  Acho  que  talvez  mescla  os  dois  ali  só  para  ﬁcar  melhor  pra  
+Ricardo  Pedroso  da  Silva:  visualização.  
+Gabriel  Lucas  Vital  Evangelista:  lembra  que  aqui  na  eh  nesse  daqui  a  gente  tem  aquela  visualização  
+de
+ 
+módulo
+ 
+eh
+ 
+de
+ 
+eh
+ 
+de
+ 
+modo
+ 
+agropado,
+ 
+Ricardo  Pedroso  da  Silva:  Sim,  tem  aquela  então  interativa,  né,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  que  tá  no  no  de  cima  ali,  né?  
+Gabriel  Lucas  Vital  Evangelista:  É  a  que  traz  aqui,  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Não  é  a  que  traz  a  visualização  por  pessoa  tudo  que  ela  deve  
+Thais  Jayne  Biscaia:  Você  
+Ricardo  Pedroso  da  Silva:  É,  mas  ali  no  no  Caruana,  
+Gabriel  Lucas  Vital  Evangelista:  ou  
+Ricardo  Pedroso  da  Silva:  tipo,  elas  não  vão  saber  a  qual  caruana  que  tem,  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Thais  Jayne  Biscaia:  tá  
+Gabriel  Lucas  Vital  Evangelista:  Não,  eu  é,  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  Aí  tem  que  tr,  
+Gabriel  Lucas  Vital  Evangelista:  eu  tô  colocando  o  ﬁltro  aqui  de  
+Thais  Jayne  Biscaia:  falando?  
+Ricardo  Pedroso  da  Silva:  eu  acho  que  nem  é  o  ﬁltro,  
+Gabriel  Lucas  Vital  Evangelista:  CNPJ,  
+Ricardo  Pedroso  da  Silva:  eu  acho  que  junta  com  o  nome  do  fornecedor  e  deixa  num  campo  
+Gabriel  Lucas  Vital  Evangelista:  tá?  
+Ricardo  Pedroso  da  Silva:  só,  que  aí,  por  exemplo,  vai  listar  ali  no  fornecedor,  vai  listar  três  caruana,  
+cada
+ 
+uma
+ 
+com
+ 
+seu
+ 
+CNPJ
+ 
+no
+ 
+início
+ 
+do
+ 
+nome
+ 
+do
+ 
+ﬁltro,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  aqui  não  ﬁca  aqui,  
+Ricardo  Pedroso  da  Silva:  entendeu?  
+Gabriel  Lucas  Vital  Evangelista:  tá  vendo?  
+Gabriel  Lucas  Vital  Evangelista:  Não  tá  vindo  a  observação  completa.  
+Ricardo  Pedroso  da  Silva:  Mas,  
+Thais  Jayne  Biscaia:  Entendi.  
+Ricardo  Pedroso  da  Silva:  pois  é,  aí  que  é  a  situação,  né?  
+Ricardo  Pedroso  da  Silva:  Tipo,  Caruana,  
+Thais  Jayne  Biscaia:  É  que  ele  tá  juntando  todas  o  É  que  ali  ele  tá  
+Ricardo  Pedroso  da  Silva:  é,  Caroana,  todos  são  com  o  mesmo  nome,  
+Thais  Jayne  Biscaia:  juntando.  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  As  três  têm  o  mesmo  nome.  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Aí  o  que  vai  diferenciar  no  caso  da  Caruana  vai  ser  eh  o  CNPJ,  senão  teria  
+que
+ 
+ﬁltrar,
+ 
+colocar
+ 
+caruana
+ 
+e
+ 
+aí
+ 
+mais
+ 
+outro
+ 
+campo,
+ 
+pegar
+ 
+o
+ 
+CNPJ
+ 
+e
+ 
+ver
+ 
+qual
+ 
+que
+ 
+é
+ 
+o
+ 
+CNPJ
+ 
+da
+ 
+caruana
+ 
+que
+ 
+eu
+ 
+quero
+ 
+ﬁltrar.
+ 
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  se  fazer  isso  ﬁca  melhor  o  agrupamento.  
+Gabriel  Lucas  Vital  Evangelista:  eh,  colocar  junto  ali  no  nome  dos  do  fornecedor  a  numeração  do  do  
+CNPJ,
+ 
+certo?
+ 
+Thais  Jayne  Biscaia:  Isso.  
+Ricardo  Pedroso  da  Silva:  Isso.  
+Ricardo  Pedroso  da  Silva:  Mesc  ali  os  dois.  
+Ricardo  Pedroso  da  Silva:  O  número  do  fornecedor  traçam  a  não  lembro  como  é  que  tá  o  nome  da  
+coluna
+ 
+lá.
+ 
+Ricardo  Pedroso  da  Silva:  Razão  social.  
+Thais  Jayne  Biscaia:  M.  
+00:40:00  
+Gabriel  Lucas  Vital  Evangelista:  M.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  fora  isso,  tranquilo.  
+Thais  Jayne  Biscaia:  Tranquilo,  gostei.  
+Gabriel  Lucas  Vital  Evangelista:  Vencemos  aqui,  né?  
+Thais  Jayne  Biscaia:  Sim,  
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Thais  Jayne  Biscaia:  tem  alguma  alguma  alguma  outra  coisa,  Ricardo?  
+Thais  Jayne  Biscaia:  Eu  por  mim  tá  perfeito.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  o  ponto  que  falta  é  as  competências,  
+Thais  Jayne  Biscaia:  Eu  acho  que  vai  agregar  bastante.  
+Thais  Jayne  Biscaia:  Aham.  
+Thais  Jayne  Biscaia:  Ah,  
+Gabriel  Lucas  Vital  Evangelista:  mas  aí,  
+Thais  Jayne  Biscaia:  tá.  
+Ricardo  Pedroso  da  Silva:  né?  
+Gabriel  Lucas  Vital  Evangelista:  mas  aí  as  competências  também  viriam  nesse  gráﬁco  aqui  de  
+situação
+ 
+Thais  Jayne  Biscaia:  Hum.  
+Gabriel  Lucas  Vital  Evangelista:  documental  por  terceiro  ou  só  no  ele  também  viria  nesse  gráﬁco,  
+Thais  Jayne  Biscaia:  Isso.  
+Thais  Jayne  Biscaia:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  não  viria  só  no  detalhamento  de  pendências  com  competências,  não.  
+Ricardo  Pedroso  da  Silva:  Porque  aí  eu  acho  que  atende  aí  esse  gráﬁco  aí  que  é  as  pendências.  
+Thais  Jayne  Biscaia:  É  que  tá,  é  que  tá  separado.  
+Thais  Jayne  Biscaia:  É  que  o  Gabriel  já  trouxe  as  pendências,  
+Ricardo  Pedroso  da  Silva:  É  isso.  
+Thais  Jayne  Biscaia:  as  competências.  
+Ricardo  Pedroso  da  Silva:  É  porque  a  gente  tem  um  um  relatório  lá  que  a  gente  trouxe  só  com  as  
+pendências
+ 
+que
+ 
+tem
+ 
+como
+ 
+que
+ 
+tão
+ 
+vinculadas
+ 
+a
+ 
+competências,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Mas  tipo  a  da  ali  do  aprovado,  aqueles  documentos  de  qual  competência  
+que
+ 
+é
+ 
+isso.
+ 
+Gabriel  Lucas  Vital  Evangelista:  aqui,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Tá  vendo?  
+Ricardo  Pedroso  da  Silva:  É.  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  É  isso,  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Agora  foi  isso  aí.  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  Oh,  perfeito.  
+Ricardo  Pedroso  da  Silva:  Mas  acho  que  dá  para  te  fazer  para  para  todo  mundo  aí,  
+Gabriel  Lucas  Vital  Evangelista:  Maravil.  
+Ricardo  Pedroso  da  Silva:  não  só  paraa  Caruana,  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  botei  uma  L.  
+Ricardo  Pedroso  da  Silva:  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Eu  eu  botei  uma  uma  regra  na  no  prompt  que  toda  vez  que  a  razão  
+social
+ 
+foi
+ 
+igual,
+ 
+sim,
+ 
+Ricardo  Pedroso  da  Silva:  Ah,  tá  beleza.  
+Gabriel  Lucas  Vital  Evangelista:  é  uma  condicional,  entendeu?  
+Ricardo  Pedroso  da  Silva:  Eles  vão  saindo  pegar  do  lado.  
+Gabriel  Lucas  Vital  Evangelista:  para  não  ﬁcar  muito  poluído  aqui.  
+Ricardo  Pedroso  da  Silva:  Deixa  eu  Uhum.  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Aí,  por  exemplo,  a  top  10,  
+Thais  Jayne  Biscaia:  Service  também.  
+Gabriel  Lucas  Vital  Evangelista:  que  é  que  é  o  mesmo  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  É,  porque  aí  o  que  a  gente  pode  ir  na  reunião  é  tipo,  provavelmente  elas  vão  
+questionar
+ 
+assim:
+ 
+"Ah,
+ 
+beleza,
+ 
+Thais  Jayne  Biscaia:  Qual?  
+Gabriel  Lucas  Vital  Evangelista:  caso.  
+Ricardo  Pedroso  da  Silva:  mas  tá  regular  de  de  qual  ã  de  qual  
+Thais  Jayne  Biscaia:  Qual  tá  serv?  
+Ricardo  Pedroso  da  Silva:  competência?"  É  uma  informação  que  a  gente  tem  a  
+Ricardo  Pedroso  da  Silva:  irregularidade  das  competências,  mas  a  gente  ainda  não  tem  a  
+regularidade,
+ 
+entendeu?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  e  isso  aí  eu  já  tinha  captado  até  por  isso  que  a  gente  pegou,  a  
+gente
+ 
+criou
+ 
+esse,
+ 
+esse
+ 
+daqui
+ 
+voltado
+ 
+exclusivo
+ 
+para
+ 
+competência,
+ 
+mas
+ 
+se
+ 
+você
+ 
+acredita
+ 
+que
+ 
+essa
+ 
+esse
+ 
+ﬁltro
+ 
+de
+ 
+competência,
+ 
+por
+ 
+consequência
+ 
+esse
+ 
+campo
+ 
+de
+ 
+competência
+ 
+também
+ 
+tem
+ 
+que
+ 
+ter
+ 
+nessa
+ 
+visualização
+ 
+Gabriel  Lucas  Vital  Evangelista:  aqui.  
+Ricardo  Pedroso  da  Silva:  Sim,  tem  que  ter  elas  vão,  
+Gabriel  Lucas  Vital  Evangelista:  É  isso.  
+Ricardo  Pedroso  da  Silva:  só  que  não  dá  para  te  incluir  porque  a  gente  não  vai  conseguir  trazer  esse  
+dado.
+ 
+Thais  Jayne  Biscaia:  Mas  já  tem  a  competência  aqui  embaixo.  
+Thais  Jayne  Biscaia:  Acho  que  eh  Ah,  
+Ricardo  Pedroso  da  Silva:  Não,  mas  a  gente  tem  a  competência  por  irregularidade,  né?  
+Ricardo  Pedroso  da  Silva:  Então  eu  t  as  competências  que  estão  compendentes.  
+Thais  Jayne  Biscaia:  tá.  
+Thais  Jayne  Biscaia:  Elas  querem  ela  Isso  elas  vão  querer  saber  o  que  que  foi  postado  de  cada  
+competência.
+ 
+Ricardo  Pedroso  da  Silva:  Mas  a  aí  vê,  lembra  no  e-mail  dele  lá  que  ela  que  ela  mandou  aquele  aquele  
+modelo?
+ 
+Ricardo  Pedroso  da  Silva:  Então  lá  tem  competências  regí  outros  que  
+Thais  Jayne  Biscaia:  que  tá  que  não  tá.  
+Thais  Jayne  Biscaia:  Aham.  
+Ricardo  Pedroso  da  Silva:  tá  com  com  problema.  
+Gabriel  Lucas  Vital  Evangelista:  Tá?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  então,  como  paleativo,  talvez,  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  a  intenção  é  que  a  gente  não  criaria  um  um  relatório  tipo  
+detalhamento
+ 
+das
+ 
+competências
+ 
+aprovadas.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Então,  
+Ricardo  Pedroso  da  Silva:  Sim,  mas  o  problema  é  que  hoje  a  gente  não  consegue  pegar  ainda  mapear  
+esse
+ 
+isso
+ 
+do
+ 
+que
+ 
+foi
+ 
+aprovado.
+ 
+Ricardo  Pedroso  da  Silva:  A  gente  tem  o  que  foi  reprovado.  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  não  consegue  eh  tipo  trazer  o  volume  de  todas  que  foram  
+aprovadas.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Não,  
+Ricardo  Pedroso  da  Silva:  É  que  eu  não  tenho  esse  vínculo  hoje  em  banco,  tipo,  documento  que  foi  
+aprovado.
+ 
+Gabriel  Lucas  Vital  Evangelista:  mas  a  gente  tem  Mas  a  
+Ricardo  Pedroso  da  Silva:  Lembra  que  eu  comentei  na  na  na  prprint  que  a  gente  tem  um  problema  ali  
+em
+ 
+relação
+ 
+a
+ 
+cruzamento
+ 
+de
+ 
+de
+ 
+documento
+ 
+versus
+ 
+competência
+ 
+versus
+ 
+pendência.
+ 
+Ricardo  Pedroso  da  Silva:  A  gente  tá  fazendo  aqui,  a  gente  fez  um  esquema,  por  isso  que  eu  pedi  
+para
+ 
+Thaí
+ 
+lá
+ 
+na
+ 
+no
+ 
+na
+ 
+texto
+ 
+da
+ 
+pendência
+ 
+ela
+ 
+colocar
+ 
+também
+ 
+a
+ 
+competência,
+ 
+Thais  Jayne  Biscaia:  Угу.  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  Porque  daí  a  gente  consegue  extrair,  classiﬁcar  ali  pelo  pelo  texto  da  da  
+pendência.
+ 
+Ricardo  Pedroso  da  Silva:  Só  que  isso  tá  vinculado  à  pendência,  né?  
+Ricardo  Pedroso  da  Silva:  Não  se  o  cara  foi  aprovado,  não.  
+00:45:00  
+Ricardo  Pedroso  da  Silva:  Se  não  foi  pendenciado,  hoje  eu  tenho  uma  diﬁculdade  de  pegar  essa  
+competência.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  É,  mas  dentro  do  status  a  gente  vai  ter  informação  dentro  do  banco  
+aprovada
+ 
+e
+ 
+em
+ 
+e
+ 
+qual
+ 
+mês
+ 
+que
+ 
+foi
+ 
+qual
+ 
+Thais  Jayne  Biscaia:  Competência  separado,  
+Gabriel  Lucas  Vital  Evangelista:  competência  
+Thais  Jayne  Biscaia:  sim.  
+Thais  Jayne  Biscaia:  Do  separado,  
+Ricardo  Pedroso  da  Silva:  Então,  é  isso  que  eu  tô  falando.  
+Thais  Jayne  Biscaia:  sim.  
+Ricardo  Pedroso  da  Silva:  A  gente  não  tem  hoje  no  banco  essa  essa  informação  da  da  
+Gabriel  Lucas  Vital  Evangelista:  e  
+Ricardo  Pedroso  da  Silva:  competência  da  marca  
+Gabriel  Lucas  Vital  Evangelista:  não,  
+Thais  Jayne  Biscaia:  Ah,  tá.  
+Ricardo  Pedroso  da  Silva:  representação.  
+Gabriel  Lucas  Vital  Evangelista:  mas  mas  as  meninas  vão  tem  que  aprovar  o  mês  e  sinalizar  que  é  o  
+mês
+ 
+especíﬁco.
+ 
+Thais  Jayne  Biscaia:  Não  tem  essa  separação.  
+Ricardo  Pedroso  da  Silva:  Não,  você  tem  essa  separação,  
+Thais  Jayne  Biscaia:  Não  marcas  
+Ricardo  Pedroso  da  Silva:  tem  lá  com  a  Isso  é  que  é  o  campo  que  a  gente  
+Thais  Jayne  Biscaia:  apresentações.  
+Ricardo  Pedroso  da  Silva:  colocou  lá  para  paliativo,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Ô  tá,  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  você  consegue  compartilhar  a  tela  para  mim  só  para  gente  conseguir  
+visualizar
+ 
+isso?
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Porque  se  se  a  gente  baixasse  eh  a  gente  não  consegue  extrair  essa  
+informação
+ 
+Ricardo  Pedroso  da  Silva:  Mas  
+Thais  Jayne  Biscaia:  Pegar  uma  que  terminou  já.  
+Gabriel  Lucas  Vital  Evangelista:  de  dentro  do  banco,  
+Thais  Jayne  Biscaia:  Deixa,  deixa  eu  compartilhar  para  eu  ver  se  eu,  se  eu  explico  de  uma  forma  um  
+pouco
+ 
+diferente.
+ 
+Gabriel  Lucas  Vital  Evangelista:  tá?  
+Thais  Jayne  Biscaia:  Pera  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Desculpa  aí  que  eu  não  tô  conseguindo  
+Thais  Jayne  Biscaia:  Eh,  não,  
+Gabriel  Lucas  Vital  Evangelista:  visualizar  
+Ricardo  Pedroso  da  Silva:  é  que  você  tá  tá  olhando  aquela  aquela  da  planilha  que  a  gente  tava  
+olhando
+ 
+ali,
+ 
+Thais  Jayne  Biscaia:  aqui,  ó.  
+Ricardo  Pedroso  da  Silva:  sabe?  
+Ricardo  Pedroso  da  Silva:  A  planilha  que  a  gente  tava  olhando  há  pouco,  Gabriel,  que  tem.  
+Gabriel  Lucas  Vital  Evangelista:  a  do  a  de  terceiros.  
+Ricardo  Pedroso  da  Silva:  Tá,  vamos,  tá,  calma  aí,  tá?  
+Ricardo  Pedroso  da  Silva:  Continua  aí,  senão  a  gente  vai  se  atrapalhar.  
+Gabriel  Lucas  Vital  Evangelista:  Ah.  
+Thais  Jayne  Biscaia:  Então  aqui,  ó,  por  exemplo,  lá  da  CTF  web  desse  aqui,  a  de  abril  tá  aqui,  né?  
+Thais  Jayne  Biscaia:  Então  a  gente  tem  tem,  por  exemplo,  
+Gabriel  Lucas  Vital  Evangelista:  Ah.  
+Thais  Jayne  Biscaia:  o  histórico  aqui  de  algumas  CTF  webs  deles.  
+Thais  Jayne  Biscaia:  Que  que  acontece?  
+Thais  Jayne  Biscaia:  Isso  daqui,  esse  de  abril  a  gente  consegue  jogar  DCTF  web  em  abril,  não  
+consegue?
+ 
+Thais  Jayne  Biscaia:  em  algum  lugar,  Ricardo.  
+Ricardo  Pedroso  da  Silva:  É  esse  o  problema  que  eu  tenho.  
+Thais  Jayne  Biscaia:  Esse  vínculo,  
+Ricardo  Pedroso  da  Silva:  Eu  não  tenho  é  esse  vínculo,  
+Thais  Jayne  Biscaia:  por  exemp.  
+Thais  Jayne  Biscaia:  Ah,  você  não  tem  esse  vínculo.  
+Ricardo  Pedroso  da  Silva:  esse  vínculo  com  esse  documento,  
+Thais  Jayne  Biscaia:  Ah,  tá,  
+Ricardo  Pedroso  da  Silva:  entendeu?  
+Thais  Jayne  Biscaia:  entendi.  
+Thais  Jayne  Biscaia:  Nem  fornecedor  e  nem  terceiro  hoje.  
+Ricardo  Pedroso  da  Silva:  Não,  que  é  o  desenvolvimento  que  a  gente  tá  fazendo  
+Thais  Jayne  Biscaia:  Ah,  tá  beleza.  
+Ricardo  Pedroso  da  Silva:  agora,  
+Thais  Jayne  Biscaia:  É  isso.  
+Thais  Jayne  Biscaia:  Vai  precisar.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  tá.  
+Thais  Jayne  Biscaia:  Isso  aí  é  necessário.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  mas  isso  já  tá  paraas  próximas  sprints.  
+Ricardo  Pedroso  da  Silva:  já  tá  sendo  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  não.  
+Thais  Jayne  Biscaia:  Acho  que  já  tá.  
+Gabriel  Lucas  Vital  Evangelista:  Maravilha.  
+Thais  Jayne  Biscaia:  foi  na  última  sprint,  
+Gabriel  Lucas  Vital  Evangelista:  Então,  
+Ricardo  Pedroso  da  Silva:  desenvolvido.  
+Gabriel  Lucas  Vital  Evangelista:  eh,  não,  na  próxima,  na  na  reunião  a  gente  só  fala  para  ela,  ó,  
+Thais  Jayne  Biscaia:  então  
+Gabriel  Lucas  Vital  Evangelista:  e  a  próxima  evolução  desse  desse  relatório  para  você  é  a  gente  ter  
+essa
+ 
+informação.
+ 
+Ricardo  Pedroso  da  Silva:  É,  o  que  a  gente  consegue  gerar  ali  no  gráﬁco,  no,  digamos,  do  indicador  
+para
+ 
+ela
+ 
+é
+ 
+competências
+ 
+com
+ 
+pendência.
+ 
+Thais  Jayne  Biscaia:  tendências.  
+Ricardo  Pedroso  da  Silva:  É,  
+Thais  Jayne  Biscaia:  O  resto  a  gente  consegue  na  nos  próximos  eh  na  próxima.  
+Ricardo  Pedroso  da  Silva:  é  que  é  incompetência  compendência,  que  é  aquele  indicadorzinho  que  ela  
+tem,
+ 
+Thais  Jayne  Biscaia:  Eu  
+Ricardo  Pedroso  da  Silva:  que  ela  tinha  lá  na  outra  plataforma  que  tinha  lá  a  divisão,  competências  
+com
+ 
+pendência,
+ 
+competências,
+ 
+tudo
+ 
+certinho,
+ 
+OK?
+ 
+Ricardo  Pedroso  da  Silva:  Que  eu  acho  que  hoje  eu  não  tem  ninguém  que  tá  certinho,  né,  T?  
+Thais  Jayne  Biscaia:  não,  não  tem  ninguém  não.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  Não.  
+Gabriel  Lucas  Vital  Evangelista:  aí  a  gente  até  
+Thais  Jayne  Biscaia:  Eu  acho  que  agora  nesse  dia  25,  
+Ricardo  Pedroso  da  Silva:  Tem  
+Thais  Jayne  Biscaia:  assim  que  a  gente  ﬁnalizar  as  análises,  
+Gabriel  Lucas  Vital  Evangelista:  Não.  
+Thais  Jayne  Biscaia:  quem  sabe  tem  alguma  coisa  um  pouco  melhor.  
+Thais  Jayne  Biscaia:  Mas  eu  acho  que  vai  começar  a  melhorar  a  partir  do  daqui  um  mês,  daqui  30  
+dias,
+ 
+eu
+ 
+acho,
+ 
+porque
+ 
+a
+ 
+gente
+ 
+já
+ 
+fez
+ 
+de
+ 
+tudo
+ 
+pro
+ 
+fornecedor,
+ 
+vai
+ 
+depender
+ 
+só
+ 
+do
+ 
+fornecedor.
+ 
+Ricardo  Pedroso  da  Silva:  quer  coisa  
+Gabriel  Lucas  Vital  Evangelista:  Então  na  na  abordagem  com  ela,  a  gente  pode  virar  e  falar  assim:  
+"Olha,
+ 
+eh,
+ 
+pô,
+ 
+a
+ 
+gente
+ 
+tá
+ 
+aqui
+ 
+com
+ 
+detalhamento,
+ 
+com
+ 
+pendências,
+ 
+porque
+ 
+o
+ 
+nosso
+ 
+objetivo,
+ 
+Thais  Jayne  Biscaia:  F.  
+Gabriel  Lucas  Vital  Evangelista:  até  pelo  que  vocês  já  trouxeram  pra  gente,  é  a  gente  sanear  a  sua  
+base
+ 
+o
+ 
+mais
+ 
+rápido
+ 
+possível.
+ 
+Gabriel  Lucas  Vital  Evangelista:  a  gente  evoluindo  isso,  na  próxima  a  gente  já  vai  ter  já  o  
+detalhamento
+ 
+das
+ 
+conformidades
+ 
+ou
+ 
+da
+ 
+das
+ 
+aprovações
+ 
+e
+ 
+tudo
+ 
+mais,
+ 
+nem
+ 
+colocar
+ 
+assim
+ 
+aqui
+ 
+falta
+ 
+que
+ 
+estamos
+ 
+desenvolvendo
+ 
+que
+ 
+não
+ 
+temos
+ 
+o
+ 
+momento.
+ 
+Thais  Jayne  Biscaia:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  É  só  que  não  é  o  
+Thais  Jayne  Biscaia:  não.  
+Thais  Jayne  Biscaia:  Se  elas  perguntarem  alguma  coisa,  
+Gabriel  Lucas  Vital  Evangelista:  foco.  
+Thais  Jayne  Biscaia:  a  gente  pode  até  eh  colocar  que  eh,  por  exemplo,  a  gente  pode  colocar  que  a  
+gente
+ 
+já
+ 
+está
+ 
+desenvolvendo
+ 
+e
+ 
+botar
+ 
+que
+ 
+é
+ 
+por
+ 
+causa
+ 
+delas,
+ 
+tipo,
+ 
+entendeu?
+ 
+Thais  Jayne  Biscaia:  Que  não  não  é  só  por  causa  delas,  né,  Ricardo?  
+Thais  Jayne  Biscaia:  Mas  a  gente  pode  esse  é  do  Voltam  lá,  deixa  eu  ver  o  ﬁnal  desse  relatório  que  
+você
+ 
+expandiu
+ 
+agora.
+ 
+Thais  Jayne  Biscaia:  O  que  que  é  esses  aqui  de  baixo  que  não  tem  nada?  
+Gabriel  Lucas  Vital  Evangelista:  Esses  é  o  que  não  tem  terceiros  ativos.  
+Thais  Jayne  Biscaia:  Ah,  tá,  entendi.  
+Thais  Jayne  Biscaia:  Beleza.  
+Thais  Jayne  Biscaia:  Só  terceiro,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Exato.  
+Gabriel  Lucas  Vital  Evangelista:  Esse,  esse  daqui,  ó,  
+Thais  Jayne  Biscaia:  Tá.  
+Gabriel  Lucas  Vital  Evangelista:  é  terceiros  cadastrados  por  fornecedor,  
+Thais  Jayne  Biscaia:  Para  ﬁnanciador.  
+Gabriel  Lucas  Vital  Evangelista:  que  é  aquele  relatório  geral  que  eu  te  falei.  
+Thais  Jayne  Biscaia:  Entendi.  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  E  aqui  a  conformidade  documental  por  fornecedor.  
+Thais  Jayne  Biscaia:  que  da  esse  aqui  seria  no  pizza,  né,  
+Gabriel  Lucas  Vital  Evangelista:  Exatamente.  
+Thais  Jayne  Biscaia:  ou  não?  
+Thais  Jayne  Biscaia:  Ah,  tá  beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Que  a  gente  que  a  gente  pode  trazer  eh  tipo  um  ﬁltro  aqui  dos  
+fornecedores
+ 
+e
+ 
+a
+ 
+partir
+ 
+do
+ 
+momento
+ 
+que
+ 
+ela
+ 
+que
+ 
+ela
+ 
+clicar
+ 
+no
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  fornecedor,  ela  tem  a  análise  de  pizza.  
+Thais  Jayne  Biscaia:  Perfeito.  
+Thais  Jayne  Biscaia:  E  a  gente  consegue  puxar  um  um  uma  pizza,  por  exemplo,  assim,  do  que  tá  a  
+porcentagem
+ 
+de
+ 
+documento
+ 
+aprovado
+ 
+total
+ 
+hoje
+ 
+dentro
+ 
+do
+ 
+dash
+ 
+para
+ 
+ela?
+ 
+00:50:00  
+Thais  Jayne  Biscaia:  Tipo  assim,  ó,  a  gente  tem  lá  1000  documentos,  desses  1000  900,  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  não  é  esse  esses  dois  indicadores  de  geral  ali  
+Thais  Jayne  Biscaia:  tá?  
+Thais  Jayne  Biscaia:  É  geral  geral.  
+Ricardo  Pedroso  da  Silva:  só  é  só  seria  um  gráﬁco.  
+Thais  Jayne  Biscaia:  Ah,  isso.  
+Ricardo  Pedroso  da  Silva:  É  isso  aí,  
+Thais  Jayne  Biscaia:  Eh,  é,  
+Ricardo  Pedroso  da  Silva:  tipo  em  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Thais  Jayne  Biscaia:  eu  acho  que  se  a  gente  conseguisse  trazer  esses  dados  aqui  de  90.5,  
+Ricardo  Pedroso  da  Silva:  vez  
+Thais  Jayne  Biscaia:  9,5  no  em  gráﬁco,  tipo,  de  bitza,  quem  sabe  ela  gosta,  porque  eu  já  vi  que  ela  
+gosta
+ 
+de
+ 
+coisa
+ 
+bem
+ 
+visual.
+ 
+Ricardo  Pedroso  da  Silva:  é  tipo  traz  de  um  lado  ali  o  gráﬁcozinho  de  pizza,  que  é  o  percentual  de  
+conformidade.
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Ela  quer  saber  quão  conforme  tá  a  Zuric.  
+Ricardo  Pedroso  da  Silva:  Beleza.  
+Ricardo  Pedroso  da  Silva:  Tá  90%  conforme,  
+Thais  Jayne  Biscaia:  Isso.  
+Ricardo  Pedroso  da  Silva:  tá  o  caos.  
+Thais  Jayne  Biscaia:  9,5  conforme  e  90  não  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  conforme.  
+Gabriel  Lucas  Vital  Evangelista:  é  porque  eu  trouxe  os  números  porque  eu  achei  que  ia  ﬁcar  mais  
+visual,
+ 
+Ricardo  Pedroso  da  Silva:  Ja.  
+Gabriel  Lucas  Vital  Evangelista:  mas  Vocês  acham  que  gráﬁco  vai  ser  mais  
+Thais  Jayne  Biscaia:  Não,  mas  não  é  que  ela,  tipo  assim,  
+Gabriel  Lucas  Vital  Evangelista:  visual?  
+Thais  Jayne  Biscaia:  ela  pegou  um  ranço  nas  nos  três  pontinhos  do  do,  como  é  que  fala?  
+Ricardo  Pedroso  da  Silva:  Угу m.  
+Thais  Jayne  Biscaia:  do  relatório  que  eu  acho  que  ela  vai  querer  as  coisas  bem  visuais  mesmo,  
+entendeu,
+ 
+né,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  É  porque,  
+Thais  Jayne  Biscaia:  Ricardo?  
+Gabriel  Lucas  Vital  Evangelista:  por  exemplo,  aqui,  né,  traz  assim,  ó,  total  de  pendências,  pendente  
+que
+ 
+não
+ 
+foi
+ 
+enviado,
+ 
+logo
+ 
+tá
+ 
+na
+ 
+mão
+ 
+do
+ 
+fornecedor,
+ 
+o
+ 
+que
+ 
+tá
+ 
+para
+ 
+análise,
+ 
+né,
+ 
+e
+ 
+o
+ 
+que
+ 
+foi
+ 
+reprovado.
+ 
+Gabriel  Lucas  Vital  Evangelista:  eh  documentos  pendentes  não  enviados,  documentos  conformes,  
+pendências
+ 
+de
+ 
+terceiros,
+ 
+eh
+ 
+pendências
+ 
+documentais
+ 
+e
+ 
+terceiros
+ 
+ativos.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Então,  a  gente  vai  pegar  esses  dois  dados  aqui,  a  gente  pode  manter  
+tudo.
+ 
+Gabriel  Lucas  Vital  Evangelista:  A  gente  só  vai  pegar  esse  conformidade,  não  conformidade  geral  e  
+conformidade
+ 
+eh
+ 
+geral
+ 
+e
+ 
+transformar
+ 
+em
+ 
+um
+ 
+gráﬁco
+ 
+de
+ 
+pizza.
+ 
+Gabriel  Lucas  Vital  Evangelista:  É  isso  que  vocês  querem.  
+Ricardo  Pedroso  da  Silva:  Eu  vejo  que  sim,  que  é  semelhante  ao  que  ela  tinha  lá  no  na  outra  
+plataforma
+ 
+que
+ 
+ela
+ 
+usava,
+ 
+Thais  Jayne  Biscaia:  Isso.  
+Thais  Jayne  Biscaia:  Nerhof.  
+Ricardo  Pedroso  da  Silva:  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Belia.  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  mantém  os  indicador,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Tá.  
+Ricardo  Pedroso  da  Silva:  Mantém  os  indicador  só  esse  aí  em  especíﬁco.  
+Ricardo  Pedroso  da  Silva:  Traça  para  um  lado  o  gráﬁco  o  gráﬁco  indicador  do  outro  lado  ou  na  outra  
+linha.
+ 
+Ricardo  Pedroso  da  Silva:  Não  sei  o  que  que  é  pendências  documentais  ali.  
+Gabriel  Lucas  Vital  Evangelista:  M.  
+Ricardo  Pedroso  da  Silva:  Acho  que  tem  que  especiﬁcar  que  as  dependências  de  de  fornecedor,  é,  
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Tem  pendência  de  terceiros  e  pendências  documentais.  
+Gabriel  Lucas  Vital  Evangelista:  Doc,  eh,  tendências  documentais  é  o  de  terceiros.  
+Gabriel  Lucas  Vital  Evangelista:  E  esse  daqui,  ó,  não,  esse  é  o  de  fornecedor.  
+Ricardo  Pedroso  da  Silva:  de  fornecedor,  né?  
+Gabriel  Lucas  Vital  Evangelista:  E  esse  aqui  é  o  de  terceiro,  
+Ricardo  Pedroso  da  Silva:  É,  acho  que  só  coloca  lá  para  colocar  a  pendência  de  
+Gabriel  Lucas  Vital  Evangelista:  certo?  
+Ricardo  Pedroso  da  Silva:  fornecedor,  alguma  coisa  assim,  só  para  diferenciar,  senão  aparece  alguma  
+Gabriel  Lucas  Vital  Evangelista:  Beleza,  
+Ricardo  Pedroso  da  Silva:  coisa.  
+Gabriel  Lucas  Vital  Evangelista:  já  tô  anotando  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  vamos  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Isso  daqui  a  gente  vai  fazer  a  também  essa  bugata  aqui  que  a  gente  
+falou.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  essa  análise  interativa  a  gente  viu  e  tá  OK,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Porque  traz  a  a  lista  dos  Vocês  acham  que  faz  sentido,  faz  sentido  
+ter
+ 
+alguma
+ 
+coisa
+ 
+para
+ 
+ela
+ 
+poder,
+ 
+tipo,
+ 
+pegar
+ 
+e
+ 
+baixar
+ 
+aqui
+ 
+não
+ 
+eh
+ 
+pegar
+ 
+e
+ 
+baixar,
+ 
+tipo,
+ 
+ah,
+ 
+cliquei
+ 
+aqui,
+ 
+Gabriel  Lucas  Vital  Evangelista:  quero  baixar  essa  lista  da  da  da  Brooks.  
+Thais  Jayne  Biscaia:  Tem  faz  sentido  para  
+Ricardo  Pedroso  da  Silva:  É,  na  verdade  ela  vai  querer  baixar  tudo,  
+Thais  Jayne  Biscaia:  ela  tudo.  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  Ah,  ela  
+Thais  Jayne  Biscaia:  É.  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Não  vai  querer  baixar  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  tudo.  
+Gabriel  Lucas  Vital  Evangelista:  é  porque  essa  informação  que  tá  aparecendo  aqui,  
+Ricardo  Pedroso  da  Silva:  não  
+Gabriel  Lucas  Vital  Evangelista:  ela  baixa  aqui,  
+Thais  Jayne  Biscaia:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  tá  vendo  que  ela  vai  só  escolher  o  fornecedor  e  
+Thais  Jayne  Biscaia:  E  ah,  
+Gabriel  Lucas  Vital  Evangelista:  baixar?  
+Thais  Jayne  Biscaia:  olha,  eu  acho  que  
+Gabriel  Lucas  Vital  Evangelista:  Então,  então  é,  
+Thais  Jayne  Biscaia:  sim.  
+Gabriel  Lucas  Vital  Evangelista:  então,  a  mesma  coisa  que  ela  faria  aqui,  ela  ela  faria  aqui  também.  
+Ricardo  Pedroso  da  Silva:  acho  que  ela  vai  querer  exportar,  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  por  exemplo,  lá  quando  você  ﬁltra  lá  no  início,  você  tem  um  geralzão  do  
+fornecedor,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Então  tem  indicadores  especíﬁcos  do  fornecedor  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Sim,  ele  ele  só  atualiza  
+Ricardo  Pedroso  da  Silva:  Beleza,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  atualiza  os  cards  pro  fornecedor.  
+Ricardo  Pedroso  da  Silva:  Mas  acho  que  não  tá  pegando  tudo  do  fornecedor  ainda.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  Por  exemplo,  docs  reprovados  ali,  Docs  pendentes.  
+Ricardo  Pedroso  da  Silva:  Acho  que  aí  ele  não  tá  ﬁltrando.  
+Gabriel  Lucas  Vital  Evangelista:  não  tá  trazendo  de  fornecedor.  
+00:55:00  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  ver  se  fechou  um  erro  pontual.  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  É,  ele  só  muda  os  
+Gabriel  Lucas  Vital  Evangelista:  É,  ele  chamou  desses  aqui.  
+Ricardo  Pedroso  da  Silva:  primeiros.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  é,  não,  deixa  eu.  
+Gabriel  Lucas  Vital  Evangelista:  Isso  aqui  antes  estava  atualizando,  então  deve  ter  dado  alguma  
+algum
+ 
+rolê
+ 
+no
+ 
+código
+ 
+aqui.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  apertar  para  ver  eh  que  todos  esses  cardes  têm  
+Thais  Jayne  Biscaia:  Так.  
+Gabriel  Lucas  Vital  Evangelista:  que  atualizar  conforme  eh  o  ﬁltro  que  a  gente  escolher  aqui  de  
+fornecedor,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Aí  aqui  em  cima  tem  as  competências  também  que  a  gente  
+consegue
+ 
+lá
+ 
+Ricardo  Pedroso  da  Silva:  Eu  
+Gabriel  Lucas  Vital  Evangelista:  ver.  
+Ricardo  Pedroso  da  Silva:  acho  que  talvez  a  gente  até  tiraria  a  competência  ali  por  como  não  vai  
+funcionar,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Sim,  sim,  
+Ricardo  Pedroso  da  Silva:  eh,  
+Gabriel  Lucas  Vital  Evangelista:  sim.  
+Ricardo  Pedroso  da  Silva:  como  não  vai  funcionar  a  regularidade,  tipo,  a  parte  de  regularidade,  só  
+para
+ 
+não
+ 
+abrir
+ 
+a
+ 
+brecha
+ 
+ali,
+ 
+ela
+ 
+vai
+ 
+ﬁltrar
+ 
+alguma
+ 
+coisa
+ 
+e
+ 
+não
+ 
+ou
+ 
+o
+ 
+que
+ 
+que
+ 
+você
+ 
+ou
+ 
+deixa
+ 
+Gabriel  Lucas  Vital  Evangelista:  Hum.  É  porque  é  é  porque  a  competência  já  tem  já  o  seu  a  
+Ricardo  Pedroso  da  Silva:  É,  a  gente  só  tem  a  competência  no  no  na  pendências,  
+Gabriel  Lucas  Vital  Evangelista:  sua  o  seu  exatamente.  
+Ricardo  Pedroso  da  Silva:  né?  
+Ricardo  Pedroso  da  Silva:  Mas  se,  tipo,  ah,  não,  eu  quero  quer  ﬁltrar  a  situação.  
+Ricardo  Pedroso  da  Silva:  Mas  o  quão  tá  o  quão  tá  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Porque  em  tese,  por  exemplo,  
+Ricardo  Pedroso  da  Silva:  inconforme.  
+Gabriel  Lucas  Vital  Evangelista:  assim,  né,  a  gente  conseguindo  esse  vínculo  que  já  tá  em  
+desenvolvimento,
+ 
+em
+ 
+tese,
+ 
+ela
+ 
+poderia
+ 
+fazer
+ 
+essa
+ 
+essa
+ 
+busca
+ 
+em
+ 
+todos
+ 
+os
+ 
+relatórios,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  É,  ah,  eu  quero  saber  como  é  que  tá  o  fornecedor  Brooks  na  
+competência
+ 
+de
+ 
+março
+ 
+para
+ 
+ver
+ 
+se
+ 
+pelo
+ 
+menos
+ 
+os
+ 
+documentos
+ 
+antigos
+ 
+estão
+ 
+subindo,
+ 
+né?
+ 
+Ricardo  Pedroso  da  Silva:  Mhm.  
+Gabriel  Lucas  Vital  Evangelista:  Teria  que  ter  esse  ﬁltro  em  tudo,  
+Ricardo  Pedroso  da  Silva:  Mas  a  aí  ela  vai  querer  nesse  indicador  geral  aí,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  tipo  o  indicador  geral  aí  que  é  o  que  tá  inconforme,  né?  
+Ricardo  Pedroso  da  Silva:  Aí  ele  tem  que  reﬂetir  nesse  indicador  geral  aí  que  ela  que  ela  vai  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Não.  Perfeito.  
+Ricardo  Pedroso  da  Silva:  querer.  
+Gabriel  Lucas  Vital  Evangelista:  Então  vou  tirar  esse  ﬁltro  daqui  de  cima  porque  a  gente  não  
+consegue
+ 
+atender
+ 
+agora.
+ 
+Ricardo  Pedroso  da  Silva:  Tá  aí,  vocês  estão  colocando  ali  nas  análises  a  qual  competência  que  tá  na  
+descrição
+ 
+lá
+ 
+da
+ 
+pendência?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh  
+Thais  Jayne  Biscaia:  no  na  pendência.  
+Ricardo  Pedroso  da  Silva:  É,  
+Thais  Jayne  Biscaia:  Deixa  eu  ver  se  as  meninas  colocam.  
+Ricardo  Pedroso  da  Silva:  lembro  que  a  gente  tinha  alinhado  para  a  gente  vai  desenvolver  aqui,  
+Thais  Jayne  Biscaia:  Sim.  
+Ricardo  Pedroso  da  Silva:  mas  provisoriamente  a  gente  ia  colocar  ali  o  quando  dessa  a  pendência,  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Deixa  eu  dar  uma  olhada  se  elas  estão  colocando.  
+Ricardo  Pedroso  da  Silva:  né?  
+Thais  Jayne  Biscaia:  Mas  eu  lembro  que  eu  passei  para  elas.  
+Thais  Jayne  Biscaia:  Deixa  eu  puxar  aqui  nas  pendências  que  já  
+Thais  Jayne  Biscaia:  estão.  
+Ricardo  Pedroso  da  Silva:  M.  
+Thais  Jayne  Biscaia:  Deixa  eu  puxar  aqui  pelo  ﬁcha  de  P  aí.  
+Thais  Jayne  Biscaia:  capacitação.  
+Thais  Jayne  Biscaia:  Alguns  estão  indo,  outros  não.  
+Thais  Jayne  Biscaia:  Mas  eu  vou  falar  para  elas  colocarem  na  frente,  tá?  
+Thais  Jayne  Biscaia:  Mas  aí  a  gente  já  ajusta.  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Que  a  gente  também  tá  ajustando  as  competências  já  do  que  tá  sem.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  tendências  documentais.  
+Gabriel  Lucas  Vital  Evangelista:  trocar  para  eh  pendências  de  fornecedor,  
+Thais  Jayne  Biscaia:  P  
+Ricardo  Pedroso  da  Silva:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  Iso.  
+Gabriel  Lucas  Vital  Evangelista:  Dá  para  dando  umas  eh  uns  picos  de  luz  aqui  no  meu  em  casa.  
+Gabriel  Lucas  Vital  Evangelista:  Vocês  
+Ricardo  Pedroso  da  Silva:  Você  
+Gabriel  Lucas  Vital  Evangelista:  viram  como  é  que  ﬁcou  a  regrinha?  
+Gabriel  Lucas  Vital  Evangelista:  Eu  mandei  para  vocês  no  chat  lá.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  eu  acho  que  eu  mandei  para  cada  um  no  chat,  pessoal.  
+Ricardo  Pedroso  da  Silva:  mandou  agora?  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  tem  tem  uns  minutos,  eu  acho.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  ver.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  não,  não  mandei  não.  
+01:00:00  
+Ricardo  Pedroso  da  Silva:  Чи  
+Thais  Jayne  Biscaia:  Aonde  que  tá,  
+Gabriel  Lucas  Vital  Evangelista:  Só  ﬁcou  no  ﬁcou  no  Não,  
+Thais  Jayne  Biscaia:  gente?  
+Gabriel  Lucas  Vital  Evangelista:  não  mandei.  
+Gabriel  Lucas  Vital  Evangelista:  Ficou  no  contrl  C  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  Tá.  
+Thais  Jayne  Biscaia:  Birulei.  
+Gabriel  Lucas  Vital  Evangelista:  não,  
+Thais  Jayne  Biscaia:  Birulei.  
+Gabriel  Lucas  Vital  Evangelista:  total.  
+Gabriel  Lucas  Vital  Evangelista:  Gente,  eu  sonhei  com  com  relatório,  você  não  tá  entendendo?  
+Ricardo  Pedroso  da  Silva:  Ai,  se  você  só  pesadelo,  
+Thais  Jayne  Biscaia:  Ah,  
+Ricardo  Pedroso  da  Silva:  não  sonho.  
+Thais  Jayne  Biscaia:  Gabriel,  pelo  amor  de  Deus,  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  não,  
+Thais  Jayne  Biscaia:  eu  não  posso  reclamar.  
+Ricardo  Pedroso  da  Silva:  Eu  
+Thais  Jayne  Biscaia:  Ei,  se  eu  for  falar  assim,  
+Gabriel  Lucas  Vital  Evangelista:  sério,  
+Thais  Jayne  Biscaia:  ah,  eu  tô  sonhando  com  o  avião,  eu  não  posso  reclamar.  
+Thais  Jayne  Biscaia:  Moro  na  rota  do  avião.  
+Thais  Jayne  Biscaia:  Aí  é  normal  com  
+Gabriel  Lucas  Vital  Evangelista:  não,  eu  eu  não  sem  zoeira  assim,  
+Thais  Jayne  Biscaia:  avião.  
+Gabriel  Lucas  Vital  Evangelista:  eu  tava  eu  fui  deitar  ontem  à  noite  e  tava  assim,  velho,  eu  acho  que  a  
+gente
+ 
+pode
+ 
+colocar
+ 
+tal
+ 
+ﬁltro.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Falei:  "Não,  misericórdia.  
+Ricardo  Pedroso  da  Silva:  não  vou  jogar.  
+Ricardo  Pedroso  da  Silva:  Porque  eu  também  sou  
+Thais  Jayne  Biscaia:  Eu  eu  esque  eu  eu  brinco  que  não,  
+Ricardo  Pedroso  da  Silva:  assim.  
+Thais  Jayne  Biscaia:  mas  eu  tava  E  daí  sabe  o  que  eu  faço?  
+Thais  Jayne  Biscaia:  O  meu  home  é  do  lado  aqui  da  minha  cama  onde  eu  durmo.  
+Gabriel  Lucas  Vital  Evangelista:  No  
+Thais  Jayne  Biscaia:  Aí  eu  baixo  o  computador,  desligo  o  monitor  e  empurro  o  notebook  para  cá,  né?  
+Thais  Jayne  Biscaia:  Aí,  sabe  o  que  que  eu  faço?  
+Thais  Jayne  Biscaia:  Eu  deixo  o  meu  caderninho  com  uma  caneta  embaixo  do  meu  celular.  
+Thais  Jayne  Biscaia:  Aí  quando  eu  lembro  de  alguma  coisa  na  madrugada,  eu  levanto,  anoto  com  a  
+luz
+ 
+do
+ 
+celular
+ 
+e
+ 
+deixo
+ 
+do
+ 
+lado.
+ 
+Ricardo  Pedroso  da  Silva:  Ah,  não,  eu  não  faço  isso  não.  
+Ricardo  Pedroso  da  Silva:  Eu  ﬁquei,  
+Thais  Jayne  Biscaia:  Senão  eu  esque  Não,  
+Ricardo  Pedroso  da  Silva:  eu  sei  que  aquilo  lá  vai  ﬁcar  matutando  na  minha  cabeça  até  eu  
+Thais  Jayne  Biscaia:  eu  anoto  porque  senão  eu  esqueço.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  acordar.  
+Thais  Jayne  Biscaia:  Exatamente,  porque  se  eu  não  anotar  eu  vou  eu  não  vou  sair  do  looping,  
+Gabriel  Lucas  Vital  Evangelista:  não.  
+Thais  Jayne  Biscaia:  entendeu?  
+Thais  Jayne  Biscaia:  Daí  se  eu  anotar  eu  saio  do  looping  e  eu  falo:  "Não,  agora  eu  vou  lembrar  
+amanhã."
+ 
+Bem,
+ 
+Thais  Jayne  Biscaia:  é,  senão  eu  não  durmo  daí.  
+Thais  Jayne  Biscaia:  E  aí  realmente  eu  tenho  pesado  dele  no  
+Gabriel  Lucas  Vital  Evangelista:  Não,  se  se  tá  me  importunando  muito  tempo,  aí  eu  eu  me  mando  um  
+áudio
+ 
+no
+ 
+meu
+ 
+na
+ 
+minha
+ 
+conversa
+ 
+que
+ 
+eu
+ 
+tenho
+ 
+comigo
+ 
+mesmo,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  no  WhatsApp,  mas  eu  luto  para  não  fazer  isso.  
+Gabriel  Lucas  Vital  Evangelista:  Doc  fornecedor.  
+Thais  Jayne  Biscaia:  Conseguiram  enviar,  tá,  Ricardo.  
+Thais  Jayne  Biscaia:  Aquela  do  que  deu  aquele  problema  ali  da  coisa.  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Sim,  eu  já  coloquei  lá  como  obrigatório.  
+Thais  Jayne  Biscaia:  Fechou.  
+Thais  Jayne  Biscaia:  Eu  já  vou  até  receber  porque  eles  tá,  eles  tiveram  reunião  e  aí  eu  vou  receber  
+eles
+ 
+fora
+ 
+do
+ 
+dia
+ 
+25
+ 
+só
+ 
+por
+ 
+o
+ 
+resto
+ 
+vai
+ 
+ﬁcar
+ 
+tudo
+ 
+pro
+ 
+dia
+ 
+10.
+ 
+Agora
+ 
+esse
+ 
+povo
+ 
+aqui,
+ 
+depois
+ 
+eu
+ 
+vou
+ 
+pegar
+ 
+eles
+ 
+de
+ 
+volta.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Ó,  eu  mandei  agora  sim,  
+Thais  Jayne  Biscaia:  Ótimo.  
+Gabriel  Lucas  Vital  Evangelista:  eu  mandei.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  tinha  tava  na  tava  na  caixa  para  Thaí  e  eu  não  tinha  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  apertado  o  enviar  nada.  
+Gabriel  Lucas  Vital  Evangelista:  Hum.  
+Thais  Jayne  Biscaia:  Gente,  eu  vou  mutar  aqui,  vou  sair  um  pouquinho  e  vou  já  volto,  tá?  
+Thais  Jayne  Biscaia:  Dois.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Acho  que  o  o  vencido  não  tá  não.  
+Gabriel  Lucas  Vital  Evangelista:  O  vencido  tá  assim,  tá  no  outro  critério  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  eu  aí  eu  atualizo,  eu  vou  atualizar  aquela  pasta  lá,  olhada  com  
+vocês,
+ 
+com
+ 
+e
+ 
+com
+ 
+o
+ 
+João,
+ 
+Ricardo  Pedroso  da  Silva:  João.  
+Gabriel  Lucas  Vital  Evangelista:  que  aí  eu  atualizo  tanto  a  o  prompt,  como  é  que  tá  atualmente,  o  lá  o  
+Python
+ 
+lá
+ 
+e
+ 
+também
+ 
+o
+ 
+HTML.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  aí  eu  só  porque  eu  não  substituí,  porque  aquele  que  tem  mais  
+informações
+ 
+tem
+ 
+uns
+ 
+dois,
+ 
+tem
+ 
+uns
+ 
+dois
+ 
+campos
+ 
+lá
+ 
+vão
+ 
+ser
+ 
+muito
+ 
+úteis
+ 
+para
+ 
+país.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Aí  a  gente  vai  desenvolver  depois  se  se  trazer  e  resolver  esse  trem  da  
+da
+ 
+Zuri,
+ 
+que
+ 
+se
+ 
+Deus
+ 
+quiser.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  aí  a  gente  a  gente  consegue  trazer  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Bom,  mas  se  a  gente  conseguir  quando  terminar  esse  
+desenvolvimento
+ 
+aí
+ 
+do
+ 
+dos
+ 
+vínculos,
+ 
+das
+ 
+competências,
+ 
+vão
+ 
+ﬁcar
+ 
+muito
+ 
+legal.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  eu  tinha  pensado  num  trem  aqui,  eu  vou  até  aproveitar  para  
+compartilhar
+ 
+com
+ 
+você.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eu  guardei  no  banco  de  notas.  
+Gabriel  Lucas  Vital  Evangelista:  Calma  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  
+Gabriel  Lucas  Vital  Evangelista:  tava  pensando  no  HTML,  aí  eu  até  fui  pesquisando  e  e  trazendo  para  
+cá
+ 
+eh
+ 
+que
+ 
+elas
+ 
+para
+ 
+elas
+ 
+não
+ 
+precisar
+ 
+arem
+ 
+toda
+ 
+vez
+ 
+baixar
+ 
+o
+ 
+HTML
+ 
+eh
+ 
+atualizado,
+ 
+elas
+ 
+teriam
+ 
+que
+ 
+baixar
+ 
+o
+ 
+drive
+ 
+pro
+ 
+01:05:00  
+Gabriel  Lucas  Vital  Evangelista:  desktop.  
+Ricardo  Pedroso  da  Silva:  Tá,  mas  aí  essa  parte  aí  o  João  tá  vendo  uma  forma  de  elas  não  
+precisarem
+ 
+fazer
+ 
+esse
+ 
+processo
+ 
+aí.
+ 
+Ricardo  Pedroso  da  Silva:  Ontem  conversei  com  o  João,  ele  tá  vendo  uma  possível  
+Gabriel  Lucas  Vital  Evangelista:  A  a  solução  que  eu  pensei,  
+Ricardo  Pedroso  da  Silva:  solução.  
+Gabriel  Lucas  Vital  Evangelista:  que  eu  que  eu  pesquisei  aqui,  que  pode  ser  viável  é  um  end  point  
+estático
+ 
+no
+ 
+mesmo
+ 
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Mas  o  o  João  o  João  tá  tá  veriﬁcando  já  uma  forma  de  fazer  isso  aí,  
+Gabriel  Lucas  Vital  Evangelista:  servidor.  
+Ricardo  Pedroso  da  Silva:  hein,  Gabriel?  
+Gabriel  Lucas  Vital  Evangelista:  Beleza?  
+Ricardo  Pedroso  da  Silva:  Daí  ele  ele  vai  ele  ﬁcou  de  pensar  em  algumas  alternativas.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  Ele  já  tinha  uma  alternativa,  mas  ele  tava  testando  ontem.  
+Ricardo  Pedroso  da  Silva:  Mas  a  ideia  é  que  eles  consigam  acessar  esse  esse  
+Gabriel  Lucas  Vital  Evangelista:  entend,  
+Ricardo  Pedroso  da  Silva:  HTML  e  ele  faça  um  refresh  aí  automático  sem  precisar,  tipo,  baixar  o  
+HTML
+ 
+Gabriel  Lucas  Vital  Evangelista:  entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  mas  aí  no  caso  ele  ele  conseguiria.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  não,  né?  
+Ricardo  Pedroso  da  Silva:  Mas  provavelmente  não  vai  ser  pelo  drive  que  a  gente  vai  compartilhar  ali.  
+Ricardo  Pedroso  da  Silva:  Ele  comentou  que  vai  ver  algumas  outras  alternativas,  mas  provavelmente  
+não
+ 
+vai
+ 
+ser
+ 
+pelo
+ 
+pelo
+ 
+drive
+ 
+que
+ 
+vai
+ 
+ﬁcar
+ 
+esse
+ 
+HTML
+ 
+disponível.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  É  porque  essa  solução  do  Drive,  ela  seria  simples,  porque  eu  tenho  
+90%
+ 
+de
+ 
+certeza
+ 
+que
+ 
+eles
+ 
+usam
+ 
+o
+ 
+pacote
+ 
+Google
+ 
+também
+ 
+na
+ 
+Zuric,
+ 
+sabe?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Aí  era  só  eh  se  ela  baixasse  o  desktop  do  drive  para  dentro  da  
+máquina
+ 
+dela,
+ 
+o
+ 
+HTML,
+ 
+a
+ 
+nossa
+ 
+operação,
+ 
+a
+ 
+nossa
+ 
+negócio
+ 
+atualizava
+ 
+automaticamente.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Então  toda  vez  que  ela  clicasse  na  HTML,  eh,  já  vinha  para  ela  
+atualizado.
+ 
+Ricardo  Pedroso  da  Silva:  Sim,  já  havia  atualizado.  
+Ricardo  Pedroso  da  Silva:  É,  pode  ser  uma  alternativa  sim.  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  tem  o  end  point  também,  que  é  só,  né,  que  aí  seria  um  domínio  ﬁxo  
+para
+ 
+elas
+ 
+também,
+ 
+também
+ 
+resolveria
+ 
+esse
+ 
+problema.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Eh,  a  gente  tá  eh,  cara,  eu  tô  perto  de  chegar  aqui  nos  1  milhão  de  
+tokens
+ 
+utilizados
+ 
+Gabriel  Lucas  Vital  Evangelista:  hoje  só  de  modiﬁcação  nesses  trem.  
+Ricardo  Pedroso  da  Silva:  Você  tá  pagando?  
+Ricardo  Pedroso  da  Silva:  Você  tem  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  eu  pago,  eu  pago  uma  para  mim.  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Ricardo  Pedroso  da  Silva:  pago?  
+Gabriel  Lucas  Vital  Evangelista:  Ahã.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  vai  melhorar  a  visualização,  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Já  de  cara  eu  já  falo  que  não  ﬁcou,  não  achei  bonito  não.  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  só  traz,  se  trazer  fora  ali  do  do  gráﬁco,  acho  que  já  vai  atender.  
+Ricardo  Pedroso  da  Silva:  Ou  trazer  só  o  o  o  número,  tipo  alinhado  na  horizontal.  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  eh  sabe  uma  coisa  que  agora  eu  ﬁquei  me  pegou  um  pouco  aqui  
+que
+ 
+a
+ 
+isso
+ 
+aqui
+ 
+é
+ 
+a
+ 
+distribuição
+ 
+documental
+ 
+dos
+ 
+terceiros.
+ 
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  bem  especíﬁco,  
+Ricardo  Pedroso  da  Silva:  Mas  não  era  esse  aí  que  a  gente  tinha  comentado,  né?  
+Gabriel  Lucas  Vital  Evangelista:  é  porque  aquela  aquele  aqueles  percentuais  de  conformidade,  eles  
+est
+ 
+ele
+ 
+leva
+ 
+em
+ 
+consideração
+ 
+o
+ 
+critério
+ 
+terceiro.
+ 
+Gabriel  Lucas  Vital  Evangelista:  A  gente  pode  mudar  o  critério  ou  a  gente  pode  acrescentar  dois  
+critérios,
+ 
+né,
+ 
+pela
+ 
+visualizar
+ 
+tanto
+ 
+de
+ 
+terceiro
+ 
+como
+ 
+de
+ 
+fornecedor
+ 
+separadamente.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Você  lembra  aqueles  percentuais  que  ﬁcavam  aqui?  
+Ricardo  Pedroso  da  Silva:  Isso  tinha  conforme  e  não  conforme,  
+Gabriel  Lucas  Vital  Evangelista:  Exatamente.  
+Ricardo  Pedroso  da  Silva:  hein?  
+Gabriel  Lucas  Vital  Evangelista:  Mas  o  o  o  critério  que  tava  aqui  no  no  prompt  era  com  base  no  na  
+documentação
+ 
+de
+ 
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  só  dá  para  incorporar  a  documentação  de  fornecedor,  
+Gabriel  Lucas  Vital  Evangelista:  terceiro  
+Ricardo  Pedroso  da  Silva:  mas  os  o  indicador  ali  que  tem  que  ter  é  o  que?  
+Ricardo  Pedroso  da  Silva:  Percentual  de  conformidade  e  não  conformidade.  
+Gabriel  Lucas  Vital  Evangelista:  aí  geral,  tanto  de  fornecedor  como  de  terceiro.  
+Gabriel  Lucas  Vital  Evangelista:  É  isso  que  é  isso  aí.  
+Ricardo  Pedroso  da  Silva:  Eu  eu  vejo  que  sim.  
+Gabriel  Lucas  Vital  Evangelista:  Toda  vez  que  agora  aqui,  ó,  consertou  também  o  rolê  dos  eh,  vocês  
+estão
+ 
+vendo,
+ 
+atualiza
+ 
+conforme
+ 
+eh
+ 
+e
+ 
+tanto
+ 
+esse
+ 
+gráﬁco
+ 
+como
+ 
+os
+ 
+negócios
+ 
+Ricardo  Pedroso  da  Silva:  Aham.  
+Ricardo  Pedroso  da  Silva:  Conformeor  
+Gabriel  Lucas  Vital  Evangelista:  é  conforme  o  fornecedor.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  tirei  aqui  o  aquele  ﬁltro  também,  
+Ricardo  Pedroso  da  Silva:  é  
+Gabriel  Lucas  Vital  Evangelista:  né,  
+Ricardo  Pedroso  da  Silva:  competência.  
+Gabriel  Lucas  Vital  Evangelista:  de  competência.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  só  deixar  isso  aqui  mais  bonito,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eu  tava  pensando  a  nível  de  visualização,  deixar  esses  cards  aqui,  ó,  
+todos
+ 
+enﬁlerados
+ 
+aqui,
+ 
+ó,
+ 
+na
+ 
+como
+ 
+se
+ 
+fosse
+ 
+aqui,
+ 
+ó,
+ 
+botar
+ 
+eles
+ 
+no
+ 
+canto
+ 
+esquerdo
+ 
+e
+ 
+o
+ 
+gráﬁco
+ 
+aqui,
+ 
+ó.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendeu?  
+Ricardo  Pedroso  da  Silva:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Sì.  
+Gabriel  Lucas  Vital  Evangelista:  Talvez  ﬁcaria  mais  
+Ricardo  Pedroso  da  Silva:  Ah,  mas  eu  acho  que  aí,  só  reforçando,  não  sei  se  você  vai  modiﬁcar,  
+Gabriel  Lucas  Vital  Evangelista:  bonito.  
+01:10:00  
+Ricardo  Pedroso  da  Silva:  acho  que  esses  status  aí  não  é  os  status  que  a  gente  tem  que  trazer  no  
+gráﬁco
+ 
+para
+ 
+tem
+ 
+que
+ 
+trazer
+ 
+o
+ 
+percentual
+ 
+geralzão,
+ 
+tipo
+ 
+o
+ 
+que
+ 
+tá
+ 
+a
+ 
+inconformidade
+ 
+e
+ 
+o
+ 
+que
+ 
+tá
+ 
+não
+ 
+conforme.
+ 
+Ricardo  Pedroso  da  Silva:  Aí  vai  agrupar,  tipo,  o  não  anexado,  aguardando  analuardando  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  análise.  
+Gabriel  Lucas  Vital  Evangelista:  tudo  que  não  for  não,  tudo  que  não  for  aprovado  é  não  conforme.  
+Ricardo  Pedroso  da  Silva:  Não  conforme  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Ricardo  Pedroso  da  Silva:  isso.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  a  gente  tem  que  pensar  em  outra  terminologia  ou  mudar  o  
+aprovado
+ 
+para
+ 
+conforme,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Porque  ﬁcar  aprovado  e  não  conforme.  
+Ricardo  Pedroso  da  Silva:  Isso  é  coloca  conforme  e  não  conforme.  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  Não.  Beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  aí  esse  gráﬁco  aqui  falta  mudar.  
+Gabriel  Lucas  Vital  Evangelista:  Você  tem  também.  
+Gabriel  Lucas  Vital  Evangelista:  Esse  daqui  foi  o  que  a  gente  já  fechou,  
+Ricardo  Pedroso  da  Silva:  Så  
+Gabriel  Lucas  Vital  Evangelista:  que  por  enquanto  tá  certo.  
+Gabriel  Lucas  Vital  Evangelista:  Esse  daqui,  mesma  coisa.  
+Gabriel  Lucas  Vital  Evangelista:  E  o  legal  é  que  com  exceção  esses  dois  aqui,  que  são  gráﬁcos  gerais,  
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Igual  eu  falei  para  vocês,  os  outros  quatro  todos  já  condicionam  a  
+partir
+ 
+do
+ 
+momento
+ 
+que
+ 
+que
+ 
+você
+ 
+traz
+ 
+o
+ 
+ﬁltro
+ 
+para
+ 
+cá,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Então,  eh,  deixa  euar  tendências  aqui,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Ainda  ainda  trouxe  poucas  competências,  tá  vendo?  
+Gabriel  Lucas  Vital  Evangelista:  Mas  já  tem,  
+Ricardo  Pedroso  da  Silva:  É,  esses  que  não  tem  é  por  causa  daquela  questão  que,  
+Gabriel  Lucas  Vital  Evangelista:  ó.  
+Ricardo  Pedroso  da  Silva:  tipo,  a  competência  foi  adicionada  a  partir  de  um  certo  período,  né?  
+Ricardo  Pedroso  da  Silva:  Então,  por  isso  que  alguns  documentos  estão  sem  competências,  que  não  
+foi
+ 
+classiﬁcado,
+ 
+não
+ 
+tinha
+ 
+essa
+ 
+competência
+ 
+lá
+ 
+naquela
+ 
+época,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Ricardo  Pedroso  da  Silva:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Você  vocês  acham  que  eh  faz  sentido  talvez  colocar  um  ﬁltro  
+adicional
+ 
+aqui
+ 
+no
+ 
+competência
+ 
+nos
+ 
+eh
+ 
+Ricardo  Pedroso  da  Silva:  Coloca  ali  um  e  determinado  ou  não  identiﬁcado.  
+Gabriel  Lucas  Vital  Evangelista:  ou  um  sem  competências  aqui,  tipo  eh,  
+Thais  Jayne  Biscaia:  Sim,  eu  acho  que  sim,  
+Gabriel  Lucas  Vital  Evangelista:  ou  campo  vazio  que  aí  
+Thais  Jayne  Biscaia:  porque  a  gente  vazio,  põe  um  vazio,  né,  Ricardo,  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  que  é  o  que  traz  lá  no  no  dash  dentro  da  plataforma.  
+Thais  Jayne  Biscaia:  Pode  colocar  vazio,  porque  daí  o  que  que  a  gente  vai  fazer?  
+Gabriel  Lucas  Vital  Evangelista:  beleza.  
+Thais  Jayne  Biscaia:  A  gente  já  tá  ajustando  algumas  coisas  ali  e  aí  a  gente  já  tá  trazendo  isso,  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Aí,  
+Thais  Jayne  Biscaia:  tá?  
+Gabriel  Lucas  Vital  Evangelista:  lembra  que  aqui  eh  faz  a  gestão  tanto  no  detalhamento  das  
+tendências,
+ 
+você
+ 
+consegue
+ 
+determinar
+ 
+a
+ 
+área
+ 
+se
+ 
+é
+ 
+se
+ 
+é
+ 
+terceiros
+ 
+ou
+ 
+documentos,
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Eu  
+Gabriel  Lucas  Vital  Evangelista:  que  aqui  documentos  é  igual  a  fornecedor,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Então  a  gente  talvez  pode  pode  mudar  aqui  o  nome  para  fornecedor,  
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Teos  fornecedores.  
+Ricardo  Pedroso  da  Silva:  acho  que  só  esse  do  vazio  ali  coloca  ali,  sei  lá,  pendente  de  classiﬁcação,  
+uma
+ 
+coisa
+ 
+assim,
+ 
+porque
+ 
+senão
+ 
+ela
+ 
+vai,
+ 
+ela,
+ 
+sei
+ 
+lá,
+ 
+ela
+ 
+vai
+ 
+dizer:
+ 
+"Ah,
+ 
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Ricardo  Pedroso  da  Silva:  mas  o  que  que  é  vazio?"  Eu  não  sei  que  é  vazio  aqui.  
+Ricardo  Pedroso  da  Silva:  Você  sabe  que  é  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Pendente  não  enviado  e  em  análise  é  os  únicos  status  do  das  
+tendências,
+ 
+Ricardo  Pedroso  da  Silva:  vazio.  
+Gabriel  Lucas  Vital  Evangelista:  tá?  
+Thais  Jayne  Biscaia:  Combin.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  
+Thais  Jayne  Biscaia:  Perfeito.  
+Gabriel  Lucas  Vital  Evangelista:  mas  assim  é  porque  eh  é  o  que  puxou  das  planilhas.  
+Gabriel  Lucas  Vital  Evangelista:  Se  quiser  acrescentar  mais  alguma  nomenclatura  aqui  também  pode,  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Gabriel  Lucas  Vital  Evangelista:  falou  que  é  o  que  tá  atualmente  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Não,  mas  eu  acho  que  atende,  
+Gabriel  Lucas  Vital  Evangelista:  atendido.  
+Thais  Jayne  Biscaia:  né,  Ricardo?  
+Ricardo  Pedroso  da  Silva:  Tá,  pera  aí.  
+Ricardo  Pedroso  da  Silva:  Pendente  não  enrolado.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza,  
+Thais  Jayne  Biscaia:  Lá  abre  aula.  
+Ricardo  Pedroso  da  Silva:  Tem  uma  pendência,  tá?  
+Ricardo  Pedroso  da  Silva:  Tem  uma  pendência.  
+Ricardo  Pedroso  da  Silva:  Foi  gerado  uma  pendência  para  esse  cara  
+Gabriel  Lucas  Vital  Evangelista:  exato.  
+Ricardo  Pedroso  da  Silva:  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Então,  então  status  pro  documento  PCMSO  tá  pendente,  
+Thais  Jayne  Biscaia:  Isso  
+Gabriel  Lucas  Vital  Evangelista:  não  enviado.  
+Gabriel  Lucas  Vital  Evangelista:  tá  pendente  porque  não  foi  enviado  ou  
+Thais  Jayne  Biscaia:  não,  ele  foi  enviado.  
+Thais  Jayne  Biscaia:  Tá  ali,  ó.  
+Thais  Jayne  Biscaia:  O  detalhe  da  pendência  tá  aqui  do  lado.  
+Thais  Jayne  Biscaia:  Esse  aqui  não  foi.  
+Thais  Jayne  Biscaia:  Esse  foi  enviado.  
+Thais  Jayne  Biscaia:  Eu  mostrando  minha  tela  bem  louca,  
+Gabriel  Lucas  Vital  Evangelista:  ele  
+Thais  Jayne  Biscaia:  né?  
+Ricardo  Pedroso  da  Silva:  Mas  é  que  você  deu  uma  pendência  para  esse  para  esse  documento,  
+Thais  Jayne  Biscaia:  Isso.  
+Thais  Jayne  Biscaia:  Aham.  
+Thais  Jayne  Biscaia:  Ele  foi  reprovado.  
+Ricardo  Pedroso  da  Silva:  né?  
+Thais  Jayne  Biscaia:  Na  verdade,  esse  pendente  aí  é  reprovado.  
+Thais  Jayne  Biscaia:  O  status.  
+Thais  Jayne  Biscaia:  Na  verdade,  esse  pendente  não  é  não  enviado,  é  reprovado.  
+Gabriel  Lucas  Vital  Evangelista:  tá.  
+Gabriel  Lucas  Vital  Evangelista:  Então  já  tem  que  ter  mais  critério  aqui,  né?  
+Thais  Jayne  Biscaia:  Misericórdia,  
+Gabriel  Lucas  Vital  Evangelista:  Porque  pode  ter  também  o  pendente  não  enviado  e  o  pendente  
+reprovado
+ 
+e
+ 
+o
+ 
+reprovado,
+ 
+Thais  Jayne  Biscaia:  quanto  cr  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  isto  
+Ricardo  Pedroso  da  Silva:  Acho  vai  dar  uma  confusão  depois.  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Gabriel  Lucas  Vital  Evangelista:  É  porque  tem  o  detalhe  da  pendente  aqui,  
+Thais  Jayne  Biscaia:  Misericórdia.  
+Ricardo  Pedroso  da  Silva:  Eu  
+Gabriel  Lucas  Vital  Evangelista:  tá  vendo,  ó?  
+Gabriel  Lucas  Vital  Evangelista:  PMNO,  CNPJ  está  divergente  com  com  cadastro.  
+Ricardo  Pedroso  da  Silva:  eu  tiraria  esse  status.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  acho  esse  esses  dois  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  esse  está  só  vai  gerar  confusão.  
+Thais  Jayne  Biscaia:  Confusão.  
+Thais  Jayne  Biscaia:  Aham.  
+Ricardo  Pedroso  da  Silva:  É,  
+Gabriel  Lucas  Vital  Evangelista:  status  aqui.  
+Ricardo  Pedroso  da  Silva:  é.  
+Ricardo  Pedroso  da  Silva:  Eu  tiraria  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Então,  
+Ricardo  Pedroso  da  Silva:  esse  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  então  você  tá  me  falando  que  a  gente  eh  que  para  pro  detalhamento  
+das
+ 
+pendências
+ 
+a
+ 
+gente
+ 
+não
+ 
+vai
+ 
+ter
+ 
+ﬁltro
+ 
+de
+ 
+status.
+ 
+Ricardo  Pedroso  da  Silva:  é  porque  eu  acho  que  assim,  tipo,  ah,  
+Thais  Jayne  Biscaia:  Você  tem  pendência,  
+Ricardo  Pedroso  da  Silva:  tem,  
+Thais  Jayne  Biscaia:  vai  ter  detalhe.  
+Thais  Jayne  Biscaia:  A  gente  já  sabe  que  tá  
+Ricardo  Pedroso  da  Silva:  é,  tem,  ah,  tá,  tem  pendência,  
+Thais  Jayne  Biscaia:  reprovado.  
+01:15:00  
+Ricardo  Pedroso  da  Silva:  tipo,  tá  com  pendência  lá,  a  hora  que  não  tiver  mais  pendência  vai  sumir  
+daí,
+ 
+Thais  Jayne  Biscaia:  Ele  sai  daqui.  
+Ricardo  Pedroso  da  Silva:  vai  daí.  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  Então,  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Ricardo  Pedroso  da  Silva:  se  tá  sendo  analisado  ou  não  e  não  importa,  tipo,  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Ricardo  Pedroso  da  Silva:  é  para  para  elas,  acho  que  o  conto  é  o  que  tem  pendência,  né?  
+Ricardo  Pedroso  da  Silva:  Então,  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Ricardo  Pedroso  da  Silva:  depois  que  passar  pela  análise,  ele  cai  fora  daqui.  
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  vocês  querem  que  tire  status  também  desse  tá?  
+Ricardo  Pedroso  da  Silva:  Eu  acho  que  tira  status,  é  porque  vai  dar  só  confusão  nisso  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Então  eu  tiro  status  tanto  dos  ﬁltros  como  do  relatório.  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Thais  Jayne  Biscaia:  S.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  maravilha.  
+Ricardo  Pedroso  da  Silva:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  ver  como  é  que  tá  vindo  esse  relatório  aqui  em  PDF,  né,  que  
+foi
+ 
+o
+ 
+que
+ 
+elas
+ 
+pediram.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Tá  vindo  assim.  
+Gabriel  Lucas  Vital  Evangelista:  Vocês  querem  que  muda  alguma  coisa?  
+Ricardo  Pedroso  da  Silva:  Mas  é  diferente  do  que  tá  mostrando  a  tela,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Não,  tá  exatamente  igual.  
+Thais  Jayne  Biscaia:  esse  status.  
+Gabriel  Lucas  Vital  Evangelista:  Tá  mostrando.  
+Ricardo  Pedroso  da  Silva:  É,  tem  esse  status,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Não  é.  
+Ricardo  Pedroso  da  Silva:  O  status  é  o  que  a  gente  tá  tratando  ali  por  baixo,  então,  né?  
+Gabriel  Lucas  Vital  Evangelista:  É  sim.  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  porque  na  real  o  status  é  o  que  a  gente  vai  tirar  daqui  também,  
+Ricardo  Pedroso  da  Silva:  O  status.  
+Ricardo  Pedroso  da  Silva:  Tá,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  Ah,  tá  beleza.  
+Ricardo  Pedroso  da  Silva:  tá  beleza.  
+Thais  Jayne  Biscaia:  Aham.  
+Thais  Jayne  Biscaia:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  então  tá.  
+Thais  Jayne  Biscaia:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  vai  tirar  status  tanto  do  ﬁltro  como  do  relatório,  
+Thais  Jayne  Biscaia:  tá  
+Ricardo  Pedroso  da  Silva:  Tá,  tá  beleza.  
+Ricardo  Pedroso  da  Silva:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Ricardo  Pedroso  da  Silva:  se  se  exportar  o  que  tá  mostrando  no  relatório,  
+Thais  Jayne  Biscaia:  ótimo.  
+Ricardo  Pedroso  da  Silva:  acho  que  é  o  que  eles  precisam.  
+Gabriel  Lucas  Vital  Evangelista:  Não.  Perfeito.  
+Ricardo  Pedroso  da  Silva:  Mas  ali  você  ﬁltrou,  você  colocou  para  gerar  para  todos.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  Ele  gerou  só  alguns?  
+Ricardo  Pedroso  da  Silva:  Parece  não  voltei  o  PDF  ali.  
+Gabriel  Lucas  Vital  Evangelista:  ah,  não,  é  porque  tá  aqui,  ó,  
+Ricardo  Pedroso  da  Silva:  Ah,  
+Gabriel  Lucas  Vital  Evangelista:  especíﬁca  competência.  
+Ricardo  Pedroso  da  Silva:  que  está  só  uma  competência.  
+Ricardo  Pedroso  da  Silva:  Tá  
+Gabriel  Lucas  Vital  Evangelista:  Exato.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  agora,  tirando  aqui,  ó,  o  total  de  tendências  que  aqui,  
+Ricardo  Pedroso  da  Silva:  b  
+Gabriel  Lucas  Vital  Evangelista:  ó,  tá  vendo?  
+Gabriel  Lucas  Vital  Evangelista:  para  para  vender  esses  documentos,  porque  aí  aqui  sempre  vem  o  
+número
+ 
+de
+ 
+total
+ 
+da
+ 
+total.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Aí  conquanto  você  faz  o  ﬁltro,  ah,  
+Thais  Jayne  Biscaia:  Tá,  ele  
+Gabriel  Lucas  Vital  Evangelista:  esse  fornecedor  eh  esse  fornecedor  ele  é  responsável  por  18  
+pendências,
+ 
+Thais  Jayne  Biscaia:  vai  
+Gabriel  Lucas  Vital  Evangelista:  um  total  de  1634  que  a  gente  tem,  
+Thais  Jayne  Biscaia:  ô  legal.  
+Gabriel  Lucas  Vital  Evangelista:  tá?  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  esse  tipo,  por  exemplo,  essa  documentação  aqui,  eh,  são  
+documentações
+ 
+de
+ 
+fornecedor,
+ 
+né?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Não  é  documentação  de  terceiro,  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  certo?  
+Ricardo  Pedroso  da  Silva:  Hum.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza?  
+Gabriel  Lucas  Vital  Evangelista:  Então  tem  que  
+Thais  Jayne  Biscaia:  Certo.  
+Ricardo  Pedroso  da  Silva:  É,  
+Thais  Jayne  Biscaia:  Esse  primeiro,  
+Ricardo  Pedroso  da  Silva:  esse  é  esse  documentos  aí  é  aí  tem  
+Thais  Jayne  Biscaia:  esse  primeiro,  esse  primeiro  não.  
+Gabriel  Lucas  Vital  Evangelista:  botar  
+Thais  Jayne  Biscaia:  Volta,  ó.  
+Ricardo  Pedroso  da  Silva:  terceiros,  tá?  
+Ricardo  Pedroso  da  Silva:  já  classiﬁcar  na  coluna  e  acho  que  o  documentos  aí  você  nomeia  para  
+Thais  Jayne  Biscaia:  Isso,  isso  é  
+Gabriel  Lucas  Vital  Evangelista:  é,  não  é?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  foi  na  real,  
+Thais  Jayne  Biscaia:  fornecedor.  
+Ricardo  Pedroso  da  Silva:  fornecedor.  
+Gabriel  Lucas  Vital  Evangelista:  eu  só  perguntei  igual  a  minha  cara,  mas  eu  queria  saber  se  eh  todos  
+esses
+ 
+aqui
+ 
+que
+ 
+estão
+ 
+descritos
+ 
+em
+ 
+área
+ 
+como
+ 
+documentos
+ 
+são
+ 
+de
+ 
+fato
+ 
+documentos
+ 
+que
+ 
+a
+ 
+gente
+ 
+pede
+ 
+pro
+ 
+fornecedor
+ 
+e
+ 
+não
+ 
+é
+ 
+pro
+ 
+terceiro.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Tá  vendo?  
+Ricardo  Pedroso  da  Silva:  Isso  é  isso  aí.  
+Thais  Jayne  Biscaia:  Mhm.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza?  
+Gabriel  Lucas  Vital  Evangelista:  Então,  aqui  na  na  área  é  só  mudar  nomenclatura,  é  no  ﬁltro  e  também  
+no
+ 
+relatório
+ 
+de
+ 
+documentos
+ 
+para
+ 
+terceiro.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Beleza?  
+Gabriel  Lucas  Vital  Evangelista:  Então,  no  detalhamento  das  pendências,  a  gente  vai  trazer  eh  a  
+retirada
+ 
+do
+ 
+status,
+ 
+tanto
+ 
+no
+ 
+ﬁltro
+ 
+como
+ 
+no
+ 
+relatório.
+ 
+Gabriel  Lucas  Vital  Evangelista:  E  no  ﬁltro  áreas  a  gente  vai  trocar  documentos  para  fornecedores  e  
+também
+ 
+dentro
+ 
+do
+ 
+relatório
+ 
+a
+ 
+área
+ 
+vai
+ 
+especiﬁcar
+ 
+também
+ 
+o
+ 
+lugar
+ 
+de
+ 
+documento,
+ 
+fornecedor.
+ 
+Thais  Jayne  Biscaia:  Угу m.  
+Gabriel  Lucas  Vital  Evangelista:  E  na  competência  a  gente  vai  ter  uma  competência  eh  para  quando  a  
+competência
+ 
+não
+ 
+tiver
+ 
+descrita,
+ 
+como
+ 
+é
+ 
+que
+ 
+vai
+ 
+ser
+ 
+o
+ 
+nome
+ 
+que
+ 
+a
+ 
+gente
+ 
+deﬁniu?
+ 
+Gabriel  Lucas  Vital  Evangelista:  Não  tiver  em  branco  a  competência.  
+Thais  Jayne  Biscaia:  Putz,  não  era  vazio,  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  o  é  o  Ricardo  tinha  falado  que  vazio  não  tá  
+Thais  Jayne  Biscaia:  né?  
+Ricardo  Pedroso  da  Silva:  coloca  pendente  de  reclassiﬁcação  
+Gabriel  Lucas  Vital  Evangelista:  deﬁnido.  
+Thais  Jayne  Biscaia:  Verdade.  
+Ricardo  Pedroso  da  Silva:  classiﬁcar  
+Thais  Jayne  Biscaia:  Classiﬁcar  competência.  
+Thais  Jayne  Biscaia:  Ah,  classiﬁcar  competência,  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  alguma  coisa  assim,  
+Ricardo  Pedroso  da  Silva:  o  a  classiﬁcar  
+Thais  Jayne  Biscaia:  não  sei.  
+Gabriel  Lucas  Vital  Evangelista:  a  classiﬁcar,  eh,  eu  acho  que  é  classiﬁcar  ﬁca  mais  curtinho,  
+Ricardo  Pedroso  da  Silva:  Ah.  
+Thais  Jayne  Biscaia:  É.  
+Gabriel  Lucas  Vital  Evangelista:  ﬁca,  acho  que  vai  ﬁcar  melornar  mais  a  beleza.  
+Gabriel  Lucas  Vital  Evangelista:  na  competência.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  vai  apresentar  a  competência  a  a  classiﬁcar  que  vai  ser  para  
+todos
+ 
+cuje
+ 
+Ricardo  Pedroso  da  Silva:  Eu  
+Thais  Jayne  Biscaia:  Угу m.  
+Gabriel  Lucas  Vital  Evangelista:  as  linhas  a  competência  não  está  preenchida.  
+Gabriel  Lucas  Vital  Evangelista:  Deu,  deu,  deu  bom,  eu  acho.  
+Ricardo  Pedroso  da  Silva:  acho  que  a  é  isso.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Ricardo  Pedroso  da  Silva:  Acho  que  amanhã  talvez  a  gente  pode  só  fazer  mais  uma  cal  depois  tudo  
+ser
+ 
+justo
+ 
+e
+ 
+bater
+ 
+de
+ 
+novo.
+ 
+Gabriel  Lucas  Vital  Evangelista:  a  col  com  ela  vai  ser  amanhã  
+Thais  Jayne  Biscaia:  Hum.  
+Gabriel  Lucas  Vital  Evangelista:  ou  
+Ricardo  Pedroso  da  Silva:  É  mais  
+Thais  Jayne  Biscaia:  Deixa  eu  ver.  
+Thais  Jayne  Biscaia:  Amanhã  de  tarde,  
+Ricardo  Pedroso  da  Silva:  detalhe.  
+Thais  Jayne  Biscaia:  das  15  às  16  eu  
+Gabriel  Lucas  Vital  Evangelista:  beleza.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  marquei.  
+Gabriel  Lucas  Vital  Evangelista:  ó,  eu  eu  nem  tinha  visto  isso.  
+Gabriel  Lucas  Vital  Evangelista:  Achei  legal  isso  aqui,  ó.  
+01:20:00  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  é,  nem  tinha  visto.  
+Ricardo  Pedroso  da  Silva:  Pessoal,  eu  vou  ter  que  sair  aqui,  
+Thais  Jayne  Biscaia:  Mhm.  
+Thais  Jayne  Biscaia:  Mhm.  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Ricardo  Pedroso  da  Silva:  tá?  
+Gabriel  Lucas  Vital  Evangelista:  Ontem  a  gente  já  segurou,  
+Ricardo  Pedroso  da  Silva:  Não,  
+Thais  Jayne  Biscaia:  É,  
+Ricardo  Pedroso  da  Silva:  é  que  eu  realmente  eu  tenho  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  não  é  não.  
+Thais  Jayne  Biscaia:  Gente,  eu  já  falei  para  ele  que  5:30  você  sai.  
+Ricardo  Pedroso  da  Silva:  compromisso.  
+Thais  Jayne  Biscaia:  Só  que  assim,  hein?  
+Thais  Jayne  Biscaia:  Agora  eu  vou  zoar  um  pouquinho  para  quebrar  o  gelo.  
+Thais  Jayne  Biscaia:  Você  saiu  muito  bravo,  Ricardo.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  eu  chamei  ele,  
+Ricardo  Pedroso  da  Silva:  Ah!  
+Gabriel  Lucas  Vital  Evangelista:  pô.  
+Thais  Jayne  Biscaia:  Do  Renato.  
+Thais  Jayne  Biscaia:  Não,  
+Ricardo  Pedroso  da  Silva:  Ah,  o  Gabri,  
+Thais  Jayne  Biscaia:  o  pior  foi  o  Thaago.  
+Ricardo  Pedroso  da  Silva:  o  Gabriel  já  tá  aqui.  
+Ricardo  Pedroso  da  Silva:  Vai  fazer  dois  meses  quase  já.  
+Thais  Jayne  Biscaia:  Já,  
+Ricardo  Pedroso  da  Silva:  Tem  que  ter  decorado  o  nome,  
+Thais  Jayne  Biscaia:  já,  já.  
+Gabriel  Lucas  Vital  Evangelista:  É  o  mínimo,  
+Thais  Jayne  Biscaia:  Já  é  o  mínimo.  
+Gabriel  Lucas  Vital  Evangelista:  né,  
+Ricardo  Pedroso  da  Silva:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Ricardo?  
+Gabriel  Lucas  Vital  Evangelista:  Ô,  
+Thais  Jayne  Biscaia:  Ah,  
+Gabriel  Lucas  Vital  Evangelista:  mas  eu  não  
+Thais  Jayne  Biscaia:  eu  só  eu  só  vi  assim,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  esperava.  
+Thais  Jayne  Biscaia:  Ô,  Renato.  
+Thais  Jayne  Biscaia:  Ah,  então  tá  bom.  
+Thais  Jayne  Biscaia:  Tchau.  
+Gabriel  Lucas  Vital  Evangelista:  Ai,  velho.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  aqui,  ó,  tem  que  tirar  esse  conformes  busca  automática  aqui,  né?  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  tinha  falado  disso.  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  mas  eu  achei  da  hora  isso  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Nem  esperava  ele  ser  sem  eu  mandar.  
+Thais  Jayne  Biscaia:  Ficou  muito  top.  
+Gabriel  Lucas  Vital  Evangelista:  É  que  
+Thais  Jayne  Biscaia:  Mas  ﬁcou  muito  bom,  
+Ricardo  Pedroso  da  Silva:  É,  eu  acho  que  esse  esse  aí,  
+Thais  Jayne  Biscaia:  porque  daí  esse  esse  que  é  o  que  vai  atender  tudo  para  
+Ricardo  Pedroso  da  Silva:  Gabriel,  
+Gabriel  Lucas  Vital  Evangelista:  ele  
+Ricardo  Pedroso  da  Silva:  se  eh  se  der  se  der  para  colocar  esses  indicador  na  exportação  que  ela  for  
+Thais  Jayne  Biscaia:  ela.  
+Ricardo  Pedroso  da  Silva:  fazer,  eu  acho  que  vai  ﬁcar  perfeito,  
+Gabriel  Lucas  Vital  Evangelista:  vamos  ver.  
+Ricardo  Pedroso  da  Silva:  porque  é  o  que  ela  vai  querer  eh  Se  ele  colocar  dentro  esses  indicador  
+dentro
+ 
+do
+ 
+PDF,
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  senão  tu  pede  pro  Elec.  
+Ricardo  Pedroso  da  Silva:  É,  mas  eu  acho  que  daria  para  pedir  para  colocar  ou  coloca  esse  ﬁltro  de  
+exportação
+ 
+acima,
+ 
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Thais  Jayne  Biscaia:  Esse  aí.  
+Thais  Jayne  Biscaia:  Uhum.  
+Ricardo  Pedroso  da  Silva:  né?  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  mas  isso  acho  que  é  bem  bem  bem  tranquilo  de  fazer.  
+Ricardo  Pedroso  da  Silva:  É,  
+Gabriel  Lucas  Vital  Evangelista:  É  porque  é  uma  imagem  estática,  né?  
+Ricardo  Pedroso  da  Silva:  sim.  
+Ricardo  Pedroso  da  Silva:  Exatamente.  
+Ricardo  Pedroso  da  Silva:  Eu  vou  lá,  
+Gabriel  Lucas  Vital  Evangelista:  É.  
+Ricardo  Pedroso  da  Silva:  pessoal.  
+Thais  Jayne  Biscaia:  T.  Tchau,  
+Ricardo  Pedroso  da  Silva:  Falou.  
+Gabriel  Lucas  Vital  Evangelista:  Tchau.  
+Thais  Jayne  Biscaia:  Ricardo.  
+Ricardo  Pedroso  da  Silva:  M.  
+Gabriel  Lucas  Vital  Evangelista:  Até  amanhã.  
+Thais  Jayne  Biscaia:  T.  Ah,  eu  só  vou  avisar  ele  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  Deixa  eu  ver.  
+Thais  Jayne  Biscaia:  Eu  acho  que  tem  mais  só  as  planilhas  do  dos  
+Gabriel  Lucas  Vital  Evangelista:  esse  critério  aqui  a  a  a  vencer  
+Thais  Jayne  Biscaia:  usuários.  
+Thais  Jayne  Biscaia:  É  que  eu  eh  e  tá  vendo?  
+Thais  Jayne  Biscaia:  É,  esses  aqui  a  vencer  é,  opa,  volta  aí.  
+Thais  Jayne  Biscaia:  Esse  aprovado  lá  da  avaliação  ergonômica  não  tem  vencimento,  tá  vendo?  
+Thais  Jayne  Biscaia:  Mais  um  pouquinho  para  cima,  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  
+Thais  Jayne  Biscaia:  mais  um  pouquinho  aqui,  ó.  
+Thais  Jayne  Biscaia:  Dá  aprovado,  status  e  vencimento,  avaliação  ergonômica,  ó.  
+Thais  Jayne  Biscaia:  Tá  vendo,  ó?  
+Thais  Jayne  Biscaia:  Aqui,  claro,  são  dois  CNPJs,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eh  
+Thais  Jayne  Biscaia:  Então,  um  eles  não  mandaram  e  o  outro  eles  mandaram,  mas  a  gente  não  
+analisou.
+ 
+Thais  Jayne  Biscaia:  Esse  tem  que  revisar,  tá?  
+Thais  Jayne  Biscaia:  Por  quê?  
+Thais  Jayne  Biscaia:  a  vencer.  
+Thais  Jayne  Biscaia:  Então  só  a  e  aprovado,  ó,  a  vencer  e  aprovado.  
+Thais  Jayne  Biscaia:  Nesses  casos  aqui,  tá?  
+Thais  Jayne  Biscaia:  Eh,  são  as  certidões  automáticas,  tá  vendo,  ó?  
+Thais  Jayne  Biscaia:  Só  que  se  a  gente  for  para  baixo,  vai  mais  um  pouco  para  baixo,  mais  cipa,  ó.  
+Thais  Jayne  Biscaia:  Tá  vendo?  
+Gabriel  Lucas  Vital  Evangelista:  Ja.  
+Thais  Jayne  Biscaia:  Ó.  
+Thais  Jayne  Biscaia:  Eh,  tem  que  ver  porque  esses  e  esse  status  aqui  ele  tinha  que  seguir  o  restante  
+da
+ 
+planilha
+ 
+lá
+ 
+para
+ 
+cima,
+ 
+ou
+ 
+aprovado
+ 
+ou
+ 
+reprovado,
+ 
+eh,
+ 
+ou
+ 
+não
+ 
+anexado,
+ 
+vamos
+ 
+dizer
+ 
+Gabriel  Lucas  Vital  Evangelista:  Entendi.  
+Thais  Jayne  Biscaia:  assim.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  deixa  eu  ver  qual  eh  essa  situação  documental  de  qual  planha  ela  
+tá
+ 
+vindo.
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Porque  daí  a  gente  seguiria  aquele  status  que  a  gente  fechou  agora  a  pouco,  
+entendeu?
+ 
+Thais  Jayne  Biscaia:  Tá,  tá,  tá.  
+Thais  Jayne  Biscaia:  Deixa  eu  só  eu  tenho  que  fazer  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  é  vendo  situa  fornecedor  Zuricção  de  preenchimento  
+Gabriel  Lucas  Vital  Evangelista:  documental  
+Gabriel  Lucas  Vital  Evangelista:  อ  
+Thais  Jayne  Biscaia:  Olhou  
+Gabriel  Lucas  Vital  Evangelista:  Tem  esse  ainda  bem  que  a  gente  deixa  dar  uma  
+Thais  Jayne  Biscaia:  ver.  
+Gabriel  Lucas  Vital  Evangelista:  olhadinha.  
+Thais  Jayne  Biscaia:  Aham.  
+Thais  Jayne  Biscaia:  Deixa  eu  só  
+Gabriel  Lucas  Vital  Evangelista:  Relatório  fornecedores  do  Perí  que  é  isso  aqui.  
+Thais  Jayne  Biscaia:  71.  
+Gabriel  Lucas  Vital  Evangelista:  M.  
+Thais  Jayne  Biscaia:  Agora  
+01:25:00  
+Gabriel  Lucas  Vital  Evangelista:  Ups.  
+Gabriel  Lucas  Vital  Evangelista:  M.  
+Thais  Jayne  Biscaia:  Угу.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  relatórios  pendências,  relatórios  terceiros,  situação  de  
+preenchimento
+ 
+documental
+ 
+do
+ 
+terceiro.
+ 
+Gabriel  Lucas  Vital  Evangelista:  situação  de  preenchimento  documental  na  última  solicitação  do  
+fornecedor.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Maravilha.  
+Thais  Jayne  Biscaia:  Угу.  
+Thais  Jayne  Biscaia:  Olha,  são  usuários  do  CSU.  
+Thais  Jayne  Biscaia:  Ótimo.  
+Thais  Jayne  Biscaia:  E  as  logos.  
+Thais  Jayne  Biscaia:  Perfeito.  
+Thais  Jayne  Biscaia:  Já  vou  mandar  o  negócio  da  c*  aqui  também.  
+Thais  Jayne  Biscaia:  novos  ambientes.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  tá.  
+Gabriel  Lucas  Vital  Evangelista:  eh  descobrir  aqui  de  qual  vem  eh  que  
+Gabriel  Lucas  Vital  Evangelista:  tirou.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  aqui  o  eh  não  vale  
+Thais  Jayne  Biscaia:  Hum.  
+Gabriel  Lucas  Vital  Evangelista:  não  vale  a  reclamação  da  Débora,  tá?  
+Thais  Jayne  Biscaia:  Do  
+Gabriel  Lucas  Vital  Evangelista:  Mas  eh  não  é  que  eu  ia  falar  aqui  o  seguinte,  
+Thais  Jayne  Biscaia:  quê?  
+Gabriel  Lucas  Vital  Evangelista:  não  vale  a  reclamação  da  Débora,  mas  de  fato  o  os  três  pontinhos  
+não
+ 
+ﬁcar
+ 
+estático,
+ 
+Thais  Jayne  Biscaia:  Ele  some.  
+Thais  Jayne  Biscaia:  Ele  some.  
+Gabriel  Lucas  Vital  Evangelista:  eh  aí  você  demora  um  tempinho  para  poder  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Se  entender.  
+Gabriel  Lucas  Vital  Evangelista:  entender,  
+Thais  Jayne  Biscaia:  É.  
+Thais  Jayne  Biscaia:  Não,  eu  eu  não  discordo,  mas  pegação  
+Gabriel  Lucas  Vital  Evangelista:  não  é?  
+Gabriel  Lucas  Vital  Evangelista:  É,  para  mim  é  injeção,  para  mim  acho  que  é  mais  
+Thais  Jayne  Biscaia:  de  pé.  
+Gabriel  Lucas  Vital  Evangelista:  inção.  
+Thais  Jayne  Biscaia:  É  tipo  assim,  ah,  não  tenho  o  que  reclamar.  
+Thais  Jayne  Biscaia:  Vou  reclamar  
+Gabriel  Lucas  Vital  Evangelista:  Exatamente.  
+Thais  Jayne  Biscaia:  disso.  
+Gabriel  Lucas  Vital  Evangelista:  Dito  isso  ﬁcaria  de  fato  mais  intuitivo  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  mesmo.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  deixa  eu  ver  como  é  que  ﬁcou  a  melhoria  aqui.  
+Thais  Jayne  Biscaia:  Ja.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  feliz  bom.  
+Gabriel  Lucas  Vital  Evangelista:  Vamos  ver  como  é  que  ﬁcou  relato.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  olha,  vei,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Tá  vendo  os  dados  por  fornecedor?  
+Gabriel  Lucas  Vital  Evangelista:  dentro  do  relatório,  igual  o  Ricardo  pediu.  
+Thais  Jayne  Biscaia:  Mhm.  
+Gabriel  Lucas  Vital  Evangelista:  Aí  agora  só  precisoção.  
+Gabriel  Lucas  Vital  Evangelista:  A  o  ﬁltro  que  a  gente  tem  que  levar  como  critério  vai  ser  esse  aqui,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  Situação  da  análise  do  documento,  certo?  
+Thais  Jayne  Biscaia:  Certo.  
+Gabriel  Lucas  Vital  Evangelista:  E  as  únicas  possibilidades  que  vai  ter  nele  vai  
+Thais  Jayne  Biscaia:  Isso.  
+Gabriel  Lucas  Vital  Evangelista:  ser,  
+01:30:00  
+Thais  Jayne  Biscaia:  Aprovado.  
+Thais  Jayne  Biscaia:  provado  não  
+Gabriel  Lucas  Vital  Evangelista:  beleza?  
+Thais  Jayne  Biscaia:  analisados.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  aqui  dentro  do  relatório,  o  staff  é  a  mesma  coisa.  
+Gabriel  Lucas  Vital  Evangelista:  Então,  deixa  eu  pintar  isso  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Bem,  eu  juro  que  vai  ser  a  última  modiﬁcação.  
+Thais  Jayne  Biscaia:  Daí  
+Gabriel  Lucas  Vital  Evangelista:  Hoje  a  gente  é  hoje  a  gente  para  no  
+Thais  Jayne  Biscaia:  atualiza.  
+Thais  Jayne  Biscaia:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  horário.  
+Thais  Jayne  Biscaia:  aí  eu  eu  não  hoje  eu  não  paro  que  ontem  eu  não  consegui  eh  parar  para  fazer  o  
+que
+ 
+eu
+ 
+tive
+ 
+que
+ 
+fazer,
+ 
+sabe?
+ 
+Thais  Jayne  Biscaia:  Daí  eu  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  eu  tenho  que  mandar  uma  proposta  atualizada  aqui  pro  pessoal  
+da
+ 
+Thais  Jayne  Biscaia:  vou  
+Gabriel  Lucas  Vital  Evangelista:  pro  pessoal  da  eh  integral.  
+Thais  Jayne  Biscaia:  Ah,  tá.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  eh,  rezável  em  conspiração.  
+Thais  Jayne  Biscaia:  OK.  
+Thais  Jayne  Biscaia:  Tá.  
+Thais  Jayne  Biscaia:  Tô  respondendo  meus  e-mails  da  semana  toda  hoje.  
+Thais  Jayne  Biscaia:  Certo?  
+Thais  Jayne  Biscaia:  Responder  a  todos.  
+Gabriel  Lucas  Vital  Evangelista:  É  os  ﬁltros,  é  o  ﬁltro.  
+Gabriel  Lucas  Vital  Evangelista:  Quando  você  erra  lá  no  início,  adicionar  a  frase  
+Gabriel  Lucas  Vital  Evangelista:  toda.  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Fechou  agora.  
+Thais  Jayne  Biscaia:  Hum.  Ótimo.  
+Thais  Jayne  Biscaia:  Aíensado  usa  automática.  
+Thais  Jayne  Biscaia:  Paulo  Roberto  
+Gabriel  Lucas  Vital  Evangelista:  Prontos.  
+Thais  Jayne  Biscaia:  tal.  
+Gabriel  Lucas  Vital  Evangelista:  Não  
+Gabriel  Lucas  Vital  Evangelista:  canalizado.  
+Thais  Jayne  Biscaia:  No  se  a  gente  vai  entregar  um,  eu  vejo  que  a  gente  vai  entregar  uma  coisa  bem  
+melhor
+ 
+do
+ 
+que
+ 
+a
+ 
+gente,
+ 
+do
+ 
+que
+ 
+elas
+ 
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  pediram.  
+Gabriel  Lucas  Vital  Evangelista:  eu  assim,  eu  acho  eh  que  inclusive  o  
+Gabriel  Lucas  Vital  Evangelista:  Ahão.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  acho  inclusive  que  elas  não  eh  que  acho  que  a  gente  vai  provocar  
+aquela
+ 
+relação
+ 
+de
+ 
+auas
+ 
+no
+ 
+sentido
+ 
+de
+ 
+elas
+ 
+não
+ 
+estarem
+ 
+esperando
+ 
+por
+ 
+isso,
+ 
+sabe?
+ 
+Thais  Jayne  Biscaia:  Posso  ser  sincera,  muito  sincera.  
+Thais  Jayne  Biscaia:  É  o  que  eu  mais  espero.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  
+Thais  Jayne  Biscaia:  Tipo  assim,  ah,  
+Gabriel  Lucas  Vital  Evangelista:  eu  também  tô  
+Thais  Jayne  Biscaia:  realmente  ﬁzeram  cagada,  ﬁzer,  mas  toma.  
+Thais  Jayne  Biscaia:  Trolha  no  medo,  
+Gabriel  Lucas  Vital  Evangelista:  eh  não.  
+Gabriel  Lucas  Vital  Evangelista:  E  nessa  velocidade  eh,  
+Thais  Jayne  Biscaia:  não  é?  
+Gabriel  Lucas  Vital  Evangelista:  por  isso  que  eu  que  eu  te  você  você  que  vai  apresentar  ou  você  vai  
+querer
+ 
+que
+ 
+eu
+ 
+Thais  Jayne  Biscaia:  E  assim,  o  o  que  você  precisa  também  ver,  não,  
+Gabriel  Lucas  Vital  Evangelista:  apresento?  
+Thais  Jayne  Biscaia:  você  apresenta.  
+Thais  Jayne  Biscaia:  Eu  acho  que  quem  tem  que  apresentar  é  você.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza.  
+Thais  Jayne  Biscaia:  Não,  ixe,  
+Gabriel  Lucas  Vital  Evangelista:  Não,  
+Thais  Jayne  Biscaia:  não  é  você.  
+Gabriel  Lucas  Vital  Evangelista:  eu  falo  que  é  porque  você  que  é  a  nossa  líder,  eh,  você  que  tá  à  frente  
+do
+ 
+Thais  Jayne  Biscaia:  Não,  não  é  assim,  eu  tô  à  frente  do  projeto  do  que  é  tipo  do  início  disso  aí,  
+Gabriel  Lucas  Vital  Evangelista:  projeto,  
+Thais  Jayne  Biscaia:  entendeu?  
+Thais  Jayne  Biscaia:  Porque  o  que  tá  aparentando  para  elas  é  que,  tipo,  a  minha  equipe  não  tá  
+trabalhando,
+ 
+só
+ 
+que
+ 
+tá
+ 
+em
+ 
+uma
+ 
+prova
+ 
+que
+ 
+minha
+ 
+equipe
+ 
+tá
+ 
+trabalhando,
+ 
+entendeu?
+ 
+Gabriel  Lucas  Vital  Evangelista:  exatamente.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  é  até  por  isso  que  eu  eu  eu  achei  que,  
+Thais  Jayne  Biscaia:  Então,  
+Gabriel  Lucas  Vital  Evangelista:  ó,  se  você  quiser  aposentar,  ﬁca  à  vontade,  
+Thais  Jayne  Biscaia:  não,  não,  
+Gabriel  Lucas  Vital  Evangelista:  tá?  
+Thais  Jayne  Biscaia:  não.  
+Thais  Jayne  Biscaia:  Ixe,  não,  
+Gabriel  Lucas  Vital  Evangelista:  Juro,  sério,  é  porque  eu  tenho  zero  vaidade  nisso.  
+Thais  Jayne  Biscaia:  não  é,  não  é  um  trabalho  nosso,  não  é,  é  em  conjunto.  
+Thais  Jayne  Biscaia:  Eu  te  dei  os  dados  e  você  montou.  
+Gabriel  Lucas  Vital  Evangelista:  Sim.  
+Thais  Jayne  Biscaia:  É,  é  em  conjunto,  eu  acho.  
+Thais  Jayne  Biscaia:  E  assim,  você  é  o  CS  da  conta,  você  que  tem  que  também  é  bom  que  você  já  
+você
+ 
+já
+ 
+vá
+ 
+assumindo
+ 
+algumas
+ 
+coisas,
+ 
+porque
+ 
+até
+ 
+hoje
+ 
+quem
+ 
+levou
+ 
+quase
+ 
+todas
+ 
+as
+ 
+reuniões
+ 
+fui
+ 
+eu.
+ 
+Thais  Jayne  Biscaia:  Então  acho  que  é  importante  também  para  elas  ver,  tipo,  não,  reclamação  é  com  
+a
+ 
+Gabriel
+ 
+e
+ 
+não
+ 
+com
+ 
+a
+ 
+Thaís,
+ 
+porque,
+ 
+por
+ 
+exemplo,
+ 
+a
+ 
+reclamação
+ 
+veio
+ 
+para
+ 
+mim
+ 
+disso
+ 
+aí
+ 
+e
+ 
+não
+ 
+para
+ 
+você.
+ 
+Thais  Jayne  Biscaia:  E  o  certo  era  ter  ido  para  você,  entendeu?  
+Thais  Jayne  Biscaia:  Como  CS.  
+Gabriel  Lucas  Vital  Evangelista:  Sim.  
+Thais  Jayne  Biscaia:  Então,  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  é  isso  que  é  isso  que  é  importante  a  gente  deixar  claro.  
+Gabriel  Lucas  Vital  Evangelista:  é.  
+Thais  Jayne  Biscaia:  Por  isso  que  eu  acho  que  você  que  tem  que  apresentar.  
+Gabriel  Lucas  Vital  Evangelista:  Não.  Sim.  É  porque  eu  acho  que  pro  nosso  cliente  é  difícil  fazer  essa  
+distinção,
+ 
+sabe?
+ 
+Thais  Jayne  Biscaia:  Concord.  
+Gabriel  Lucas  Vital  Evangelista:  Pro  cliente  de  BPO  vai  ser  muito  difícil  fazer  essa  distinção.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  porque,  tipo  assim,  
+Thais  Jayne  Biscaia:  Sim.  
+01:35:00  
+Gabriel  Lucas  Vital  Evangelista:  ah,  tô  insatisfeito  com  o  relatório,  não.  
+Gabriel  Lucas  Vital  Evangelista:  Isso  aí  você  não  vai  falar  comigo,  você  vai  falar  com  o  Gabriel.  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Tipo,  é  porque  ele  ele  vai  ﬁcar  assim,  eu  quero  reclamar,  não  importa  
+com
+ 
+quem.
+ 
+Thais  Jayne  Biscaia:  É,  eu  quero  isso.  
+Thais  Jayne  Biscaia:  Exatamente.  
+Thais  Jayne  Biscaia:  E  daí  assim  a  reclamação,  que  que  eu  vou  fazer?  
+Thais  Jayne  Biscaia:  Que  nem  eu  passei  pro  Renato,  daí  assim  e  o  certo  era  ter  passado  para  você,  
+mas
+ 
+eu
+ 
+passei
+ 
+direto
+ 
+para
+ 
+ele
+ 
+já
+ 
+pra
+ 
+gente
+ 
+não
+ 
+sofrer
+ 
+consequências,
+ 
+vamos
+ 
+dizer
+ 
+assim,
+ 
+tipo
+ 
+já
+ 
+pegar.
+ 
+Thais  Jayne  Biscaia:  E  daí  ele  daí  foi  bom  que  eh  de  início  de  impressão  que  alguém  tinha  al  alguma  
+coisa
+ 
+tava
+ 
+Gabriel  Lucas  Vital  Evangelista:  Nossa!  
+Thais  Jayne  Biscaia:  faltando  e  no  ﬁm  não  tava,  né?  
+Thais  Jayne  Biscaia:  Tipo,  a  gente  já  tava  tudo  meio  
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  organizado.  
+Gabriel  Lucas  Vital  Evangelista:  deixa  eu  ver  alguns  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  É,  meu  meu  contexto  acabou  aqui,  meus  1  milhão  pouquins.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  tenho  que  esperar  duas  horas  para  poder  voltar  a  usar.  
+Thais  Jayne  Biscaia:  Ah,  mas  deixa  para  amanhã.  
+Gabriel  Lucas  Vital  Evangelista:  E  não,  
+Thais  Jayne  Biscaia:  Deixa  eu  ver  
+Gabriel  Lucas  Vital  Evangelista:  o  negócio  é  que  eu  tinha  que  eu  tinha  que  criar  um  negócio  aqui,  mas  
+basicamente
+ 
+a
+ 
+gente
+ 
+ainda
+ 
+só
+ 
+falta
+ 
+agora
+ 
+melhorar
+ 
+essa
+ 
+visualização
+ 
+aqui
+ 
+do
+ 
+do
+ 
+Thais  Jayne  Biscaia:  se  
+Gabriel  Lucas  Vital  Evangelista:  distribuição  do  documental,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  trazendo  ela  para  apenas  duas,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Que  é  conforme  e  não  conforme,  sem  levar  em  cons.  
+Gabriel  Lucas  Vital  Evangelista:  Se  bem  que  aqui  a  você  acha  que  faz  aqui  ser  geralzão  mesmo,  né?  
+Thais  Jayne  Biscaia:  é  aí  é  geralzão  mesmo.  
+Thais  Jayne  Biscaia:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  Beleza?  
+Gabriel  Lucas  Vital  Evangelista:  Porque  nesse  daqui,  esse  daqui  é  só  com  fornecedor,  né?  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  E  aqui  a  gente  tem  por  terceiro.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  pode  também  colocar  essa  visualização  de  card  aqui  para  
+terceiro.
+ 
+Gabriel  Lucas  Vital  Evangelista:  O  que  que  você  
+Thais  Jayne  Biscaia:  Também  acho.  
+Gabriel  Lucas  Vital  Evangelista:  acha,  
+Thais  Jayne  Biscaia:  Acho.  
+Thais  Jayne  Biscaia:  Acho  que  que  vai  melhorar.  
+Gabriel  Lucas  Vital  Evangelista:  Aham.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  coloca  car  aqui  pro  terceiro  também.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  e  no  detalhamento  de  competência,  aquelas  mudanças  que  a  
+gente
+ 
+já
+ 
+tinha
+ 
+sinalizado.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Mas  fora  isso,  eh,  aí  você,  tipo,  como  é  amanhã,  amanhã  a  gente  
+podia
+ 
+só
+ 
+sentar
+ 
+uns
+ 
+minutinhos
+ 
+só
+ 
+para
+ 
+você
+ 
+validar
+ 
+se
+ 
+vai
+ 
+vir
+ 
+a
+ 
+correção
+ 
+certinho
+ 
+de
+ 
+Thais  Jayne  Biscaia:  Fechou.  
+Gabriel  Lucas  Vital  Evangelista:  tipo  eh,  
+Thais  Jayne  Biscaia:  Vamos  validar  isso  eh  na  entre  roadmap  e  almoço.  
+Gabriel  Lucas  Vital  Evangelista:  é,  
+Thais  Jayne  Biscaia:  Que  que  você  acha?  
+Gabriel  Lucas  Vital  Evangelista:  pode  ser  o  horário  que  você  quiser  e  minha  agenda  tiver  livre,  você  
+pode
+ 
+dar
+ 
+Thais  Jayne  Biscaia:  Porque  ﬁca  ﬁca  melhor,  
+Gabriel  Lucas  Vital  Evangelista:  casa.  
+Thais  Jayne  Biscaia:  eu  acho.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  fechou.  
+Gabriel  Lucas  Vital  Evangelista:  Vocês  que  
+Thais  Jayne  Biscaia:  Tá  para  eu  tá  livre  ali  na  minha  agenda.  
+Gabriel  Lucas  Vital  Evangelista:  agora  
+Thais  Jayne  Biscaia:  E  daí  é  eu  acho  que  é  o  o  lance  SR  i  fone.  
+Gabriel  Lucas  Vital  Evangelista:  aí  aqui,  mas  engraçado,  eh,  eu  não  sei  por  que  a  planilha  tá  puxando  
+15
+ 
+fornecedores
+ 
+se
+ 
+eles
+ 
+têm
+ 
+54
+ 
+cadastrados.
+ 
+Thais  Jayne  Biscaia:  É,  eu  acho  que  são  15  que  estão  movimentando  a  plataforma,  entendeu?  
+Thais  Jayne  Biscaia:  É  o  que  eu  o  que  eu  
+Gabriel  Lucas  Vital  Evangelista:  Mas,  mas  aqui,  mas  você  não  acha  que,  por  exemplo,  
+Thais  Jayne  Biscaia:  senti.  
+Gabriel  Lucas  Vital  Evangelista:  eh,  por  exemplo,  ó,  do  54,  não,  53  são  com  certiﬁcado  válido.  
+Gabriel  Lucas  Vital  Evangelista:  Então,  pelo  menos  a  busca  automática  a  gente  tinha  que  ter  de  53,  
+Thais  Jayne  Biscaia:  Sim,  sim.  
+Thais  Jayne  Biscaia:  Não,  54,  porque  esse  cara  que  não,  
+Gabriel  Lucas  Vital  Evangelista:  não  é?  
+Gabriel  Lucas  Vital  Evangelista:  Porque  tem  um  não  
+Thais  Jayne  Biscaia:  ele  não  tá  certiﬁcado,  
+Gabriel  Lucas  Vital  Evangelista:  certiﬁcado.  
+Thais  Jayne  Biscaia:  mas  ele  tem  busca  porque  eu  vi  as  buscas  deles  dele.  
+Thais  Jayne  Biscaia:  Isso  eu  vi  que  é  a  mática.  
+Thais  Jayne  Biscaia:  Eu  sei  qual  que  tá,  não  tá  certiﬁcado.  
+Thais  Jayne  Biscaia:  É  a  mática,  
+Gabriel  Lucas  Vital  Evangelista:  E  relatório  
+Thais  Jayne  Biscaia:  entendeu?  
+Thais  Jayne  Biscaia:  Tinha  que  descobrir.  
+Gabriel  Lucas  Vital  Evangelista:  de  
+Thais  Jayne  Biscaia:  É  aquele  é  tinha  que  descobrir  o  o  resto  aí  da,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Não  é,  mas  não,  mas  isso  é  fácil.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  isso  é  isso  é  fácil.  
+Thais  Jayne  Biscaia:  R  C  falta  sóc  
+Gabriel  Lucas  Vital  Evangelista:  engasado,  cara,  aação  desse  a  interação  dos  trem  não  é  nada  boa,  
+velho,
+ 
+do
+ 
+database.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Nossa  senhora.  
+Gabriel  Lucas  Vital  Evangelista:  Aqui,  por  exemplo,  não  tá  vindo  o  a  melhoria  que  o  Ricardo  falou  que  
+ia
+ 
+fazer
+ 
+de
+ 
+de
+ 
+trazer
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  a  a  barrinha  para  pesquisar,  sabe?  
+Gabriel  Lucas  Vital  Evangelista:  Mas  eu  tô  com  essa  planilha  aberta.  
+Thais  Jayne  Biscaia:  Sì.  
+Gabriel  Lucas  Vital  Evangelista:  Deixa  eu  dar  uma  olhadinha  só  no  frenho  aqui.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  tá  mostrando  33  
+Thais  Jayne  Biscaia:  Não,  tinha  que  ter  54  pelo  menos.  
+Gabriel  Lucas  Vital  Evangelista:  aqui.  
+Thais  Jayne  Biscaia:  Você  não  tem  Excel  na  máquina?  
+Gabriel  Lucas  Vital  Evangelista:  Não,  não  tem.  
+Thais  Jayne  Biscaia:  Hum.  Vai  ter  pro  Cáio.  
+01:40:00  
+Thais  Jayne  Biscaia:  Acho  que  é  o  Cásio.  
+Thais  Jayne  Biscaia:  É,  pegue  pro  Cásio.  
+Gabriel  Lucas  Vital  Evangelista:  O  o  Renato  continua  na  minha  cola  porque  ele  falou  que  os  três  
+Thais  Jayne  Biscaia:  Hum  hum.  
+Gabriel  Lucas  Vital  Evangelista:  conﬁgurado  para  ele.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  falei  assim,  cara,  eh,  
+Thais  Jayne  Biscaia:  Não  entendi.  
+Gabriel  Lucas  Vital  Evangelista:  que  tudo  que  eu  mando  para  sabe  você  lembra  aquele  trem  que  eu  te  
+falei
+ 
+que
+ 
+perit
+ 
+acho
+ 
+que
+ 
+Thais  Jayne  Biscaia:  Desculpa.  
+Gabriel  Lucas  Vital  Evangelista:  você  viu  em  uma  callou  e  falou  assim:  
+Thais  Jayne  Biscaia:  Hum.  
+Gabriel  Lucas  Vital  Evangelista:  "Nossa,  eh,  a  parada  vem  desconﬁgurada  para  mim.  seu  seu  
+PowerPoint.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Ele  falou  que  continua.  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  falei  assim:  "Não,  velho,  é  alguma  coisa  que  é  só  uma  máquina,  
+não
+ 
+tem
+ 
+Thais  Jayne  Biscaia:  Não,  
+Gabriel  Lucas  Vital  Evangelista:  base."  
+Thais  Jayne  Biscaia:  não  tem  porque  a  gente  a  gente  troca  um  monte  de  de  documento,  um  monte  de  
+coisa,
+ 
+não
+ 
+vem
+ 
+desconﬁgurado
+ 
+para
+ 
+mim.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Exatamente.  
+Gabriel  Lucas  Vital  Evangelista:  Eu  não  consigo,  eu  não  consigo  contar  aqui  quantos,  quantos  que  eu  
+tenho
+ 
+sem
+ 
+repetir,
+ 
+né?
+ 
+Thais  Jayne  Biscaia:  Угу m.  
+Gabriel  Lucas  Vital  Evangelista:  Mas  aqui,  ó,  tá  mostrando  selecionar  tudo,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  33,  tá  vendo?  
+Gabriel  Lucas  Vital  Evangelista:  Tem  que  ver  com  o  Ricardo  por  na  real.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  deixa  eu  
+Gabriel  Lucas  Vital  Evangelista:  ver  aí.  
+Gabriel  Lucas  Vital  Evangelista:  Pera  aí,  é,  vou  apagar  essas  daqui.  
+Gabriel  Lucas  Vital  Evangelista:  Depois  eu  vou  baixar  todas  de  novo  de  dentro  do  sistema,  ó,  para  pra  
+gente
+ 
+poder
+ 
+validar.
+ 
+Gabriel  Lucas  Vital  Evangelista:  emb  tá  subindo  15  fornecedores.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  se  bem  que  antes  de  fazer  isso,  eu  tenho  que  veriﬁcar  se  porque  
+tá
+ 
+aqui,
+ 
+né,
+ 
+15
+ 
+fornecedores
+ 
+competentes,
+ 
+então
+ 
+tem
+ 
+que
+ 
+ter
+ 
+o
+ 
+card
+ 
+de
+ 
+eh
+ 
+quantos
+ 
+forne
+ 
+eh
+ 
+quantidade
+ 
+de
+ 
+fornecedor
+ 
+total
+ 
+cadastrada
+ 
+na
+ 
+eh
+ 
+na
+ 
+base.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Ah,  
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  beleza?  
+Gabriel  Lucas  Vital  Evangelista:  Não  tá.  
+Gabriel  Lucas  Vital  Evangelista:  Fica  com  Deus.  
+Gabriel  Lucas  Vital  Evangelista:  Até  amanhã.  
+Thais  Jayne  Biscaia:  Até  
+Gabriel  Lucas  Vital  Evangelista:  Você  já  mandou  já  o  invite  para  amanhã?  
+Thais  Jayne  Biscaia:  não,  vou  mandar  já.  
+Thais  Jayne  Biscaia:  Pera  aí,  deixa  eu  pegar  abrir  aqui.  
+Thais  Jayne  Biscaia:  Cadê  minha  agenda?  
+Thais  Jayne  Biscaia:  Aí  
+Gabriel  Lucas  Vital  Evangelista:  Vou  aproveitar,  vou  pra  academia  mais  cedo.  
+Thais  Jayne  Biscaia:  a  falar  do  almoço,  senão  eu  não  vou.  
+Gabriel  Lucas  Vital  Evangelista:  A  minha  ﬁca  uns  15  minutinhos  aqui  de  casa,  sabe?  
+Gabriel  Lucas  Vital  Evangelista:  Então  no  almoço  não  dá  muito  
+Thais  Jayne  Biscaia:  Ah,  não.  
+Thais  Jayne  Biscaia:  O  meu  é  até  vergonhoso.  
+Gabriel  Lucas  Vital  Evangelista:  corrida.  
+Thais  Jayne  Biscaia:  Quer  ver?  
+Thais  Jayne  Biscaia:  Eu  vou  até  abrir  aqui.  
+Thais  Jayne  Biscaia:  Ah,  cadê?  
+Gabriel  Lucas  Vital  Evangelista:  Amanhã  tem  amanhã  tem  o  roadm,  
+Thais  Jayne  Biscaia:  Deixa  eu  abrir  aqui  o  eh  depois  do  roadmap  que  eu  vou  marcar  das  11  ao  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  meiodia.  
+Gabriel  Lucas  Vital  Evangelista:  Não  
+Thais  Jayne  Biscaia:  Quer  ver?  
+Thais  Jayne  Biscaia:  Eh,  ó,  
+Gabriel  Lucas  Vital  Evangelista:  fechou.  
+Thais  Jayne  Biscaia:  a  marca  que  aparece  para  na  mim,  no  meu  no  meu  je  aqui  dá  269  m  a  a  
+Gabriel  Lucas  Vital  Evangelista:  Isso  é  do  lado  de  cada,  
+Thais  Jayne  Biscaia:  academia,  
+Gabriel  Lucas  Vital  Evangelista:  né?  
+Thais  Jayne  Biscaia:  literalmente.  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  
+Thais  Jayne  Biscaia:  Final,  eu  vou  ter  eu  vou  colocar  assim,  ó.  
+Gabriel  Lucas  Vital  Evangelista:  maravilha.  
+Thais  Jayne  Biscaia:  Final  ﬁnal.  
+Thais  Jayne  Biscaia:  Eu  vou  pôr  você.  
+Thais  Jayne  Biscaia:  E  eu  vou  pôr  o  Ricardo  só  para  ele  já  ﬁcar  meio  que  ciente  da  reunião,  mas  não  
+precisaria
+ 
+ele
+ 
+entrar,
+ 
+não
+ 
+sei,
+ 
+né?
+ 
+Thais  Jayne  Biscaia:  Eu  acho  que  bem,  vou  pôr  nós  duas.  
+Thais  Jayne  Biscaia:  Apresentação  qu  apresentação  não  tá  roadmap.  
+Thais  Jayne  Biscaia:  Radmap,  meu  Jesus  amado.  
+Thais  Jayne  Biscaia:  Ô,  reunião  zarada  loca.  
+Thais  Jayne  Biscaia:  Alinhamento,  alinhamento,  alinhamento.  
+Thais  Jayne  Biscaia:  Brieﬁng.  
+Thais  Jayne  Biscaia:  Reunião.  
+Thais  Jayne  Biscaia:  Reunião  diária  
+Gabriel  Lucas  Vital  Evangelista:  É,  velho,  
+Thais  Jayne  Biscaia:  time.  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  tem  reunião  quase,  acho  que  só  terça,  né,  que  a  gente  não  
+tem
+ 
+reunião,
+ 
+não.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Terça  e  quarta  a  gente  não  tem  reunião  geral,  né?  
+Thais  Jayne  Biscaia:  É,  
+Gabriel  Lucas  Vital  Evangelista:  Aí  
+Thais  Jayne  Biscaia:  é  que  eu  não  tô  nessas  reunião,  né?  
+Thais  Jayne  Biscaia:  Graças  a  Deus.  
+Gabriel  Lucas  Vital  Evangelista:  qu  
+Thais  Jayne  Biscaia:  Essas  reunião  geral.  
+Thais  Jayne  Biscaia:  Só  que  quinta  eu  tenho.  
+Thais  Jayne  Biscaia:  Amanhã  tem  daily  comercial,  
+Gabriel  Lucas  Vital  Evangelista:  Ah,  
+Thais  Jayne  Biscaia:  tem  que  apresentar.  
+Gabriel  Lucas  Vital  Evangelista:  nessa  eu  não  tô  não.  
+Thais  Jayne  Biscaia:  É,  não,  mas  é  do  comercial  e  GDT.  
+Thais  Jayne  Biscaia:  Não  tem  não.  
+Gabriel  Lucas  Vital  Evangelista:  É,  não,  não,  não  tô,  
+Thais  Jayne  Biscaia:  A  gente  não  fala  de  SS.  
+Gabriel  Lucas  Vital  Evangelista:  eu  não  tô  reclamando  não.  
+Gabriel  Lucas  Vital  Evangelista:  Só  tô  Eu  tô  comemorando.  
+Thais  Jayne  Biscaia:  Achar  bem,  né?  
+Gabriel  Lucas  Vital  Evangelista:  Deve  ser  eu  tô.  
+Gabriel  Lucas  Vital  Evangelista:  Eh,  mas  não  fechou,  velho.  
+Gabriel  Lucas  Vital  Evangelista:  Graças  a  Deus,  eu  acho  que  vai  ser  muito  O  resultado  tá  legal.  
+Thais  Jayne  Biscaia:  Aj.  
+Gabriel  Lucas  Vital  Evangelista:  A  gente  já  viu  já  viabilidade,  eu  já  trouxe  dois  cenários  já  de  estilos  de  
+integrações
+ 
+possíveis
+ 
+para
+ 
+para
+ 
+Azuri.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Você  sabe  me  falar  se  Azurik  usa  pacote  oﬃce  ou  Google?  
+01:45:00  
+Thais  Jayne  Biscaia:  Hm.  
+Thais  Jayne  Biscaia:  Eu  acho  que  é  Oﬃce  porque  eles  é,  se  não  me  engano  é  Teams,  se  eu  não  me  
+engano.
+ 
+Thais  Jayne  Biscaia:  Não  tenho  certeza.  
+Gabriel  Lucas  Vital  Evangelista:  Não,  
+Thais  Jayne  Biscaia:  Eu  tenho  que  conﬁrmar  com  as  meninas,  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  sim,  
+Thais  Jayne  Biscaia:  mas  
+Gabriel  Lucas  Vital  Evangelista:  a  gente  pergunta  amanhã  porque  isso  interfere  num  modelo  de  
+visualização,
+ 
+tá?
+ 
+Thais  Jayne  Biscaia:  pode  ser,  né?  
+Thais  Jayne  Biscaia:  Uhum.  
+Thais  Jayne  Biscaia:  Não,  qualquer  coisa  a  gente  a  gente  informa  elas  para  se  manter  a  ver  pelo  
+Google,
+ 
+Gabriel  Lucas  Vital  Evangelista:  É,  
+Thais  Jayne  Biscaia:  que  é  o  que  a  gente  trabalha,  né?  
+Gabriel  Lucas  Vital  Evangelista:  é  que  é  um  dos  não,  mas  tem  uma  solução  também  eh,  que  seria  tipo  
+um
+ 
+sitezinho
+ 
+para
+ 
+elas
+ 
+também
+ 
+seria
+ 
+seguro
+ 
+e
+ 
+não
+ 
+violaria
+ 
+Thais  Jayne  Biscaia:  Uhum.  
+Gabriel  Lucas  Vital  Evangelista:  LGPD,  mas  o  ideal  seria  ser  pelo  Google.  
+Thais  Jayne  Biscaia:  Opa,  deixa  eu  ver  aqui  que  eu  vou  mandar  um  negócio  pro  Vagnão  lá  num  grupo  
+meu
+ 
+e
+ 
+do
+ 
+Deixa
+ 
+eu
+ 
+só
+ 
+ver
+ 
+aqui.
+ 
+Gabriel  Lucas  Vital  Evangelista:  Tá,  tô  indo  aqui  com  Deus,  tá?  
+Thais  Jayne  Biscaia:  Fechou.  
+Thais  Jayne  Biscaia:  Então,  obrigada.  
+Gabriel  Lucas  Vital  Evangelista:  Ciao  
+Thais  Jayne  Biscaia:  Até.  Vai  com  Deus.  
+Thais  Jayne  Biscaia:  Boa  academia.  
+Thais  Jayne  Biscaia:  Eu  vou  vou  terminar  minhas  pendências  aqui.  
+Thais  Jayne  Biscaia:  Até  amanhã.  
+Thais  Jayne  Biscaia:  Bos.  
+A  reunião  terminou  depois  de  01:46:12  👋  
+Esta  transcrição  editável  foi  gerada  por  computador  e  pode  conter  erros.  Depois  de  criada,  ela  poderá  
+ser
+ 
+editada
+ 
+pelos
+ 
+usuários.
+ 
+ 
