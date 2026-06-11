@@ -46,7 +46,7 @@ export function MultiSelectDropdown({
     selected.size === 0
       ? placeholder
       : selected.size === 1
-      ? [...selected][0]
+      ? (options.find(o => o.key === [...selected][0])?.label ?? [...selected][0])
       : `${selected.size} selecionados`
 
   const handleToggle = useCallback((key: string, e: React.MouseEvent) => {

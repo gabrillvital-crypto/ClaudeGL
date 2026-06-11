@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import type { SitTerceiroRow, DrillDoc } from '../types'
 import { DrillDown } from './DrillDown'
 import { GrupoEmpresaView } from './GrupoEmpresaView'
@@ -77,10 +77,15 @@ export function R3Section({ data, geradoEm = '' }: Props) {
     [filteredData]
   )
 
+  // Ref sempre sincronizado inline — garante que o setTimeout captura o valor mais atual
+  const pdfRowsRef = useRef(pdfRows)
+  pdfRowsRef.current = pdfRows
+
   function handlePDF() {
+    const snapshot = pdfRowsRef.current
     setPdfLoading(true)
     setTimeout(() => {
-      exportR3PDF({ rows: pdfRows, geradoEm })
+      exportR3PDF({ rows: snapshot, geradoEm })
       setPdfLoading(false)
     }, 50)
   }
