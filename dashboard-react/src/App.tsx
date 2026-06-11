@@ -23,35 +23,50 @@ export function App() {
 
   const hasFilter = selectedFornSet.size > 0
 
-  // Opções para o dropdown com Razão Social — CNPJ formatado
+  // Opções para o dropdown — uma linha por CNPJ único (suporta filiais com mesmo nome)
   const fornOptions = useMemo(() => {
     if (!data) return []
-    const names = new Set([
+    const allNames = new Set([
       ...data.sit_tabela.map(r => r.Fornecedor),
       ...data.forn_sit.map(r => r.Fornecedor),
+      ...data.tabela.map(r => r.Fornecedor),
     ])
-    return [...names].sort().map(name => ({
-      key: name,
-      label: data.fornCNPJMap[name]
-        ? `${name} — ${fmtCNPJ(data.fornCNPJMap[name])}`
-        : name,
-    }))
+    const seen = new Set<string>()
+    const opts: { key: string; label: string }[] = []
+    ;[...allNames].sort().forEach(name => {
+      const cnpjs = data.fornCNPJMap[name] ?? []
+      if (cnpjs.length > 0) {
+        cnpjs.forEach(cnpj => {
+          const key = `${name}|||${cnpj}`
+          if (!seen.has(key)) {
+            seen.add(key)
+            opts.push({ key, label: `${name} — ${fmtCNPJ(cnpj)}` })
+          }
+        })
+      } else {
+        if (!seen.has(name)) {
+          seen.add(name)
+          opts.push({ key: name, label: name })
+        }
+      }
+    })
+    return opts
   }, [data])
 
   // Dados filtrados
   const sitFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.sit_tabela.filter(r => matchesForn(r.Fornecedor)) : data.sit_tabela
+    return hasFilter ? data.sit_tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.sit_tabela
   }, [data, hasFilter, matchesForn])
 
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor)) : data.forn_sit
+    return hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.forn_sit
   }, [data, hasFilter, matchesForn])
 
   const tabelaFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor)) : data.tabela
+    return hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
   }, [data, hasFilter, matchesForn])
 
   // KPIs reativos ao filtro

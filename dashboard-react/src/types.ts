@@ -6,6 +6,7 @@ export type StatusR4 = 'Aprovado' | 'Reprovado' | 'Não Anexado' | 'Em análise'
 
 export interface PendRow {
   Fornecedor: string
+  CNPJ_Forn: string
   Status: string
   Area: string
   Documento: string
@@ -25,6 +26,7 @@ export interface SitTerceiroRow {
 
 export interface FornSitRow {
   Fornecedor: string
+  CNPJ_Forn: string
   Documento: string
   Status: StatusR4
   Vencimento: string
@@ -126,8 +128,8 @@ export interface DashboardData {
   // Drill-down: fornecedor → terceiro → docs
   drillData: Record<string, Record<string, DrillDoc[]>>
 
-  // Mapa abbrev-name → CNPJ para o dropdown
-  fornCNPJMap: Record<string, string>
+  // Mapa abbrev-name → lista de CNPJs (suporta matriz + filiais com mesmo nome)
+  fornCNPJMap: Record<string, string[]>
 
   // Meta
   competencias: string[]

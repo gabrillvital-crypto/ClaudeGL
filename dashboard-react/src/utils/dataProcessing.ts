@@ -141,9 +141,12 @@ export function processAllData(
   // Coluna "Situação última solicitação"
   const colSitSolicR3 = sitCols.find(c => c.toLowerCase().includes('ltima') && c.toLowerCase().includes('solic')) ?? null
 
+  const colCNPJPend = pendCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
+
   const fornSitCols = rawFornSit[0] ? Object.keys(rawFornSit[0]) : []
   const colR4RS = fornSitCols[0] ?? 'Razão Social'
   const colAnaliseR4 = fornSitCols.find(c => c.toLowerCase().includes('lise') && c.toLowerCase().includes('doc')) ?? null
+  const colCnpjR4 = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
 
   // Fornecedores cadastro CSV
   const fornCadCols = rawFornCad[0] ? Object.keys(rawFornCad[0]) : []
@@ -189,6 +192,7 @@ export function processAllData(
       if (!status) return null
       return {
         Fornecedor: abbrev(String(row[colR4RS] || '')),
+        CNPJ_Forn: colCnpjR4 ? normCNPJ(row[colCnpjR4]) : '',
         Documento: String(row['Documento'] ?? '').trim(),
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
@@ -222,7 +226,6 @@ export function processAllData(
     if (c) cnpjsR3.add(c)
   })
   const cnpjsR4 = new Set<string>()
-  const colCnpjR4 = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
   rawFornSit.forEach(row => {
     const c = colCnpjR4 ? normCNPJ(row[colCnpjR4]) : ''
     if (c) cnpjsR4.add(c)
@@ -263,6 +266,7 @@ export function processAllData(
     const comp = String(row[colMarcasPend] ?? '').trim().replace(/^nan$/, '')
     return {
       Fornecedor: abbrev(String(row[colRsPend] || '')),
+      CNPJ_Forn: colCNPJPend ? normCNPJ(row[colCNPJPend]) : '',
       Status: String(row[colSitPend] || '').trim(),
       Area: String(row[colAreaPend] || '').trim(),
       Documento: extractDoc(row),
@@ -368,15 +372,20 @@ export function processAllData(
 
   const fornecedores_list = [...new Set(tabela.map(r => r.Fornecedor))].sort()
 
-  // Mapa name → CNPJ para o dropdown (Razão Social — CNPJ)
-  const fornCNPJMap: Record<string, string> = {}
-  sitCalc.forEach(r => {
-    if (r.CNPJ_Forn && !fornCNPJMap[r.Fornecedor]) fornCNPJMap[r.Fornecedor] = r.CNPJ_Forn
-  })
+  // Mapa name → [CNPJ, ...] para o dropdown — suporta matriz + filiais com mesmo nome
+  const fornCNPJMap: Record<string, string[]> = {}
+  const _addCNPJ = (name: string, cnpj: string) => {
+    if (!name || !cnpj) return
+    if (!fornCNPJMap[name]) fornCNPJMap[name] = []
+    if (!fornCNPJMap[name].includes(cnpj)) fornCNPJMap[name].push(cnpj)
+  }
+  sitCalc.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
+  forn_sit.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
+  tabela.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
   rawFornCad.forEach(row => {
     const rs = abbrev(String(row[colRsFornCad] ?? ''))
     const cnpj = normCNPJ(row[colCNPJForn])
-    if (rs && cnpj && !fornCNPJMap[rs]) fornCNPJMap[rs] = cnpj
+    _addCNPJ(rs, cnpj)
   })
 
   return {
