@@ -4,6 +4,17 @@ import type {
   DrillDoc, DashboardData, StatusR3, StatusR4,
 } from '../types'
 
+function stripContratos(rows: Record<string, string>[]): Record<string, string>[] {
+  if (!rows.length) return rows
+  const contractCols = Object.keys(rows[0]).filter(k => /^contratos?$/i.test(k.trim()))
+  if (!contractCols.length) return rows
+  return rows.map(row => {
+    const clean = { ...row }
+    contractCols.forEach(c => delete clean[c])
+    return clean
+  })
+}
+
 export function abbrev(name: string, n = 40): string {
   const s = String(name || '').trim()
   const short = s.replace(/\s+(LTDA|LTDA\.|S\/A|SA|EIRELI|ME|EPP).*/i, '')
@@ -114,6 +125,13 @@ export function processAllData(
   rawFornCad: Record<string, string>[]
 ): DashboardData {
   const geradoEm = new Date().toLocaleString('pt-BR')
+
+  // Strip qualquer coluna "Contrato" / "Contratos" antes de processar
+  rawPend    = stripContratos(rawPend)
+  rawTerc    = stripContratos(rawTerc)
+  rawSit     = stripContratos(rawSit)
+  rawFornSit = stripContratos(rawFornSit)
+  rawFornCad = stripContratos(rawFornCad)
 
   // ── Descoberta de colunas ─────────────────────────────────────────────────
   const pendCols = rawPend[0] ? Object.keys(rawPend[0]) : []

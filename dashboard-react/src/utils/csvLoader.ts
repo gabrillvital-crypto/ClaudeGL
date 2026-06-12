@@ -7,6 +7,7 @@ export async function loadCSV(url: string): Promise<Record<string, string>[]> {
   const result = Papa.parse<Record<string, string>>(text, {
     header: true,
     skipEmptyLines: true,
+    delimiter: '',  // auto-detect: comma, semicolon, tab, pipe
     transformHeader: (h: string) => h.trim(),
   })
   return result.data

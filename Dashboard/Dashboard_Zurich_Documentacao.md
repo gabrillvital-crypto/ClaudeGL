@@ -1,7 +1,7 @@
 # Dashboard Gestão de Terceiros — Zurich Airport
 **Documentação técnica e operacional**
 Elaborado por: Gabriel Vital | Efcaz CS | 26/05/2026
-Atualizado: 03/06/2026 (sessão 11 — novos dados jun/2026, novos cards, seção sem interação com a plataforma)
+Atualizado: 12/06/2026 (atualização de dados — base semanal)
 
 ---
 
@@ -345,6 +345,7 @@ O HTML é gerado em `Dashboard\relatorio_fornecedores_zurich.html`. Abrir no Chr
 | 28/05/2026 | 10 | Documentação atualizada com de-paras completos |
 | 01/06/2026 | — | Dados atualizados para jun/2026 (CSVs 03/06), card Total de Fornecedores alterado para contagem por CNPJ (55), card "Fornecedores com Execução" adicionado (38) |
 | 03/06/2026 | 11 | R5 (cadastro XLS) adicionado como 5ª fonte; seção "Fornecedor sem interação com a plataforma" (21 fornecedores); enriquecimento do FORN_CNPJ_MAP com dados do cadastro; Top Service atualizado para 3 CNPJs |
+| 12/06/2026 | — | Atualização de dados (base semanal). Total Fornecedores: 57 · Fornecedores c/ Execução: 36 · Aprovados: 1.343 · Reprovados: 2.275 (+218 vs semana anterior) · Ag. Submissão: 1.279 · Em Análise: 58 · Vencidos: 143 · Terceiros Ativos: 1.019 |
 
 ---
 

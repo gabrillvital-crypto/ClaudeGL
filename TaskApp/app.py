@@ -307,19 +307,18 @@ def db_update_client_notes(client_id, status_cs, notes_cs):
 
 def db_get_client_stats():
     with _db() as db:
-        clients = db.execute("SELECT * FROM clients ORDER BY tier, name").fetchall()
-        result = []
-        for c in clients:
-            s = db.execute("""
-                SELECT
-                    SUM(CASE WHEN status='pending'     THEN 1 ELSE 0 END) AS pending,
-                    SUM(CASE WHEN status='in_progress' THEN 1 ELSE 0 END) AS in_progress,
-                    SUM(CASE WHEN status='done'        THEN 1 ELSE 0 END) AS done,
-                    COUNT(*) AS total
-                FROM tasks WHERE client_id=?
-            """, (c["id"],)).fetchone()
-            result.append((c, s))
-        return result
+        clients    = db.execute("SELECT * FROM clients ORDER BY tier, name").fetchall()
+        stats_rows = db.execute("""
+            SELECT client_id,
+                SUM(CASE WHEN status='pending'     THEN 1 ELSE 0 END) AS pending,
+                SUM(CASE WHEN status='in_progress' THEN 1 ELSE 0 END) AS in_progress,
+                SUM(CASE WHEN status='done'        THEN 1 ELSE 0 END) AS done,
+                COUNT(*) AS total
+            FROM tasks WHERE client_id IS NOT NULL GROUP BY client_id
+        """).fetchall()
+    stats_map = {r["client_id"]: r for r in stats_rows}
+    _empty    = {"pending": 0, "in_progress": 0, "done": 0, "total": 0}
+    return [(c, stats_map.get(c["id"], _empty)) for c in clients]
 
 
 # Tasks ─────────────────────────────────────────────────────────────────────
@@ -472,6 +471,36 @@ def fetch_tasks_for_date(iso_date):
             "CASE priority WHEN 'alta' THEN 0 WHEN 'media' THEN 1 ELSE 2 END",
             (iso_date,)
         ).fetchall()
+
+
+def fetch_checklists_for_tasks(task_ids):
+    """Bulk-load checklist items — retorna {task_id: [rows]} em vez de N queries."""
+    if not task_ids:
+        return {}
+    placeholders = ",".join("?" * len(task_ids))
+    with _db() as db:
+        rows = db.execute(
+            f"SELECT * FROM checklist_items WHERE task_id IN ({placeholders})"
+            " ORDER BY task_id, position, id",
+            list(task_ids)
+        ).fetchall()
+    result = {}
+    for row in rows:
+        result.setdefault(row["task_id"], []).append(row)
+    return result
+
+
+def fetch_client_names(client_ids):
+    """Bulk-load nomes de clientes — retorna {client_id: name} em vez de N queries."""
+    ids = [cid for cid in client_ids if cid]
+    if not ids:
+        return {}
+    placeholders = ",".join("?" * len(ids))
+    with _db() as db:
+        rows = db.execute(
+            f"SELECT id, name FROM clients WHERE id IN ({placeholders})", ids
+        ).fetchall()
+    return {r["id"]: r["name"] for r in rows}
 
 
 def fetch_tasks_counts_for_month(year, month):
@@ -2190,10 +2219,12 @@ class TaskApp(ctk.CTk):
                          font=ctk.CTkFont(size=13), text_color="#bbb").pack(pady=60)
             return
 
+        _ck   = fetch_checklists_for_tasks([t["id"] for t in tasks])
+        _clns = fetch_client_names({t["client_id"] for t in tasks})
         for task in tasks:
-            self._card(task)
+            self._card(task, _ck, _clns)
 
-    def _card(self, task):
+    def _card(self, task, _ck_by_id=None, _cl_names=None):
         is_done       = task["status"] == "done"
         is_in_progress = task["status"] == "in_progress"
         p             = PRIORITY[task["priority"]]
@@ -2243,7 +2274,7 @@ class TaskApp(ctk.CTk):
                          text_color="white").pack(expand=True)
 
         # Checklist progress badge (se existir)
-        items     = db_get_checklist(task["id"])
+        items     = _ck_by_id.get(task["id"], []) if _ck_by_id is not None else db_get_checklist(task["id"])
         done_ck   = sum(1 for i in items if i["is_done"])
         total_ck  = len(items)
         if total_ck > 0:
@@ -2278,10 +2309,14 @@ class TaskApp(ctk.CTk):
 
         # Cliente badge
         if task["client_id"]:
-            with _db() as _cx:
-                _cl = _cx.execute("SELECT name FROM clients WHERE id=?", (task["client_id"],)).fetchone()
-            if _cl:
-                cl_name = _cl["name"][:18] + ("…" if len(_cl["name"]) > 18 else "")
+            if _cl_names is not None:
+                _raw_name = _cl_names.get(task["client_id"])
+            else:
+                with _db() as _cx:
+                    _r = _cx.execute("SELECT name FROM clients WHERE id=?", (task["client_id"],)).fetchone()
+                _raw_name = _r["name"] if _r else None
+            if _raw_name:
+                cl_name = _raw_name[:18] + ("…" if len(_raw_name) > 18 else "")
                 cl_badge = ctk.CTkFrame(card, fg_color="#dbeafe", corner_radius=4,
                                         width=max(60, len(cl_name)*7), height=22)
                 cl_badge.grid(row=0, column=6, padx=4, pady=(14, 0), sticky="ne")
@@ -2409,6 +2444,10 @@ class TaskApp(ctk.CTk):
             ).pack(pady=60)
             return
 
+        _all  = today_tasks + overdue_tasks
+        _ck   = fetch_checklists_for_tasks([t["id"] for t in _all])
+        _clns = fetch_client_names({t["client_id"] for t in _all})
+
         if today_tasks:
             sec = ctk.CTkFrame(self.scroll, fg_color="transparent")
             sec.pack(fill="x", padx=14, pady=(12, 2))
@@ -2416,7 +2455,7 @@ class TaskApp(ctk.CTk):
                          font=ctk.CTkFont(family="Calibri", size=13, weight="bold"),
                          text_color="#D97706").pack(side="left")
             for task in today_tasks:
-                self._card(task)
+                self._card(task, _ck, _clns)
 
         if overdue_tasks:
             sec = ctk.CTkFrame(self.scroll, fg_color="transparent")
@@ -2425,7 +2464,7 @@ class TaskApp(ctk.CTk):
                          font=ctk.CTkFont(family="Calibri", size=13, weight="bold"),
                          text_color="#DC2626").pack(side="left")
             for task in overdue_tasks:
-                self._card(task)
+                self._card(task, _ck, _clns)
 
     def _build_calendario_view(self):
         _MONTHS = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
@@ -2573,8 +2612,10 @@ class TaskApp(ctk.CTk):
             ctk.CTkLabel(self.scroll, text="Nenhuma tarefa com prazo para este dia.",
                          font=ctk.CTkFont(size=12), text_color="#bbb").pack(pady=20)
         else:
+            _ck   = fetch_checklists_for_tasks([t["id"] for t in day_tasks])
+            _clns = fetch_client_names({t["client_id"] for t in day_tasks})
             for task in day_tasks:
-                self._card(task)
+                self._card(task, _ck, _clns)
 
     def _cal_select(self, iso_date):
         self._cal_selected = iso_date
