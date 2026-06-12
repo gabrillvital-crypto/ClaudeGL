@@ -13,8 +13,8 @@ export function useDashboardData() {
   useEffect(() => {
     setState('loading')
     loadAllCSVs()
-      .then(({ rawPend, rawTerc, rawSit, rawFornSit, rawFornCad }) => {
-        const processed = processAllData(rawPend, rawTerc, rawSit, rawFornSit, rawFornCad)
+      .then(({ rawPend, rawTerc, rawSit, rawFornSit, rawFornCad, rawContratos }) => {
+        const processed = processAllData(rawPend, rawTerc, rawSit, rawFornSit, rawFornCad, rawContratos)
         setData(processed)
         setState('success')
       })

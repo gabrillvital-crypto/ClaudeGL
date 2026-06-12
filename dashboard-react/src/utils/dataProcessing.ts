@@ -6,7 +6,7 @@ import type {
 
 function stripContratos(rows: Record<string, string>[]): Record<string, string>[] {
   if (!rows.length) return rows
-  const contractCols = Object.keys(rows[0]).filter(k => /^contratos?$/i.test(k.trim()))
+  const contractCols = Object.keys(rows[0]).filter(k => /^contrato\b/i.test(k.trim()))
   if (!contractCols.length) return rows
   return rows.map(row => {
     const clean = { ...row }
@@ -122,16 +122,18 @@ export function processAllData(
   rawTerc: Record<string, string>[],
   rawSit: Record<string, string>[],
   rawFornSit: Record<string, string>[],
-  rawFornCad: Record<string, string>[]
+  rawFornCad: Record<string, string>[],
+  rawContratos: Record<string, string>[] = []
 ): DashboardData {
   const geradoEm = new Date().toLocaleString('pt-BR')
 
-  // Strip qualquer coluna "Contrato" / "Contratos" antes de processar
-  rawPend    = stripContratos(rawPend)
-  rawTerc    = stripContratos(rawTerc)
-  rawSit     = stripContratos(rawSit)
-  rawFornSit = stripContratos(rawFornSit)
-  rawFornCad = stripContratos(rawFornCad)
+  // Strip colunas de contrato antes de processar (regex cobre "Contrato 1".."Contrato 10")
+  rawPend      = stripContratos(rawPend)
+  rawTerc      = stripContratos(rawTerc)
+  rawSit       = stripContratos(rawSit)
+  rawFornSit   = stripContratos(rawFornSit)
+  rawFornCad   = stripContratos(rawFornCad)
+  rawContratos = stripContratos(rawContratos)
 
   // ── Descoberta de colunas ─────────────────────────────────────────────────
   const pendCols = rawPend[0] ? Object.keys(rawPend[0]) : []
@@ -256,13 +258,32 @@ export function processAllData(
   let sem_execucao: SemExecRow[] = []
   let total_sem_execucao = 0
 
-  if (rawFornCad.length > 0 && colCNPJForn) {
+  if (rawContratos.length > 0) {
+    // Relatório de contratos é a fonte autoritativa da lista de fornecedores
+    const allCNPJs = new Set(
+      rawContratos.map(r => normCNPJ(r['Documento Fornecedor'])).filter(Boolean)
+    )
+    total_forn_geral = allCNPJs.size
+    const seenSem = new Set<string>()
+    sem_execucao = rawContratos
+      .filter(row => {
+        const cnpj = normCNPJ(row['Documento Fornecedor'])
+        if (!cnpj || cnpjsExec.has(cnpj)) return false
+        if (seenSem.has(cnpj)) return false
+        seenSem.add(cnpj)
+        return true
+      })
+      .map(row => ({
+        Razao_Social: String(row['Fornecedor'] ?? '').trim(),
+        CPF_CNPJ: normCNPJ(row['Documento Fornecedor']),
+      }))
+    total_sem_execucao = sem_execucao.length
+  } else if (rawFornCad.length > 0 && colCNPJForn) {
     total_forn_geral = new Set(rawFornCad.map(r => normCNPJ(r[colCNPJForn])).filter(Boolean)).size
     const semExecRows = rawFornCad.filter(row => {
       const cnpj = normCNPJ(row[colCNPJForn])
       return cnpj && !cnpjsExec.has(cnpj)
     })
-    // Deduplicar por CNPJ
     const seen = new Set<string>()
     sem_execucao = semExecRows
       .filter(row => {
@@ -398,6 +419,11 @@ export function processAllData(
     if (!fornCNPJMap[name]) fornCNPJMap[name] = []
     if (!fornCNPJMap[name].includes(cnpj)) fornCNPJMap[name].push(cnpj)
   }
+  // Relatório de contratos: fonte autoritativa para o dropdown (inclui todos os fornecedores)
+  rawContratos.forEach(row => {
+    _addCNPJ(abbrev(String(row['Fornecedor'] ?? '')), normCNPJ(row['Documento Fornecedor']))
+  })
+  // Complementa com R3/R4/pendências (cobre empresas ausentes do relatório de contratos)
   sitCalc.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
   forn_sit.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
   tabela.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))

@@ -23,33 +23,30 @@ export function App() {
 
   const hasFilter = selectedFornSet.size > 0
 
-  // Opções para o dropdown — uma linha por CNPJ único (suporta filiais com mesmo nome)
+  // Opções para o dropdown — fonte: relatório de contratos (autoritativo) + fallback R3/R4
+  // Uma linha por CNPJ único; filiais com mesmo nome ganham checkboxes independentes
   const fornOptions = useMemo(() => {
     if (!data) return []
-    const allNames = new Set([
-      ...data.sit_tabela.map(r => r.Fornecedor),
-      ...data.forn_sit.map(r => r.Fornecedor),
-      ...data.tabela.map(r => r.Fornecedor),
-    ])
     const seen = new Set<string>()
     const opts: { key: string; label: string }[] = []
-    ;[...allNames].sort().forEach(name => {
-      const cnpjs = data.fornCNPJMap[name] ?? []
-      if (cnpjs.length > 0) {
-        cnpjs.forEach(cnpj => {
-          const key = `${name}|||${cnpj}`
-          if (!seen.has(key)) {
-            seen.add(key)
-            opts.push({ key, label: `${name} — ${fmtCNPJ(cnpj)}` })
+    Object.entries(data.fornCNPJMap)
+      .sort(([a], [b]) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }))
+      .forEach(([name, cnpjs]) => {
+        if (cnpjs.length > 0) {
+          cnpjs.forEach(cnpj => {
+            const key = `${name}|||${cnpj}`
+            if (!seen.has(key)) {
+              seen.add(key)
+              opts.push({ key, label: `${name} — ${fmtCNPJ(cnpj)}` })
+            }
+          })
+        } else {
+          if (!seen.has(name)) {
+            seen.add(name)
+            opts.push({ key: name, label: name })
           }
-        })
-      } else {
-        if (!seen.has(name)) {
-          seen.add(name)
-          opts.push({ key: name, label: name })
         }
-      }
-    })
+      })
     return opts
   }, [data])
 

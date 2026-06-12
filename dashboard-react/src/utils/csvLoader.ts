@@ -14,12 +14,13 @@ export async function loadCSV(url: string): Promise<Record<string, string>[]> {
 }
 
 export async function loadAllCSVs() {
-  const [rawPend, rawTerc, rawSit, rawFornSit, rawFornCad] = await Promise.all([
+  const [rawPend, rawTerc, rawSit, rawFornSit, rawFornCad, rawContratos] = await Promise.all([
     loadCSV('/data/pendencias_zurich.csv'),
     loadCSV('/data/terceiros_zurich.csv'),
     loadCSV('/data/situacao_terceiro_zurich.csv'),
     loadCSV('/data/situacao_fornecedor_zurich.csv'),
     loadCSV('/data/fornecedores_zurich.csv').catch(() => [] as Record<string, string>[]),
+    loadCSV('/data/contratos_zurich.csv').catch(() => [] as Record<string, string>[]),
   ])
-  return { rawPend, rawTerc, rawSit, rawFornSit, rawFornCad }
+  return { rawPend, rawTerc, rawSit, rawFornSit, rawFornCad, rawContratos }
 }
