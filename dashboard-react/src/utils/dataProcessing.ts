@@ -167,9 +167,10 @@ export function processAllData(
   const colCnpjR4 = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
 
   // Fornecedores cadastro CSV
+  // Suporta formato antigo (CPF/CNPJ + Razao Social) e novo (Documento Fornecedor + Fornecedor)
   const fornCadCols = rawFornCad[0] ? Object.keys(rawFornCad[0]) : []
-  const colCNPJForn = findCol(fornCadCols, 'cpf') ?? findCol(fornCadCols, 'cnpj') ?? ''
-  const colRsFornCad = findCol(fornCadCols, 'raz') ?? (fornCadCols[0] ?? '')
+  const colCNPJForn = findCol(fornCadCols, 'cpf') ?? findCol(fornCadCols, 'cnpj') ?? findCol(fornCadCols, 'documento') ?? ''
+  const colRsFornCad = findCol(fornCadCols, 'raz') ?? fornCadCols.find(c => c.trim().toLowerCase() === 'fornecedor') ?? (fornCadCols[0] ?? '')
 
   // ── R3 — Situação por Terceiro ────────────────────────────────────────────
   const sitCalc: SitTerceiroRow[] = rawSit
