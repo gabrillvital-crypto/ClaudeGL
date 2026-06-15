@@ -52,7 +52,7 @@
 |---|---|---|---|
 | Fundição Alumetaf | R$ 3.300 | 🔴 Sem contato | Sem abertura documentada |
 | Soluções Terceirizadas | R$ 3.200 | 🟢 Ongoing | Bom relacionamento — proposta V.3 março/26 |
-| DOF / Norskan | R$ 2.699 | 🟢 Ongoing | Expansão avaliações + ocorrências em negociação |
+| DOF / Norskan | R$ 2.699 | 🟢 Ongoing | Demo Avaliações + Ocorrências feita 10/06 — André validou fit, aguarda aprovação interna DOF; retomar ~22/06 |
 | Sabará Químicos | R$ 2.504 | 🟢 Ongoing | Reunião realizada — Arleane e Alex engajados |
 | Premier Pet | R$ 2.500 | 🟢 Ongoing | Bom relacionamento — Sérgio |
 | Tarkett | R$ 2.500 | 🔴 Sem contato | Sem abertura documentada |
