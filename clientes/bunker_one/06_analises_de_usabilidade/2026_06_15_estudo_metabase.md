@@ -18,13 +18,22 @@
 
 ## KPIs
 
-| Indicador | Valor | Status |
-|---|---|---|
-| Solicitações abertas | 102 | 🔴 |
-| Fornecedores ativos | 20 / 300 | 🔴 |
-| Avaliações abertas | 0 | 🔴 (módulo inativo) |
-| Ocorrências abertas | 19 | 🟡 |
-| Média de homologação | 74 dias 9h | 🔴 |
+| Indicador | Valor | Fonte | Status |
+|---|---|---|---|
+| Solicitações abertas (total) | 102 | Metabase | 🔴 |
+| Solicitações pendentes (visão homepage) | 9 | Portal Bunker One | 🟡 |
+| Fornecedores ativos | 20 / 300 (6,7%) | Metabase | 🔴 |
+| Certificados cadastrais válidos | 8 / 20 (40%) | Portal Bunker One | 🔴 |
+| Fornecedores não certificados | 12 / 20 (60%) | Portal Bunker One | 🔴 |
+| Avaliações abertas | 0 | Metabase | 🔴 (módulo inativo) |
+| Ocorrências abertas (total) | 19 | Metabase | 🟡 |
+| Ocorrências para análise Bunker One | 12 | Portal Bunker One | 🟡 |
+| Ocorrências pendentes fornecedor | 0 | Portal Bunker One | 🟢 |
+| Média de homologação | 74 dias 9h | Metabase | 🔴 |
+| Média homologação com indeferimento | 74 dias 9h | Metabase | 🔴 |
+| Média homologação sem indeferimento | N/D (campo vazio) | Metabase | — |
+
+> Interpretação: a média de homologação de 74 dias é puxada apenas pelos casos com indeferimento — nenhum fornecedor foi aprovado sem ao menos uma rejeição anterior. Isso indica que o processo de documentação está mal calibrado ou os fornecedores não sabem o que enviar.
 
 ---
 
@@ -50,23 +59,62 @@
 
 ---
 
-## Usuários-chave — Contatos completos (Metabase)
+## Perfis completos de usuários — 20 cadastrados (Metabase 15/06/2026)
 
-| Nome | E-mail | Telefone | Empresa | Observação |
+> ⚠ **Alerta de conformidade:** contrato prevê 2 UC — mas há **7 usuários com perfil UC** cadastrados (excluindo EFCAZ interno). Investigar se é erro de role assignment ou uso intencional.
+
+### Tabela completa
+
+| Nome | E-mail | Telefone | Empresa | Perfil(s) | Acesso abr–jun/26 |
+|---|---|---|---|---|---|
+| André Faustino | anfa@bunkerone.com | 11 99999-9999 (placeholder) | Bunker One | Consulta fornecedor | — |
+| Marco Aurelio | marco.aurelio@novaoffshore.com.br | 0000000000 (placeholder) | Nova Offshore | Comprador, Solicitante, Homologador | — |
+| Usuario Integração Setup | — | placeholder | Sistema | Integração | — |
+| Carvalho Junior | carvalho.junior@novaoffshore.com.br | 0000000000 (placeholder) | Nova Offshore | Comprador, Solicitante, Homologador | — |
+| Diego Tavares | dipt@bunkerone.com | 0000000000 (placeholder) | Bunker One | Comprador, Solicitante, Homologador | — |
+| **Rafaella Perdone** | raco@bunkerone.com | **55 21 99866-7852** | Bunker One | Consulta fornecedor + **UC** | 1 acesso (01/abr) |
+| Andre Luis Reis Silva | anlu@bunkerone.com | 11111111111 (placeholder) | Bunker One | **UC** | 2 acessos (último: 22/abr) |
+| Thiago Santos | thsa@bunkerone.com | 5511000000 (placeholder) | Bunker One | Consulta fornecedor | — |
+| **Daniel Caldas da Silva** | dcs@bunkerone.com | **21 97673-6903** | Bunker One | **UC** | 1 acesso (09/abr) |
+| Clara Zacche | anlo@bunkerone.com | 5511999999999 (placeholder) | Bunker One | Consulta fornecedor | — |
+| Ricardo Silva | ricardo.silva@azi.com.br | — | AZI/Efcaz (interno) | Consulta fornecedor | — |
+| Heber Bispo | hebi@bunkerone.com | 0000000000 (placeholder) | Bunker One | Comprador, Solicitante, Homologador | — |
+| **Rodrigo Moura** | rodrigo.moura@novaoffshore.com.br | — | Nova Offshore | **UC** ⭐ | **25 acessos (11/06)** |
+| Roney Gatto | rong@bunkerone.com | **55 21 99742-4014** | Bunker One | Consulta fornecedor | 12 acessos (05/06) |
+| **Rodrigo Lopes** | rodrigo@rlopesconsultoria.com | 0000000000 (placeholder) | Consultoria externa | **UC** | 1 acesso (22/abr) |
+| EFCAZ *(interno)* | administrador@efcaz.com.br | — | Efcaz | Administrador + UC | ⚠ não contabilizar |
+| **José Ronaldo** | jose.filho@novaoffshore.com.br | **21 99717-9333** | Nova Offshore | **UC** | 5 acessos (12/06) |
+| **Mariana Silva Amorim** | masm@bunkerone.com | **55 21 97116-8257** | Bunker One | **UC** | 0 acessos no período |
+| João Borges | — | — | — | — | 1 acesso (16/abr) |
+| Antonio Mendes | — | — | — | — | 6 acessos (02/06) |
+
+> **Telefones reais identificados (DDD 21 — Rio de Janeiro):** Rafaella, Daniel, Roney Gatto, José Ronaldo, Mariana.
+
+---
+
+## Unidades Cadastradoras — análise específica
+
+**Contratado:** 2 UC | **Cadastrado:** 7 UC (excluindo EFCAZ interno)
+
+| UC | Empresa | Telefone real | Acessos abr–jun/26 | Status |
 |---|---|---|---|---|
-| Rafaella Perdone | raco@bunkerone.com | 55 21 99866-7852 | Bunker One | Telefone real |
-| Andre Luis Reis Silva | anlu@bunkerone.com | — (placeholder) | Bunker One | Inativo desde abril |
-| Daniel Caldas da Silva | dcs@bunkerone.com | 21 97673-6903 | Bunker One | Telefone real |
-| **Rodrigo Moura** | rodrigo.moura@novaoffshore.com.br | — | **Nova Offshore** | ⭐ Power user (25 acessos) — é da Nova Offshore, não Bunker One |
-| Rodrigo Lopes | rodrigo@rlopesconsultoria.com | — (placeholder) | Consultoria externa | Acesso pontual |
-| José Ronaldo | jose.filho@novaoffshore.com.br | 21 99717-9333 | **Nova Offshore** | Telefone real — último login interno (12/06) |
-| Mariana Silva Amorim | masm@bunkerone.com | 55 21 97116-8257 | Bunker One | Unidade Cadastradora — telefone real |
-| EFCAZ | administrador@efcaz.com.br | — | Efcaz (interno) | ⚠ Conta interna — não contabilizar |
+| Rodrigo Moura | Nova Offshore | — | **25** ⭐ | 🟢 Mais ativo da conta inteira |
+| José Ronaldo | Nova Offshore | 21 99717-9333 | **5** | 🟢 Ativo |
+| Rafaella Perdone | Bunker One | 55 21 99866-7852 | 1 (01/abr) | 🟡 Praticamente inativa |
+| Andre Luis Reis Silva | Bunker One | placeholder | 2 (22/abr) | 🟡 Inativo há 53d |
+| Daniel Caldas da Silva | Bunker One | 21 97673-6903 | 1 (09/abr) | 🔴 Inativo há 66d |
+| Rodrigo Lopes | Consultoria externa | placeholder | 1 (22/abr) | 🔴 Inativo há 53d |
+| Mariana Silva Amorim | Bunker One | 55 21 97116-8257 | **0** | 🔴 Zero acessos no período |
 
-> **Contatos com telefone real (DDD 21 — Rio de Janeiro):** Rafaella, Daniel, José Ronaldo e Mariana.
-> **Cadastro incompleto:** Andre Luis (placeholder), Rodrigo Lopes (placeholder), Rodrigo Moura (sem telefone).
+### Interpretação crítica
 
-> ⚠ **Insight crítico:** Rodrigo Moura (25 acessos) e José Ronaldo são da **Nova Offshore** — não do Bunker One diretamente. A Nova Offshore é parceira estratégica integrada como usuária e fornecedora na plataforma.
+**A plataforma é operada pela Nova Offshore, não pelo Bunker One.**
+
+Os dois UCs mais ativos (Rodrigo Moura e José Ronaldo) são da **Nova Offshore** — parceira da Bunker One, não funcionários diretos. Os 5 UCs do lado Bunker One têm engajamento quase zero no período.
+
+Isso cria um risco real: se a Nova Offshore mudar de foco ou encerrar a parceria, a Bunker One perde o "motor" da plataforma.
+
+Mariana Silva Amorim (única UC interna da Bunker One com telefone real) **não teve nenhum acesso no período analisado** — e deveria ser a responsável pela gestão.
 
 > ⚠ Renato (Efcaz) indicou que o contato para abertura com Gabriel é André (executivo interno da Efcaz) — não entrar direto sem passar por ele primeiro.
 
@@ -125,6 +173,35 @@
 ### Contato recomendado para abertura
 
 Com base no relatório, o contato operacional certo é **Rodrigo Moura** — não os nomes que apareceram no Metabase. Mas a instrução do Renato segue válida: entrar primeiro pelo executivo interno da Efcaz (André) para fazer a introdução, e após a abertura, direcionar a Rodrigo Moura como power user.
+
+---
+
+## Fornecedores cadastrados — dados de contato (Metabase 15/06/2026)
+
+| Razão Social | Nome Fantasia | CNPJ | Porte | Telefone(s) | E-mail | Capital Social |
+|---|---|---|---|---|---|---|
+| PINAMAK COMERCIAL DE MAQUINAS E EQUIPAMENTOS INDUSTRIAIS LTDA | PINACOMAK | 28.117.851/0001-19 | Grande | 21 2126-2800 / 2126-2822 | moyseis.lopes@pinamak.com.br | 0 |
+| SHIPLOG SERVICOS DE AGENCIAMENTO MARITIMO E LOGISTICA LTDA | SHIPLOG AGENCY | 29.362.436/0001-02 | Pequeno | 21 2135-7521 | luciano.oliveira@shiplogagency.com | 10.000 |
+| NOVA OFFSHORE NAVEGACAO LTDA | — | 23.625.377/0001-31 | Grande | 21 3550-1280 | finance@bonoshipping.com | 9.031.000 |
+| J B C TRANSPORTES LTDA | — | 19.056.147/0001-21 | Microempresa | 21 9999-9999 | xxxxxxxxxx@gmail.com | 100.000 |
+| AMBIPAR RESPONSE MARITIME SERVICES PDA S/A | — | 04.978.039/0001-39 | Grande | 27 3376-7172 / 2781-2558 | fabio@zenithmaritima.com.br | 1.637.998 |
+| SUPPLY CONTROL GERENCIAMENTO E SERVICOS LTDA | SUPPLY CONTROL | 34.803.572/0001-20 | Pequeno | 47 2033-6788 | supplycontrolbunker@gmail.com | 400.000 |
+| ALCANCE ASSESSORIA EM COMERCIO EXTERIOR LTDA | ALCANCE COMEX | 07.989.076/0001-30 | Pequeno | 81 3467-3467 / 3426-5047 | marcos@alcancecomex.com.br | 100.000 |
+| AMSP BRASIL SERVICOS PORTUARIOS E LOGISTICA LTDA | AMSP BRASIL - COMBUSTIVEIS & ENERGIAS SUSTENTAVEIS | 45.926.568/0001-76 | Pequeno | 53 8421-7232 | diretoria@amspbrasil.com.br | 4.500.000 |
+| QUIMITRANS LOGISTICA & TRANSPORTES LTDA | — | 74.445.099/0002-52 | Grande | 21 2676-4410 | controladoria03.sp@qltlog.com | 1.500.000 |
+| MASTER TRANSPORTADORA E LOGISTICA LTDA | BEL-MASTER | 21.102.732/0001-62 | Microempresa | 21 7891-3525 | apereiradasilva49@yahoo.com.br | 110.000 |
+| VANS ASSESSORIA ADUANEIRA LTDA | — | 40.018.508/0001-31 | Pequeno | 21 6425-3194 | vans.assessoria@gmail.com | 15.000 |
+| COMPANHIA PORTUARIA VILA VELHA | — | 39.826.482/0001-79 | Grande | 27 3399-4121 | cpvv@cpvv.com.br | 20.409.860 |
+| INTERTEK DO BRASIL INSPECOES LTDA | — | 42.565.697/0011-60 | Grande | 11 2842-0444 | mi.adm@intertek.com | 389.474.065 |
+| SEA LINE AGENCIA MARITIMA LTDA | — | 82.885.716/0001-88 | Pequeno | 47 3471-4500 | marlene@sealine.com.br | 444.243 |
+| SEG ENGENHARIA LTDA | SEG - SERVICO DE ENGENHARIA E GESTAO DE SSMA | 28.399.575/0001-48 | Microempresa | 82 9341-7661 | engmarciomarques@hotmail.com | 1.000.000 |
+| C.L.A TRANSPORTES LTDA | — | 13.454.736/0001-81 | Grande | 47 3343-0303 / 3343-7379 | financeiro@clatransportes.com | 20.000 |
+| INNOVINE SISTEMAS E CONSULTORIA LTDA | GRUPO IDEIAS TECNOLOGIA | 13.125.492/0001-93 | Microempresa | 21 2018-6919 | comercial@ideastecnologia.com.br | 300.000 |
+| NOVA JBC LTDA | — | 52.016.808/0001-60 | Microempresa | 21 6435-5510 | jbctransportes2013@gmail.com | 100.000 |
+| OCEANPACT SERVICOS MARITIMOS S.A. | — | 09.114.805/0002-11 | Grande | 21 3032-6700 / 3950-8550 | administrativo@oceanpact.com | 0 |
+| ALE COMBUSTIVEIS S.A. | — | 23.314.594/0001-00 | Grande | 84 3204-5050 / 8498-9433 | fiscalizacoes@ale.com.br | 834.123.735 |
+
+> Total visível: 20 fornecedores — confirma os 20 ativos cadastrados. Perfil da base: agenciamento marítimo, transportadoras, inspeção (Intertek), portos (Vila Velha, AMSP), combustíveis (ALE), comércio exterior.
 
 ---
 
