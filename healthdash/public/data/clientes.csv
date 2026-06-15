@@ -1,0 +1,3 @@
+cliente,tier,mrr,dias_ultimo_login,usuario_ativo,usuario_contratado,forn_cadastrado,forn_meta,docs_vencidos,docs_total,config_sistema_pct,conformidade_aprovados,conformidade_total,certidoes_status,rfi_trimestre,nps,dias_ultima_interacao,tickets_criticos,dias_renovacao,engagement_renovacao,buscas_status,modulos_uso,modulos_contratado
+Integral Médica,B,2181.92,3,35,21,242,300,80,242,,16,242,1,0,,3,0,18,1,1,2,3
+Bunker One,B+,3839,2,20,30,20,300,0,0,,0,0,1,0,,45,0,500,2,1,3,5
