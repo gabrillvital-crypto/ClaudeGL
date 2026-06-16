@@ -14,9 +14,8 @@ BASE_DIR = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"
 TERCEIROS_CSV      = BASE_DIR + r"\terceiros_zurich.csv"
 SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
-SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"   # novo: CSV (era XLSX)
-SITUACAO_FORN_XLSX = BASE_DIR + r"\situacao_fornecedor_zurich.xlsx"  # mantido como fallback
-FORNECEDORES_CSV   = BASE_DIR + r"\fornecedores_zurich.csv"
+SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
+FORNECEDORES_CSV   = BASE_DIR + r"\codigos_contrato_fornecedores_zurich.csv"
 OUTPUT_HTML        = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\relatorio_fornecedores_zurich.html"
 
 # ── CORES ─────────────────────────────────────────────────────────────────────
@@ -43,9 +42,13 @@ ML = dict(l=20, r=20, t=50, b=80)   # margem com legenda embaixo
 def read_csv_safe(path):
     for enc in ["utf-8-sig", "latin-1", "utf-8"]:
         try:
-            df = pd.read_csv(path, encoding=enc, on_bad_lines="skip")
+            with open(path, encoding=enc, errors="replace") as f:
+                sample = f.read(4096)
+            sep = ";" if sample.count(";") > sample.count(",") else ","
+            df = pd.read_csv(path, encoding=enc, sep=sep, on_bad_lines="skip")
             df.columns = df.columns.str.strip()
-            return df
+            drop_cols = [c for c in df.columns if re.search(r'^contrato\s*\d*$', c, re.I)]
+            return df.drop(columns=drop_cols, errors="ignore")
         except Exception:
             continue
     raise RuntimeError(f"Nao foi possivel ler: {path}")
@@ -263,13 +266,9 @@ def map_status_flex(val):
     if "anexado" in s:  return "Não anexado"
     return None
 
-# Preferir CSV novo; fallback para XLSX legado
 _sit_forn_ok = False
 if _os.path.exists(SITUACAO_FORN_CSV):
     df_sit_forn = read_csv_safe(SITUACAO_FORN_CSV)
-    _sit_forn_ok = True
-elif _os.path.exists(SITUACAO_FORN_XLSX):
-    df_sit_forn = pd.read_excel(SITUACAO_FORN_XLSX)
     _sit_forn_ok = True
 
 if _sit_forn_ok:
@@ -333,8 +332,8 @@ nomes_r3 = set(df_sit_calc["Empresa"].dropna().unique()) if "Empresa" in df_sit_
 nomes_r4 = set(df_sit_forn_calc["Empresa"].dropna().unique()) if not df_sit_forn_calc.empty and "Empresa" in df_sit_forn_calc.columns else set()
 if _os.path.exists(FORNECEDORES_CSV):
     df_forn_geral = read_csv_safe(FORNECEDORES_CSV)
-    col_cnpj_forn = next((c for c in df_forn_geral.columns if "cpf" in c.lower() or "cnpj" in c.lower()), df_forn_geral.columns[0])
-    col_rs_forn   = next((c for c in df_forn_geral.columns if "raz" in c.lower()), df_forn_geral.columns[0])
+    col_cnpj_forn = next((c for c in df_forn_geral.columns if any(k in c.lower() for k in ("cpf", "cnpj", "documento"))), df_forn_geral.columns[0])
+    col_rs_forn   = next((c for c in df_forn_geral.columns if ("raz" in c.lower() or "fornecedor" in c.lower()) and "documento" not in c.lower()), df_forn_geral.columns[0])
     total_forn_geral = df_forn_geral[col_cnpj_forn].nunique()
     # Enriquecer forn_cnpj_map com duplicatas do cadastro
     _cad_grp = df_forn_geral.groupby(col_rs_forn)[col_cnpj_forn].apply(
@@ -401,17 +400,7 @@ for _, r in _top5.iterrows():
 COMP_LABELS_BD = ["Jan/2026", "Fev/2026", "Mar/2026", "Abr/2026", "Mai/2026"]
 COMP_W_BD      = [0.14, 0.19, 0.25, 0.23, 0.19]
 
-tabela_bd               = tabela.copy()
-tabela_bd["Competencia"] = np.random.choice(COMP_LABELS_BD, size=len(tabela_bd), p=COMP_W_BD)
-_forn_u = tabela_bd["Fornecedor"].unique()
-_cmap   = {f: f"CNTR-{2024100 + i}" for i, f in enumerate(_forn_u)}
-tabela_bd["Contrato"]   = tabela_bd["Fornecedor"].map(_cmap)
-tabela_bd_json          = tabela_bd[["Fornecedor","Contrato","Status","Area","Documento","Competencia","Detalhe"]].to_dict("records")
 
-colabs_bd               = sit_tabela[["Fornecedor","Terceiro","Status","Vencimento"]].copy()
-colabs_bd["Competencia"] = np.random.choice(COMP_LABELS_BD, size=len(colabs_bd), p=COMP_W_BD)
-colabs_bd["Contrato"]   = colabs_bd["Fornecedor"].map(_cmap).fillna("N/A")
-colabs_bd_json          = colabs_bd[["Fornecedor","Contrato","Terceiro","Competencia","Status","Vencimento"]].to_dict("records")
 
 # ── FIGURAS ───────────────────────────────────────────────────────────────────
 
