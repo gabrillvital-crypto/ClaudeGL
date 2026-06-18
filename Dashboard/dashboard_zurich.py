@@ -14,8 +14,8 @@ BASE_DIR = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"
 TERCEIROS_CSV      = BASE_DIR + r"\terceiros_zurich.csv"
 SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
-SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"   # novo: CSV (era XLSX)
-SITUACAO_FORN_XLSX = BASE_DIR + r"\situacao_fornecedor_zurich.xlsx"  # mantido como fallback
+SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
+FORNECEDORES_CSV   = BASE_DIR + r"\fornecedores_zurich.csv"
 OUTPUT_HTML        = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\dashboard_zurich_airport.html"
 
 # ── CORES ─────────────────────────────────────────────────────────────────────
@@ -42,9 +42,13 @@ ML = dict(l=20, r=20, t=50, b=80)   # margem com legenda embaixo
 def read_csv_safe(path):
     for enc in ["utf-8-sig", "latin-1", "utf-8"]:
         try:
-            df = pd.read_csv(path, encoding=enc, on_bad_lines="skip")
+            with open(path, encoding=enc, errors="replace") as f:
+                sample = f.read(4096)
+            sep = ";" if sample.count(";") > sample.count(",") else ","
+            df = pd.read_csv(path, encoding=enc, sep=sep, on_bad_lines="skip")
             df.columns = df.columns.str.strip()
-            return df
+            drop_cols = [c for c in df.columns if re.search(r'^contratos?$', c, re.I)]
+            return df.drop(columns=drop_cols, errors="ignore")
         except Exception:
             continue
     raise RuntimeError(f"Nao foi possivel ler: {path}")
@@ -54,9 +58,10 @@ def abbrev(name, n=40):
     short = re.sub(r'\s+(LTDA|LTDA\.|S/A|SA|EIRELI|ME|EPP).*', '', s, flags=re.I)
     return short[:n] + "..." if len(short) > n else short
 
-df_pend = read_csv_safe(PENDENCIAS_CSV)
-df_terc = read_csv_safe(TERCEIROS_CSV)
-df_sit  = read_csv_safe(SITUACAO_CSV)
+df_pend    = read_csv_safe(PENDENCIAS_CSV)
+df_terc    = read_csv_safe(TERCEIROS_CSV)
+df_sit     = read_csv_safe(SITUACAO_CSV)
+df_forn_cad = read_csv_safe(FORNECEDORES_CSV) if _os.path.exists(FORNECEDORES_CSV) else None
 
 df_pend["Empresa"] = df_pend["Razao Social"].apply(abbrev) if "Razao Social" in df_pend.columns else df_pend["Razão Social"].apply(abbrev)
 df_terc["Empresa"] = df_terc["Razao Social"].apply(abbrev) if "Razao Social" in df_terc.columns else df_terc["Razão Social"].apply(abbrev)
@@ -116,7 +121,12 @@ trab_vencidos_count   = df_sit_calc[df_sit_calc["Status_Cat"] == "Vencido"]["Ter
 col_sit_pend = "Situação da solicitação" if "Situação da solicitação" in df_pend.columns else "Situacao da solicitacao"
 col_area_pend = "Área da pendência" if "Área da pendência" in df_pend.columns else "Area da pendencia"
 
-total_fornecedores = df_pend[col_rs_pend].nunique()
+# Preferir cadastro completo (fornecedores_zurich.csv) para total real
+if df_forn_cad is not None:
+    _col_cnpj_forn = next((c for c in df_forn_cad.columns if re.search(r'cpf|cnpj', c, re.I)), None)
+    total_fornecedores = df_forn_cad[_col_cnpj_forn].nunique() if _col_cnpj_forn else df_pend[col_rs_pend].nunique()
+else:
+    total_fornecedores = df_pend[col_rs_pend].nunique()
 total_pendencias   = len(df_pend)
 em_elaboracao      = (df_pend[col_sit_pend] == "EM_ELABORACAO").sum()
 aprovado_com_pend  = (df_pend[col_sit_pend] == "APROVADO").sum()
@@ -177,13 +187,9 @@ def map_status_flex(val):
     if "anexado" in s: return "Pendente"
     return None
 
-# Preferir CSV novo; fallback para XLSX legado se CSV não existir
 _sit_forn_ok = False
 if _os.path.exists(SITUACAO_FORN_CSV):
     df_sit_forn = read_csv_safe(SITUACAO_FORN_CSV)
-    _sit_forn_ok = True
-elif _os.path.exists(SITUACAO_FORN_XLSX):
-    df_sit_forn = pd.read_excel(SITUACAO_FORN_XLSX)
     _sit_forn_ok = True
 
 if _sit_forn_ok:
@@ -229,20 +235,6 @@ for _, r in _top5.iterrows():
     t[-1] = base
     HIST_FORN_DATA[r["Empresa"]] = np.clip(t, 10, 100).round(1).tolist()
 
-COMP_LABELS_BD = ["Jan/2026", "Fev/2026", "Mar/2026", "Abr/2026", "Mai/2026"]
-COMP_W_BD      = [0.14, 0.19, 0.25, 0.23, 0.19]
-
-tabela_bd               = tabela.copy()
-tabela_bd["Competencia"] = np.random.choice(COMP_LABELS_BD, size=len(tabela_bd), p=COMP_W_BD)
-_forn_u = tabela_bd["Fornecedor"].unique()
-_cmap   = {f: f"CNTR-{2024100 + i}" for i, f in enumerate(_forn_u)}
-tabela_bd["Contrato"]   = tabela_bd["Fornecedor"].map(_cmap)
-tabela_bd_json          = tabela_bd[["Fornecedor","Contrato","Status","Area","Documento","Competencia","Detalhe"]].to_dict("records")
-
-colabs_bd               = sit_tabela[["Fornecedor","Terceiro","Status","Vencimento"]].copy()
-colabs_bd["Competencia"] = np.random.choice(COMP_LABELS_BD, size=len(colabs_bd), p=COMP_W_BD)
-colabs_bd["Contrato"]   = colabs_bd["Fornecedor"].map(_cmap).fillna("N/A")
-colabs_bd_json          = colabs_bd[["Fornecedor","Contrato","Terceiro","Competencia","Status","Vencimento"]].to_dict("records")
 
 # ── FIGURAS ───────────────────────────────────────────────────────────────────
 

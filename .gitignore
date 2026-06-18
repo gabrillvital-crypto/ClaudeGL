@@ -1,3 +1,26 @@
 dashboard-react/node_modules/
 dashboard-react/dist/
 dashboard-react/iniciar.bat
+
+# Configurações pessoais do Claude Code
+.claude/
+CLAUDE.md
+*.ps1
+
+# Arquivos de cliente sensíveis (LGPD)
+clientes/
+Documentos/
+Reunioes/
+Renovacoes/
+healthdash/
+Geral/
+base_conhecimento/
+*.pdf
+# Arquivos pessoais
+*.xlsx
+controle_gastos_pai*
+gerar_planilha_gastos_pai*
+*.pptx
+*.zip
+*.zip
+*.md
