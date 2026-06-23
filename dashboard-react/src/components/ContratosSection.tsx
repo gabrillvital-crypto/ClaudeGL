@@ -34,8 +34,8 @@ function buildRows(terceiros: ContratoItem['terceiros']) {
   }))
 }
 
-function buildRowsForn(forn: FornContratoItem) {
-  return forn.contratos.flatMap(c =>
+function buildRowsForn(contratos: ContratoItem[]) {
+  return contratos.flatMap(c =>
     c.terceiros.map(t => ({
       'Contrato': c.codigo,
       'Aeroporto Contrato': c.aeroporto,
@@ -71,7 +71,8 @@ function exportPDF(title: string, subtitle: string, terceiros: ContratoItem['ter
   doc.save(`${title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`)
 }
 
-function exportFornPDF(forn: FornContratoItem) {
+function exportFornPDF(nome: string, contratos: ContratoItem[]) {
+  const totalTerc = contratos.reduce((s, c) => s + c.totalTerceiros, 0)
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
   const pageW = doc.internal.pageSize.getWidth()
   doc.setFillColor(10, 106, 122)
@@ -79,21 +80,21 @@ function exportFornPDF(forn: FornContratoItem) {
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(11)
   doc.setFont('helvetica', 'bold')
-  doc.text(`Terceiros — ${forn.nome}`, 10, 10)
+  doc.text(`Terceiros — ${nome}`, 10, 10)
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
-  doc.text(`${forn.totalContratos} contratos · ${forn.totalTerceiros} terceiros`, pageW - 10, 10, { align: 'right' })
+  doc.text(`${contratos.length} contrato${contratos.length !== 1 ? 's' : ''} · ${totalTerc} terceiro${totalTerc !== 1 ? 's' : ''}`, pageW - 10, 10, { align: 'right' })
   autoTable(doc, {
     startY: 20,
     head: [['Contrato', 'Aeroporto', 'Nome', 'CPF/CNPJ', 'Cargo', 'Status']],
-    body: forn.contratos.flatMap(c =>
+    body: contratos.flatMap(c =>
       c.terceiros.map(t => [c.codigo, c.aeroporto, t.nome, fmtDoc(t.cpf), t.cargo, t.status])
     ),
     styles: { fontSize: 9, cellPadding: 3 },
     headStyles: { fillColor: [14, 143, 163], textColor: 255, fontStyle: 'bold' },
     alternateRowStyles: { fillColor: [240, 248, 250] },
   })
-  doc.save(`terceiros_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`)
+  doc.save(`terceiros_${nome.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`)
 }
 
 function ExportBar({ rows, slug, onPDF }: { rows: Record<string, unknown>[]; slug: string; onPDF: () => void }) {
@@ -179,7 +180,7 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
     return forn.contratos.filter(c => contratoFilter.has(c.codigo))
   }, [forn.contratos, contratoFilter])
 
-  const fornRows = buildRowsForn(forn)
+  const fornRows = useMemo(() => buildRowsForn(contratosFiltrados), [contratosFiltrados])
   const slug = `contratos_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}`
 
   function toggleContrato(cod: string) {
@@ -222,7 +223,7 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
           <span className="text-[#bbb] text-lg">›</span>
           <span className="font-bold text-sm text-[#333]">{forn.nome}</span>
         </div>
-        <ExportBar rows={fornRows} slug={slug} onPDF={() => exportFornPDF(forn)} />
+        <ExportBar rows={fornRows} slug={slug} onPDF={() => exportFornPDF(forn.nome, contratosFiltrados)} />
       </div>
 
       <div className="text-[12px] text-[#888] mb-3">
