@@ -9,6 +9,7 @@ import { Section } from './components/Section'
 import { R3Section } from './components/R3Section'
 import { SituacaoEmpresaSection } from './components/SituacaoEmpresaSection'
 import { PendenciasSection } from './components/PendenciasSection'
+import { ContratosSection } from './components/ContratosSection'
 
 function fmtCNPJ(digits: string): string {
   const d = digits.replace(/\D/g, '')
@@ -64,6 +65,11 @@ export function App() {
   const tabelaFiltered = useMemo(() => {
     if (!data) return []
     return hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
+  }, [data, hasFilter, matchesForn])
+
+  const contratosFiltered = useMemo(() => {
+    if (!data) return []
+    return hasFilter ? data.contratosData.filter(f => matchesForn(f.nome, f.cnpj)) : data.contratosData
   }, [data, hasFilter, matchesForn])
 
   // KPIs reativos ao filtro
@@ -200,6 +206,11 @@ export function App() {
         {/* Pendências */}
         <Section title="Detalhamento das Pendências (com Competência)">
           <PendenciasSection data={tabelaFiltered} gfForn="" competencias={data.competencias} geradoEm={data.geradoEm} />
+        </Section>
+
+        {/* Contratos por Fornecedor */}
+        <Section title={`Contratos por Fornecedor — Drill-Down Interativo`}>
+          <ContratosSection data={contratosFiltered} />
         </Section>
 
         {/* Fornecedores sem Execução */}

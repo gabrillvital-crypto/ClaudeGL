@@ -81,6 +81,29 @@ export interface DrillDoc {
   venc: string
 }
 
+export interface TerceiroContratoItem {
+  nome: string
+  cpf: string
+  cargo: string
+  status: string
+  aeroporto: string
+}
+
+export interface ContratoItem {
+  codigo: string
+  aeroporto: string
+  totalTerceiros: number
+  terceiros: TerceiroContratoItem[]
+}
+
+export interface FornContratoItem {
+  nome: string
+  cnpj: string
+  totalContratos: number
+  totalTerceiros: number
+  contratos: ContratoItem[]
+}
+
 export interface DashboardData {
   // KPIs principais
   total_forn_geral: number          // do cadastro fornecedores.csv
@@ -130,6 +153,9 @@ export interface DashboardData {
 
   // Mapa abbrev-name → lista de CNPJs (suporta matriz + filiais com mesmo nome)
   fornCNPJMap: Record<string, string[]>
+
+  // Drill-down de contratos
+  contratosData: FornContratoItem[]
 
   // Meta
   competencias: string[]
