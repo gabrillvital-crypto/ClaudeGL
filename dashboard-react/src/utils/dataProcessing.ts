@@ -427,7 +427,10 @@ export function processAllData(
   const colCNPJTercForn = tercCols2.find(c => c.toLowerCase().includes('cpf') && !c.toLowerCase().includes('terceiro')) ?? 'CPF/CNPJ'
   const colRsTercNome   = tercCols2.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('raz')) ?? 'Razão Social Terceiro'
   const colCPFTerc      = tercCols2.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('cpf')) ?? 'CPF/CNPJ Terceiro'
-  const colCodContrato  = tercCols2.find(c => c.toLowerCase().includes('código') && c.toLowerCase().includes('contrato')) ?? 'Código do contrato vinculado'
+  // Busca específica para evitar capturar "Quais códigos de contrato esse fornecedor possui atualmente?"
+  const colCodContrato  = tercCols2.find(c => /^código do contrato\b/i.test(c.trim()))
+    ?? tercCols2.find(c => c.toLowerCase().includes('vinculado'))
+    ?? 'Código do contrato vinculado'
   const colAeroporto    = tercCols2.find(c => c.toLowerCase().includes('aeroporto')) ?? 'Código do aeroporto'
   const colCargo        = tercCols2.find(c => c.toLowerCase().includes('cargo')) ?? 'Cargo'
   const colStatusTerc2  = tercCols2.find(c => c.toLowerCase() === 'status') ?? 'Status'
@@ -459,22 +462,17 @@ export function processAllData(
 
     if (!cnpj || !nomeTerceiro || !codContratosRaw) return
 
-    // Pode vir concatenado: "ZAB.CT.24.009-00 / FLN ZAB.CT.24.009-00 / MEA VIX.24.SA.0745"
-    const codigos = codContratosRaw.split('/').map(s => s.trim()).filter(Boolean)
-
     if (!_tercByContrato[cnpj]) _tercByContrato[cnpj] = {}
-    codigos.forEach(cod => {
-      if (!_tercByContrato[cnpj][cod]) _tercByContrato[cnpj][cod] = []
-      _tercByContrato[cnpj][cod].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
-    })
+    if (!_tercByContrato[cnpj][codContratosRaw]) _tercByContrato[cnpj][codContratosRaw] = []
+    _tercByContrato[cnpj][codContratosRaw].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
 
     // Garantir que o fornecedor aparece no mapa base mesmo que não esteja no relatório de contratos
     const nomeForn = abbrev(String(row[colRsTercForn] ?? ''))
     if (cnpj && nomeForn && !_fornContratosBase[cnpj]) {
       _fornContratosBase[cnpj] = { nome: nomeForn, contratos: new Set() }
     }
-    if (cnpj && codigos.length > 0 && _fornContratosBase[cnpj]) {
-      codigos.forEach(c => _fornContratosBase[cnpj].contratos.add(c))
+    if (cnpj && _fornContratosBase[cnpj]) {
+      _fornContratosBase[cnpj].contratos.add(codContratosRaw)
     }
   })
 
