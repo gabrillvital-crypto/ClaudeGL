@@ -128,6 +128,12 @@ export function processAllData(
 ): DashboardData {
   const geradoEm = new Date().toLocaleString('pt-BR')
 
+  // Capturar colunas Contrato 1..10 e dados brutos ANTES do strip (drill-down de contratos)
+  const _contractCols = rawContratos[0]
+    ? Object.keys(rawContratos[0]).filter(k => /^contrato\b/i.test(k.trim()))
+    : []
+  const _rawContratosForDrill = rawContratos
+
   // Strip colunas de contrato antes de processar (regex cobre "Contrato 1".."Contrato 10")
   rawPend      = stripContratos(rawPend)
   rawTerc      = stripContratos(rawTerc)
@@ -412,52 +418,84 @@ export function processAllData(
   })
 
   // ── Drill-down de contratos ────────────────────────────────────────────────
-  // Fonte: rawTerc — cada terceiro tem "Código do contrato vinculado" e "Código do aeroporto"
+  // Fonte primária: rawContratos (Contrato 1..10) → todos os contratos por fornecedor
+  // Fonte secundária: rawTerc (Código do contrato vinculado) → terceiros por contrato
+  // O campo "Código do contrato vinculado" pode ter múltiplos separados por "/"
+
   const tercCols2 = rawTerc[0] ? Object.keys(rawTerc[0]) : []
-  const colRsTercForn  = findCol(tercCols2, 'raz') ?? 'Razão Social'
+  const colRsTercForn   = findCol(tercCols2, 'raz') ?? 'Razão Social'
   const colCNPJTercForn = tercCols2.find(c => c.toLowerCase().includes('cpf') && !c.toLowerCase().includes('terceiro')) ?? 'CPF/CNPJ'
-  const colRsTercNome  = tercCols2.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('raz')) ?? 'Razão Social Terceiro'
-  const colCPFTerc     = tercCols2.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('cpf')) ?? 'CPF/CNPJ Terceiro'
-  const colCodContrato = tercCols2.find(c => c.toLowerCase().includes('código') && c.toLowerCase().includes('contrato')) ?? 'Código do contrato vinculado'
-  const colAeroporto   = tercCols2.find(c => c.toLowerCase().includes('aeroporto')) ?? 'Código do aeroporto'
-  const colCargo       = tercCols2.find(c => c.toLowerCase().includes('cargo')) ?? 'Cargo'
-  const colStatusTerc2 = tercCols2.find(c => c.toLowerCase() === 'status') ?? 'Status'
+  const colRsTercNome   = tercCols2.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('raz')) ?? 'Razão Social Terceiro'
+  const colCPFTerc      = tercCols2.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('cpf')) ?? 'CPF/CNPJ Terceiro'
+  const colCodContrato  = tercCols2.find(c => c.toLowerCase().includes('código') && c.toLowerCase().includes('contrato')) ?? 'Código do contrato vinculado'
+  const colAeroporto    = tercCols2.find(c => c.toLowerCase().includes('aeroporto')) ?? 'Código do aeroporto'
+  const colCargo        = tercCols2.find(c => c.toLowerCase().includes('cargo')) ?? 'Cargo'
+  const colStatusTerc2  = tercCols2.find(c => c.toLowerCase() === 'status') ?? 'Status'
 
-  const _contratosMap: Record<string, { nome: string; cnpj: string; contratos: Record<string, { aeroporto: string; terceiros: TerceiroContratoItem[] }> }> = {}
+  // 1. Mapa CNPJ → { nome, contratos: Set<string> } a partir do relatório de contratos
+  const _fornContratosBase: Record<string, { nome: string; contratos: Set<string> }> = {}
+  _rawContratosForDrill.forEach(row => {
+    const cnpj = normCNPJ(row['Documento Fornecedor'])
+    const nome = abbrev(String(row['Fornecedor'] ?? ''))
+    if (!cnpj || !nome) return
+    if (!_fornContratosBase[cnpj]) _fornContratosBase[cnpj] = { nome, contratos: new Set() }
+    _contractCols.forEach(col => {
+      const val = String(row[col] ?? '').trim()
+      if (val && val !== 'nan') _fornContratosBase[cnpj].contratos.add(val)
+    })
+  })
 
+  // 2. Mapa CNPJ → { [codContrato]: TerceiroContratoItem[] } a partir do cadastro de terceiros
+  // Split por "/" para separar contratos concatenados no mesmo campo
+  const _tercByContrato: Record<string, Record<string, TerceiroContratoItem[]>> = {}
   rawTerc.forEach(row => {
     const cnpj = normCNPJ(row[colCNPJTercForn])
-    const nome = abbrev(String(row[colRsTercForn] ?? ''))
     const nomeTerceiro = String(row[colRsTercNome] ?? '').trim()
     const cpfTerceiro = String(row[colCPFTerc] ?? '').trim()
-    const codContrato = String(row[colCodContrato] ?? '').trim()
+    const codContratosRaw = String(row[colCodContrato] ?? '').trim()
     const cargo = String(row[colCargo] ?? '').trim()
     const status = String(row[colStatusTerc2] ?? '').trim()
     const aeroporto = String(row[colAeroporto] ?? '').trim()
 
-    if (!nome || !cnpj) return
-    if (!nomeTerceiro || !codContrato) return
+    if (!cnpj || !nomeTerceiro || !codContratosRaw) return
 
-    if (!_contratosMap[cnpj]) _contratosMap[cnpj] = { nome, cnpj, contratos: {} }
-    if (!_contratosMap[cnpj].contratos[codContrato]) {
-      _contratosMap[cnpj].contratos[codContrato] = { aeroporto, terceiros: [] }
+    // Pode vir concatenado: "ZAB.CT.24.009-00 / FLN ZAB.CT.24.009-00 / MEA VIX.24.SA.0745"
+    const codigos = codContratosRaw.split('/').map(s => s.trim()).filter(Boolean)
+
+    if (!_tercByContrato[cnpj]) _tercByContrato[cnpj] = {}
+    codigos.forEach(cod => {
+      if (!_tercByContrato[cnpj][cod]) _tercByContrato[cnpj][cod] = []
+      _tercByContrato[cnpj][cod].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
+    })
+
+    // Garantir que o fornecedor aparece no mapa base mesmo que não esteja no relatório de contratos
+    const nomeForn = abbrev(String(row[colRsTercForn] ?? ''))
+    if (cnpj && nomeForn && !_fornContratosBase[cnpj]) {
+      _fornContratosBase[cnpj] = { nome: nomeForn, contratos: new Set() }
     }
-    _contratosMap[cnpj].contratos[codContrato].terceiros.push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
+    if (cnpj && codigos.length > 0 && _fornContratosBase[cnpj]) {
+      codigos.forEach(c => _fornContratosBase[cnpj].contratos.add(c))
+    }
   })
 
-  const contratosData: FornContratoItem[] = Object.values(_contratosMap)
-    .map(f => {
-      const contratos: ContratoItem[] = Object.entries(f.contratos)
-        .map(([codigo, d]) => ({
-          codigo,
-          aeroporto: d.aeroporto,
-          totalTerceiros: d.terceiros.length,
-          terceiros: d.terceiros,
-        }))
+  // 3. Merge: fornecedor → lista de contratos (com ou sem terceiros)
+  const contratosData: FornContratoItem[] = Object.entries(_fornContratosBase)
+    .filter(([, f]) => f.contratos.size > 0)
+    .map(([cnpj, f]) => {
+      const contratos: ContratoItem[] = [...f.contratos]
+        .map(codigo => {
+          const terceiros = _tercByContrato[cnpj]?.[codigo] ?? []
+          return {
+            codigo,
+            aeroporto: terceiros[0]?.aeroporto ?? '',
+            totalTerceiros: terceiros.length,
+            terceiros,
+          }
+        })
         .sort((a, b) => a.codigo.localeCompare(b.codigo, 'pt-BR', { sensitivity: 'base' }))
       return {
         nome: f.nome,
-        cnpj: f.cnpj,
+        cnpj,
         totalContratos: contratos.length,
         totalTerceiros: contratos.reduce((s, c) => s + c.totalTerceiros, 0),
         contratos,
