@@ -24,33 +24,7 @@ function StatusBadge({ status }: { status: string }) {
   )
 }
 
-function exportContratoPDF(forn: FornContratoItem, contrato: ContratoItem) {
-  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
-  const pageW = doc.internal.pageSize.getWidth()
-
-  doc.setFillColor(10, 106, 122)
-  doc.rect(0, 0, pageW, 16, 'F')
-  doc.setTextColor(255, 255, 255)
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'bold')
-  doc.text(`Terceiros — ${contrato.codigo}`, 10, 10)
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(9)
-  doc.text(forn.nome, pageW - 10, 10, { align: 'right' })
-
-  autoTable(doc, {
-    startY: 20,
-    head: [['Nome', 'CPF/CNPJ', 'Cargo', 'Aeroporto', 'Status']],
-    body: contrato.terceiros.map(t => [t.nome, fmtDoc(t.cpf), t.cargo, t.aeroporto, t.status]),
-    styles: { fontSize: 9, cellPadding: 3 },
-    headStyles: { fillColor: [14, 143, 163], textColor: 255, fontStyle: 'bold' },
-    alternateRowStyles: { fillColor: [240, 248, 250] },
-  })
-
-  doc.save(`terceiros_${contrato.codigo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`)
-}
-
-function buildExportRows(terceiros: ContratoItem['terceiros']) {
+function buildRows(terceiros: ContratoItem['terceiros']) {
   return terceiros.map(t => ({
     'Nome': t.nome,
     'CPF/CNPJ': fmtDoc(t.cpf),
@@ -60,28 +34,92 @@ function buildExportRows(terceiros: ContratoItem['terceiros']) {
   }))
 }
 
-function ExportButtons({ forn, contrato }: { forn: FornContratoItem; contrato: ContratoItem }) {
-  const slug = contrato.codigo.replace(/[^a-zA-Z0-9]/g, '_')
-  const rows = buildExportRows(contrato.terceiros)
+function buildRowsForn(forn: FornContratoItem) {
+  return forn.contratos.flatMap(c =>
+    c.terceiros.map(t => ({
+      'Contrato': c.codigo,
+      'Aeroporto Contrato': c.aeroporto,
+      'Nome': t.nome,
+      'CPF/CNPJ': fmtDoc(t.cpf),
+      'Cargo': t.cargo,
+      'Aeroporto': t.aeroporto,
+      'Status': t.status,
+    }))
+  )
+}
+
+function exportPDF(title: string, subtitle: string, terceiros: ContratoItem['terceiros']) {
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+  const pageW = doc.internal.pageSize.getWidth()
+  doc.setFillColor(10, 106, 122)
+  doc.rect(0, 0, pageW, 16, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'bold')
+  doc.text(title, 10, 10)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.text(subtitle, pageW - 10, 10, { align: 'right' })
+  autoTable(doc, {
+    startY: 20,
+    head: [['Nome', 'CPF/CNPJ', 'Cargo', 'Aeroporto', 'Status']],
+    body: terceiros.map(t => [t.nome, fmtDoc(t.cpf), t.cargo, t.aeroporto, t.status]),
+    styles: { fontSize: 9, cellPadding: 3 },
+    headStyles: { fillColor: [14, 143, 163], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [240, 248, 250] },
+  })
+  doc.save(`${title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`)
+}
+
+function exportFornPDF(forn: FornContratoItem) {
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+  const pageW = doc.internal.pageSize.getWidth()
+  doc.setFillColor(10, 106, 122)
+  doc.rect(0, 0, pageW, 16, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(11)
+  doc.setFont('helvetica', 'bold')
+  doc.text(`Terceiros — ${forn.nome}`, 10, 10)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(9)
+  doc.text(`${forn.totalContratos} contratos · ${forn.totalTerceiros} terceiros`, pageW - 10, 10, { align: 'right' })
+  autoTable(doc, {
+    startY: 20,
+    head: [['Contrato', 'Aeroporto', 'Nome', 'CPF/CNPJ', 'Cargo', 'Status']],
+    body: forn.contratos.flatMap(c =>
+      c.terceiros.map(t => [c.codigo, c.aeroporto, t.nome, fmtDoc(t.cpf), t.cargo, t.status])
+    ),
+    styles: { fontSize: 9, cellPadding: 3 },
+    headStyles: { fillColor: [14, 143, 163], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [240, 248, 250] },
+  })
+  doc.save(`terceiros_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`)
+}
+
+function ExportBar({ rows, slug, onPDF }: { rows: Record<string, unknown>[]; slug: string; onPDF: () => void }) {
+  if (rows.length === 0) return null
   return (
-    <div className="flex gap-2">
-      <button onClick={() => exportCSV(rows, `terceiros_${slug}`)}
-        className="text-[11px] font-bold px-3 py-1.5 rounded border border-[#0E8FA3] text-[#0E8FA3] hover:bg-[#e8f7fa] transition-colors bg-white">
-        CSV
-      </button>
-      <button onClick={() => exportXLSX(rows, `terceiros_${slug}`)}
-        className="text-[11px] font-bold px-3 py-1.5 rounded border border-[#28A745] text-[#28A745] hover:bg-[#d4edda] transition-colors bg-white">
+    <div className="flex items-center gap-2">
+      <span className="text-[11px] font-bold text-[#888] uppercase tracking-wide">Exportar:</span>
+      <button onClick={() => exportXLSX(rows, slug)}
+        className="text-[11px] font-bold px-3 py-1.5 rounded bg-[#28A745] text-white hover:bg-[#218838] transition-colors border-0 cursor-pointer">
         Excel
       </button>
-      <button onClick={() => exportContratoPDF(forn, contrato)}
-        className="text-[11px] font-bold px-3 py-1.5 rounded border border-[#DC3545] text-[#DC3545] hover:bg-[#ffeaea] transition-colors bg-white">
-        PDF
+      <button onClick={() => exportCSV(rows, slug)}
+        className="text-[11px] font-bold px-3 py-1.5 rounded bg-[#6c757d] text-white hover:bg-[#5a6268] transition-colors border-0 cursor-pointer">
+        CSV
+      </button>
+      <button onClick={onPDF}
+        className="text-[11px] font-bold px-3 py-1.5 rounded bg-[#DC3545] text-white hover:bg-[#c82333] transition-colors border-0 cursor-pointer">
+        ↓ PDF
       </button>
     </div>
   )
 }
 
 function Level3({ forn, contrato, onBack }: { forn: FornContratoItem; contrato: ContratoItem; onBack: () => void }) {
+  const rows = buildRows(contrato.terceiros)
+  const slug = `terceiros_${contrato.codigo.replace(/[^a-zA-Z0-9]/g, '_')}`
   return (
     <div>
       <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
@@ -91,7 +129,8 @@ function Level3({ forn, contrato, onBack }: { forn: FornContratoItem; contrato: 
             ← {contrato.codigo}
           </button>
         </div>
-        {contrato.terceiros.length > 0 && <ExportButtons forn={forn} contrato={contrato} />}
+        <ExportBar rows={rows} slug={slug}
+          onPDF={() => exportPDF(contrato.codigo, forn.nome, contrato.terceiros)} />
       </div>
       <div className="text-[12px] text-[#888] mb-3">
         {contrato.totalTerceiros} terceiro{contrato.totalTerceiros !== 1 ? 's' : ''} vinculado{contrato.totalTerceiros !== 1 ? 's' : ''}
@@ -135,16 +174,13 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
   const [selContrato, setSelContrato] = useState<ContratoItem | null>(null)
   const [contratoFilter, setContratoFilter] = useState<Set<string>>(new Set())
 
-  const contratosComTerceiros = useMemo(
-    () => forn.contratos.filter(c => c.totalTerceiros > 0),
-    [forn]
-  )
-  const showFilter = contratosComTerceiros.length > 1
-
   const contratosFiltrados = useMemo(() => {
     if (contratoFilter.size === 0) return forn.contratos
     return forn.contratos.filter(c => contratoFilter.has(c.codigo))
   }, [forn.contratos, contratoFilter])
+
+  const fornRows = buildRowsForn(forn)
+  const slug = `contratos_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}`
 
   function toggleContrato(cod: string) {
     setContratoFilter(prev => {
@@ -177,24 +213,27 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <button onClick={onBack}
-          className="bg-[#e8f7fa] text-[#0E8FA3] font-bold text-sm px-2.5 py-1 rounded hover:bg-[#d0eff5] border-0 cursor-pointer">
-          ← Fornecedores
-        </button>
-        <span className="text-[#bbb] text-lg">›</span>
-        <span className="font-bold text-sm text-[#333]">{forn.nome}</span>
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button onClick={onBack}
+            className="bg-[#e8f7fa] text-[#0E8FA3] font-bold text-sm px-2.5 py-1 rounded hover:bg-[#d0eff5] border-0 cursor-pointer">
+            ← Fornecedores
+          </button>
+          <span className="text-[#bbb] text-lg">›</span>
+          <span className="font-bold text-sm text-[#333]">{forn.nome}</span>
+        </div>
+        <ExportBar rows={fornRows} slug={slug} onPDF={() => exportFornPDF(forn)} />
       </div>
 
       <div className="text-[12px] text-[#888] mb-3">
         {forn.totalContratos} contrato{forn.totalContratos !== 1 ? 's' : ''} · {forn.totalTerceiros} terceiro{forn.totalTerceiros !== 1 ? 's' : ''}
       </div>
 
-      {/* Filtro por contrato — só aparece quando há mais de 1 contrato com terceiros */}
-      {showFilter && (
-        <div className="flex gap-2 flex-wrap mb-4">
-          <span className="text-[11px] text-[#888] self-center font-semibold">Filtrar:</span>
-          {contratosComTerceiros.map(c => {
+      {/* Filtro por contrato — aparece sempre que houver mais de 1 contrato */}
+      {forn.contratos.length > 1 && (
+        <div className="flex gap-2 flex-wrap mb-4 items-center">
+          <span className="text-[11px] text-[#888] font-semibold">Filtrar:</span>
+          {forn.contratos.map(c => {
             const ativo = contratoFilter.has(c.codigo)
             return (
               <button key={c.codigo} onClick={() => toggleContrato(c.codigo)}
@@ -245,6 +284,13 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
 
 export function ContratosSection({ data }: Props) {
   const [selForn, setSelForn] = useState<FornContratoItem | null>(null)
+  const [busca, setBusca] = useState('')
+
+  const dataFiltrada = useMemo(() => {
+    const q = busca.trim().toLowerCase()
+    if (!q) return data
+    return data.filter(f => f.nome.toLowerCase().includes(q))
+  }, [data, busca])
 
   if (selForn) {
     return (
@@ -256,11 +302,27 @@ export function ContratosSection({ data }: Props) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-5">
-      <p className="text-[13px] text-[#666] mb-4">
-        Clique num fornecedor para ver os contratos. Clique num contrato para ver os terceiros vinculados.
-      </p>
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <p className="text-[13px] text-[#666] flex-1">
+          Clique num fornecedor para ver os contratos. Clique num contrato para ver os terceiros vinculados.
+        </p>
+        <input
+          type="text"
+          value={busca}
+          onChange={e => setBusca(e.target.value)}
+          placeholder="Buscar fornecedor..."
+          className="border border-[#e0e0e0] rounded-lg px-3 py-1.5 text-[13px] text-[#333] outline-none focus:border-[#0E8FA3] w-64"
+        />
+        {busca && (
+          <button onClick={() => setBusca('')}
+            className="text-[11px] text-[#888] hover:text-[#333] cursor-pointer border-0 bg-transparent underline">
+            Limpar
+          </button>
+        )}
+      </div>
+
       <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
-        {data.map(f => (
+        {dataFiltrada.map(f => (
           <div key={f.cnpj} onClick={() => setSelForn(f)}
             className="bg-[#f8f9fa] rounded-xl p-4 cursor-pointer border-2 border-[#e0e0e0] hover:border-[#0E8FA3] hover:shadow-md hover:-translate-y-0.5 transition-all select-none">
             <div className="text-[28px] font-black leading-none text-[#0E8FA3]">
@@ -290,8 +352,10 @@ export function ContratosSection({ data }: Props) {
             </div>
           </div>
         ))}
-        {data.length === 0 && (
-          <p className="text-[#999] text-[13px] text-center py-6 col-span-full">Nenhum dado disponível</p>
+        {dataFiltrada.length === 0 && (
+          <p className="text-[#999] text-[13px] text-center py-6 col-span-full">
+            {busca ? `Nenhum fornecedor encontrado para "${busca}"` : 'Nenhum dado disponível'}
+          </p>
         )}
       </div>
     </div>
