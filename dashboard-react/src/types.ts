@@ -1,10 +1,8 @@
 // Status R3 (situação_terceiro_zurich.csv — inclui Situação Análise Documento)
 export type StatusR3 = 'Aprovado' | 'Reprovado' | 'Não anexado' | 'Aguardando Submissão' | 'Em Análise'
 
-// Status R4 — inclui status legados (docs manuais) + novos da busca automática
-export type StatusR4 =
-  | 'Aprovado' | 'Reprovado' | 'Não Anexado' | 'Em análise' | 'Vencido'   // legado (docs manuais)
-  | 'Regular' | 'Não Analisado' | 'Irregular'                              // busca automática
+// Status R4 — Irregular é novo (busca automática: débito detectado)
+export type StatusR4 = 'Aprovado' | 'Reprovado' | 'Não Anexado' | 'Em análise' | 'Vencido' | 'Irregular'
 
 export interface PendRow {
   Fornecedor: string
@@ -130,8 +128,6 @@ export interface DashboardData {
   r4_nao_anex: number
   r4_em_analise: number
   r4_vencido: number
-  r4_regular: number       // busca automática: REGULAR (robô OK)
-  r4_nao_analisado: number // busca automática: NEUTRO/ALERTA sem análise BPO
   r4_irregular: number     // busca automática: IRREGULAR (débito detectado)
   r4_pct_nc: number
   r4_pct_c: number

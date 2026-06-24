@@ -123,18 +123,18 @@ function mapStatusR4(
 function mapStatusBuscaAuto(situacaoDoc: string, situacaoAnalise: string): StatusR4 {
   const sd = situacaoDoc.trim().toUpperCase()
   const sa = situacaoAnalise.trim().toUpperCase()
-  // Regra 2: REGULAR → sempre Regular, independente de análise ou status
-  if (sd === 'REGULAR') return 'Regular'
-  // Regra 4: IRREGULAR → Irregular (temporário, sem gerar pendência sistêmica)
+  // Regra 2: REGULAR → Aprovado (robô confirmou certidão válida)
+  if (sd === 'REGULAR') return 'Aprovado'
+  // Regra 4: IRREGULAR → Irregular (débito detectado — mantido separado para visibilidade)
   if (sd === 'IRREGULAR') return 'Irregular'
   // Regras 1 e 3: NEUTRO ou ALERTA → validar pela Situação Análise (BPO)
   if (sd === 'NEUTRO' || sd === 'ALERTA') {
     if (sa === 'APROVADO') return 'Aprovado'
     if (sa === 'REPROVADO') return 'Reprovado'
     if (sa === 'VENCIDO') return 'Vencido'
-    return 'Não Analisado' // NÃO ANALISADO ou qualquer outro valor
+    return 'Em análise' // NÃO ANALISADO → aguardando análise BPO
   }
-  return 'Não Analisado'
+  return 'Em análise'
 }
 
 export function processAllData(
@@ -266,30 +266,24 @@ export function processAllData(
     })
     .filter((r): r is FornSitRow => r !== null)
 
-  const r4_total = forn_sit.length
-  const r4_aprovado      = forn_sit.filter(r => r.Status === 'Aprovado').length
-  const r4_reprovado     = forn_sit.filter(r => r.Status === 'Reprovado').length
-  const r4_nao_anex      = forn_sit.filter(r => r.Status === 'Não Anexado').length
-  const r4_em_analise    = forn_sit.filter(r => r.Status === 'Em análise').length
-  const r4_vencido       = forn_sit.filter(r => r.Status === 'Vencido').length
-  const r4_regular       = forn_sit.filter(r => r.Status === 'Regular').length
-  const r4_nao_analisado = forn_sit.filter(r => r.Status === 'Não Analisado').length
-  const r4_irregular     = forn_sit.filter(r => r.Status === 'Irregular').length
-  // Não conformidade = tudo exceto Regular e Aprovado
-  const r4_nao_conf = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido + r4_nao_analisado + r4_irregular
+  const r4_total      = forn_sit.length
+  const r4_aprovado   = forn_sit.filter(r => r.Status === 'Aprovado').length
+  const r4_reprovado  = forn_sit.filter(r => r.Status === 'Reprovado').length
+  const r4_nao_anex   = forn_sit.filter(r => r.Status === 'Não Anexado').length
+  const r4_em_analise = forn_sit.filter(r => r.Status === 'Em análise').length
+  const r4_vencido    = forn_sit.filter(r => r.Status === 'Vencido').length
+  const r4_irregular  = forn_sit.filter(r => r.Status === 'Irregular').length
+  const r4_nao_conf   = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido + r4_irregular
   const r4_pct_nc = r4_total > 0 ? Math.round(r4_nao_conf / r4_total * 1000) / 10 : 0
-  const r4_pct_c  = r4_total > 0 ? Math.round((r4_aprovado + r4_regular) / r4_total * 1000) / 10 : 0
+  const r4_pct_c  = r4_total > 0 ? Math.round(r4_aprovado / r4_total * 1000) / 10 : 0
   const r4_fornecedores = new Set(forn_sit.map(r => r.Fornecedor)).size
 
   // ── KPIs combinados R3+R4 ─────────────────────────────────────────────────
-  // Regular (robô OK) é conformante — soma com aprovados para o KPI global
-  // Irregular (débito detectado) é não conforme — soma com reprovados
-  // Não Analisado (BPO ainda não agiu) → vai para Em Análise
-  const docs_aprovados    = aprovR3 + r4_aprovado + r4_regular
+  const docs_aprovados    = aprovR3 + r4_aprovado
   const docs_reprovados   = reprovR3 + r4_reprovado + r4_irregular
   const docs_nao_enviados = naoAnexR3 + r4_nao_anex
   const docs_aguard_sub   = aguardR3Sub
-  const docs_em_analise   = aguardR3Real + r4_em_analise + r4_nao_analisado
+  const docs_em_analise   = aguardR3Real + r4_em_analise
   const docs_vencidos     = r4_vencido
 
   // ── CNPJs com execução (R3 + R4) ──────────────────────────────────────────
@@ -586,8 +580,6 @@ export function processAllData(
     r4_nao_anex,
     r4_em_analise,
     r4_vencido,
-    r4_regular,
-    r4_nao_analisado,
     r4_irregular,
     r4_pct_nc,
     r4_pct_c,

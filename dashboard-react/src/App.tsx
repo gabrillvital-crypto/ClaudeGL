@@ -98,8 +98,7 @@ export function App() {
       total_docs_sit:          sit.length,
       docs_aprovados:
         sit.filter(r => r.Status === 'Aprovado').length
-        + forn.filter(r => r.Status === 'Aprovado').length
-        + forn.filter(r => r.Status === 'Regular').length,
+        + forn.filter(r => r.Status === 'Aprovado').length,
       docs_reprovados:
         sit.filter(r => r.Status === 'Reprovado').length
         + forn.filter(r => r.Status === 'Reprovado').length
@@ -107,12 +106,11 @@ export function App() {
       docs_nao_enviados:
         sit.filter(r => r.Status === 'Não anexado').length
         + forn.filter(r => r.Status === 'Não Anexado').length,
-      docs_aguard_sub:         sit.filter(r => r.Status === 'Aguardando Submissão').length,
+      docs_aguard_sub:  sit.filter(r => r.Status === 'Aguardando Submissão').length,
       docs_em_analise:
         sit.filter(r => r.Status === 'Em Análise').length
-        + forn.filter(r => r.Status === 'Em análise').length
-        + forn.filter(r => r.Status === 'Não Analisado').length,
-      docs_vencidos:           forn.filter(r => r.Status === 'Vencido').length,
+        + forn.filter(r => r.Status === 'Em análise').length,
+      docs_vencidos:    forn.filter(r => r.Status === 'Vencido').length,
     }
   }, [data, hasFilter, sitFiltered, fornSitFiltered])
 
@@ -121,44 +119,38 @@ export function App() {
     if (!data) return null
     if (!hasFilter) {
       return {
-        r4_total:          data.r4_total,
-        r4_aprovado:       data.r4_aprovado,
-        r4_reprovado:      data.r4_reprovado,
-        r4_nao_anex:       data.r4_nao_anex,
-        r4_em_analise:     data.r4_em_analise,
-        r4_vencido:        data.r4_vencido,
-        r4_regular:        data.r4_regular,
-        r4_nao_analisado:  data.r4_nao_analisado,
-        r4_irregular:      data.r4_irregular,
-        r4_pct_nc:         data.r4_pct_nc,
-        r4_pct_c:          data.r4_pct_c,
-        r4_fornecedores:   data.r4_fornecedores,
+        r4_total:        data.r4_total,
+        r4_aprovado:     data.r4_aprovado,
+        r4_reprovado:    data.r4_reprovado,
+        r4_nao_anex:     data.r4_nao_anex,
+        r4_em_analise:   data.r4_em_analise,
+        r4_vencido:      data.r4_vencido,
+        r4_irregular:    data.r4_irregular,
+        r4_pct_nc:       data.r4_pct_nc,
+        r4_pct_c:        data.r4_pct_c,
+        r4_fornecedores: data.r4_fornecedores,
       }
     }
-    const forn          = fornSitFiltered
-    const total         = forn.length
-    const aprovado      = forn.filter(r => r.Status === 'Aprovado').length
-    const reprovado     = forn.filter(r => r.Status === 'Reprovado').length
-    const nao_anex      = forn.filter(r => r.Status === 'Não Anexado').length
-    const em_anal       = forn.filter(r => r.Status === 'Em análise').length
-    const vencido       = forn.filter(r => r.Status === 'Vencido').length
-    const regular       = forn.filter(r => r.Status === 'Regular').length
-    const nao_analisado = forn.filter(r => r.Status === 'Não Analisado').length
-    const irregular     = forn.filter(r => r.Status === 'Irregular').length
-    const nao_conf      = reprovado + nao_anex + em_anal + vencido + nao_analisado + irregular
+    const forn      = fornSitFiltered
+    const total     = forn.length
+    const aprovado  = forn.filter(r => r.Status === 'Aprovado').length
+    const reprovado = forn.filter(r => r.Status === 'Reprovado').length
+    const nao_anex  = forn.filter(r => r.Status === 'Não Anexado').length
+    const em_anal   = forn.filter(r => r.Status === 'Em análise').length
+    const vencido   = forn.filter(r => r.Status === 'Vencido').length
+    const irregular = forn.filter(r => r.Status === 'Irregular').length
+    const nao_conf  = reprovado + nao_anex + em_anal + vencido + irregular
     return {
-      r4_total:          total,
-      r4_aprovado:       aprovado,
-      r4_reprovado:      reprovado,
-      r4_nao_anex:       nao_anex,
-      r4_em_analise:     em_anal,
-      r4_vencido:        vencido,
-      r4_regular:        regular,
-      r4_nao_analisado:  nao_analisado,
-      r4_irregular:      irregular,
-      r4_pct_nc:         total > 0 ? Math.round(nao_conf / total * 1000) / 10 : 0,
-      r4_pct_c:          total > 0 ? Math.round((aprovado + regular) / total * 1000) / 10 : 0,
-      r4_fornecedores:   new Set(forn.map(r => r.Fornecedor)).size,
+      r4_total:        total,
+      r4_aprovado:     aprovado,
+      r4_reprovado:    reprovado,
+      r4_nao_anex:     nao_anex,
+      r4_em_analise:   em_anal,
+      r4_vencido:      vencido,
+      r4_irregular:    irregular,
+      r4_pct_nc:       total > 0 ? Math.round(nao_conf / total * 1000) / 10 : 0,
+      r4_pct_c:        total > 0 ? Math.round(aprovado / total * 1000) / 10 : 0,
+      r4_fornecedores: new Set(forn.map(r => r.Fornecedor)).size,
     }
   }, [data, hasFilter, fornSitFiltered])
 
