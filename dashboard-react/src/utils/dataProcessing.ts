@@ -118,14 +118,45 @@ function mapStatusR4(
   return null
 }
 
+// ── Busca Automática: matrix das 4 regras ────────────────────────────────────
+// Recebe Situação Documento (campo do robô) + Situação Análise (campo BPO)
+function mapStatusBuscaAuto(situacaoDoc: string, situacaoAnalise: string): StatusR4 {
+  const sd = situacaoDoc.trim().toUpperCase()
+  const sa = situacaoAnalise.trim().toUpperCase()
+  // Regra 2: REGULAR → sempre Regular, independente de análise ou status
+  if (sd === 'REGULAR') return 'Regular'
+  // Regra 4: IRREGULAR → Irregular (temporário, sem gerar pendência sistêmica)
+  if (sd === 'IRREGULAR') return 'Irregular'
+  // Regras 1 e 3: NEUTRO ou ALERTA → validar pela Situação Análise (BPO)
+  if (sd === 'NEUTRO' || sd === 'ALERTA') {
+    if (sa === 'APROVADO') return 'Aprovado'
+    if (sa === 'REPROVADO') return 'Reprovado'
+    if (sa === 'VENCIDO') return 'Vencido'
+    return 'Não Analisado' // NÃO ANALISADO ou qualquer outro valor
+  }
+  return 'Não Analisado'
+}
+
 export function processAllData(
   rawPend: Record<string, string>[],
   rawTerc: Record<string, string>[],
   rawSit: Record<string, string>[],
   rawFornSit: Record<string, string>[],
   rawFornCad: Record<string, string>[],
-  rawContratos: Record<string, string>[] = []
+  rawContratos: Record<string, string>[] = [],
+  rawBuscaAuto: Record<string, string>[] = []
 ): DashboardData {
+  // Montar lookup: "cnpj||doc_normalizado" → { situacaoDoc, situacaoAnalise }
+  const buscaAutoLookup = new Map<string, { situacaoDoc: string; situacaoAnalise: string }>()
+  rawBuscaAuto.forEach(row => {
+    const cnpj = normCNPJ(row['CNPJ'] ?? '')
+    const doc = String(row['Documento'] ?? '').trim().toUpperCase()
+    if (!cnpj || !doc) return
+    buscaAutoLookup.set(`${cnpj}||${doc}`, {
+      situacaoDoc: String(row['Situação Documento'] ?? '').trim(),
+      situacaoAnalise: String(row['Situação Análise Documento'] ?? '').trim(),
+    })
+  })
   const geradoEm = new Date().toLocaleString('pt-BR')
 
   // Capturar colunas Contrato 1..10 e dados brutos ANTES do strip (drill-down de contratos)
@@ -213,15 +244,22 @@ export function processAllData(
   const total_trab_ativo = terc_kpi.filter(r => r.Status === 'Ativo').length
   const total_trab_inativo = terc_kpi.filter(r => r.Status === 'Inativo').length
 
-  // ── R4 — Situação por Fornecedor ──────────────────────────────────────────
+  // ── R4 — Situação por Fornecedor (com enriquecimento de busca automática) ──
   const forn_sit: FornSitRow[] = rawFornSit
     .map(row => {
-      const status = mapStatusR4(row, colAnaliseR4)
+      const cnpj = colCnpjR4 ? normCNPJ(row[colCnpjR4]) : ''
+      const doc = String(row['Documento'] ?? '').trim()
+      const docKey = `${cnpj}||${doc.toUpperCase()}`
+      // Se existe no busca_auto → aplica matrix das 4 regras; senão mantém lógica atual
+      const auto = buscaAutoLookup.get(docKey)
+      const status = auto
+        ? mapStatusBuscaAuto(auto.situacaoDoc, auto.situacaoAnalise)
+        : mapStatusR4(row, colAnaliseR4)
       if (!status) return null
       return {
         Fornecedor: abbrev(String(row[colR4RS] || '')),
-        CNPJ_Forn: colCnpjR4 ? normCNPJ(row[colCnpjR4]) : '',
-        Documento: String(row['Documento'] ?? '').trim(),
+        CNPJ_Forn: cnpj,
+        Documento: doc,
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
       }
@@ -229,23 +267,30 @@ export function processAllData(
     .filter((r): r is FornSitRow => r !== null)
 
   const r4_total = forn_sit.length
-  const r4_aprovado = forn_sit.filter(r => r.Status === 'Aprovado').length
-  const r4_reprovado = forn_sit.filter(r => r.Status === 'Reprovado').length
-  const r4_nao_anex = forn_sit.filter(r => r.Status === 'Não Anexado').length
-  const r4_em_analise = forn_sit.filter(r => r.Status === 'Em análise').length
-  const r4_vencido = forn_sit.filter(r => r.Status === 'Vencido').length
-  const r4_nao_conf = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido
+  const r4_aprovado      = forn_sit.filter(r => r.Status === 'Aprovado').length
+  const r4_reprovado     = forn_sit.filter(r => r.Status === 'Reprovado').length
+  const r4_nao_anex      = forn_sit.filter(r => r.Status === 'Não Anexado').length
+  const r4_em_analise    = forn_sit.filter(r => r.Status === 'Em análise').length
+  const r4_vencido       = forn_sit.filter(r => r.Status === 'Vencido').length
+  const r4_regular       = forn_sit.filter(r => r.Status === 'Regular').length
+  const r4_nao_analisado = forn_sit.filter(r => r.Status === 'Não Analisado').length
+  const r4_irregular     = forn_sit.filter(r => r.Status === 'Irregular').length
+  // Não conformidade = tudo exceto Regular e Aprovado
+  const r4_nao_conf = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido + r4_nao_analisado + r4_irregular
   const r4_pct_nc = r4_total > 0 ? Math.round(r4_nao_conf / r4_total * 1000) / 10 : 0
-  const r4_pct_c = r4_total > 0 ? Math.round(r4_aprovado / r4_total * 1000) / 10 : 0
+  const r4_pct_c  = r4_total > 0 ? Math.round((r4_aprovado + r4_regular) / r4_total * 1000) / 10 : 0
   const r4_fornecedores = new Set(forn_sit.map(r => r.Fornecedor)).size
 
   // ── KPIs combinados R3+R4 ─────────────────────────────────────────────────
-  const docs_aprovados = aprovR3 + r4_aprovado
-  const docs_reprovados = reprovR3 + r4_reprovado
+  // Regular (robô OK) é conformante — soma com aprovados para o KPI global
+  // Irregular (débito detectado) é não conforme — soma com reprovados
+  // Não Analisado (BPO ainda não agiu) → vai para Em Análise
+  const docs_aprovados    = aprovR3 + r4_aprovado + r4_regular
+  const docs_reprovados   = reprovR3 + r4_reprovado + r4_irregular
   const docs_nao_enviados = naoAnexR3 + r4_nao_anex
-  const docs_aguard_sub = aguardR3Sub
-  const docs_em_analise = aguardR3Real + r4_em_analise
-  const docs_vencidos = r4_vencido
+  const docs_aguard_sub   = aguardR3Sub
+  const docs_em_analise   = aguardR3Real + r4_em_analise + r4_nao_analisado
+  const docs_vencidos     = r4_vencido
 
   // ── CNPJs com execução (R3 + R4) ──────────────────────────────────────────
   const cnpjsR3 = new Set<string>()
@@ -541,6 +586,9 @@ export function processAllData(
     r4_nao_anex,
     r4_em_analise,
     r4_vencido,
+    r4_regular,
+    r4_nao_analisado,
+    r4_irregular,
     r4_pct_nc,
     r4_pct_c,
     r4_fornecedores,

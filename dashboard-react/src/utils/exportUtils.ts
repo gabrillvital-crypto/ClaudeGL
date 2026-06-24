@@ -161,11 +161,14 @@ export function exportR4PDF({ rows, kpis, geradoEm, filename = 'situacao_empresa
   ], 26)
 
   const statusColor = (s: string): [number, number, number] => {
-    if (s === 'Aprovado')     return [40, 167, 69]
-    if (s === 'Reprovado')    return [220, 53, 69]
-    if (s === 'Não Anexado')  return [160, 120, 0]
-    if (s === 'Em análise')   return [14, 143, 163]
-    if (s === 'Vencido')      return [220, 53, 69]
+    if (s === 'Aprovado')      return [40, 167, 69]
+    if (s === 'Regular')       return [21, 115, 71]   // busca auto OK
+    if (s === 'Reprovado')     return [220, 53, 69]
+    if (s === 'Irregular')     return [176, 92, 0]    // débito detectado
+    if (s === 'Não Analisado') return [108, 117, 125] // aguardando BPO
+    if (s === 'Não Anexado')   return [160, 120, 0]
+    if (s === 'Em análise')    return [14, 143, 163]
+    if (s === 'Vencido')       return [220, 53, 69]
     return [100, 100, 100]
   }
 
