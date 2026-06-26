@@ -16,6 +16,7 @@ TERCEIROS_CSV      = BASE_DIR + r"\terceiros_zurich.csv"
 SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
 SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
 FORNECEDORES_CSV   = BASE_DIR + r"\codigos_contrato_fornecedores_zurich.csv"
+BUSCA_AUTO_CSV     = BASE_DIR + r"\busca_automatica_zurich.csv"
 OUTPUT_HTML        = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\relatorio_fornecedores_zurich.html"
 
 # ── CORES ─────────────────────────────────────────────────────────────────────
@@ -271,33 +272,66 @@ if _os.path.exists(SITUACAO_FORN_CSV):
     df_sit_forn = read_csv_safe(SITUACAO_FORN_CSV)
     _sit_forn_ok = True
 
+# ── BUSCA AUTOMÁTICA — lookup (cnpj_digits, doc_upper) → (Situação Documento, Situação Análise) ──
+_busca_auto_map = {}
+if _os.path.exists(BUSCA_AUTO_CSV):
+    _df_ba = read_csv_safe(BUSCA_AUTO_CSV)
+    _col_ba_cnpj = next((c for c in _df_ba.columns if "cnpj" in c.lower()), None)
+    # "Documento" exato primeiro; fallback para coluna com "doc" excluindo as com "situa" ou "venc"
+    _col_ba_doc  = next((c for c in _df_ba.columns if c.strip().lower() == "documento"), None) or \
+                   next((c for c in _df_ba.columns
+                         if "doc" in c.lower() and "situa" not in c.lower() and "venc" not in c.lower()), None)
+    _col_ba_sit  = next((c for c in _df_ba.columns
+                         if "situa" in c.lower() and "doc" in c.lower() and "lise" not in c.lower()), None)
+    _col_ba_anal = next((c for c in _df_ba.columns
+                         if "lise" in c.lower() and "doc" in c.lower()), None)
+    if _col_ba_cnpj and _col_ba_doc and _col_ba_sit:
+        for _, _r in _df_ba.iterrows():
+            _ck = re.sub(r'\D', '', str(_r[_col_ba_cnpj]))
+            _dk = str(_r[_col_ba_doc]).strip().upper()
+            _sk = str(_r[_col_ba_sit]).strip().upper()
+            _ak = str(_r[_col_ba_anal]).strip().upper() if _col_ba_anal else ""
+            if _ck and _dk and _dk != "NAN":
+                _busca_auto_map[(_ck, _dk)] = (_sk, _ak)
+
 if _sit_forn_ok:
     col_r4_rs = df_sit_forn.columns[0]
     df_sit_forn["Empresa"] = df_sit_forn[col_r4_rs].apply(abbrev)
 
-    # Novo CSV tem coluna "Situação Análise Documento" (Aprovado/Reprovado/Não Analisado)
-    # Usá-la quando disponível; caso contrário usar "Status" (A vencer / Vencido / Não anexado)
     col_analise = next((c for c in df_sit_forn.columns if "lise" in c.lower() and "doc" in c.lower()), None)
-    if col_analise:
-        # Coluna I (Situação Análise Documento) é mandatória — sem fallback em Status
-        def map_status_r4(row):
-            analise = str(row.get(col_analise, "")).strip().upper()
-            if analise == "APROVADO":   return "Aprovado"
-            if analise == "REPROVADO":  return "Reprovado"
-            # NÃO ANALISADO + A vencer = busca automática válida → equivale a Aprovado
-            status = str(row.get("Status", "")).strip().lower()
-            if "vencer" in status:      return "Aprovado"
-            if "anexado" in status:     return "Não Anexado"
-            if "vencido" in status:     return "Vencido"
-            return "Em análise"
-        df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
-    else:
-        df_sit_forn["Status_Cat"] = df_sit_forn["Status"].apply(map_status_flex)
 
+    def map_status_r4(row):
+        cnpj_r = re.sub(r'\D', '', str(row.get("CNPJ", "")))
+        doc_r  = str(row.get("Documento", "")).strip().upper()
+        analise = str(row.get(col_analise, "")).strip().upper() if col_analise else ""
+        # Verifica enriquecimento pela busca automática
+        sit_ba = _busca_auto_map.get((cnpj_r, doc_r))
+        if sit_ba:
+            sit_doc, sit_anal_ba = sit_ba
+            if sit_doc == "REGULAR":    return "Aprovado"
+            if sit_doc == "IRREGULAR":  return "Irregular"
+            # NEUTRO ou ALERTA: usa análise do CSV busca_auto (mesma fonte que o React)
+            if sit_anal_ba == "APROVADO":  return "Aprovado"
+            if sit_anal_ba == "REPROVADO": return "Reprovado"
+            if sit_anal_ba == "VENCIDO":   return "Vencido"
+            return "Em análise"
+        # Documento manual
+        if analise == "APROVADO":  return "Aprovado"
+        if analise == "REPROVADO": return "Reprovado"
+        status = str(row.get("Status", "")).strip().lower()
+        if "vencer" in status:    return "Aprovado"
+        if "anexado" in status:   return "Não Anexado"
+        if "vencido" in status:   return "Vencido"
+        return "Em análise"
+
+    df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
     df_sit_forn_calc = df_sit_forn[df_sit_forn["Status_Cat"].notna()].copy()
 
     forn_sit_tabela = df_sit_forn_calc[["Empresa", "Documento", "Status_Cat", "Data de Vencimento"]].copy()
     forn_sit_tabela.columns = ["Fornecedor", "Documento", "Status", "Vencimento"]
+    if "CNPJ" in df_sit_forn_calc.columns:
+        forn_sit_tabela["CNPJ"] = df_sit_forn_calc["CNPJ"].apply(
+            lambda v: re.sub(r'\D', '', str(v))).values
     forn_sit_tabela["Vencimento"] = pd.to_datetime(
         forn_sit_tabela["Vencimento"], errors="coerce"
     ).dt.strftime("%d/%m/%Y").fillna("")
@@ -306,10 +340,11 @@ if _sit_forn_ok:
     r4_total        = len(df_sit_forn_calc)
     r4_aprovado     = int((df_sit_forn_calc["Status_Cat"] == "Aprovado").sum())
     r4_reprovado    = int((df_sit_forn_calc["Status_Cat"] == "Reprovado").sum())
+    r4_irregular    = int((df_sit_forn_calc["Status_Cat"] == "Irregular").sum())
     r4_nao_anex     = int((df_sit_forn_calc["Status_Cat"] == "Não Anexado").sum())
     r4_em_analise   = int((df_sit_forn_calc["Status_Cat"] == "Em análise").sum())
     r4_vencido      = int((df_sit_forn_calc["Status_Cat"] == "Vencido").sum())
-    r4_nao_conf     = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido
+    r4_nao_conf     = r4_reprovado + r4_irregular + r4_nao_anex + r4_em_analise + r4_vencido
     r4_pct_nc       = round(r4_nao_conf / r4_total * 100, 1) if r4_total > 0 else 0.0
     r4_pct_c        = round(r4_aprovado / r4_total * 100, 1) if r4_total > 0 else 0.0
     r4_fornecedores = int(
@@ -318,7 +353,7 @@ if _sit_forn_ok:
     ) if "CNPJ" in df_sit_forn_calc.columns else int(df_sit_forn_calc["Empresa"].nunique())
 else:
     forn_sit_json   = []
-    r4_total = r4_aprovado = r4_reprovado = r4_nao_anex = r4_em_analise = r4_vencido = r4_fornecedores = 0
+    r4_total = r4_aprovado = r4_reprovado = r4_irregular = r4_nao_anex = r4_em_analise = r4_vencido = r4_fornecedores = 0
     r4_pct_nc = r4_pct_c = 0.0
     r4_nao_conf = 0
     df_sit_forn_calc = pd.DataFrame()
@@ -379,6 +414,82 @@ if _os.path.exists(FORNECEDORES_CSV) and "df_forn_geral" in dir():
 else:
     sem_exec_json = "[]"
     total_sem_execucao = 0
+
+# ── CONTRATOS POR FORNECEDOR ──────────────────────────────────────────────────
+# Estrutura: lista de {nome, cnpj, contratos:[...], terceiros_by_contract:{cod:[{nome,cnpj,cargo,aeroporto,status}]}}
+_contratos_map = {}
+
+if _os.path.exists(FORNECEDORES_CSV):
+    # Lê sem o filtro drop_cols de read_csv_safe (que remove "Contrato 1..10")
+    _df_ct = None
+    for _enc in ["utf-8-sig", "latin-1", "utf-8"]:
+        try:
+            with open(FORNECEDORES_CSV, encoding=_enc, errors="replace") as _f: _s = _f.read(4096)
+            _sep = ";" if _s.count(";") > _s.count(",") else ","
+            _df_ct = pd.read_csv(FORNECEDORES_CSV, encoding=_enc, sep=_sep, on_bad_lines="skip")
+            _df_ct.columns = _df_ct.columns.str.strip()
+            break
+        except Exception: continue
+    if _df_ct is None:
+        _df_ct = pd.DataFrame()
+    _col_ct_cnpj = next((c for c in _df_ct.columns if "doc" in c.lower() and "forn" in c.lower()), _df_ct.columns[0] if len(_df_ct.columns) else "CNPJ")
+    _col_ct_nome = next((c for c in _df_ct.columns if "forn" in c.lower() and "doc" not in c.lower()), _df_ct.columns[1])
+    def _cnpj_digits(v):
+        s = str(v).strip().split('.')[0]  # remove .0 de floats
+        return re.sub(r'\D', '', s)
+
+    for _, _r in _df_ct.iterrows():
+        _cnpj_c = _cnpj_digits(_r[_col_ct_cnpj])
+        _nome_c = str(_r[_col_ct_nome]).strip()
+        _codes  = [str(_r.get(f"Contrato {i}", "")).strip()
+                   for i in range(1, 11)
+                   if str(_r.get(f"Contrato {i}", "")).strip() not in ("", "nan")]
+        if _cnpj_c and _cnpj_c not in _contratos_map:
+            _contratos_map[_cnpj_c] = {
+                "nome": abbrev(_nome_c), "nome_full": _nome_c, "cnpj": _cnpj_c,
+                "contratos": sorted(set(_codes)), "terceiros_by_contract": {}
+            }
+        elif _cnpj_c:
+            _contratos_map[_cnpj_c]["contratos"] = sorted(
+                set(_contratos_map[_cnpj_c]["contratos"] + _codes))
+
+# Enriquecer com terceiros (usa df_terc que já foi carregado)
+_col_terc_forn_cnpj  = next((c for c in df_terc.columns if c.lower().replace(" ","").startswith("cpf/cnpj") and "terceiro" not in c.lower()), None)
+_col_terc_cod_ct     = next((c for c in df_terc.columns if "c" in c.lower() and "digo" in c.lower() and "contrato" in c.lower() and "vinc" in c.lower()), None)
+_col_terc_aeroporto  = next((c for c in df_terc.columns if "aeroporto" in c.lower() or ("digo" in c.lower() and "aero" in c.lower())), None)
+_col_terc_nome_terc  = next((c for c in df_terc.columns if "terceiro" in c.lower() and ("raz" in c.lower() or "social" in c.lower() or "nome" in c.lower())), None)
+_col_terc_cnpj_terc  = next((c for c in df_terc.columns if "terceiro" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())), None)
+_col_terc_cargo      = next((c for c in df_terc.columns if "cargo" in c.lower()), None)
+
+for _, _r in df_terc.iterrows():
+    _forn_cnpj_t = _cnpj_digits(_r.get(_col_terc_forn_cnpj, "") if _col_terc_forn_cnpj else "")
+    if not _forn_cnpj_t:
+        continue
+    if _forn_cnpj_t not in _contratos_map:
+        _nome_t = abbrev(str(_r.get(col_rs_terc, "")).strip())
+        _contratos_map[_forn_cnpj_t] = {
+            "nome": _nome_t, "nome_full": str(_r.get(col_rs_terc, "")).strip(),
+            "cnpj": _forn_cnpj_t, "contratos": [], "terceiros_by_contract": {}
+        }
+    _cod_raw = str(_r.get(_col_terc_cod_ct, "") if _col_terc_cod_ct else "").strip()
+    _contratos_terc = [c.strip() for c in _cod_raw.split("/") if c.strip() and c.strip() != "nan"]
+    if not _contratos_terc:
+        continue
+    _terc_info = {
+        "nome":       str(_r.get(_col_terc_nome_terc, "") if _col_terc_nome_terc else "").strip(),
+        "cnpj":       str(_r.get(_col_terc_cnpj_terc, "") if _col_terc_cnpj_terc else "").strip(),
+        "cargo":      str(_r.get(_col_terc_cargo, "") if _col_terc_cargo else "").strip(),
+        "aeroporto":  str(_r.get(_col_terc_aeroporto, "") if _col_terc_aeroporto else "").strip(),
+        "status":     str(_r.get(col_status_terc, "")).strip(),
+    }
+    for _ct in _contratos_terc:
+        _contratos_map[_forn_cnpj_t]["terceiros_by_contract"].setdefault(_ct, []).append(_terc_info)
+
+contratos_list = sorted(
+    [v for v in _contratos_map.values() if v["contratos"] or v["terceiros_by_contract"]],
+    key=lambda x: x["nome"]
+)
+contratos_json = json.dumps(contratos_list, ensure_ascii=False)
 
 # ── SIMULAÇÃO COM DADOS DO BD (dados simulados para demo) ─────────────────────
 np.random.seed(42)
@@ -546,6 +657,7 @@ def fig_div(fig, div_id):
 
 DATA_HOJE = datetime.now().strftime("%d/%m/%Y %H:%M")
 competencias_opts = "".join(f'<option value="{c}">{c}</option>' for c in competencias_lista)
+# contratos_json já calculado acima
 
 # ── HTML ──────────────────────────────────────────────────────────────────────
 html = f"""<!DOCTYPE html>
@@ -702,6 +814,44 @@ html = f"""<!DOCTYPE html>
   .badge-aprovado           {{ background: #d4edda; color: {COR_VERDE}; }}
   .badge-reprovado          {{ background: #ffeaea; color: {COR_VERMELHO}; }}
   .badge-competencia   {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 11px; padding: 2px 7px; border-radius: 8px; }}
+  .badge-irregular     {{ background: #fff0e0; color: #b35a00; }}
+
+  /* CONTRATOS DRILL-DOWN */
+  .ct-cards-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px; margin-top: 16px; }}
+  .ct-card {{
+    background: #f8f9fa; border-radius: 10px; padding: 16px; cursor: pointer;
+    border: 2px solid #e0e0e0; transition: all 0.15s; user-select: none;
+  }}
+  .ct-card:hover {{ border-color: {COR_TEAL}; box-shadow: 0 4px 14px rgba(14,143,163,.18); transform: translateY(-2px); }}
+  .ct-card-name  {{ font-size: 13px; font-weight: 700; color: #222; margin-bottom: 6px; line-height: 1.3; min-height: 34px; }}
+  .ct-card-meta  {{ font-size: 11px; color: #888; margin-top: 4px; }}
+  .ct-card-codes {{ display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; overflow: hidden; max-height: 58px; }}
+  .ct-code-chip  {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 10px; font-weight: 700;
+                    padding: 2px 7px; border-radius: 10px; white-space: nowrap;
+                    max-width: 150px; overflow: hidden; text-overflow: ellipsis; }}
+  .ct-code-chip.active {{ background: {COR_TEAL}; color: white; }}
+  .ct-contract-row {{
+    display: flex; align-items: center; padding: 13px 16px; cursor: pointer;
+    gap: 14px; border-radius: 8px; transition: background 0.1s; border-bottom: 1px solid #f0f0f0;
+  }}
+  .ct-contract-row:hover {{ background: #f0f8fa; }}
+  .ct-contract-code {{ font-size: 14px; font-weight: 700; color: {COR_TEAL}; min-width: 140px; }}
+  .ct-contract-meta {{ flex: 1; font-size: 12px; color: #666; }}
+  .ct-contract-arrow {{ font-size: 22px; color: #bbb; font-weight: 300; }}
+  .ct-search-wrap {{ display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }}
+  .ct-search-wrap input {{
+    border: 1px solid #cde; border-radius: 6px; padding: 7px 12px;
+    font-size: 13px; font-family: Calibri, Arial, sans-serif; width: 280px;
+  }}
+  .ct-search-wrap input:focus {{ outline: 2px solid {COR_TEAL}; border-color: {COR_TEAL}; }}
+  .ct-chip-filter {{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }}
+  .ct-chip {{
+    background: #eee; color: #555; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 12px; cursor: pointer; border: 1px solid #ddd;
+    transition: all 0.12s;
+  }}
+  .ct-chip:hover {{ background: #e0f4f7; border-color: {COR_TEAL}; color: {COR_TEAL}; }}
+  .ct-chip.selected {{ background: {COR_TEAL}; color: white; border-color: {COR_TEAL}; }}
 
   /* ALERTA DE AUDITORIA */
   .audit-alert {{
@@ -949,7 +1099,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div class="kpi-card red"
          data-tooltip="Documentos que passaram por análise, mas foram recusados por inconformidade ou erro.">
-      <div class="kpi-val" id="kpi-docs-nao-aprov">{int(total_reprovados_docs) + r4_reprovado}</div>
+      <div class="kpi-val" id="kpi-docs-nao-aprov">{int(total_reprovados_docs) + r4_reprovado + r4_irregular}</div>
       <div class="kpi-label">Documentos<br>Reprovados</div>
     </div>
     <div class="kpi-card yellow"
@@ -1051,6 +1201,66 @@ html = f"""<!DOCTYPE html>
 
   </div><!-- /auditoria-section (oculto) -->
 
+  <!-- CONTRATOS POR FORNECEDOR -->
+  <div class="section-title">Contratos por Fornecedor — Drill-down Interativo
+    <span class="section-toggle" onclick="toggleSection('ct-section', this)">&#9660; Expandir</span>
+  </div>
+  <div id="ct-section" class="section-collapsible collapsed">
+  <div class="chart-card">
+    <p style="font-size:13px;color:#666;margin-bottom:12px;">
+      Clique num fornecedor para ver seus contratos. Clique no contrato para ver os terceiros vinculados.
+    </p>
+
+    <!-- L1: grid de cards de fornecedores -->
+    <div id="ct-level1">
+      <div class="ct-search-wrap">
+        <input type="text" id="ct-search" placeholder="Buscar fornecedor..." oninput="ctFilterL1(this.value)">
+        <span id="ct-l1-count" style="font-size:12px;color:#999"></span>
+      </div>
+      <div class="ct-cards-grid" id="ct-cards"></div>
+    </div>
+
+    <!-- L2: contratos do fornecedor -->
+    <div id="ct-level2" style="display:none">
+      <div class="drill-breadcrumb" id="ct-breadcrumb2"></div>
+      <div id="ct-chip-filter" class="ct-chip-filter"></div>
+      <div id="ct-contract-list"></div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <span class="export-label" style="align-self:center">Exportar:</span>
+        <button class="btn-action btn-export"     onclick="ctExportL2XLSX()">Excel</button>
+        <button class="btn-action btn-export-csv" onclick="ctExportL2CSV()">CSV</button>
+        <button class="btn-action btn-export-pdf" onclick="ctExportL2PDF()">PDF</button>
+      </div>
+    </div>
+
+    <!-- L3: terceiros do contrato -->
+    <div id="ct-level3" style="display:none">
+      <div class="drill-breadcrumb" id="ct-breadcrumb3"></div>
+      <div class="tabela-wrap">
+        <table id="ct-terc-table" style="width:100%">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF/CNPJ</th>
+              <th>Cargo</th>
+              <th>Aeroporto</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ct-terc-body"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <span class="export-label" style="align-self:center">Exportar:</span>
+        <button class="btn-action btn-export"     onclick="ctExportL3XLSX()">Excel</button>
+        <button class="btn-action btn-export-csv" onclick="ctExportL3CSV()">CSV</button>
+        <button class="btn-action btn-export-pdf" onclick="ctExportL3PDF()">PDF</button>
+      </div>
+    </div>
+
+  </div>
+  </div><!-- /ct-section -->
+
   <!-- DRILL-DOWN INTERATIVO -->
   <div class="section-title">Análise Interativa — Fornecedor › Terceiro › Documentos
     <span class="section-toggle" onclick="toggleSection('drill-section', this)">▼ Expandir</span>
@@ -1102,9 +1312,13 @@ html = f"""<!DOCTYPE html>
       <div class="kpi-val" id="sit-kpi-nao-anex">{total_nao_anex_r3}</div>
       <div class="kpi-label">Nao<br>Anexado</div>
     </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-val" id="sit-kpi-aguard-sub">{total_aguard_r3_elab}</div>
+      <div class="kpi-label">Ag.<br>Submissão</div>
+    </div>
     <div class="kpi-card orange">
-      <div class="kpi-val" id="sit-kpi-aguard">{total_aguard_r3}</div>
-      <div class="kpi-label">Ag.<br>Analise</div>
+      <div class="kpi-val" id="sit-kpi-aguard-real">{total_aguard_r3_real}</div>
+      <div class="kpi-label">Em<br>Análise</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-val" id="sit-kpi-terc">{total_terceiros_r3}</div>
@@ -1218,6 +1432,11 @@ html = f"""<!DOCTYPE html>
       <div class="kpi-val" id="r4-kpi-vencido">{r4_vencido}</div>
       <div class="kpi-label">Vencido<br>(sem revisao)</div>
     </div>
+    <div class="kpi-card orange"
+         data-tooltip="Documentos com débito detectado pela busca automática (certidões IRREGULAR).">
+      <div class="kpi-val" id="r4-kpi-irregular">{r4_irregular}</div>
+      <div class="kpi-label">Irregular<br>(Débito Detectado)</div>
+    </div>
     <div class="kpi-card">
       <div class="kpi-val" id="r4-kpi-forn">{r4_fornecedores}</div>
       <div class="kpi-label">Fornecedores<br>com Docs</div>
@@ -1244,6 +1463,7 @@ html = f"""<!DOCTYPE html>
         <option value="">Todos</option>
         <option value="Aprovado">Aprovado</option>
         <option value="Reprovado">Reprovado</option>
+        <option value="Irregular (Débito)">Irregular (Débito)</option>
         <option value="Não Anexado">Não Anexado</option>
         <option value="Em análise">Em análise</option>
         <option value="Vencido">Vencido</option>
@@ -1392,6 +1612,7 @@ const FORN_SIT     = {json.dumps(forn_sit_json, ensure_ascii=False)};
 const FORN_CNPJ_MAP  = {forn_cnpj_json};
 const ALL_CADASTRO   = {all_cadastro_names_json};
 const SEM_EXEC       = {sem_exec_json};
+const CONTRATOS      = {contratos_json};
 
 // ── KPI DINAMICO ──────────────────────────────────────────────────────────────
 function updateKPICards() {{
@@ -1413,8 +1634,9 @@ function updateKPICards() {{
   const vencidoR4    = fs.filter(r => r.Status === "Vencido").length;
   const reprovR3     = s.filter(r => r.Status === "Reprovado").length;
   const reprovR4     = fs.filter(r => r.Status === "Reprovado").length;
+  const irregularR4  = fs.filter(r => r.Status === "Irregular").length;
   const docsAprov    = aprovR3 + aprovR4;
-  const docsNaoAprov = reprovR3 + reprovR4;
+  const docsNaoAprov = reprovR3 + reprovR4 + irregularR4;
   const docsNaoEnv   = naoAnexR3 + naoAnexR4;
   const docsAguardSub = aguardR3Elab;
   const docsEmAnal    = aguardR3Real + emAnalR4;
@@ -1741,18 +1963,18 @@ function badgeArea(a) {{
   return '<span class="badge badge-documentos">Fornecedor</span>';
 }}
 function badgeSit(s) {{
-  if (s === "Aprovado")            return '<span class="badge badge-conforme">Aprovado</span>';
-  if (s === "Reprovado")           return '<span class="badge badge-vencido">Reprovado</span>';
-  if (s === "Não anexado")         return '<span class="badge badge-pendente">Não anexado</span>';
+  if (s === "Aprovado")             return '<span class="badge badge-conforme">Aprovado</span>';
+  if (s === "Reprovado")            return '<span class="badge badge-vencido">Reprovado</span>';
+  if (s === "Irregular (Débito)")   return '<span class="badge badge-irregular">Irregular (Débito)</span>';
+  if (s === "Não anexado")          return '<span class="badge badge-pendente">Não anexado</span>';
+  if (s === "Não Anexado")          return '<span class="badge badge-pendente">Não Anexado</span>';
   if (s === "Aguardando Submissão") return '<span class="badge badge-aguardando-submissao">Aguardando Submissão</span>';
-  if (s === "Em Análise")          return '<span class="badge badge-em-analise">Em Análise</span>';
-  if (s === "Aguardando análise")  return '<span class="badge badge-aguardando-analise">Aguardando análise</span>';
-  if (s === "Em análise")          return '<span class="badge badge-em-analise">Em análise</span>';
-  if (s === "Vencido")             return '<span class="badge badge-vencido">Vencido</span>';
-  if (s === "Não Analisado")       return '<span class="badge badge-aguardando-analise">Não Analisado</span>';
-  // Legado R4 (status de data do documento)
-  if (s === "A vencer")            return '<span class="badge badge-conforme">A vencer</span>';
-  if (s === "Vencido")             return '<span class="badge badge-vencido">Vencido</span>';
+  if (s === "Em Análise")           return '<span class="badge badge-em-analise">Em Análise</span>';
+  if (s === "Aguardando análise")   return '<span class="badge badge-aguardando-analise">Aguardando análise</span>';
+  if (s === "Em análise")           return '<span class="badge badge-em-analise">Em análise</span>';
+  if (s === "Vencido")              return '<span class="badge badge-vencido">Vencido</span>';
+  if (s === "Não Analisado")        return '<span class="badge badge-aguardando-analise">Não Analisado</span>';
+  if (s === "A vencer")             return '<span class="badge badge-conforme">A vencer</span>';
   return '<span class="badge badge-pendente">' + s + '</span>';
 }}
 
@@ -1795,8 +2017,8 @@ function filtrarSit() {{
   const terc3     = new Set(sitFiltrado.map(r => r["Terceiro"])).size;
   [["sit-kpi-nc", pctNC3 + "%"], ["sit-kpi-c", pctC3 + "%"],
    ["sit-kpi-aprov", aprov3], ["sit-kpi-reprov", reprov3],
-   ["sit-kpi-nao-anex", naoAnex3], ["sit-kpi-aguard", aguard3],
-   ["sit-kpi-terc", terc3]
+   ["sit-kpi-nao-anex", naoAnex3], ["sit-kpi-aguard-sub", aguardSub3],
+   ["sit-kpi-aguard-real", emAnal3], ["sit-kpi-terc", terc3]
   ].forEach(([id, val]) => {{ const e = document.getElementById(id); if (e) e.textContent = val; }});
 }}
 function limparSit() {{
@@ -1870,20 +2092,21 @@ function filtrarFornSit() {{
   const cnt = document.getElementById("forn-sit-count");
   if (cnt) cnt.textContent = `${{fornSitFiltrado.length}} registro(s) de ${{FORN_SIT.length}} no total`;
 
-  // KPIs dinâmicos R4 — coluna I (Situação Análise Documento)
+  // KPIs dinâmicos R4
   const aprov4     = fornSitFiltrado.filter(r => r["Status"]==="Aprovado").length;
   const reprov4    = fornSitFiltrado.filter(r => r["Status"]==="Reprovado").length;
+  const irreg4     = fornSitFiltrado.filter(r => r["Status"]==="Irregular (Débito)").length;
   const naoAnex4   = fornSitFiltrado.filter(r => r["Status"]==="Não Anexado").length;
   const emAnalise4 = fornSitFiltrado.filter(r => r["Status"]==="Em análise").length;
   const vencido4   = fornSitFiltrado.filter(r => r["Status"]==="Vencido").length;
-  const tot4       = aprov4 + reprov4 + naoAnex4 + emAnalise4 + vencido4;
-  const pctNC4     = tot4>0 ? ((reprov4+naoAnex4+emAnalise4+vencido4)/tot4*100).toFixed(1) : "0.0";
+  const tot4       = aprov4 + reprov4 + irreg4 + naoAnex4 + emAnalise4 + vencido4;
+  const pctNC4     = tot4>0 ? ((reprov4+irreg4+naoAnex4+emAnalise4+vencido4)/tot4*100).toFixed(1) : "0.0";
   const pctC4      = tot4>0 ? (aprov4/tot4*100).toFixed(1) : "0.0";
   const forn4      = new Set(fornSitFiltrado.map(r=>r["Fornecedor"])).size;
   [["r4-kpi-nc", pctNC4+"%"], ["r4-kpi-c", pctC4+"%"],
    ["r4-kpi-aprov", aprov4], ["r4-kpi-reprov", reprov4],
-   ["r4-kpi-nao-anex", naoAnex4], ["r4-kpi-em-analise", emAnalise4],
-   ["r4-kpi-vencido", vencido4], ["r4-kpi-forn", forn4]
+   ["r4-kpi-irregular", irreg4], ["r4-kpi-nao-anex", naoAnex4],
+   ["r4-kpi-em-analise", emAnalise4], ["r4-kpi-vencido", vencido4], ["r4-kpi-forn", forn4]
   ].forEach(([id, val]) => {{ const e=document.getElementById(id); if(e) e.textContent=val; }});
 }}
 function limparFornSit() {{
@@ -2061,8 +2284,8 @@ function exportarSitPDF() {{
   doc.text(empLabel, 14, 25);
 
   // KPI summary — lê valores atuais do DOM (respeitam filtro ativo)
-  const kpiLabels = ["% Nao Conf.", "% Conforme", "Aprovados", "Reprovados", "Nao Anexado", "Ag. Analise", "Terceiros"];
-  const kpiIds    = ["sit-kpi-nc", "sit-kpi-c", "sit-kpi-aprov", "sit-kpi-reprov", "sit-kpi-nao-anex", "sit-kpi-aguard", "sit-kpi-terc"];
+  const kpiLabels = ["% Nao Conf.", "% Conforme", "Aprovados", "Reprovados", "Nao Anexado", "Ag. Submissão", "Em Análise", "Terceiros"];
+  const kpiIds    = ["sit-kpi-nc", "sit-kpi-c", "sit-kpi-aprov", "sit-kpi-reprov", "sit-kpi-nao-anex", "sit-kpi-aguard-sub", "sit-kpi-aguard-real", "sit-kpi-terc"];
   const kpiVals   = kpiIds.map(id => document.getElementById(id)?.textContent?.trim() || "—");
 
   doc.autoTable({{
@@ -2262,6 +2485,211 @@ function renderLevel3(forn, trab) {{
 
 renderLevel1();
 
+// ── CONTRATOS DRILL-DOWN ──────────────────────────────────────────────────────
+let ctFornAtual = null;
+let ctContratosAtual = [];
+let ctContratosVisiveis = new Set(); // chips selecionados (vazio = todos)
+
+function ctShowLevel(n) {{
+  [1,2,3].forEach(i => document.getElementById("ct-level"+i).style.display = i===n ? "block" : "none");
+}}
+
+function ctRenderL1(q) {{
+  const lq = (q || "").toLowerCase();
+  let lista = CONTRATOS.filter(f => !lq || f.nome.toLowerCase().includes(lq) || f.nome_full.toLowerCase().includes(lq));
+  document.getElementById("ct-l1-count").textContent = lista.length + " fornecedor(es)";
+  document.getElementById("ct-cards").innerHTML = lista.map(f => {{
+    // Usa a mesma união que o L2 — contratos do CSV + contratos com terceiros vinculados
+    const allCt  = [...new Set([...f.contratos, ...Object.keys(f.terceiros_by_contract)])].sort();
+    const nContr = allCt.length;
+    const nTerc  = Object.values(f.terceiros_by_contract).reduce((a,b)=>a+b.length,0);
+    const preview = allCt.slice(0,3);
+    const more    = nContr > 3 ? ` <span style="color:#999;font-size:10px">+${{nContr-3}}</span>` : "";
+    return `<div class="ct-card" onclick="ctRenderL2('${{encodeURIComponent(f.cnpj)}}')">
+      <div class="ct-card-name">${{f.nome}}</div>
+      <div class="ct-card-codes">
+        ${{preview.map(c=>`<span class="ct-code-chip" title="${{c}}">${{c}}</span>`).join("")}}${{more}}
+        ${{nContr===0 ? '<span style="color:#bbb;font-size:11px">Sem contratos</span>' : ""}}
+      </div>
+      <div class="ct-card-meta">${{nContr}} contrato(s) &middot; ${{nTerc}} terceiro(s)</div>
+    </div>`;
+  }}).join("") || '<div class="drill-hint">Nenhum fornecedor encontrado</div>';
+}}
+
+function ctFilterL1(q) {{ ctRenderL1(q); }}
+
+function ctRenderL2(cnpjEnc) {{
+  ctShowLevel(2);
+  const cnpj = decodeURIComponent(cnpjEnc);
+  ctFornAtual = CONTRATOS.find(f => f.cnpj === cnpj) || null;
+  if (!ctFornAtual) return;
+
+  document.getElementById("ct-breadcrumb2").innerHTML =
+    `<span class="drill-back" onclick="ctBackToL1()">← Fornecedores</span>
+     <span class="drill-crumb-sep">›</span>
+     <span class="drill-crumb-current">${{ctFornAtual.nome}}</span>`;
+
+  // Monta lista de contratos únicos (do campo contratos + chaves de terceiros_by_contract)
+  const ctSet = new Set([...ctFornAtual.contratos,
+                          ...Object.keys(ctFornAtual.terceiros_by_contract)]);
+  ctContratosAtual = [...ctSet].sort();
+  ctContratosVisiveis = new Set();
+
+  // Chips (só exibe quando >1 contrato)
+  const chipDiv = document.getElementById("ct-chip-filter");
+  if (ctContratosAtual.length > 1) {{
+    chipDiv.innerHTML = ctContratosAtual.map(c =>
+      `<span class="ct-chip" data-ct="${{encodeURIComponent(c)}}" onclick="ctToggleChip(this)">${{c}}</span>`
+    ).join("");
+  }} else {{
+    chipDiv.innerHTML = "";
+  }}
+
+  ctRenderContratos();
+}}
+
+function ctToggleChip(el) {{
+  const ct = decodeURIComponent(el.dataset.ct);
+  if (ctContratosVisiveis.has(ct)) {{ ctContratosVisiveis.delete(ct); el.classList.remove("selected"); }}
+  else {{ ctContratosVisiveis.add(ct); el.classList.add("selected"); }}
+  ctRenderContratos();
+}}
+
+function ctRenderContratos() {{
+  if (!ctFornAtual) return;
+  const visivel = ctContratosVisiveis.size === 0
+    ? ctContratosAtual
+    : ctContratosAtual.filter(c => ctContratosVisiveis.has(c));
+  document.getElementById("ct-contract-list").innerHTML = visivel.map(c => {{
+    const tercs = ctFornAtual.terceiros_by_contract[c] || [];
+    const ativos = tercs.filter(t => t.status === "Ativo").length;
+    const aerops = [...new Set(tercs.map(t=>t.aeroporto).filter(Boolean))].join(", ") || "—";
+    return `<div class="ct-contract-row" onclick="ctRenderL3('${{encodeURIComponent(c)}}')">
+      <div class="ct-contract-code">${{c}}</div>
+      <div class="ct-contract-meta">${{tercs.length}} terceiro(s) &middot; ${{ativos}} ativo(s) &middot; ${{aerops}}</div>
+      <div class="ct-contract-arrow">›</div>
+    </div>`;
+  }}).join("") || '<div class="drill-hint">Nenhum contrato</div>';
+}}
+
+function ctRenderL3(ctEnc) {{
+  ctShowLevel(3);
+  const ct = decodeURIComponent(ctEnc);
+  if (!ctFornAtual) return;
+  const tercs = ctFornAtual.terceiros_by_contract[ct] || [];
+
+  document.getElementById("ct-breadcrumb3").innerHTML =
+    `<span class="drill-back" onclick="ctShowLevel(2)">← ${{ctFornAtual.nome}}</span>
+     <span class="drill-crumb-sep">›</span>
+     <span class="drill-crumb-current">${{ct}}</span>`;
+
+  document.getElementById("ct-terc-body").innerHTML = tercs.map(t => {{
+    const badgeCls = t.status === "Ativo" ? "badge-conforme" : "badge-nao-enviado";
+    return `<tr>
+      <td>${{t.nome || "—"}}</td>
+      <td style="font-family:monospace;font-size:12px">${{t.cnpj || "—"}}</td>
+      <td>${{t.cargo || "—"}}</td>
+      <td>${{t.aeroporto || "—"}}</td>
+      <td><span class="badge ${{badgeCls}}">${{t.status || "—"}}</span></td>
+    </tr>`;
+  }}).join("") || '<tr><td colspan="5" style="text-align:center;color:#aaa">Nenhum terceiro</td></tr>';
+
+  // guarda para export
+  window._ctL3Current = {{ contrato: ct, dados: tercs }};
+}}
+
+function ctBackToL1() {{
+  ctShowLevel(1);
+  ctRenderL1(document.getElementById("ct-search").value);
+}}
+
+// Exportações L2 — listagem de terceiros do fornecedor (todos os contratos visíveis)
+function _ctL2TercRows() {{
+  const visivel = ctContratosVisiveis.size === 0
+    ? ctContratosAtual
+    : ctContratosAtual.filter(c => ctContratosVisiveis.has(c));
+  const rows = [];
+  visivel.forEach(c => {{
+    const ts = ctFornAtual.terceiros_by_contract[c] || [];
+    ts.forEach(t => rows.push({{
+      Contrato: c, Aeroporto: t.aeroporto || "", Nome: t.nome || "",
+      "CPF/CNPJ": t.cnpj || "", Cargo: t.cargo || "", Status: t.status || ""
+    }}));
+  }});
+  return {{ rows, nContratos: visivel.length, nTerceiros: rows.length }};
+}}
+function ctExportL2XLSX() {{
+  const {{ rows }} = _ctL2TercRows();
+  downloadXLSX(rows, ["Contrato","Aeroporto","Nome","CPF/CNPJ","Cargo","Status"],
+    "terceiros_" + (ctFornAtual?.nome||"") + ".xlsx");
+}}
+function ctExportL2CSV() {{
+  const {{ rows }} = _ctL2TercRows();
+  downloadCSV(rows, ["Contrato","Aeroporto","Nome","CPF/CNPJ","Cargo","Status"],
+    "terceiros_" + (ctFornAtual?.nome||"") + ".csv");
+}}
+function ctExportL2PDF() {{
+  const {{ rows, nContratos, nTerceiros }} = _ctL2TercRows();
+  const fornNome = ctFornAtual?.nome || "";
+  const {{ jsPDF }} = window.jspdf;
+  const doc = new jsPDF({{ orientation: "landscape", unit: "mm", format: "a4" }});
+  const W = doc.internal.pageSize.getWidth();
+  doc.setFontSize(13); doc.setTextColor(14, 143, 163);
+  doc.text("Terceiros — " + fornNome, 14, 14);
+  doc.setFontSize(10); doc.setTextColor(80);
+  doc.text(nContratos + " contratos · " + nTerceiros + " terceiros", W - 14, 14, {{ align: "right" }});
+  doc.setFontSize(9); doc.setTextColor(120);
+  doc.text("Gerado em: " + new Date().toLocaleString("pt-BR"), 14, 20);
+  const hs = ["Contrato","Aeroporto","Nome","CPF/CNPJ","Cargo","Status"];
+  doc.autoTable({{
+    head: [hs],
+    body: rows.map(r => hs.map(h => r[h] || "")),
+    startY: 25,
+    styles: {{ fontSize: 8, cellPadding: 2.5 }},
+    headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
+    alternateRowStyles: {{ fillColor: [245, 252, 253] }},
+    columnStyles: {{
+      0: {{ cellWidth: 30 }},
+      1: {{ cellWidth: 18 }},
+      2: {{ cellWidth: 72 }},
+      3: {{ cellWidth: 30 }},
+      4: {{ cellWidth: 55 }},
+      5: {{ cellWidth: 18 }}
+    }},
+    didParseCell(data) {{
+      if (data.section === "body" && data.column.index === 5) {{
+        const v = String(data.cell.raw || "");
+        if (v === "Ativo") data.cell.styles.textColor = [5, 150, 105];
+        else               data.cell.styles.textColor = [180, 40, 40];
+      }}
+    }}
+  }});
+  doc.save("terceiros_" + fornNome + ".pdf");
+}}
+
+// Exportações L3 (terceiros do contrato)
+function _ctL3Rows() {{
+  const d = window._ctL3Current;
+  if (!d) return [];
+  return d.dados.map(t => ({{ Fornecedor: ctFornAtual?.nome||"", Contrato: d.contrato,
+    Nome: t.nome, "CPF/CNPJ": t.cnpj, Cargo: t.cargo, Aeroporto: t.aeroporto, Status: t.status }}));
+}}
+function ctExportL3XLSX() {{
+  downloadXLSX(_ctL3Rows(), ["Fornecedor","Contrato","Nome","CPF/CNPJ","Cargo","Aeroporto","Status"],
+    "terceiros_contrato.xlsx");
+}}
+function ctExportL3CSV() {{
+  downloadCSV(_ctL3Rows(), ["Fornecedor","Contrato","Nome","CPF/CNPJ","Cargo","Aeroporto","Status"],
+    "terceiros_contrato.csv");
+}}
+function ctExportL3PDF() {{
+  downloadPDF(_ctL3Rows(), ["Fornecedor","Contrato","Nome","CPF/CNPJ","Cargo","Aeroporto","Status"],
+    "terceiros_contrato.pdf", "Terceiros por Contrato — Zurich Airport");
+}}
+
+// Init L1
+ctRenderL1("");
+
 // ── TOGGLE SECOES ─────────────────────────────────────────────────────────────
 function toggleSection(id, btn) {{
   const el = document.getElementById(id);
@@ -2291,7 +2719,7 @@ function applyGlobalFilter() {{
 
   // Expande secoes quando filtro ativo
   if (count > 0) {{
-    ["drill-section","pend-section","sit-section","forn-sit-section"].forEach(expandSection);
+    ["ct-section","drill-section","pend-section","sit-section","forn-sit-section"].forEach(expandSection);
   }}
 
   // Label do botao

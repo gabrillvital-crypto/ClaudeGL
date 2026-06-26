@@ -495,15 +495,16 @@ export function processAllData(
     const nomeTerceiro = String(row[colRsTercNome] ?? '').trim()
     const cpfTerceiro = String(row[colCPFTerc] ?? '').trim()
     const codContratosRaw = String(row[colCodContrato] ?? '').trim()
+    const effectiveCod = codContratosRaw || 'Sem contrato'
     const cargo = String(row[colCargo] ?? '').trim()
     const status = String(row[colStatusTerc2] ?? '').trim()
     const aeroporto = String(row[colAeroporto] ?? '').trim()
 
-    if (!cnpj || !nomeTerceiro || !codContratosRaw) return
+    if (!cnpj || !nomeTerceiro) return
 
     if (!_tercByContrato[cnpj]) _tercByContrato[cnpj] = {}
-    if (!_tercByContrato[cnpj][codContratosRaw]) _tercByContrato[cnpj][codContratosRaw] = []
-    _tercByContrato[cnpj][codContratosRaw].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
+    if (!_tercByContrato[cnpj][effectiveCod]) _tercByContrato[cnpj][effectiveCod] = []
+    _tercByContrato[cnpj][effectiveCod].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
 
     // Garantir que o fornecedor aparece no mapa base mesmo que não esteja no relatório de contratos
     const nomeForn = abbrev(String(row[colRsTercForn] ?? ''))
@@ -511,7 +512,7 @@ export function processAllData(
       _fornContratosBase[cnpj] = { nome: nomeForn, contratos: new Set() }
     }
     if (cnpj && _fornContratosBase[cnpj]) {
-      _fornContratosBase[cnpj].contratos.add(codContratosRaw)
+      _fornContratosBase[cnpj].contratos.add(effectiveCod)
     }
   })
 
