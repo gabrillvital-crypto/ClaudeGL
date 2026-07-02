@@ -298,24 +298,45 @@ if _sit_forn_ok:
     col_r4_rs = df_sit_forn.columns[0]
     df_sit_forn["Empresa"] = df_sit_forn[col_r4_rs].apply(abbrev)
 
-    col_analise = next((c for c in df_sit_forn.columns if "lise" in c.lower() and "doc" in c.lower()), None)
+    # "Situação Análise Documento" contém "lise"; "Situação Documento" não
+    col_analise   = next((c for c in df_sit_forn.columns if "lise" in c.lower() and "doc" in c.lower()), None)
+    col_sit_doc   = next((c for c in df_sit_forn.columns
+                          if "situa" in c.lower() and "doc" in c.lower() and "lise" not in c.lower()), None)
 
     def map_status_r4(row):
+        # Prioridade: coluna "Situação Documento" da própria linha R4 (adicionada 26/06/2026)
+        sit_doc = str(row.get(col_sit_doc, "") if col_sit_doc else "").strip().upper()
+        analise = str(row.get(col_analise, "") if col_analise else "").strip().upper()
+
+        if sit_doc == "REGULAR":
+            raw_status = str(row.get("Status", "")).strip().lower()
+            if "vencido" in raw_status:
+                # Vencido: robô confirmou mas doc expirou — usa Situação Análise para decidir
+                if analise == "APROVADO":  return "Aprovado"
+                if analise == "REPROVADO": return "Reprovado"
+                return "Em análise"
+            return "Aprovado"          # A vencer, Não Anexado, etc. → robô confirmou válida
+        if sit_doc == "IRREGULAR":
+            return "Irregular"
+        if sit_doc == "ALERTA":
+            return "Alerta"            # busca não executou — verificar manualmente
+        if sit_doc == "NEUTRO":
+            # documento manual → usa Situação Análise Documento
+            if analise == "APROVADO":  return "Aprovado"
+            if analise == "REPROVADO": return "Reprovado"
+            return "Em análise"        # NÃO ANALISADO ou outro
+
+        # Situação Documento vazia → fallback busca_auto CSV → lógica manual
         cnpj_r = re.sub(r'\D', '', str(row.get("CNPJ", "")))
         doc_r  = str(row.get("Documento", "")).strip().upper()
-        analise = str(row.get(col_analise, "")).strip().upper() if col_analise else ""
-        # Verifica enriquecimento pela busca automática
         sit_ba = _busca_auto_map.get((cnpj_r, doc_r))
         if sit_ba:
-            sit_doc, sit_anal_ba = sit_ba
-            if sit_doc == "REGULAR":    return "Aprovado"
-            if sit_doc == "IRREGULAR":  return "Irregular"
-            # NEUTRO ou ALERTA: usa análise do CSV busca_auto (mesma fonte que o React)
-            if sit_anal_ba == "APROVADO":  return "Aprovado"
-            if sit_anal_ba == "REPROVADO": return "Reprovado"
-            if sit_anal_ba == "VENCIDO":   return "Vencido"
-            return "Em análise"
-        # Documento manual
+            sd, _sa = sit_ba
+            if sd == "REGULAR":    return "Aprovado"
+            if sd == "IRREGULAR":  return "Irregular"
+            if sd == "ALERTA":     return "Alerta"
+            if sd != "NEUTRO":     return "Em análise"
+        # Manual puro
         if analise == "APROVADO":  return "Aprovado"
         if analise == "REPROVADO": return "Reprovado"
         status = str(row.get("Status", "")).strip().lower()
@@ -341,10 +362,11 @@ if _sit_forn_ok:
     r4_aprovado     = int((df_sit_forn_calc["Status_Cat"] == "Aprovado").sum())
     r4_reprovado    = int((df_sit_forn_calc["Status_Cat"] == "Reprovado").sum())
     r4_irregular    = int((df_sit_forn_calc["Status_Cat"] == "Irregular").sum())
+    r4_alerta       = int((df_sit_forn_calc["Status_Cat"] == "Alerta").sum())
     r4_nao_anex     = int((df_sit_forn_calc["Status_Cat"] == "Não Anexado").sum())
     r4_em_analise   = int((df_sit_forn_calc["Status_Cat"] == "Em análise").sum())
     r4_vencido      = int((df_sit_forn_calc["Status_Cat"] == "Vencido").sum())
-    r4_nao_conf     = r4_reprovado + r4_irregular + r4_nao_anex + r4_em_analise + r4_vencido
+    r4_nao_conf     = r4_reprovado + r4_irregular + r4_alerta + r4_nao_anex + r4_em_analise + r4_vencido
     r4_pct_nc       = round(r4_nao_conf / r4_total * 100, 1) if r4_total > 0 else 0.0
     r4_pct_c        = round(r4_aprovado / r4_total * 100, 1) if r4_total > 0 else 0.0
     r4_fornecedores = int(
@@ -353,7 +375,7 @@ if _sit_forn_ok:
     ) if "CNPJ" in df_sit_forn_calc.columns else int(df_sit_forn_calc["Empresa"].nunique())
 else:
     forn_sit_json   = []
-    r4_total = r4_aprovado = r4_reprovado = r4_irregular = r4_nao_anex = r4_em_analise = r4_vencido = r4_fornecedores = 0
+    r4_total = r4_aprovado = r4_reprovado = r4_irregular = r4_alerta = r4_nao_anex = r4_em_analise = r4_vencido = r4_fornecedores = 0
     r4_pct_nc = r4_pct_c = 0.0
     r4_nao_conf = 0
     df_sit_forn_calc = pd.DataFrame()
@@ -815,6 +837,9 @@ html = f"""<!DOCTYPE html>
   .badge-reprovado          {{ background: #ffeaea; color: {COR_VERMELHO}; }}
   .badge-competencia   {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 11px; padding: 2px 7px; border-radius: 8px; }}
   .badge-irregular     {{ background: #fff0e0; color: #b35a00; }}
+  .badge-alerta        {{ background: #fef3c7; color: #d97706; }}
+  .kpi-card.amber      {{ border-top-color: #d97706; }}
+  .kpi-card.amber .kpi-val {{ color: #d97706; }}
 
   /* CONTRATOS DRILL-DOWN */
   .ct-cards-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px; margin-top: 16px; }}
@@ -1099,7 +1124,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div class="kpi-card red"
          data-tooltip="Documentos que passaram por análise, mas foram recusados por inconformidade ou erro.">
-      <div class="kpi-val" id="kpi-docs-nao-aprov">{int(total_reprovados_docs) + r4_reprovado + r4_irregular}</div>
+      <div class="kpi-val" id="kpi-docs-nao-aprov">{int(total_reprovados_docs) + r4_reprovado + r4_irregular + r4_alerta}</div>
       <div class="kpi-label">Documentos<br>Reprovados</div>
     </div>
     <div class="kpi-card yellow"
@@ -1437,6 +1462,11 @@ html = f"""<!DOCTYPE html>
       <div class="kpi-val" id="r4-kpi-irregular">{r4_irregular}</div>
       <div class="kpi-label">Irregular<br>(Débito Detectado)</div>
     </div>
+    <div class="kpi-card amber"
+         data-tooltip="Busca automática não executou — verificar manualmente o motivo.">
+      <div class="kpi-val" id="r4-kpi-alerta">{r4_alerta}</div>
+      <div class="kpi-label">Alerta<br>(Verificar Busca)</div>
+    </div>
     <div class="kpi-card">
       <div class="kpi-val" id="r4-kpi-forn">{r4_fornecedores}</div>
       <div class="kpi-label">Fornecedores<br>com Docs</div>
@@ -1463,7 +1493,8 @@ html = f"""<!DOCTYPE html>
         <option value="">Todos</option>
         <option value="Aprovado">Aprovado</option>
         <option value="Reprovado">Reprovado</option>
-        <option value="Irregular (Débito)">Irregular (Débito)</option>
+        <option value="Irregular">Irregular (Débito)</option>
+        <option value="Alerta">Alerta</option>
         <option value="Não Anexado">Não Anexado</option>
         <option value="Em análise">Em análise</option>
         <option value="Vencido">Vencido</option>
@@ -1635,8 +1666,9 @@ function updateKPICards() {{
   const reprovR3     = s.filter(r => r.Status === "Reprovado").length;
   const reprovR4     = fs.filter(r => r.Status === "Reprovado").length;
   const irregularR4  = fs.filter(r => r.Status === "Irregular").length;
+  const alertaR4     = fs.filter(r => r.Status === "Alerta").length;
   const docsAprov    = aprovR3 + aprovR4;
-  const docsNaoAprov = reprovR3 + reprovR4 + irregularR4;
+  const docsNaoAprov = reprovR3 + reprovR4 + irregularR4 + alertaR4;
   const docsNaoEnv   = naoAnexR3 + naoAnexR4;
   const docsAguardSub = aguardR3Elab;
   const docsEmAnal    = aguardR3Real + emAnalR4;
@@ -1965,7 +1997,9 @@ function badgeArea(a) {{
 function badgeSit(s) {{
   if (s === "Aprovado")             return '<span class="badge badge-conforme">Aprovado</span>';
   if (s === "Reprovado")            return '<span class="badge badge-vencido">Reprovado</span>';
+  if (s === "Irregular")            return '<span class="badge badge-irregular">Irregular (Débito)</span>';
   if (s === "Irregular (Débito)")   return '<span class="badge badge-irregular">Irregular (Débito)</span>';
+  if (s === "Alerta")               return '<span class="badge badge-alerta">Alerta</span>';
   if (s === "Não anexado")          return '<span class="badge badge-pendente">Não anexado</span>';
   if (s === "Não Anexado")          return '<span class="badge badge-pendente">Não Anexado</span>';
   if (s === "Aguardando Submissão") return '<span class="badge badge-aguardando-submissao">Aguardando Submissão</span>';
@@ -2095,17 +2129,18 @@ function filtrarFornSit() {{
   // KPIs dinâmicos R4
   const aprov4     = fornSitFiltrado.filter(r => r["Status"]==="Aprovado").length;
   const reprov4    = fornSitFiltrado.filter(r => r["Status"]==="Reprovado").length;
-  const irreg4     = fornSitFiltrado.filter(r => r["Status"]==="Irregular (Débito)").length;
+  const irreg4     = fornSitFiltrado.filter(r => r["Status"]==="Irregular").length;
+  const alerta4    = fornSitFiltrado.filter(r => r["Status"]==="Alerta").length;
   const naoAnex4   = fornSitFiltrado.filter(r => r["Status"]==="Não Anexado").length;
   const emAnalise4 = fornSitFiltrado.filter(r => r["Status"]==="Em análise").length;
   const vencido4   = fornSitFiltrado.filter(r => r["Status"]==="Vencido").length;
-  const tot4       = aprov4 + reprov4 + irreg4 + naoAnex4 + emAnalise4 + vencido4;
-  const pctNC4     = tot4>0 ? ((reprov4+irreg4+naoAnex4+emAnalise4+vencido4)/tot4*100).toFixed(1) : "0.0";
+  const tot4       = aprov4 + reprov4 + irreg4 + alerta4 + naoAnex4 + emAnalise4 + vencido4;
+  const pctNC4     = tot4>0 ? ((reprov4+irreg4+alerta4+naoAnex4+emAnalise4+vencido4)/tot4*100).toFixed(1) : "0.0";
   const pctC4      = tot4>0 ? (aprov4/tot4*100).toFixed(1) : "0.0";
   const forn4      = new Set(fornSitFiltrado.map(r=>r["Fornecedor"])).size;
   [["r4-kpi-nc", pctNC4+"%"], ["r4-kpi-c", pctC4+"%"],
    ["r4-kpi-aprov", aprov4], ["r4-kpi-reprov", reprov4],
-   ["r4-kpi-irregular", irreg4], ["r4-kpi-nao-anex", naoAnex4],
+   ["r4-kpi-irregular", irreg4], ["r4-kpi-alerta", alerta4], ["r4-kpi-nao-anex", naoAnex4],
    ["r4-kpi-em-analise", emAnalise4], ["r4-kpi-vencido", vencido4], ["r4-kpi-forn", forn4]
   ].forEach(([id, val]) => {{ const e=document.getElementById(id); if(e) e.textContent=val; }});
 }}

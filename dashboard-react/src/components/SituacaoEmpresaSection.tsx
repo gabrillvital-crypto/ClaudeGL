@@ -12,21 +12,32 @@ interface Props {
   r4_em_analise: number
   r4_vencido: number
   r4_irregular: number
+  r4_alerta: number
   r4_pct_nc: number
   r4_pct_c: number
   r4_fornecedores: number
   geradoEm?: string
 }
 
+const STATUS_OPTIONS: { value: string; label: string; active: string; inactive: string }[] = [
+  { value: 'Aprovado',    label: 'Aprovado',          active: 'bg-[#28A745] text-white',                  inactive: 'bg-white text-[#28A745] border border-[#28A745] hover:bg-[#eafaf1]' },
+  { value: 'Reprovado',   label: 'Reprovado',         active: 'bg-[#DC3545] text-white',                  inactive: 'bg-white text-[#DC3545] border border-[#DC3545] hover:bg-[#fdf2f3]' },
+  { value: 'Irregular',   label: 'Irregular (Débito)', active: 'bg-[#b05c00] text-white',                 inactive: 'bg-white text-[#b05c00] border border-[#b05c00] hover:bg-[#fff4e8]' },
+  { value: 'Não Anexado', label: 'Não Anexado',       active: 'bg-[#FFC107] text-[#5a3e00]',              inactive: 'bg-white text-[#a07800] border border-[#FFC107] hover:bg-[#fffbea]' },
+  { value: 'Em análise',  label: 'Em análise',        active: 'bg-[#0E8FA3] text-white',                  inactive: 'bg-white text-[#0E8FA3] border border-[#0E8FA3] hover:bg-[#e8f4f7]' },
+  { value: 'Vencido',     label: 'Vencido',           active: 'bg-[#DC3545] text-white',                  inactive: 'bg-white text-[#DC3545] border border-[#DC3545] hover:bg-[#fdf2f3]' },
+  { value: 'Alerta',      label: 'Alerta',            active: 'bg-[#d97706] text-white',                  inactive: 'bg-white text-[#d97706] border border-[#d97706] hover:bg-[#fef3c7]' },
+]
+
 function badge(s: string) {
   const m: Record<string, string> = {
-    // Docs manuais (legado)
-    'Aprovado':      'bg-[#d4edda] text-[#28A745]',
-    'Reprovado':     'bg-[#ffeaea] text-[#DC3545]',
-    'Não Anexado':   'bg-[#fff3cd] text-[#856404]',
-    'Em análise':    'bg-[#e8f4f7] text-[#0E8FA3]',
-    'Vencido':       'bg-[#ffeaea] text-[#DC3545]',
-    'Irregular':     'bg-[#fff0d6] text-[#b05c00]',
+    'Aprovado':    'bg-[#d4edda] text-[#28A745]',
+    'Reprovado':   'bg-[#ffeaea] text-[#DC3545]',
+    'Não Anexado': 'bg-[#fff3cd] text-[#856404]',
+    'Em análise':  'bg-[#e8f4f7] text-[#0E8FA3]',
+    'Vencido':     'bg-[#ffeaea] text-[#DC3545]',
+    'Irregular':   'bg-[#fff0d6] text-[#b05c00]',
+    'Alerta':      'bg-[#fef3c7] text-[#d97706]',
   }
   return (
     <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-bold ${m[s] ?? 'bg-gray-100 text-gray-600'}`}>
@@ -40,6 +51,7 @@ function KPISmall({ value, label, color }: { value: string | number; label: stri
     : color === 'red'    ? 'border-t-[#DC3545] text-[#DC3545]'
     : color === 'yellow' ? 'border-t-[#FFC107] text-[#a07800]'
     : color === 'orange' ? 'border-t-[#F4793B] text-[#F4793B]'
+    : color === 'amber'  ? 'border-t-[#d97706] text-[#d97706]'
     : 'border-t-[#0E8FA3] text-[#0E8FA3]'
   const [border, text] = c.split(' ')
   return (
@@ -53,32 +65,40 @@ function KPISmall({ value, label, color }: { value: string | number; label: stri
 export function SituacaoEmpresaSection({
   data, gfForn,
   r4_total, r4_aprovado, r4_reprovado, r4_nao_anex, r4_em_analise, r4_vencido,
-  r4_irregular,
+  r4_irregular, r4_alerta,
   r4_pct_nc, r4_pct_c, r4_fornecedores,
   geradoEm = '',
 }: Props) {
   const [pdfLoading, setPdfLoading] = useState(false)
   const [filt, setFilt] = useState('')
-  const [stat, setStat] = useState('')
+  const [statFilters, setStatFilters] = useState<Set<string>>(new Set())
   const [busca, setBusca] = useState('')
+
+  function toggleStat(v: string) {
+    setStatFilters(prev => {
+      const next = new Set(prev)
+      next.has(v) ? next.delete(v) : next.add(v)
+      return next
+    })
+  }
 
   const fornList = useMemo(() => [...new Set(data.map(r => r.Fornecedor))].sort(), [data])
 
   const filtered = useMemo(() => {
     let d = gfForn ? data.filter(r => r.Fornecedor === gfForn) : data
     if (filt) d = d.filter(r => r.Fornecedor === filt)
-    if (stat) d = d.filter(r => r.Status === stat)
+    if (statFilters.size > 0) d = d.filter(r => statFilters.has(r.Status))
     if (busca) d = d.filter(r => r.Documento.toLowerCase().includes(busca.toLowerCase()))
     return d
-  }, [data, gfForn, filt, stat, busca])
+  }, [data, gfForn, filt, statFilters, busca])
 
   const subKPI = useMemo(() => {
-    const active = gfForn || filt || stat || busca
+    const active = gfForn || filt || statFilters.size > 0 || busca
     if (!active) {
       return {
         total: r4_total, aprovado: r4_aprovado, reprovado: r4_reprovado,
         nao_anex: r4_nao_anex, em_analise: r4_em_analise, vencido: r4_vencido,
-        irregular: r4_irregular,
+        irregular: r4_irregular, alerta: r4_alerta,
         pct_nc: r4_pct_nc, pct_c: r4_pct_c, forn: r4_fornecedores,
       }
     }
@@ -89,18 +109,19 @@ export function SituacaoEmpresaSection({
     const em_analise = filtered.filter(r => r.Status === 'Em análise').length
     const vencido    = filtered.filter(r => r.Status === 'Vencido').length
     const irregular  = filtered.filter(r => r.Status === 'Irregular').length
-    const nao_conf   = reprovado + nao_anex + em_analise + vencido + irregular
+    const alerta     = filtered.filter(r => r.Status === 'Alerta').length
+    const nao_conf   = reprovado + nao_anex + em_analise + vencido + irregular + alerta
     return {
-      total, aprovado, reprovado, nao_anex, em_analise, vencido, irregular,
+      total, aprovado, reprovado, nao_anex, em_analise, vencido, irregular, alerta,
       pct_nc: total > 0 ? Math.round(nao_conf / total * 1000) / 10 : 0,
       pct_c:  total > 0 ? Math.round(aprovado / total * 1000) / 10 : 0,
       forn: new Set(filtered.map(r => r.Fornecedor)).size,
     }
-  }, [filtered, gfForn, filt, stat, busca,
+  }, [filtered, gfForn, filt, statFilters, busca,
       r4_total, r4_aprovado, r4_reprovado, r4_nao_anex, r4_em_analise, r4_vencido,
-      r4_irregular, r4_pct_nc, r4_pct_c, r4_fornecedores])
+      r4_irregular, r4_alerta, r4_pct_nc, r4_pct_c, r4_fornecedores])
 
-  function clear() { setFilt(''); setStat(''); setBusca('') }
+  function clear() { setFilt(''); setStatFilters(new Set()); setBusca('') }
 
   const rows = filtered.map(r => ({ Fornecedor: r.Fornecedor, Documento: r.Documento, Status: r.Status, Vencimento: r.Vencimento }))
 
@@ -112,6 +133,10 @@ export function SituacaoEmpresaSection({
     }, 50)
   }
 
+  const activeLabel = statFilters.size > 0
+    ? `${filtered.length} de ${data.length} registro(s)`
+    : `${filtered.length} registro(s) de ${data.length} no total`
+
   return (
     <div id="section-r4">
       {/* Sub-KPIs */}
@@ -121,6 +146,7 @@ export function SituacaoEmpresaSection({
         <KPISmall value={subKPI.aprovado}       label="Aprovados"            color="green" />
         <KPISmall value={subKPI.reprovado}      label="Reprovados"           color="red" />
         <KPISmall value={subKPI.irregular}      label="Irregular (Débito)"   color="orange" />
+        <KPISmall value={subKPI.alerta}         label="Alerta (verificar)"   color="amber" />
         <KPISmall value={subKPI.nao_anex}       label="Não Anexados"         color="yellow" />
         <KPISmall value={subKPI.em_analise}     label="Aguardando Análise"   color="orange" />
         <KPISmall value={subKPI.vencido}        label="Vencidos"             color="red" />
@@ -128,25 +154,39 @@ export function SituacaoEmpresaSection({
         <KPISmall value={subKPI.forn}           label="Fornecedores c/ Docs" />
       </div>
 
-      {/* Filters */}
+      {/* Filtro de status — pills multi-select */}
+      <div className="flex flex-wrap items-center gap-2 mb-3 bg-white border border-[#e5eef1] rounded-lg px-3 py-2 shadow-sm">
+        <span className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide mr-1">
+          Filtrar por status:
+        </span>
+        {STATUS_OPTIONS.map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => toggleStat(opt.value)}
+            className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all ${
+              statFilters.has(opt.value) ? opt.active : opt.inactive
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+        {statFilters.size > 0 && (
+          <button
+            onClick={() => setStatFilters(new Set())}
+            className="ml-2 text-[11px] text-[#999] hover:text-[#DC3545] underline font-semibold"
+          >
+            Limpar filtro
+          </button>
+        )}
+      </div>
+
+      {/* Filtros Fornecedor + Busca */}
       <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-end">
         <div>
           <label className="block text-[12px] font-bold text-[#0E8FA3] uppercase mb-1">Fornecedor</label>
           <select value={filt} onChange={e => setFilt(e.target.value)} className="border border-[#cde] rounded px-2 py-1.5 text-[13px]">
             <option value="">Todos</option>
             {fornList.map(f => <option key={f} value={f}>{f}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="block text-[12px] font-bold text-[#0E8FA3] uppercase mb-1">Status</label>
-          <select value={stat} onChange={e => setStat(e.target.value)} className="border border-[#cde] rounded px-2 py-1.5 text-[13px]">
-            <option value="">Todos</option>
-            <option value="Aprovado">Aprovado</option>
-            <option value="Reprovado">Reprovado</option>
-            <option value="Irregular">Irregular (Débito)</option>
-            <option value="Não Anexado">Não Anexado</option>
-            <option value="Em análise">Aguardando Análise</option>
-            <option value="Vencido">Vencido</option>
           </select>
         </div>
         <div>
@@ -166,7 +206,7 @@ export function SituacaoEmpresaSection({
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm p-4">
-        <p className="text-[13px] text-[#6C757D] mb-2">{filtered.length} registro(s) de {data.length} no total</p>
+        <p className="text-[13px] text-[#6C757D] mb-2">{activeLabel}</p>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px] border-collapse">
             <thead>

@@ -119,21 +119,14 @@ function mapStatusR4(
 }
 
 // ── Busca Automática: matrix das 4 regras ────────────────────────────────────
-// Recebe Situação Documento (campo do robô) + Situação Análise (campo BPO)
-function mapStatusBuscaAuto(situacaoDoc: string, situacaoAnalise: string): StatusR4 {
+// NEUTRO = documento de input manual → retorna null para cair na lógica R4
+// ALERTA = busca não executou → status próprio para sinalização
+function mapStatusBuscaAuto(situacaoDoc: string, _situacaoAnalise: string): StatusR4 | null {
   const sd = situacaoDoc.trim().toUpperCase()
-  const sa = situacaoAnalise.trim().toUpperCase()
-  // Regra 2: REGULAR → Aprovado (robô confirmou certidão válida)
-  if (sd === 'REGULAR') return 'Aprovado'
-  // Regra 4: IRREGULAR → Irregular (débito detectado — mantido separado para visibilidade)
+  if (sd === 'REGULAR')   return 'Aprovado'
   if (sd === 'IRREGULAR') return 'Irregular'
-  // Regras 1 e 3: NEUTRO ou ALERTA → validar pela Situação Análise (BPO)
-  if (sd === 'NEUTRO' || sd === 'ALERTA') {
-    if (sa === 'APROVADO') return 'Aprovado'
-    if (sa === 'REPROVADO') return 'Reprovado'
-    if (sa === 'VENCIDO') return 'Vencido'
-    return 'Em análise' // NÃO ANALISADO → aguardando análise BPO
-  }
+  if (sd === 'ALERTA')    return 'Alerta'
+  if (sd === 'NEUTRO')    return null  // manual → cai no mapStatusR4
   return 'Em análise'
 }
 
@@ -203,7 +196,12 @@ export function processAllData(
 
   const fornSitCols = rawFornSit[0] ? Object.keys(rawFornSit[0]) : []
   const colR4RS = fornSitCols[0] ?? 'Razão Social'
+  // "Situação Análise Documento" contém "lise"; "Situação Documento" não — distingue os dois
   const colAnaliseR4 = fornSitCols.find(c => c.toLowerCase().includes('lise') && c.toLowerCase().includes('doc')) ?? null
+  const colSitDocR4  = fornSitCols.find(c => {
+    const lc = c.toLowerCase().trim()
+    return lc.includes('situa') && lc.includes('doc') && !lc.includes('lise')
+  }) ?? null
   const colCnpjR4 = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
 
   // Fornecedores cadastro CSV
@@ -244,17 +242,45 @@ export function processAllData(
   const total_trab_ativo = terc_kpi.filter(r => r.Status === 'Ativo').length
   const total_trab_inativo = terc_kpi.filter(r => r.Status === 'Inativo').length
 
-  // ── R4 — Situação por Fornecedor (com enriquecimento de busca automática) ──
+  // ── R4 — Situação por Fornecedor ─────────────────────────────────────────────
+  // Prioridade: coluna "Situação Documento" da própria linha (adicionada 26/06/2026)
+  //   REGULAR   → Aprovado  (robô confirmou válida; "A vencer" ainda é válida)
+  //   IRREGULAR → Irregular
+  //   ALERTA    → Alerta    (busca não executou — verificar manualmente)
+  //   NEUTRO    → usar "Situação Análise Documento": APROVADO→Aprovado, REPROVADO→Reprovado, else→Em análise
+  //   vazio     → fallback busca_auto CSV → lógica manual
   const forn_sit: FornSitRow[] = rawFornSit
     .map(row => {
       const cnpj = colCnpjR4 ? normCNPJ(row[colCnpjR4]) : ''
       const doc = String(row['Documento'] ?? '').trim()
-      const docKey = `${cnpj}||${doc.toUpperCase()}`
-      // Se existe no busca_auto → aplica matrix das 4 regras; senão mantém lógica atual
-      const auto = buscaAutoLookup.get(docKey)
-      const status = auto
-        ? mapStatusBuscaAuto(auto.situacaoDoc, auto.situacaoAnalise)
-        : mapStatusR4(row, colAnaliseR4)
+      const sitDoc  = colSitDocR4 ? String(row[colSitDocR4] ?? '').trim().toUpperCase() : ''
+      const analise = colAnaliseR4 ? String(row[colAnaliseR4] ?? '').trim().toUpperCase() : ''
+
+      let status: StatusR4 | null = null
+      if (sitDoc === 'REGULAR') {
+        const statusVal = String(row['Status'] ?? '').trim().toLowerCase()
+        if (statusVal.includes('vencido')) {
+          if (analise === 'APROVADO')        status = 'Aprovado'
+          else if (analise === 'REPROVADO')  status = 'Reprovado'
+          else                               status = 'Em análise'
+        } else {
+          status = 'Aprovado'
+        }
+      } else if (sitDoc === 'IRREGULAR') {
+        status = 'Irregular'
+      } else if (sitDoc === 'ALERTA') {
+        status = 'Alerta'
+      } else if (sitDoc === 'NEUTRO') {
+        if (analise === 'APROVADO')  status = 'Aprovado'
+        else if (analise === 'REPROVADO') status = 'Reprovado'
+        else status = 'Em análise'
+      } else {
+        // Situação Documento vazia → busca_auto CSV (fallback) → manual
+        const docKey = `${cnpj}||${doc.toUpperCase()}`
+        const auto = buscaAutoLookup.get(docKey)
+        const autoStatus = auto ? mapStatusBuscaAuto(auto.situacaoDoc, auto.situacaoAnalise) : null
+        status = autoStatus ?? mapStatusR4(row, colAnaliseR4)
+      }
       if (!status) return null
       return {
         Fornecedor: abbrev(String(row[colR4RS] || '')),
@@ -273,14 +299,15 @@ export function processAllData(
   const r4_em_analise = forn_sit.filter(r => r.Status === 'Em análise').length
   const r4_vencido    = forn_sit.filter(r => r.Status === 'Vencido').length
   const r4_irregular  = forn_sit.filter(r => r.Status === 'Irregular').length
-  const r4_nao_conf   = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido + r4_irregular
+  const r4_alerta     = forn_sit.filter(r => r.Status === 'Alerta').length
+  const r4_nao_conf   = r4_reprovado + r4_nao_anex + r4_em_analise + r4_vencido + r4_irregular + r4_alerta
   const r4_pct_nc = r4_total > 0 ? Math.round(r4_nao_conf / r4_total * 1000) / 10 : 0
   const r4_pct_c  = r4_total > 0 ? Math.round(r4_aprovado / r4_total * 1000) / 10 : 0
   const r4_fornecedores = new Set(forn_sit.map(r => r.Fornecedor)).size
 
   // ── KPIs combinados R3+R4 ─────────────────────────────────────────────────
   const docs_aprovados    = aprovR3 + r4_aprovado
-  const docs_reprovados   = reprovR3 + r4_reprovado + r4_irregular
+  const docs_reprovados   = reprovR3 + r4_reprovado + r4_irregular + r4_alerta
   const docs_nao_enviados = naoAnexR3 + r4_nao_anex
   const docs_aguard_sub   = aguardR3Sub
   const docs_em_analise   = aguardR3Real + r4_em_analise
@@ -495,16 +522,15 @@ export function processAllData(
     const nomeTerceiro = String(row[colRsTercNome] ?? '').trim()
     const cpfTerceiro = String(row[colCPFTerc] ?? '').trim()
     const codContratosRaw = String(row[colCodContrato] ?? '').trim()
-    const effectiveCod = codContratosRaw || 'Sem contrato'
     const cargo = String(row[colCargo] ?? '').trim()
     const status = String(row[colStatusTerc2] ?? '').trim()
     const aeroporto = String(row[colAeroporto] ?? '').trim()
 
-    if (!cnpj || !nomeTerceiro) return
+    if (!cnpj || !nomeTerceiro || !codContratosRaw) return
 
     if (!_tercByContrato[cnpj]) _tercByContrato[cnpj] = {}
-    if (!_tercByContrato[cnpj][effectiveCod]) _tercByContrato[cnpj][effectiveCod] = []
-    _tercByContrato[cnpj][effectiveCod].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
+    if (!_tercByContrato[cnpj][codContratosRaw]) _tercByContrato[cnpj][codContratosRaw] = []
+    _tercByContrato[cnpj][codContratosRaw].push({ nome: nomeTerceiro, cpf: cpfTerceiro, cargo, status, aeroporto })
 
     // Garantir que o fornecedor aparece no mapa base mesmo que não esteja no relatório de contratos
     const nomeForn = abbrev(String(row[colRsTercForn] ?? ''))
@@ -512,7 +538,7 @@ export function processAllData(
       _fornContratosBase[cnpj] = { nome: nomeForn, contratos: new Set() }
     }
     if (cnpj && _fornContratosBase[cnpj]) {
-      _fornContratosBase[cnpj].contratos.add(effectiveCod)
+      _fornContratosBase[cnpj].contratos.add(codContratosRaw)
     }
   })
 
@@ -582,6 +608,7 @@ export function processAllData(
     r4_em_analise,
     r4_vencido,
     r4_irregular,
+    r4_alerta,
     r4_pct_nc,
     r4_pct_c,
     r4_fornecedores,

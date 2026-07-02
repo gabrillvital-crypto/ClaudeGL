@@ -102,7 +102,8 @@ export function App() {
       docs_reprovados:
         sit.filter(r => r.Status === 'Reprovado').length
         + forn.filter(r => r.Status === 'Reprovado').length
-        + forn.filter(r => r.Status === 'Irregular').length,
+        + forn.filter(r => r.Status === 'Irregular').length
+        + forn.filter(r => r.Status === 'Alerta').length,
       docs_nao_enviados:
         sit.filter(r => r.Status === 'Não anexado').length
         + forn.filter(r => r.Status === 'Não Anexado').length,
@@ -126,6 +127,7 @@ export function App() {
         r4_em_analise:   data.r4_em_analise,
         r4_vencido:      data.r4_vencido,
         r4_irregular:    data.r4_irregular,
+        r4_alerta:       data.r4_alerta,
         r4_pct_nc:       data.r4_pct_nc,
         r4_pct_c:        data.r4_pct_c,
         r4_fornecedores: data.r4_fornecedores,
@@ -139,7 +141,8 @@ export function App() {
     const em_anal   = forn.filter(r => r.Status === 'Em análise').length
     const vencido   = forn.filter(r => r.Status === 'Vencido').length
     const irregular = forn.filter(r => r.Status === 'Irregular').length
-    const nao_conf  = reprovado + nao_anex + em_anal + vencido + irregular
+    const alerta    = forn.filter(r => r.Status === 'Alerta').length
+    const nao_conf  = reprovado + nao_anex + em_anal + vencido + irregular + alerta
     return {
       r4_total:        total,
       r4_aprovado:     aprovado,
@@ -148,6 +151,7 @@ export function App() {
       r4_em_analise:   em_anal,
       r4_vencido:      vencido,
       r4_irregular:    irregular,
+      r4_alerta:       alerta,
       r4_pct_nc:       total > 0 ? Math.round(nao_conf / total * 1000) / 10 : 0,
       r4_pct_c:        total > 0 ? Math.round(aprovado / total * 1000) / 10 : 0,
       r4_fornecedores: new Set(forn.map(r => r.Fornecedor)).size,
