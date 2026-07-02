@@ -275,11 +275,10 @@ export function processAllData(
         else if (analise === 'REPROVADO') status = 'Reprovado'
         else status = 'Em análise'
       } else {
-        // Situação Documento vazia → busca_auto CSV (fallback) → manual
-        const docKey = `${cnpj}||${doc.toUpperCase()}`
-        const auto = buscaAutoLookup.get(docKey)
-        const autoStatus = auto ? mapStatusBuscaAuto(auto.situacaoDoc, auto.situacaoAnalise) : null
-        status = autoStatus ?? mapStatusR4(row, colAnaliseR4)
+        // Situação Documento vazia → mesma regra do NEUTRO (usa Situação Análise Documento)
+        if (analise === 'APROVADO')       status = 'Aprovado'
+        else if (analise === 'REPROVADO') status = 'Reprovado'
+        else                              status = 'Em análise'
       }
       if (!status) return null
       return {

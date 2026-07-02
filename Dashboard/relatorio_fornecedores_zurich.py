@@ -326,24 +326,10 @@ if _sit_forn_ok:
             if analise == "REPROVADO": return "Reprovado"
             return "Em análise"        # NÃO ANALISADO ou outro
 
-        # Situação Documento vazia → fallback busca_auto CSV → lógica manual
-        cnpj_r = re.sub(r'\D', '', str(row.get("CNPJ", "")))
-        doc_r  = str(row.get("Documento", "")).strip().upper()
-        sit_ba = _busca_auto_map.get((cnpj_r, doc_r))
-        if sit_ba:
-            sd, _sa = sit_ba
-            if sd == "REGULAR":    return "Aprovado"
-            if sd == "IRREGULAR":  return "Irregular"
-            if sd == "ALERTA":     return "Alerta"
-            if sd != "NEUTRO":     return "Em análise"
-        # Manual puro
+        # Situação Documento vazia → mesma regra do NEUTRO (usa Situação Análise Documento)
         if analise == "APROVADO":  return "Aprovado"
         if analise == "REPROVADO": return "Reprovado"
-        status = str(row.get("Status", "")).strip().lower()
-        if "vencer" in status:    return "Aprovado"
-        if "anexado" in status:   return "Não Anexado"
-        if "vencido" in status:   return "Vencido"
-        return "Em análise"
+        return "Em análise"        # NÃO ANALISADO ou outro
 
     df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
     df_sit_forn_calc = df_sit_forn[df_sit_forn["Status_Cat"].notna()].copy()
