@@ -304,32 +304,47 @@ if _sit_forn_ok:
                           if "situa" in c.lower() and "doc" in c.lower() and "lise" not in c.lower()), None)
 
     def map_status_r4(row):
-        # Prioridade: coluna "Situação Documento" da própria linha R4 (adicionada 26/06/2026)
-        sit_doc = str(row.get(col_sit_doc, "") if col_sit_doc else "").strip().upper()
-        analise = str(row.get(col_analise, "") if col_analise else "").strip().upper()
+        sit_doc   = str(row.get(col_sit_doc, "") if col_sit_doc else "").strip().upper()
+        analise   = str(row.get(col_analise, "") if col_analise else "").strip().upper()
+        st_row    = str(row.get("Status", "")).strip().lower()
+        cnpj_r    = re.sub(r'\D', '', str(row.get("CNPJ", "")))
+        doc_r     = str(row.get("Documento", "")).strip().upper()
+        auto_entry = _busca_auto_map.get((cnpj_r, doc_r))
 
+        if auto_entry:
+            # busca_auto tem prioridade quando o doc aparece nos dois relatórios
+            sd_ba, an_ba = auto_entry
+            if sd_ba == "REGULAR":
+                return "Vencido" if "vencido" in st_row else "Aprovado"
+            if sd_ba == "IRREGULAR":
+                return "Irregular"
+            if sd_ba == "ALERTA":
+                return "Em análise"
+            if sd_ba == "NEUTRO":
+                if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_row else "Aprovado"
+                if an_ba == "REPROVADO": return "Reprovado"
+                return "Em análise"
+            return "Em análise"   # vazio em busca_auto
+
+        # Não está em busca_auto → usa colunas da própria linha sitForn
         if sit_doc == "REGULAR":
-            raw_status = str(row.get("Status", "")).strip().lower()
-            if "vencido" in raw_status:
-                # Vencido: robô confirmou mas doc expirou — usa Situação Análise para decidir
+            if "vencido" in st_row:
                 if analise == "APROVADO":  return "Aprovado"
                 if analise == "REPROVADO": return "Reprovado"
                 return "Em análise"
-            return "Aprovado"          # A vencer, Não Anexado, etc. → robô confirmou válida
+            return "Aprovado"
         if sit_doc == "IRREGULAR":
             return "Irregular"
         if sit_doc == "ALERTA":
-            return "Alerta"            # busca não executou — verificar manualmente
+            return "Em análise"
         if sit_doc == "NEUTRO":
-            # documento manual → usa Situação Análise Documento
             if analise == "APROVADO":  return "Aprovado"
             if analise == "REPROVADO": return "Reprovado"
-            return "Em análise"        # NÃO ANALISADO ou outro
-
-        # Situação Documento vazia → mesma regra do NEUTRO (usa Situação Análise Documento)
+            return "Em análise"
+        # vazio → mesma regra do NEUTRO
         if analise == "APROVADO":  return "Aprovado"
         if analise == "REPROVADO": return "Reprovado"
-        return "Em análise"        # NÃO ANALISADO ou outro
+        return "Em análise"
 
     df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
     df_sit_forn_calc = df_sit_forn[df_sit_forn["Status_Cat"].notna()].copy()

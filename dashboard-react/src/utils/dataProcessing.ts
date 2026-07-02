@@ -247,38 +247,62 @@ export function processAllData(
   //   REGULAR   → Aprovado  (robô confirmou válida; "A vencer" ainda é válida)
   //   IRREGULAR → Irregular
   //   ALERTA    → Alerta    (busca não executou — verificar manualmente)
-  //   NEUTRO    → usar "Situação Análise Documento": APROVADO→Aprovado, REPROVADO→Reprovado, else→Em análise
-  //   vazio     → fallback busca_auto CSV → lógica manual
+  //   NEUTRO/vazio → usar "Situação Análise Documento": APROVADO→Aprovado, REPROVADO→Reprovado, else→Em análise
+  //   Quando doc aparece em busca_auto: busca_auto tem prioridade (Situação Documento busca_auto + Status sitForn)
   const forn_sit: FornSitRow[] = rawFornSit
     .map(row => {
       const cnpj = colCnpjR4 ? normCNPJ(row[colCnpjR4]) : ''
       const doc = String(row['Documento'] ?? '').trim()
       const sitDoc  = colSitDocR4 ? String(row[colSitDocR4] ?? '').trim().toUpperCase() : ''
       const analise = colAnaliseR4 ? String(row[colAnaliseR4] ?? '').trim().toUpperCase() : ''
+      const stRow   = String(row['Status'] ?? '').trim().toLowerCase()
 
       let status: StatusR4 | null = null
-      if (sitDoc === 'REGULAR') {
-        const statusVal = String(row['Status'] ?? '').trim().toLowerCase()
-        if (statusVal.includes('vencido')) {
-          if (analise === 'APROVADO')        status = 'Aprovado'
-          else if (analise === 'REPROVADO')  status = 'Reprovado'
-          else                               status = 'Em análise'
+
+      const docKey   = `${cnpj}||${doc.toUpperCase()}`
+      const autoEntry = buscaAutoLookup.get(docKey)
+
+      if (autoEntry) {
+        // busca_auto tem prioridade quando o doc aparece nos dois relatórios
+        const sdBA = autoEntry.situacaoDoc.trim().toUpperCase()
+        const anBA = autoEntry.situacaoAnalise.trim().toUpperCase()
+        if (sdBA === 'REGULAR') {
+          status = stRow.includes('vencido') ? 'Vencido' : 'Aprovado'
+        } else if (sdBA === 'IRREGULAR') {
+          status = 'Irregular'
+        } else if (sdBA === 'ALERTA') {
+          status = 'Em análise'
+        } else if (sdBA === 'NEUTRO') {
+          if (anBA === 'APROVADO')       status = stRow.includes('vencido') ? 'Vencido' : 'Aprovado'
+          else if (anBA === 'REPROVADO') status = 'Reprovado'
+          else                           status = 'Em análise'
         } else {
-          status = 'Aprovado'
+          status = 'Em análise'
         }
-      } else if (sitDoc === 'IRREGULAR') {
-        status = 'Irregular'
-      } else if (sitDoc === 'ALERTA') {
-        status = 'Alerta'
-      } else if (sitDoc === 'NEUTRO') {
-        if (analise === 'APROVADO')  status = 'Aprovado'
-        else if (analise === 'REPROVADO') status = 'Reprovado'
-        else status = 'Em análise'
       } else {
-        // Situação Documento vazia → mesma regra do NEUTRO (usa Situação Análise Documento)
-        if (analise === 'APROVADO')       status = 'Aprovado'
-        else if (analise === 'REPROVADO') status = 'Reprovado'
-        else                              status = 'Em análise'
+        // Não está em busca_auto → usa colunas da própria linha sitForn
+        if (sitDoc === 'REGULAR') {
+          if (stRow.includes('vencido')) {
+            if (analise === 'APROVADO')        status = 'Aprovado'
+            else if (analise === 'REPROVADO')  status = 'Reprovado'
+            else                               status = 'Em análise'
+          } else {
+            status = 'Aprovado'
+          }
+        } else if (sitDoc === 'IRREGULAR') {
+          status = 'Irregular'
+        } else if (sitDoc === 'ALERTA') {
+          status = 'Em análise'
+        } else if (sitDoc === 'NEUTRO') {
+          if (analise === 'APROVADO')       status = 'Aprovado'
+          else if (analise === 'REPROVADO') status = 'Reprovado'
+          else                              status = 'Em análise'
+        } else {
+          // vazio → mesma regra do NEUTRO
+          if (analise === 'APROVADO')       status = 'Aprovado'
+          else if (analise === 'REPROVADO') status = 'Reprovado'
+          else                              status = 'Em análise'
+        }
       }
       if (!status) return null
       return {
