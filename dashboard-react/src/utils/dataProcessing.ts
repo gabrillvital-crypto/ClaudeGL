@@ -267,12 +267,13 @@ export function processAllData(
         const sdBA = autoEntry.situacaoDoc.trim().toUpperCase()
         const anBA = autoEntry.situacaoAnalise.trim().toUpperCase()
         if (sdBA === 'REGULAR') {
-          status = stRow.includes('vencido') ? 'Vencido' : 'Aprovado'
+          status = 'Aprovado'  // robô confirmou válida hoje — Status sitForn não prevalece
         } else if (sdBA === 'IRREGULAR') {
           status = 'Irregular'
         } else if (sdBA === 'ALERTA') {
           status = 'Em análise'
         } else if (sdBA === 'NEUTRO') {
+          // manual: BPO analisou — se aprovado mas vencido, mostra Vencido
           if (anBA === 'APROVADO')       status = stRow.includes('vencido') ? 'Vencido' : 'Aprovado'
           else if (anBA === 'REPROVADO') status = 'Reprovado'
           else                           status = 'Em análise'

@@ -315,12 +315,13 @@ if _sit_forn_ok:
             # busca_auto tem prioridade quando o doc aparece nos dois relatórios
             sd_ba, an_ba = auto_entry
             if sd_ba == "REGULAR":
-                return "Vencido" if "vencido" in st_row else "Aprovado"
+                return "Aprovado"   # robô confirmou válida hoje — Status sitForn não prevalece
             if sd_ba == "IRREGULAR":
                 return "Irregular"
             if sd_ba == "ALERTA":
                 return "Em análise"
             if sd_ba == "NEUTRO":
+                # manual: BPO analisou — se aprovado mas vencido, mostra Vencido
                 if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_row else "Aprovado"
                 if an_ba == "REPROVADO": return "Reprovado"
                 return "Em análise"
