@@ -285,14 +285,16 @@ if _os.path.exists(BUSCA_AUTO_CSV):
                          if "situa" in c.lower() and "doc" in c.lower() and "lise" not in c.lower()), None)
     _col_ba_anal = next((c for c in _df_ba.columns
                          if "lise" in c.lower() and "doc" in c.lower()), None)
+    _col_ba_status = next((c for c in _df_ba.columns if c.strip().lower() == "status"), None)
     if _col_ba_cnpj and _col_ba_doc and _col_ba_sit:
         for _, _r in _df_ba.iterrows():
-            _ck = re.sub(r'\D', '', str(_r[_col_ba_cnpj]))
-            _dk = str(_r[_col_ba_doc]).strip().upper()
-            _sk = str(_r[_col_ba_sit]).strip().upper()
-            _ak = str(_r[_col_ba_anal]).strip().upper() if _col_ba_anal else ""
+            _ck  = re.sub(r'\D', '', str(_r[_col_ba_cnpj]))
+            _dk  = str(_r[_col_ba_doc]).strip().upper()
+            _sk  = str(_r[_col_ba_sit]).strip().upper()
+            _ak  = str(_r[_col_ba_anal]).strip().upper() if _col_ba_anal else ""
+            _stk = str(_r[_col_ba_status]).strip().lower() if _col_ba_status else ""
             if _ck and _dk and _dk != "NAN":
-                _busca_auto_map[(_ck, _dk)] = (_sk, _ak)
+                _busca_auto_map[(_ck, _dk)] = (_sk, _ak, _stk)
 
 if _sit_forn_ok:
     col_r4_rs = df_sit_forn.columns[0]
@@ -312,17 +314,16 @@ if _sit_forn_ok:
         auto_entry = _busca_auto_map.get((cnpj_r, doc_r))
 
         if auto_entry:
-            # busca_auto tem prioridade quando o doc aparece nos dois relatórios
-            sd_ba, an_ba = auto_entry
+            # busca_auto tem prioridade — Status vem do busca_auto (resultado da busca automática)
+            sd_ba, an_ba, st_ba = auto_entry
             if sd_ba == "REGULAR":
-                return "Aprovado"   # robô confirmou válida hoje — Status sitForn não prevalece
+                return "Vencido" if "vencido" in st_ba else "Aprovado"
             if sd_ba == "IRREGULAR":
                 return "Irregular"
             if sd_ba == "ALERTA":
                 return "Em análise"
             if sd_ba == "NEUTRO":
-                # manual: BPO analisou — se aprovado mas vencido, mostra Vencido
-                if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_row else "Aprovado"
+                if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_ba else "Aprovado"
                 if an_ba == "REPROVADO": return "Reprovado"
                 return "Em análise"
             return "Em análise"   # vazio em busca_auto

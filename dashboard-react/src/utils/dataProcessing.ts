@@ -139,15 +139,16 @@ export function processAllData(
   rawContratos: Record<string, string>[] = [],
   rawBuscaAuto: Record<string, string>[] = []
 ): DashboardData {
-  // Montar lookup: "cnpj||doc_normalizado" → { situacaoDoc, situacaoAnalise }
-  const buscaAutoLookup = new Map<string, { situacaoDoc: string; situacaoAnalise: string }>()
+  // Montar lookup: "cnpj||doc_normalizado" → { situacaoDoc, situacaoAnalise, situacaoStatus }
+  const buscaAutoLookup = new Map<string, { situacaoDoc: string; situacaoAnalise: string; situacaoStatus: string }>()
   rawBuscaAuto.forEach(row => {
     const cnpj = normCNPJ(row['CNPJ'] ?? '')
     const doc = String(row['Documento'] ?? '').trim().toUpperCase()
     if (!cnpj || !doc) return
     buscaAutoLookup.set(`${cnpj}||${doc}`, {
-      situacaoDoc: String(row['Situação Documento'] ?? '').trim(),
+      situacaoDoc:    String(row['Situação Documento'] ?? '').trim(),
       situacaoAnalise: String(row['Situação Análise Documento'] ?? '').trim(),
+      situacaoStatus: String(row['Status'] ?? '').trim(),
     })
   })
   const geradoEm = new Date().toLocaleString('pt-BR')
@@ -263,18 +264,18 @@ export function processAllData(
       const autoEntry = buscaAutoLookup.get(docKey)
 
       if (autoEntry) {
-        // busca_auto tem prioridade quando o doc aparece nos dois relatórios
+        // busca_auto tem prioridade — Status vem do busca_auto (resultado da busca automática)
         const sdBA = autoEntry.situacaoDoc.trim().toUpperCase()
         const anBA = autoEntry.situacaoAnalise.trim().toUpperCase()
+        const stBA = autoEntry.situacaoStatus.trim().toLowerCase()
         if (sdBA === 'REGULAR') {
-          status = 'Aprovado'  // robô confirmou válida hoje — Status sitForn não prevalece
+          status = stBA.includes('vencido') ? 'Vencido' : 'Aprovado'
         } else if (sdBA === 'IRREGULAR') {
           status = 'Irregular'
         } else if (sdBA === 'ALERTA') {
           status = 'Em análise'
         } else if (sdBA === 'NEUTRO') {
-          // manual: BPO analisou — se aprovado mas vencido, mostra Vencido
-          if (anBA === 'APROVADO')       status = stRow.includes('vencido') ? 'Vencido' : 'Aprovado'
+          if (anBA === 'APROVADO')       status = stBA.includes('vencido') ? 'Vencido' : 'Aprovado'
           else if (anBA === 'REPROVADO') status = 'Reprovado'
           else                           status = 'Em análise'
         } else {
