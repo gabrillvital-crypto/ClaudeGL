@@ -296,14 +296,16 @@ export function processAllData(
         } else if (sitDoc === 'ALERTA') {
           status = 'Em análise'
         } else if (sitDoc === 'NEUTRO') {
-          if (analise === 'APROVADO')       status = 'Aprovado'
+          if (stRow.includes('não anexado')) status = 'Não Anexado'
+          else if (analise === 'APROVADO')  status = 'Aprovado'
           else if (analise === 'REPROVADO') status = 'Reprovado'
           else                              status = 'Em análise'
         } else {
           // vazio → mesma regra do NEUTRO
-          if (analise === 'APROVADO')       status = 'Aprovado'
-          else if (analise === 'REPROVADO') status = 'Reprovado'
-          else                              status = 'Em análise'
+          if (stRow.includes('não anexado')) status = 'Não Anexado'
+          else if (analise === 'APROVADO')   status = 'Aprovado'
+          else if (analise === 'REPROVADO')  status = 'Reprovado'
+          else                               status = 'Em análise'
         }
       }
       if (!status) return null
@@ -315,7 +317,7 @@ export function processAllData(
         Vencimento: fmtDate(row['Data de Vencimento']),
       }
     })
-    .filter((r): r is FornSitRow => r !== null)
+    .filter((r) => r !== null) as FornSitRow[]
 
   const r4_total      = forn_sit.length
   const r4_aprovado   = forn_sit.filter(r => r.Status === 'Aprovado').length

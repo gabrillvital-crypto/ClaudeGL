@@ -340,12 +340,14 @@ if _sit_forn_ok:
         if sit_doc == "ALERTA":
             return "Em análise"
         if sit_doc == "NEUTRO":
-            if analise == "APROVADO":  return "Aprovado"
-            if analise == "REPROVADO": return "Reprovado"
+            if "não anexado" in st_row: return "Não Anexado"
+            if analise == "APROVADO":   return "Aprovado"
+            if analise == "REPROVADO":  return "Reprovado"
             return "Em análise"
         # vazio → mesma regra do NEUTRO
-        if analise == "APROVADO":  return "Aprovado"
-        if analise == "REPROVADO": return "Reprovado"
+        if "não anexado" in st_row: return "Não Anexado"
+        if analise == "APROVADO":   return "Aprovado"
+        if analise == "REPROVADO":  return "Reprovado"
         return "Em análise"
 
     df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
