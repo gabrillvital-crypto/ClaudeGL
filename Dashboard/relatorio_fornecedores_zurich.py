@@ -245,6 +245,10 @@ def _norm_cnpj(v):
     return s
 sit_tabela["CNPJ_Forn"] = sit_tabela["CNPJ_Forn"].apply(_norm_cnpj)
 sit_tabela["Vencimento"] = pd.to_datetime(sit_tabela["Vencimento"], errors="coerce").dt.strftime("%d/%m/%Y").fillna("")
+# Documentos sem vencimento relevante — exibem Competência mas não Vencimento
+_DOCS_SEM_VENCIMENTO = {"ficha de epi", "cartão ponto com total de horas extras ou noturnas"}
+_mask_sem_venc = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_VENCIMENTO)
+sit_tabela.loc[_mask_sem_venc, "Vencimento"] = ""
 
 # Mapa Python de duplicatas: nome_abrev -> [cnpj1, cnpj2, ...] (só nomes com 2+ CNPJs distintos)
 _col_cnpj_sit = "Fornecedor CPF/CNPJ"

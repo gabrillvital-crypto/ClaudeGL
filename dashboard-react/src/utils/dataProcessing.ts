@@ -213,20 +213,30 @@ export function processAllData(
   const colCNPJForn = findCol(fornCadCols, 'cpf') ?? findCol(fornCadCols, 'cnpj') ?? findCol(fornCadCols, 'documento') ?? ''
   const colRsFornCad = findCol(fornCadCols, 'raz') ?? fornCadCols.find(c => c.trim().toLowerCase() === 'fornecedor') ?? (fornCadCols[0] ?? '')
 
+  // Documentos que exibem Competência mas não têm Vencimento relevante
+  const DOCS_SEM_VENCIMENTO = new Set([
+    'ficha de epi',
+    'cartão ponto com total de horas extras ou noturnas',
+  ])
+
   // ── R3 — Situação por Terceiro ────────────────────────────────────────────
   const sitCalc: SitTerceiroRow[] = rawSit
     .map(row => {
       const status = mapStatusR3(row, colAnaliseR3, colSitSolicR3)
       if (!status) return null
       const comp = colMarcasSit ? String(row[colMarcasSit] ?? '').trim().replace(/^nan$/, '') : ''
+      const docNome = String(row['Documento'] ?? '').trim()
+      const venc = DOCS_SEM_VENCIMENTO.has(docNome.toLowerCase())
+        ? ''
+        : fmtDate(row[colDatVenc] ?? row['Data de Vencimento'])
       return {
         Fornecedor: abbrev(String(row[colFornRS] || row['Fornecedor Razao Social'] || '')),
         Terceiro: String(row[colTercRS] || row['Terceiro Razao Social'] || '').trim(),
         CNPJ_Terceiro: normCNPJ(row[colTercCNPJ]),
         CNPJ_Forn: normCNPJ(row[colFornCNPJ]),
-        Documento: String(row['Documento'] ?? '').trim(),
+        Documento: docNome,
         Status: status,
-        Vencimento: fmtDate(row[colDatVenc] ?? row['Data de Vencimento']),
+        Vencimento: venc,
         Competencia: comp || 'A classificar',
       }
     })
