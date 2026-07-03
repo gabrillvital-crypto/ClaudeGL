@@ -289,7 +289,7 @@ export function processAllData(
         } else if (sdBA === 'ALERTA') {
           status = 'Em análise'
         } else if (sdBA === 'NEUTRO') {
-          if (anBA === 'APROVADO')       status = stBA.includes('vencido') ? 'Vencido' : 'Aprovado'
+          if (anBA === 'APROVADO')       status = 'Aprovado'
           else if (anBA === 'REPROVADO') status = 'Reprovado'
           else                           status = 'Em análise'
         } else {
