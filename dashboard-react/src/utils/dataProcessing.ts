@@ -289,11 +289,13 @@ export function processAllData(
         } else if (sdBA === 'ALERTA') {
           status = 'Em análise'
         } else if (sdBA === 'NEUTRO') {
-          if (anBA === 'APROVADO')       status = 'Aprovado'
-          else if (anBA === 'REPROVADO') status = 'Reprovado'
-          else                           status = 'Em análise'
+          if (anBA === 'APROVADO')                         status = 'Aprovado'
+          else if (anBA === 'REPROVADO')                   status = 'Reprovado'
+          else if (stBA.includes('não anexado'))           status = 'Não Anexado'
+          else                                             status = 'Em análise'
         } else {
-          status = 'Em análise'
+          // vazio em busca_auto
+          status = stBA.includes('não anexado') ? 'Não Anexado' : 'Em análise'
         }
       } else {
         // Não está em busca_auto → usa colunas da própria linha sitForn
