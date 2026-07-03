@@ -862,6 +862,15 @@ html = f"""<!DOCTYPE html>
   .badge-alerta        {{ background: #fef3c7; color: #d97706; }}
   .kpi-card.amber      {{ border-top-color: #d97706; }}
   .kpi-card.amber .kpi-val {{ color: #d97706; }}
+  .kpi-card[data-kpi-key] {{ cursor: pointer; transition: box-shadow .15s; user-select: none; }}
+  .kpi-card[data-kpi-key]:hover {{ box-shadow: 0 4px 12px rgba(0,0,0,.14); }}
+  .kpi-card.kpi-active       {{ outline: 2px solid {COR_TEAL}; outline-offset: 2px; box-shadow: 0 4px 12px rgba(14,143,163,.2); }}
+  .kpi-card.kpi-active.green  {{ outline-color: {COR_VERDE}; }}
+  .kpi-card.kpi-active.red    {{ outline-color: {COR_VERMELHO}; }}
+  .kpi-card.kpi-active.yellow {{ outline-color: {COR_AMARELO}; }}
+  .kpi-card.kpi-active.orange {{ outline-color: {COR_LARANJA}; }}
+  .kpi-ativo-badge {{ position: absolute; top: 4px; right: 6px; font-size: 9px; font-weight: 700;
+    color: #fff; background: {COR_TEAL}; border-radius: 10px; padding: 2px 6px; line-height: 1; }}
 
   /* CONTRATOS DRILL-DOWN */
   .ct-cards-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px; margin-top: 16px; }}
@@ -1190,33 +1199,33 @@ html = f"""<!DOCTYPE html>
       <div class="kpi-label">Docs Esperados<br>Terceiros</div>
     </div>
     <!-- Bloco 3: status — atualizam com filtro -->
-    <div class="kpi-card green"
-         data-tooltip="Documentos que já foram analisados e validados com sucesso pela nossa equipe de conformidade.">
+    <div class="kpi-card green" data-kpi-key="docs_aprovados" onclick="toggleKpiCard('docs_aprovados')"
+         data-tooltip="Documentos que já foram analisados e validados com sucesso. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-aprov">{int(total_conformes) + r4_aprovado}</div>
       <div class="kpi-label">Documentos<br>Aprovados</div>
     </div>
-    <div class="kpi-card red"
-         data-tooltip="Documentos que passaram por análise, mas foram recusados por inconformidade ou erro.">
+    <div class="kpi-card red" data-kpi-key="docs_reprovados" onclick="toggleKpiCard('docs_reprovados')"
+         data-tooltip="Total de documentos em situação de não conformidade: Reprovado, Irregular ou Alerta — em R3 (terceiros) e R4 (corporativo). Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-nao-aprov">{int(total_reprovados_docs) + r4_reprovado + r4_irregular + r4_alerta}</div>
       <div class="kpi-label">Documentos<br>Reprovados</div>
     </div>
-    <div class="kpi-card yellow"
-         data-tooltip="Documentos obrigatórios que ainda estão pendentes de anexo por parte do fornecedor ou terceiro.">
+    <div class="kpi-card yellow" data-kpi-key="docs_nao_enviados" onclick="toggleKpiCard('docs_nao_enviados')"
+         data-tooltip="Documentos obrigatórios que ainda estão pendentes de anexo. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-nao-env">{total_nao_anex_r3 + r4_nao_anex}</div>
       <div class="kpi-label">Documentos<br>Não Enviados</div>
     </div>
-    <div class="kpi-card yellow"
-         data-tooltip="Documentos inseridos na plataforma pelo fornecedor, mas ainda não submetidos para análise. O fornecedor precisa concluir o envio clicando em submeter.">
+    <div class="kpi-card yellow" data-kpi-key="docs_aguard_sub" onclick="toggleKpiCard('docs_aguard_sub')"
+         data-tooltip="Documentos inseridos mas ainda não submetidos para análise. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-aguard-sub">{total_aguard_r3_elab}</div>
       <div class="kpi-label">Aguardando<br>Submissão</div>
     </div>
-    <div class="kpi-card orange"
-         data-tooltip="Documentos já submetidos pelos fornecedores aguardando validação da equipe de conformidade.">
+    <div class="kpi-card orange" data-kpi-key="docs_em_analise" onclick="toggleKpiCard('docs_em_analise')"
+         data-tooltip="Documentos já submetidos aguardando validação da equipe de conformidade. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-em-anal">{total_aguard_r3_real + r4_em_analise}</div>
       <div class="kpi-label">Documentos<br>Em Análise</div>
     </div>
-    <div class="kpi-card red"
-         data-tooltip="Documentos de fornecedores com prazo vencido — exigem renovação ou substituição imediata.">
+    <div class="kpi-card red" data-kpi-key="docs_vencidos" onclick="toggleKpiCard('docs_vencidos')"
+         data-tooltip="Documentos de fornecedores com prazo vencido — exigem renovação imediata. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-vencido">{r4_vencido}</div>
       <div class="kpi-label">Documentos<br>Vencidos</div>
     </div>
@@ -1569,16 +1578,15 @@ html = f"""<!DOCTYPE html>
     </div>
     <div>
       <label>Status</label><br>
-      <select id="forn-sit-status" onchange="filtrarFornSit()">
-        <option value="">Todos</option>
-        <option value="Aprovado">Aprovado</option>
-        <option value="Reprovado">Reprovado</option>
-        <option value="Irregular">Irregular (Débito)</option>
-        <option value="Alerta">Alerta</option>
-        <option value="Não Anexado">Não Anexado</option>
-        <option value="Em análise">Em análise</option>
-        <option value="Vencido">Vencido</option>
-      </select>
+      <div class="lf-multi-wrap" id="fss-emp-wrap">
+        <div class="lf-multi-btn" onclick="toggleLfDropdown('fss',event)">
+          <span id="fss-emp-lbl">Todos</span><span id="fss-emp-arr">&#9660;</span>
+        </div>
+        <div class="lf-multi-panel" id="fss-emp-panel">
+          <div class="lf-multi-list" id="fss-emp-list"></div>
+          <div class="lf-multi-footer" onclick="clearFsStatSel()">Limpar seleção</div>
+        </div>
+      </div>
     </div>
     <div>
       <label>Buscar documento</label><br>
@@ -2164,6 +2172,32 @@ function badgeSit(s) {{
   return '<span class="badge badge-pendente">' + s + '</span>';
 }}
 
+// ── KPI CLICÁVEL ──────────────────────────────────────────────────────────────
+let activeKpiKey = null;
+const KPI_STATUS_MAP_GLOBAL = {{
+  docs_aprovados:    {{ sit: ["Aprovado"],             forn: ["Aprovado"] }},
+  docs_reprovados:   {{ sit: ["Reprovado"],             forn: ["Reprovado", "Irregular", "Alerta"] }},
+  docs_nao_enviados: {{ sit: ["Não anexado"],           forn: ["Não Anexado"] }},
+  docs_aguard_sub:   {{ sit: ["Aguardando Submissão"],  forn: [] }},
+  docs_em_analise:   {{ sit: ["Em Análise"],            forn: ["Em análise"] }},
+  docs_vencidos:     {{ sit: [],                        forn: ["Vencido"] }},
+}};
+function toggleKpiCard(key) {{
+  activeKpiKey = (activeKpiKey === key) ? null : key;
+  document.querySelectorAll(".kpi-card[data-kpi-key]").forEach(el => {{
+    const isAtivo = el.dataset.kpiKey === activeKpiKey;
+    el.classList.toggle("kpi-active", isAtivo);
+    let badge = el.querySelector(".kpi-ativo-badge");
+    if (isAtivo) {{
+      if (!badge) {{ badge = document.createElement("div"); badge.className = "kpi-ativo-badge"; badge.textContent = "ativo"; el.appendChild(badge); }}
+    }} else {{
+      if (badge) badge.remove();
+    }}
+  }});
+  filtrarSit();
+  filtrarFornSit();
+}}
+
 // ── TABELA SITUACAO ───────────────────────────────────────────────────────────
 let sitFiltrado = [];
 function filtrarSit() {{
@@ -2177,6 +2211,10 @@ function filtrarSit() {{
     if (stat  && r["Status"]      !== stat)  return false;
     if (comp  && r["Competencia"] !== comp)  return false;
     if (busca && !r["Documento"].toLowerCase().includes(busca)) return false;
+    if (activeKpiKey) {{
+      const ss = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).sit || [];
+      if (ss.length > 0 && !ss.includes(r["Status"])) return false;
+    }}
     return true;
   }});
   const tbody = document.getElementById("sit-body");
@@ -2257,17 +2295,67 @@ function limparFiltros() {{
   filtrarTabela();
 }}
 
+// ── STATUS MULTI-SELECT R4 ────────────────────────────────────────────────────
+const FS_STATUS_OPTIONS = [
+  {{ key: "Aprovado",    label: "Aprovado" }},
+  {{ key: "Reprovado",   label: "Reprovado" }},
+  {{ key: "Irregular",   label: "Irregular (Débito)" }},
+  {{ key: "Alerta",      label: "Alerta" }},
+  {{ key: "Não Anexado", label: "Não Anexado" }},
+  {{ key: "Em análise",  label: "Em análise" }},
+  {{ key: "Vencido",     label: "Vencido" }},
+];
+let fsStatSet = new Set();
+function buildFsStatMultiSelect() {{
+  const list = document.getElementById("fss-emp-list");
+  if (!list) return;
+  list.innerHTML = "";
+  FS_STATUS_OPTIONS.forEach(({{key, label}}) => {{
+    const div = document.createElement("div");
+    div.className = "lf-item";
+    div.dataset.key = key;
+    const cbId = "fss-lf-" + key.replace(/[^a-z0-9]/gi, "_");
+    div.innerHTML = `<input type="checkbox" id="${{cbId}}"><label for="${{cbId}}">${{label}}</label>`;
+    div.querySelector("input").addEventListener("change", e => {{
+      if (e.target.checked) {{ fsStatSet.add(key); div.classList.add("lf-selected"); }}
+      else {{ fsStatSet.delete(key); div.classList.remove("lf-selected"); }}
+      updateFsStatLabel();
+      filtrarFornSit();
+    }});
+    list.appendChild(div);
+  }});
+}}
+function updateFsStatLabel() {{
+  const lbl = document.getElementById("fss-emp-lbl");
+  if (!lbl) return;
+  lbl.textContent = fsStatSet.size === 0 ? "Todos"
+    : fsStatSet.size === 1 ? [...fsStatSet][0]
+    : fsStatSet.size + " selecionados";
+}}
+function clearFsStatSilent() {{
+  fsStatSet.clear();
+  document.querySelectorAll("#fss-emp-list .lf-item").forEach(div => {{
+    div.classList.remove("lf-selected");
+    const cb = div.querySelector("input"); if (cb) cb.checked = false;
+  }});
+  updateFsStatLabel();
+}}
+function clearFsStatSel() {{ clearFsStatSilent(); filtrarFornSit(); }}
+
 // ── TABELA SITUACAO DA EMPRESA (R4) ───────────────────────────────────────────
 let fornSitFiltrado = [];
 function filtrarFornSit() {{
-  const stat  = document.getElementById("forn-sit-status").value;
   const busca = document.getElementById("forn-sit-busca").value.toLowerCase();
   const cleanDoc = s => String(s || "").replace(/�/g, "");
   fornSitFiltrado = FORN_SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesLocalSet(fsEmpSet, r["Fornecedor"], r["CNPJ"])) return false;
-    if (stat && r["Status"]     !== stat) return false;
+    if (fsStatSet.size > 0 && !fsStatSet.has(r["Status"])) return false;
     if (busca && !cleanDoc(r["Documento"]).toLowerCase().includes(busca)) return false;
+    if (activeKpiKey) {{
+      const fs = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).forn || [];
+      if (fs.length > 0 && !fs.includes(r["Status"])) return false;
+    }}
     return true;
   }});
   const tbody = document.getElementById("forn-sit-body");
@@ -2302,9 +2390,8 @@ function filtrarFornSit() {{
 }}
 function limparFornSit() {{
   clearLfSel("fs", fsEmpSet, () => {{}});
-  ["forn-sit-status","forn-sit-busca"].forEach(id => {{
-    const el = document.getElementById(id); if (el) el.value = "";
-  }});
+  clearFsStatSilent();
+  const busca = document.getElementById("forn-sit-busca"); if (busca) busca.value = "";
   filtrarFornSit();
 }}
 function exportarFornSitXLSX() {{
@@ -2955,6 +3042,7 @@ function limparGlobalFiltro() {{
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildFornMultiSelect();
 buildCompMultiSelect();
+buildFsStatMultiSelect();
 
 // ── TABELA SEM EXECUÇÃO ──────────────────────────────────────────────────────
 (function() {{
