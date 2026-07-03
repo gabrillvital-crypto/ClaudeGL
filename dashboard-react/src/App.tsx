@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { useDashboardData } from './hooks/useDashboardData'
 import { useGlobalFilter } from './hooks/useGlobalFilter'
 import { Header } from './components/Header'
@@ -11,6 +11,15 @@ import { SituacaoEmpresaSection } from './components/SituacaoEmpresaSection'
 import { PendenciasSection } from './components/PendenciasSection'
 import { ContratosSection } from './components/ContratosSection'
 
+const KPI_STATUS_MAP: Record<string, { sit: string[]; forn: string[] }> = {
+  docs_aprovados:    { sit: ['Aprovado'],            forn: ['Aprovado'] },
+  docs_reprovados:   { sit: ['Reprovado'],            forn: ['Reprovado', 'Irregular', 'Alerta'] },
+  docs_nao_enviados: { sit: ['Não anexado'],          forn: ['Não Anexado'] },
+  docs_aguard_sub:   { sit: ['Aguardando Submissão'], forn: [] },
+  docs_em_analise:   { sit: ['Em Análise'],           forn: ['Em análise'] },
+  docs_vencidos:     { sit: [],                       forn: ['Vencido'] },
+}
+
 function fmtCNPJ(digits: string): string {
   const d = digits.replace(/\D/g, '')
   if (d.length === 11) return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
@@ -21,6 +30,8 @@ function fmtCNPJ(digits: string): string {
 export function App() {
   const { data, state, error } = useDashboardData()
   const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, clearAll, matchesForn } = useGlobalFilter()
+  const [activeKpi, setActiveKpi] = useState<string | null>(null)
+  const toggleKpi = useCallback((key: string) => setActiveKpi(prev => prev === key ? null : key), [])
 
   const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0
 
@@ -67,13 +78,24 @@ export function App() {
       : data.sit_tabela
     if (selectedCompSet.size > 0)
       rows = rows.filter(r => selectedCompSet.has(r.Competencia))
+    if (activeKpi) {
+      const sitStatuses = KPI_STATUS_MAP[activeKpi]?.sit ?? []
+      if (sitStatuses.length > 0)
+        rows = rows.filter(r => sitStatuses.includes(r.Status))
+    }
     return rows
-  }, [data, selectedFornSet, selectedCompSet, matchesForn])
+  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi])
 
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.forn_sit
-  }, [data, hasFilter, matchesForn])
+    let rows = hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.forn_sit
+    if (activeKpi) {
+      const fornStatuses = KPI_STATUS_MAP[activeKpi]?.forn ?? []
+      if (fornStatuses.length > 0)
+        rows = rows.filter(r => fornStatuses.includes(r.Status))
+    }
+    return rows
+  }, [data, hasFilter, matchesForn, activeKpi])
 
   const tabelaFiltered = useMemo(() => {
     if (!data) return []
@@ -221,7 +243,7 @@ export function App() {
       <div className="max-w-[1400px] mx-auto px-5 py-6">
 
         {/* KPIs — 2 globais somem quando filtro ativo */}
-        <KPIGrid {...kpis} hideGlobal={hasFilter} />
+        <KPIGrid {...kpis} hideGlobal={hasFilter} activeKpi={activeKpi} onKpiClick={toggleKpi} />
 
         {/* 3 donuts de conformidade */}
         <ConformidadeCharts sitData={sitFiltered} fornData={fornSitFiltered} />

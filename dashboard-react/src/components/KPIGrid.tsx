@@ -3,27 +3,54 @@ interface KPI {
   label: string
   color?: 'default' | 'orange' | 'red' | 'yellow' | 'green' | 'gray'
   tooltip?: string
+  kpiKey?: string
 }
 
-function KPICard({ value, label, color = 'default', tooltip }: KPI) {
+function KPICard({
+  value, label, color = 'default', tooltip, kpiKey, isActive, onKpiClick,
+}: KPI & { isActive?: boolean; onKpiClick?: (key: string) => void }) {
   const borderColors = {
     default: 'border-t-[#0E8FA3]',
-    orange: 'border-t-[#F4793B]',
-    red: 'border-t-[#DC3545]',
-    yellow: 'border-t-[#FFC107]',
-    green: 'border-t-[#28A745]',
-    gray: 'border-t-[#6C757D]',
+    orange:  'border-t-[#F4793B]',
+    red:     'border-t-[#DC3545]',
+    yellow:  'border-t-[#FFC107]',
+    green:   'border-t-[#28A745]',
+    gray:    'border-t-[#6C757D]',
   }
   const valueColors = {
     default: 'text-[#0E8FA3]',
-    orange: 'text-[#F4793B]',
-    red: 'text-[#DC3545]',
-    yellow: 'text-[#a07800]',
-    green: 'text-[#28A745]',
-    gray: 'text-[#6C757D]',
+    orange:  'text-[#F4793B]',
+    red:     'text-[#DC3545]',
+    yellow:  'text-[#a07800]',
+    green:   'text-[#28A745]',
+    gray:    'text-[#6C757D]',
   }
+  const ringColors = {
+    default: 'ring-[#0E8FA3]',
+    orange:  'ring-[#F4793B]',
+    red:     'ring-[#DC3545]',
+    yellow:  'ring-[#FFC107]',
+    green:   'ring-[#28A745]',
+    gray:    'ring-[#6C757D]',
+  }
+
+  const isClickable = !!kpiKey
+
   return (
-    <div className={`bg-white rounded-xl p-4 shadow-sm border-t-4 text-center relative group ${borderColors[color]}`}>
+    <div
+      onClick={isClickable ? () => onKpiClick?.(kpiKey!) : undefined}
+      className={[
+        'bg-white rounded-xl p-4 shadow-sm border-t-4 text-center relative group',
+        borderColors[color],
+        isClickable ? 'cursor-pointer hover:shadow-md transition-all select-none' : '',
+        isActive ? `ring-2 ring-offset-1 ${ringColors[color]} shadow-md` : '',
+      ].filter(Boolean).join(' ')}
+    >
+      {isActive && (
+        <div className="absolute top-1.5 right-1.5 text-[9px] font-bold text-white bg-[#0E8FA3] rounded-full px-1.5 py-0.5 leading-none">
+          ativo
+        </div>
+      )}
       <div className={`text-3xl font-bold leading-tight ${valueColors[color]}`}>{value}</div>
       <div
         className="text-[11px] text-[#666] mt-1.5 font-semibold uppercase tracking-wide leading-tight"
@@ -51,9 +78,13 @@ interface Props {
   docs_em_analise: number
   docs_vencidos: number
   hideGlobal?: boolean
+  activeKpi?: string | null
+  onKpiClick?: (key: string) => void
 }
 
 export function KPIGrid(props: Props) {
+  const { activeKpi, onKpiClick } = props
+
   const globalKpis: KPI[] = [
     {
       value: props.total_forn_geral,
@@ -86,48 +117,59 @@ export function KPIGrid(props: Props) {
       value: props.docs_aprovados,
       label: 'Documentos<br>Aprovados',
       color: 'green',
-      tooltip: 'Documentos que foram analisados e validados pela equipe de conformidade. Estão em dia.',
+      kpiKey: 'docs_aprovados',
+      tooltip: 'Documentos que foram analisados e validados pela equipe de conformidade. Estão em dia. Clique para filtrar as tabelas.',
     },
     {
       value: props.docs_reprovados,
       label: 'Documentos<br>Não Aprovados',
       color: 'red',
-      tooltip: 'Total de documentos em situação de não conformidade: Reprovado, Irregular ou Alerta — em R3 (terceiros) e R4 (corporativo).',
+      kpiKey: 'docs_reprovados',
+      tooltip: 'Total de documentos em situação de não conformidade: Reprovado, Irregular ou Alerta — em R3 (terceiros) e R4 (corporativo). Clique para filtrar as tabelas.',
     },
     {
       value: props.docs_nao_enviados,
       label: 'Documentos<br>Não Enviados',
       color: 'yellow',
-      tooltip: 'Documentos obrigatórios ainda pendentes de envio pelo fornecedor ou terceiro. Exigem ação imediata.',
+      kpiKey: 'docs_nao_enviados',
+      tooltip: 'Documentos obrigatórios ainda pendentes de envio pelo fornecedor ou terceiro. Clique para filtrar as tabelas.',
     },
     {
       value: props.docs_aguard_sub,
       label: 'Aguardando<br>Submissão',
       color: 'yellow',
-      tooltip: 'Documentos inseridos na plataforma pelo fornecedor, mas ainda não submetidos para análise. O fornecedor precisa concluir o envio clicando em submeter.',
+      kpiKey: 'docs_aguard_sub',
+      tooltip: 'Documentos inseridos na plataforma pelo fornecedor, mas ainda não submetidos para análise. Clique para filtrar as tabelas.',
     },
     {
       value: props.docs_em_analise,
       label: 'Documentos<br>Em Análise',
       color: 'orange',
-      tooltip: 'Documentos já submetidos pelos fornecedores aguardando validação da equipe de conformidade. Distintos dos "Aguardando Submissão" — esses já foram enviados.',
+      kpiKey: 'docs_em_analise',
+      tooltip: 'Documentos já submetidos pelos fornecedores aguardando validação da equipe de conformidade. Clique para filtrar as tabelas.',
     },
     {
       value: props.docs_vencidos,
       label: 'Documentos<br>Vencidos',
       color: 'red',
-      tooltip: 'Documentos de fornecedores (R4) com prazo vencido — exigem renovação ou substituição imediata.',
+      kpiKey: 'docs_vencidos',
+      tooltip: 'Documentos de fornecedores (R4) com prazo vencido — exigem renovação ou substituição imediata. Clique para filtrar as tabelas.',
     },
   ]
 
   const visibleKpis = props.hideGlobal ? activeKpis : [...globalKpis, ...activeKpis]
-  // 8 ativos → repeat(4, 1fr) — 2 fileiras de 4
-  // 10 total (8 + 2 globais) → repeat(5, 1fr) — 2 fileiras de 5
   const cols = visibleKpis.length <= 8 ? 'repeat(4, 1fr)' : 'repeat(5, 1fr)'
 
   return (
     <div className="grid gap-3 mb-7" style={{ gridTemplateColumns: cols }}>
-      {visibleKpis.map((k, i) => <KPICard key={i} {...k} />)}
+      {visibleKpis.map((k, i) => (
+        <KPICard
+          key={i}
+          {...k}
+          isActive={!!k.kpiKey && activeKpi === k.kpiKey}
+          onKpiClick={onKpiClick}
+        />
+      ))}
     </div>
   )
 }
