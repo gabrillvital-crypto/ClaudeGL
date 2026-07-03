@@ -92,7 +92,7 @@ export function KPIGrid(props: Props) {
       value: props.docs_reprovados,
       label: 'Documentos<br>Não Aprovados',
       color: 'red',
-      tooltip: 'Documentos que passaram por análise e foram recusados por inconformidade, dados incorretos ou prazo vencido.',
+      tooltip: 'Total de documentos em situação de não conformidade: Reprovado, Irregular ou Alerta — em R3 (terceiros) e R4 (corporativo).',
     },
     {
       value: props.docs_nao_enviados,
