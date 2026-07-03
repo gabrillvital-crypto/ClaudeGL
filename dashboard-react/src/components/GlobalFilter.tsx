@@ -15,12 +15,15 @@ interface Props {
   onCompToggle: (key: string) => void
   onCompClear: () => void
   onClear: () => void
+  onExportXLSX?: () => void
+  onExportPDF?: () => void
+  onExportCSV?: () => void
 }
 
 export function GlobalFilter({
   fornOptions, selectedFornSet, onFornToggle, onFornClear,
   compOptions, selectedCompSet, onCompToggle, onCompClear,
-  onClear,
+  onClear, onExportXLSX, onExportPDF, onExportCSV,
 }: Props) {
   const active = selectedFornSet.size > 0 || selectedCompSet.size > 0
 
@@ -62,8 +65,34 @@ export function GlobalFilter({
         ✕ Limpar filtros
       </button>
 
+      {(onExportXLSX || onExportPDF || onExportCSV) && (
+        <div className="ml-auto">
+          <label className="block text-[11px] font-bold text-white/85 uppercase tracking-wide mb-1">Exportar relatório</label>
+          <div className="flex gap-1.5">
+            {onExportXLSX && (
+              <button onClick={onExportXLSX} title="Excel com 3 abas (R3, R4, Pendências)"
+                className="bg-white/15 border border-white/40 text-white rounded px-3 py-1.5 text-[12px] font-semibold hover:bg-white/30 transition-colors">
+                Excel
+              </button>
+            )}
+            {onExportPDF && (
+              <button onClick={onExportPDF} title="PDF combinado (R3, R4, Pendências)"
+                className="bg-white/15 border border-white/40 text-white rounded px-3 py-1.5 text-[12px] font-semibold hover:bg-white/30 transition-colors">
+                PDF
+              </button>
+            )}
+            {onExportCSV && (
+              <button onClick={onExportCSV} title="CSV único com coluna Seção"
+                className="bg-white/15 border border-white/40 text-white rounded px-3 py-1.5 text-[12px] font-semibold hover:bg-white/30 transition-colors">
+                CSV
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {active && (
-        <span className="text-white/75 text-[12px] italic ml-auto self-center">
+        <span className="text-white/75 text-[12px] italic self-center">
           {activeLabel}
         </span>
       )}

@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import type { SitTerceiroRow, FornSitRow, PendRow } from '../types'
 
 // ── CSV / XLSX ─────────────────────────────────────────────────────────────
 
@@ -317,6 +318,126 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
   })
 
   doc.save(`${filename}.pdf`)
+}
+
+// ── Exportação Global (R3 + R4 + Pendências) ─────────────────────────────
+
+export function exportRelatorioXLSX(
+  sitRows: SitTerceiroRow[],
+  fornSitRows: FornSitRow[],
+  pendRows: PendRow[],
+  filename = 'relatorio_zurich',
+) {
+  const wb = XLSX.utils.book_new()
+
+  const hdR3 = ['Fornecedor', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
+  const wsR3 = XLSX.utils.aoa_to_sheet([hdR3, ...sitRows.map(r => hdR3.map(h => (r as any)[h] ?? ''))])
+  wsR3['!cols'] = hdR3.map(() => ({ wch: 22 }))
+  XLSX.utils.book_append_sheet(wb, wsR3, 'R3 - Terceiros')
+
+  const hdR4 = ['Fornecedor', 'Documento', 'Competencia', 'Status', 'Vencimento']
+  const wsR4 = XLSX.utils.aoa_to_sheet([hdR4, ...fornSitRows.map(r => hdR4.map(h => (r as any)[h] ?? ''))])
+  wsR4['!cols'] = hdR4.map(() => ({ wch: 22 }))
+  XLSX.utils.book_append_sheet(wb, wsR4, 'R4 - Empresa')
+
+  const hdPend = ['Fornecedor', 'Area', 'Documento', 'Competencia', 'Detalhe']
+  const wsPend = XLSX.utils.aoa_to_sheet([hdPend, ...pendRows.map(r => hdPend.map(h => (r as any)[h] ?? ''))])
+  wsPend['!cols'] = hdPend.map(() => ({ wch: 22 }))
+  XLSX.utils.book_append_sheet(wb, wsPend, 'Pendencias')
+
+  XLSX.writeFile(wb, `${filename}.xlsx`)
+}
+
+export function exportRelatorioPDF(
+  sitRows: SitTerceiroRow[],
+  fornSitRows: FornSitRow[],
+  pendRows: PendRow[],
+  geradoEm: string,
+  filename = 'relatorio_zurich',
+) {
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+  const pageW = doc.internal.pageSize.getWidth()
+  let y = 0
+
+  const drawSection = (title: string) => {
+    if (y > 170) { doc.addPage(); y = 0 }
+    doc.setFillColor(...TEAL_DARK)
+    doc.rect(0, y, pageW, 12, 'F')
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.setTextColor(...WHITE)
+    doc.text('EFCAZ', 10, y + 8)
+    doc.text(title, pageW / 2, y + 8, { align: 'center' })
+    doc.setFontSize(7); doc.setFont('helvetica', 'normal')
+    doc.text(geradoEm, pageW - 10, y + 8, { align: 'right' })
+    doc.setTextColor(...TEXT_DARK)
+    y += 16
+  }
+
+  drawSection('R3 — Situação Documental por Terceiro')
+  autoTable(doc, {
+    startY: y,
+    head: [['Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Status', 'Vencimento']],
+    body: sitRows.map(r => [r.Fornecedor, r.Terceiro, r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
+    styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
+    headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: GRAY_LIGHT },
+    margin: { left: 10, right: 10 },
+    showHead: 'everyPage',
+  })
+  y = (doc as any).lastAutoTable.finalY + 10
+
+  drawSection('R4 — Situação Documental da Empresa')
+  autoTable(doc, {
+    startY: y,
+    head: [['Fornecedor', 'Documento', 'Competência', 'Status', 'Vencimento']],
+    body: fornSitRows.map(r => [r.Fornecedor, r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
+    styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
+    headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: GRAY_LIGHT },
+    margin: { left: 10, right: 10 },
+    showHead: 'everyPage',
+  })
+  y = (doc as any).lastAutoTable.finalY + 10
+
+  drawSection('Pendências')
+  autoTable(doc, {
+    startY: y,
+    head: [['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe']],
+    body: pendRows.map(r => [r.Fornecedor, r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor', r.Documento, r.Competencia || '—', r.Detalhe || '—']),
+    styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
+    headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: GRAY_LIGHT },
+    margin: { left: 10, right: 10 },
+    showHead: 'everyPage',
+  })
+
+  doc.save(`${filename}.pdf`)
+}
+
+export function exportRelatorioCSV(
+  sitRows: SitTerceiroRow[],
+  fornSitRows: FornSitRow[],
+  pendRows: PendRow[],
+  filename = 'relatorio_zurich',
+) {
+  const escape = (v: unknown) => {
+    const s = String(v ?? '')
+    return s.includes(',') || s.includes('"') || s.includes('\n') ? '"' + s.replace(/"/g, '""') + '"' : s
+  }
+  const hd = ['Secao', 'Fornecedor', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
+  const lines = [
+    hd.join(','),
+    ...sitRows.map(r => [
+      'R3-Terceiros', r.Fornecedor, r.Terceiro || '', r.Documento, r.Competencia || '', r.Status, r.Vencimento || '',
+    ].map(escape).join(',')),
+    ...fornSitRows.map(r => [
+      'R4-Empresa', r.Fornecedor, '', r.Documento, r.Competencia || '', r.Status, r.Vencimento || '',
+    ].map(escape).join(',')),
+    ...pendRows.map(r => [
+      'Pendencias', r.Fornecedor, '', r.Documento, r.Competencia || '', r.Status || r.Area || '', r.Detalhe || '',
+    ].map(escape).join(',')),
+  ]
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' })
+  triggerDownload(blob, `${filename}.csv`)
 }
 
 // ── Utilitários ───────────────────────────────────────────────────────────

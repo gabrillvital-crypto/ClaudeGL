@@ -10,6 +10,7 @@ import { R3Section } from './components/R3Section'
 import { SituacaoEmpresaSection } from './components/SituacaoEmpresaSection'
 import { PendenciasSection } from './components/PendenciasSection'
 import { ContratosSection } from './components/ContratosSection'
+import { exportRelatorioXLSX, exportRelatorioPDF, exportRelatorioCSV } from './utils/exportUtils'
 
 const KPI_STATUS_MAP: Record<string, { sit: string[]; forn: string[] }> = {
   docs_aprovados:    { sit: ['Aprovado'],            forn: ['Aprovado'] },
@@ -62,11 +63,13 @@ export function App() {
     return opts
   }, [data])
 
-  // Opções de Competência — valores únicos de sit_tabela
+  // Opções de Competência — valores únicos de R3 + R4 + Pendências
   const compOptions = useMemo(() => {
     if (!data) return []
     const seen = new Set<string>()
     data.sit_tabela.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
+    data.forn_sit.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
+    data.tabela.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
     return [...seen].sort().map(c => ({ key: c, label: c }))
   }, [data])
 
@@ -89,18 +92,23 @@ export function App() {
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
     let rows = hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.forn_sit
+    if (selectedCompSet.size > 0)
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
     if (activeKpi) {
       const fornStatuses = KPI_STATUS_MAP[activeKpi]?.forn ?? []
       if (fornStatuses.length > 0)
         rows = rows.filter(r => fornStatuses.includes(r.Status))
     }
     return rows
-  }, [data, hasFilter, matchesForn, activeKpi])
+  }, [data, hasFilter, matchesForn, selectedCompSet, activeKpi])
 
   const tabelaFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
-  }, [data, hasFilter, matchesForn])
+    let rows = hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
+    if (selectedCompSet.size > 0)
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
+    return rows
+  }, [data, hasFilter, matchesForn, selectedCompSet])
 
   const contratosFiltered = useMemo(() => {
     if (!data) return []
@@ -238,6 +246,9 @@ export function App() {
         onCompToggle={toggleComp}
         onCompClear={clearComp}
         onClear={clearAll}
+        onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
+        onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}
+        onExportCSV={() => exportRelatorioCSV(sitFiltered, fornSitFiltered, tabelaFiltered)}
       />
 
       <div className="max-w-[1400px] mx-auto px-5 py-6">

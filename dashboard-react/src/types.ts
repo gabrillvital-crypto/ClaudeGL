@@ -31,6 +31,7 @@ export interface FornSitRow {
   Documento: string
   Status: StatusR4
   Vencimento: string
+  Competencia: string
 }
 
 export interface TercKPIRow {

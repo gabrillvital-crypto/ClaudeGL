@@ -205,7 +205,8 @@ export function processAllData(
     const lc = c.toLowerCase().trim()
     return lc.includes('situa') && lc.includes('doc') && !lc.includes('lise')
   }) ?? null
-  const colCnpjR4 = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
+  const colCnpjR4   = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
+  const colMarcasR4 = fornSitCols.find(c => c.toLowerCase().includes('marcas')) ?? null
 
   // Fornecedores cadastro CSV
   // Suporta formato antigo (CPF/CNPJ + Razao Social) e novo (Documento Fornecedor + Fornecedor)
@@ -325,12 +326,14 @@ export function processAllData(
         }
       }
       if (!status) return null
+      const rawComp = colMarcasR4 ? String(row[colMarcasR4] ?? '').trim() : ''
       return {
         Fornecedor: abbrev(String(row[colR4RS] || '')),
         CNPJ_Forn: cnpj,
         Documento: doc,
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
+        Competencia: (rawComp && rawComp !== 'nan') ? rawComp : '',
       }
     })
     .filter((r) => r !== null) as FornSitRow[]
