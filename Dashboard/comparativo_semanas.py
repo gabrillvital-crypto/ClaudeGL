@@ -83,15 +83,17 @@ def calcular_kpis(pendencias_csv, terceiros_csv, situacao_terceiro_csv,
         _col_ba_doc  = next((c for c in _df_ba.columns if c.strip().lower() == "documento"), None) or \
                        next((c for c in _df_ba.columns if "doc" in c.lower() and "situa" not in c.lower() and "venc" not in c.lower()), None)
         _col_ba_sit  = next((c for c in _df_ba.columns if "situa" in c.lower() and "doc" in c.lower() and "lise" not in c.lower()), None)
-        _col_ba_anal = next((c for c in _df_ba.columns if "lise" in c.lower() and "doc" in c.lower()), None)
+        _col_ba_anal   = next((c for c in _df_ba.columns if "lise" in c.lower() and "doc" in c.lower()), None)
+        _col_ba_status = next((c for c in _df_ba.columns if c.strip().lower() == "status"), None)
         if _col_ba_cnpj and _col_ba_doc and _col_ba_sit:
             for _, _r in _df_ba.iterrows():
-                _ck = re.sub(r'\D', '', str(_r[_col_ba_cnpj]))
-                _dk = str(_r[_col_ba_doc]).strip().upper()
-                _sk = str(_r[_col_ba_sit]).strip().upper()
-                _ak = str(_r[_col_ba_anal]).strip().upper() if _col_ba_anal else ""
+                _ck  = re.sub(r'\D', '', str(_r[_col_ba_cnpj]))
+                _dk  = str(_r[_col_ba_doc]).strip().upper()
+                _sk  = str(_r[_col_ba_sit]).strip().upper()
+                _ak  = str(_r[_col_ba_anal]).strip().upper() if _col_ba_anal else ""
+                _stk = str(_r[_col_ba_status]).strip().lower() if _col_ba_status else ""
                 if _ck and _dk and _dk != "NAN":
-                    _busca_auto_map[(_ck, _dk)] = (_sk, _ak)
+                    _busca_auto_map[(_ck, _dk)] = (_sk, _ak, _stk)
 
     # --- R4 ---
     r4_total = r4_aprovado = r4_reprovado = r4_irregular = r4_nao_anex = r4_em_analise = r4_vencido = r4_fornecedores = 0
@@ -99,27 +101,42 @@ def calcular_kpis(pendencias_csv, terceiros_csv, situacao_terceiro_csv,
 
     if os.path.exists(situacao_forn_csv):
         df_sit_forn = read_csv_safe(situacao_forn_csv)
-        col_analise = next((c for c in df_sit_forn.columns if "lise" in c.lower() and "doc" in c.lower()), None)
+        col_analise  = next((c for c in df_sit_forn.columns if "lise" in c.lower() and "doc" in c.lower()), None)
+        col_sit_doc  = next((c for c in df_sit_forn.columns if "situa" in c.lower() and "doc" in c.lower() and "lise" not in c.lower()), None)
 
         def map_status_r4(row):
-            cnpj_r = re.sub(r'\D', '', str(row.get("CNPJ", "")))
-            doc_r  = str(row.get("Documento", "")).strip().upper()
-            analise = str(row.get(col_analise, "")).strip().upper() if col_analise else ""
+            cnpj_r   = re.sub(r'\D', '', str(row.get("CNPJ", "")))
+            doc_r    = str(row.get("Documento", "")).strip().upper()
+            analise  = str(row.get(col_analise,  "")).strip().upper() if col_analise  else ""
+            sit_doc  = str(row.get(col_sit_doc,  "")).strip().upper() if col_sit_doc  else ""
+            status_r = str(row.get("Status", "")).strip().lower()
+
             sit_ba = _busca_auto_map.get((cnpj_r, doc_r))
             if sit_ba:
-                sit_doc, sit_anal_ba = sit_ba
-                if sit_doc == "REGULAR":    return "Aprovado"
-                if sit_doc == "IRREGULAR":  return "Irregular"
-                if sit_anal_ba == "APROVADO":  return "Aprovado"
-                if sit_anal_ba == "REPROVADO": return "Reprovado"
-                if sit_anal_ba == "VENCIDO":   return "Vencido"
+                sd_ba, an_ba, st_ba = sit_ba
+                if sd_ba == "REGULAR":
+                    return "Vencido" if "vencido" in st_ba else "Aprovado"
+                if sd_ba == "IRREGULAR": return "Irregular"
+                if sd_ba == "ALERTA":    return "Em análise"
+                if sd_ba == "NEUTRO":
+                    if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_ba else "Aprovado"
+                    if an_ba == "REPROVADO": return "Reprovado"
+                    return "Em análise"
                 return "Em análise"
+
+            # Não está em busca_auto → usa Situação Documento da própria linha
+            if sit_doc == "REGULAR":
+                if "vencido" in status_r:
+                    if analise == "APROVADO":  return "Aprovado"
+                    if analise == "REPROVADO": return "Reprovado"
+                    return "Em análise"
+                return "Aprovado"
+            if sit_doc == "IRREGULAR": return "Irregular"
+            if sit_doc == "ALERTA":    return "Em análise"
+            # NEUTRO ou vazio
+            if "não anexado" in status_r: return "Não Anexado"
             if analise == "APROVADO":  return "Aprovado"
             if analise == "REPROVADO": return "Reprovado"
-            status = str(row.get("Status", "")).strip().lower()
-            if "vencer" in status:    return "Aprovado"
-            if "anexado" in status:   return "Não Anexado"
-            if "vencido" in status:   return "Vencido"
             return "Em análise"
 
         df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
