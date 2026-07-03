@@ -46,6 +46,7 @@ export function SituacaoTerceiroSection({ data, gfForn, geradoEm = '' }: Props) 
     Terceiro: r.Terceiro,
     CNPJ_Terceiro: r.CNPJ_Terceiro,
     Documento: r.Documento,
+    Competencia: r.Competencia ?? '',
     Status: r.Status,
     Vencimento: r.Vencimento,
   }))

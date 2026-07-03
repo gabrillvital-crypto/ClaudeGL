@@ -20,9 +20,9 @@ function fmtCNPJ(digits: string): string {
 
 export function App() {
   const { data, state, error } = useDashboardData()
-  const { selectedFornSet, toggleForn, clearAll, matchesForn } = useGlobalFilter()
+  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, clearAll, matchesForn } = useGlobalFilter()
 
-  const hasFilter = selectedFornSet.size > 0
+  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0
 
   // Opções para o dropdown — fonte: relatório de contratos (autoritativo) + fallback R3/R4
   // Uma linha por CNPJ único; filiais com mesmo nome ganham checkboxes independentes
@@ -51,11 +51,24 @@ export function App() {
     return opts
   }, [data])
 
+  // Opções de Competência — valores únicos de sit_tabela
+  const compOptions = useMemo(() => {
+    if (!data) return []
+    const seen = new Set<string>()
+    data.sit_tabela.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
+    return [...seen].sort().map(c => ({ key: c, label: c }))
+  }, [data])
+
   // Dados filtrados
   const sitFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.sit_tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.sit_tabela
-  }, [data, hasFilter, matchesForn])
+    let rows = selectedFornSet.size > 0
+      ? data.sit_tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn))
+      : data.sit_tabela
+    if (selectedCompSet.size > 0)
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia))
+    return rows
+  }, [data, selectedFornSet, selectedCompSet, matchesForn])
 
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
@@ -198,6 +211,10 @@ export function App() {
         selectedFornSet={selectedFornSet}
         onFornToggle={toggleForn}
         onFornClear={clearAll}
+        compOptions={compOptions}
+        selectedCompSet={selectedCompSet}
+        onCompToggle={toggleComp}
+        onCompClear={clearComp}
         onClear={clearAll}
       />
 

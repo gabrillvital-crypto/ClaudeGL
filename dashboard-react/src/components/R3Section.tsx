@@ -63,6 +63,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
         doc: r.Documento,
         status: r.Status,
         venc: r.Vencimento,
+        comp: r.Competencia,
       })
     })
     return d
