@@ -1039,6 +1039,43 @@ html = f"""<!DOCTYPE html>
   #global-filtro-bar .btn-gf-limpar:hover {{ background: rgba(255,255,255,.35); }}
   #gf-hint {{ font-size: 12px; color: rgba(255,255,255,.75); align-self: center; margin-left: auto; font-style: italic; }}
 
+  /* MULTI-SELECT GLOBAL — COMPETÊNCIA */
+  #gfc-multi-wrap {{ position: relative; display: inline-block; }}
+  #gfc-multi-btn {{
+    border: none; border-radius: 6px; padding: 7px 12px;
+    font-size: 13px; font-family: Calibri, Arial, sans-serif;
+    background: white; color: #333; cursor: pointer; min-width: 200px;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; user-select: none;
+  }}
+  #gfc-multi-btn:hover {{ background: #f0f8fa; }}
+  #gfc-multi-panel {{
+    display: none; position: absolute; top: calc(100% + 4px); left: 0;
+    min-width: 260px; background: white; border: 1px solid #ccc; border-radius: 6px;
+    z-index: 2000; box-shadow: 0 6px 18px rgba(0,0,0,.18); overflow: hidden;
+  }}
+  #gfc-multi-search {{
+    width: 100%; padding: 9px 12px; border: none; border-bottom: 1px solid #eee;
+    font-size: 13px; box-sizing: border-box; outline: none; font-family: Calibri, Arial, sans-serif;
+  }}
+  #gfc-multi-list {{ max-height: 220px; overflow-y: auto; }}
+  .gfc-item {{
+    display: flex; align-items: center; gap: 9px; padding: 7px 12px;
+    cursor: pointer; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5;
+  }}
+  .gfc-item:hover {{ background: #f0f8fa; }}
+  .gfc-item.gfc-selected {{ background: #e4f4f8; font-weight: 700; }}
+  .gfc-item input[type=checkbox] {{ cursor: pointer; accent-color: {COR_TEAL}; width: 15px; height: 15px; flex-shrink: 0; }}
+  #gfc-multi-footer {{
+    padding: 7px 12px; border-top: 1px solid #eee; text-align: right;
+    font-size: 12px; color: {COR_TEAL}; cursor: pointer; font-weight: 700;
+  }}
+  #gfc-multi-footer:hover {{ background: #f0f8fa; }}
+  #gfc-multi-panel label {{
+    color: #333 !important; font-weight: normal !important; text-transform: none !important;
+    letter-spacing: 0 !important; display: inline !important; margin-bottom: 0 !important;
+    font-size: 13px !important;
+  }}
+
   /* MULTI-SELECT LOCAL (filtros internos de cada seção) */
   .lf-multi-wrap {{ position: relative; display: inline-block; }}
   .lf-multi-btn {{
@@ -1103,6 +1140,20 @@ html = f"""<!DOCTYPE html>
         <input type="text" id="gf-multi-search" placeholder="Buscar fornecedor..." oninput="filterFornItems(this.value)">
         <div id="gf-multi-list"></div>
         <div id="gf-multi-footer" onclick="limparGlobalFiltro()">Limpar seleção</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <label>Competência</label>
+    <div id="gfc-multi-wrap">
+      <div id="gfc-multi-btn" onclick="toggleCompDropdown(event)">
+        <span id="gfc-selected-label">Todas as competências</span>
+        <span id="gfc-multi-arrow">▾</span>
+      </div>
+      <div id="gfc-multi-panel">
+        <input type="text" id="gfc-multi-search" placeholder="Buscar competência..." oninput="filterCompItems(this.value)">
+        <div id="gfc-multi-list"></div>
+        <div id="gfc-multi-footer" onclick="limparCompFiltroSilent(); applyGlobalFilter()">Limpar seleção</div>
       </div>
     </div>
   </div>
@@ -1676,7 +1727,7 @@ const CONTRATOS      = {contratos_json};
 
 // ── KPI DINAMICO ──────────────────────────────────────────────────────────────
 function updateKPICards() {{
-  const s  = SIT.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn));
+  const s  = SIT.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn) && matchesCompGlobal(r.Competencia));
   const fs = FORN_SIT.filter(r => matchesForn(r["Fornecedor"], r["CNPJ"]));
 
   // Bloco 2: docs esperados
@@ -1796,6 +1847,7 @@ function parseFornVal(val) {{
 
 // ── MULTI-SELECT GLOBAL FILTER ─────────────────────────────────────────────
 let selectedFornSet = new Set();
+let selectedCompSet = new Set();
 
 function matchesForn(rowNome, rowCNPJ) {{
   if (selectedFornSet.size === 0) return true;
@@ -1873,7 +1925,66 @@ document.addEventListener("click", e => {{
     document.getElementById("gf-multi-panel").style.display = "none";
     document.getElementById("gf-multi-arrow").textContent = "▾";
   }}
+  const wrapC = document.getElementById("gfc-multi-wrap");
+  if (wrapC && !wrapC.contains(e.target)) {{
+    document.getElementById("gfc-multi-panel").style.display = "none";
+    document.getElementById("gfc-multi-arrow").textContent = "▾";
+  }}
 }});
+
+function matchesCompGlobal(rowComp) {{
+  if (selectedCompSet.size === 0) return true;
+  return selectedCompSet.has(rowComp || "A classificar");
+}}
+
+function buildCompMultiSelect() {{
+  const comps = [...new Set(SIT.map(r => r["Competencia"] || "A classificar"))].sort();
+  const list = document.getElementById("gfc-multi-list");
+  list.innerHTML = "";
+  comps.forEach(comp => {{
+    const div = document.createElement("div");
+    div.className = "gfc-item";
+    div.dataset.key = comp;
+    div.dataset.lbl = comp.toLowerCase();
+    const cbId = "gfc-cb-" + comp.replace(/[^a-z0-9]/gi, "_");
+    div.innerHTML = `<input type="checkbox" id="${{cbId}}"><label for="${{cbId}}" style="cursor:pointer;flex:1;font-size:13px">${{comp}}</label>`;
+    div.querySelector("input").addEventListener("change", e => {{
+      if (e.target.checked) {{ selectedCompSet.add(comp); div.classList.add("gfc-selected"); }}
+      else {{ selectedCompSet.delete(comp); div.classList.remove("gfc-selected"); }}
+      applyGlobalFilter();
+    }});
+    list.appendChild(div);
+  }});
+}}
+
+function toggleCompDropdown(e) {{
+  e.stopPropagation();
+  const panel = document.getElementById("gfc-multi-panel");
+  const arrow = document.getElementById("gfc-multi-arrow");
+  const isOpen = panel.style.display === "block";
+  panel.style.display = isOpen ? "none" : "block";
+  arrow.textContent = isOpen ? "▾" : "▴";
+  if (!isOpen) document.getElementById("gfc-multi-search").focus();
+}}
+
+function filterCompItems(q) {{
+  const lq = q.toLowerCase();
+  document.querySelectorAll("#gfc-multi-list .gfc-item").forEach(div => {{
+    div.style.display = div.dataset.lbl.includes(lq) ? "" : "none";
+  }});
+}}
+
+function limparCompFiltroSilent() {{
+  selectedCompSet.clear();
+  document.querySelectorAll("#gfc-multi-list .gfc-item").forEach(div => {{
+    const cb = div.querySelector("input[type=checkbox]");
+    if (cb) cb.checked = false;
+    div.classList.remove("gfc-selected");
+  }});
+  const s = document.getElementById("gfc-multi-search");
+  if (s) {{ s.value = ""; filterCompItems(""); }}
+  document.getElementById("gfc-selected-label").textContent = "Todas as competências";
+}}
 
 // Popula select de fornecedor; usa FORN_CNPJ_MAP (gerado pelo Python) para detectar
 // empresas com mesma razão social e CNPJs diferentes → cria uma opção por CNPJ
@@ -2061,6 +2172,7 @@ function filtrarSit() {{
   const busca = document.getElementById("sit-busca").value.toLowerCase();
   sitFiltrado = SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ_Forn"])) return false;
+    if (!matchesCompGlobal(r["Competencia"])) return false;
     if (!matchesLocalSet(sitEmpSet, r["Fornecedor"], r["CNPJ_Forn"])) return false;
     if (stat  && r["Status"]      !== stat)  return false;
     if (comp  && r["Competencia"] !== comp)  return false;
@@ -2787,7 +2899,8 @@ function expandSection(id) {{
 }}
 
 function applyGlobalFilter() {{
-  const count = selectedFornSet.size;
+  const fCount = selectedFornSet.size;
+  const cCount = selectedCompSet.size;
 
   filtrarTabela();
   filtrarSit();
@@ -2796,24 +2909,30 @@ function applyGlobalFilter() {{
   renderLevel1();
 
   // Expande secoes quando filtro ativo
-  if (count > 0) {{
+  if (fCount > 0 || cCount > 0) {{
     ["ct-section","drill-section","pend-section","sit-section","forn-sit-section"].forEach(expandSection);
   }}
 
-  // Label do botao
-  const lbl = count === 0 ? "Todos os fornecedores"
-    : count === 1 ? parseFornVal([...selectedFornSet][0]).nome
-    : count + " fornecedores selecionados";
+  // Label do botao fornecedor
+  const lbl = fCount === 0 ? "Todos os fornecedores"
+    : fCount === 1 ? parseFornVal([...selectedFornSet][0]).nome
+    : fCount + " fornecedores selecionados";
   document.getElementById("gf-selected-label").textContent = lbl;
 
+  // Label do botao comp
+  const compLbl = cCount === 0 ? "Todas as competências"
+    : cCount === 1 ? [...selectedCompSet][0]
+    : cCount + " competências selecionadas";
+  document.getElementById("gfc-selected-label").textContent = compLbl;
+
   // Hint
-  const hint = count === 0 ? ""
-    : count <= 3 ? "Filtro ativo: " + [...selectedFornSet].map(r => parseFornVal(r).nome).join(", ")
-    : "Filtro ativo: " + count + " fornecedores";
-  document.getElementById("gf-hint").textContent = hint;
+  const parts = [];
+  if (fCount > 0) parts.push(fCount <= 2 ? [...selectedFornSet].map(r => parseFornVal(r).nome).join(", ") : fCount + " fornecedores");
+  if (cCount > 0) parts.push(cCount <= 2 ? [...selectedCompSet].join(", ") : cCount + " competências");
+  document.getElementById("gf-hint").textContent = parts.length ? "Filtro ativo: " + parts.join(" · ") : "";
 
   // Cards globais somem com qualquer seleção
-  const displayGlobal = count > 0 ? "none" : "";
+  const displayGlobal = (fCount > 0 || cCount > 0) ? "none" : "";
   ["kpi-card-total-forn","kpi-card-exec-plat"].forEach(id => {{
     const el = document.getElementById(id);
     if (el) el.style.display = displayGlobal;
@@ -2829,11 +2948,13 @@ function limparGlobalFiltro() {{
   }});
   const search = document.getElementById("gf-multi-search");
   if (search) {{ search.value = ""; filterFornItems(""); }}
+  limparCompFiltroSilent();
   applyGlobalFilter();
 }}
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildFornMultiSelect();
+buildCompMultiSelect();
 
 // ── TABELA SEM EXECUÇÃO ──────────────────────────────────────────────────────
 (function() {{
