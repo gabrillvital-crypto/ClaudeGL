@@ -192,6 +192,8 @@ export function processAllData(
   const colAnaliseR3 = sitCols.find(c => c.toLowerCase().includes('lise') && c.toLowerCase().includes('doc')) ?? null
   // Coluna "Situação última solicitação"
   const colSitSolicR3 = sitCols.find(c => c.toLowerCase().includes('ltima') && c.toLowerCase().includes('solic')) ?? null
+  // Coluna "Marcas e Representações" → Competência R3
+  const colMarcasSit = sitCols.find(c => c.toLowerCase().includes('marcas')) ?? null
 
   const colCNPJPend = pendCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
 
@@ -216,6 +218,7 @@ export function processAllData(
     .map(row => {
       const status = mapStatusR3(row, colAnaliseR3, colSitSolicR3)
       if (!status) return null
+      const comp = colMarcasSit ? String(row[colMarcasSit] ?? '').trim().replace(/^nan$/, '') : ''
       return {
         Fornecedor: abbrev(String(row[colFornRS] || row['Fornecedor Razao Social'] || '')),
         Terceiro: String(row[colTercRS] || row['Terceiro Razao Social'] || '').trim(),
@@ -224,6 +227,7 @@ export function processAllData(
         Documento: String(row['Documento'] ?? '').trim(),
         Status: status,
         Vencimento: fmtDate(row[colDatVenc] ?? row['Data de Vencimento']),
+        Competencia: comp || 'A classificar',
       }
     })
     .filter((r): r is SitTerceiroRow => r !== null)
@@ -507,7 +511,7 @@ export function processAllData(
   sitCalc.forEach(r => {
     if (!drillData[r.Fornecedor]) drillData[r.Fornecedor] = {}
     if (!drillData[r.Fornecedor][r.Terceiro]) drillData[r.Fornecedor][r.Terceiro] = []
-    drillData[r.Fornecedor][r.Terceiro].push({ doc: r.Documento, status: r.Status, venc: r.Vencimento })
+    drillData[r.Fornecedor][r.Terceiro].push({ doc: r.Documento, status: r.Status, venc: r.Vencimento, comp: r.Competencia })
   })
 
   // ── Drill-down de contratos ────────────────────────────────────────────────

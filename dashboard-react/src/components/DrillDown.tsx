@@ -121,6 +121,11 @@ export function DrillDown({ drillData }: Props) {
           {(drillData[selForn]?.[selTerc] || []).map((doc, i) => (
             <div key={i} className={`flex items-center gap-3 px-4 py-2.5 border-b border-[#f0f0f0] ${i % 2 === 1 ? 'bg-[#fafafa]' : ''}`}>
               <div className="flex-1 text-[13px] text-[#333]">{doc.doc || '—'}</div>
+              {doc.comp && (
+                <span className="text-[11px] text-[#0E8FA3] bg-[#e8f7fa] px-2 py-0.5 rounded font-semibold whitespace-nowrap">
+                  {doc.comp}
+                </span>
+              )}
               <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${badgeDrill(doc.status)}`}>{doc.status}</span>
               <div className="text-[12px] text-[#888] min-w-[90px] text-right">{doc.venc || '—'}</div>
             </div>

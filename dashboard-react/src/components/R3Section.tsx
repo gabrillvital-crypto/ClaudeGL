@@ -23,6 +23,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
   const [mode, setMode] = useState<ViewMode>('drill')
   const [pdfLoading, setPdfLoading] = useState(false)
   const [statusFilters, setStatusFilters] = useState<Set<string>>(new Set())
+  const [compFilters, setCompFilters] = useState<Set<string>>(new Set())
 
   function toggleStatus(v: string) {
     setStatusFilters(prev => {
@@ -32,11 +33,26 @@ export function R3Section({ data, geradoEm = '' }: Props) {
     })
   }
 
-  // Filtragem local por status — age após o filtro global de fornecedores (já aplicado em data)
+  function toggleComp(v: string) {
+    setCompFilters(prev => {
+      const next = new Set(prev)
+      next.has(v) ? next.delete(v) : next.add(v)
+      return next
+    })
+  }
+
+  const competencias = useMemo(() => {
+    const s = new Set(data.map(r => r.Competencia).filter(Boolean))
+    return [...s].sort()
+  }, [data])
+
+  // Filtragem local por status + competência — age após o filtro global de fornecedores (já aplicado em data)
   const filteredData = useMemo(() => {
-    if (statusFilters.size === 0) return data
-    return data.filter(r => statusFilters.has(r.Status))
-  }, [data, statusFilters])
+    let d = data
+    if (statusFilters.size > 0) d = d.filter(r => statusFilters.has(r.Status))
+    if (compFilters.size > 0) d = d.filter(r => compFilters.has(r.Competencia))
+    return d
+  }, [data, statusFilters, compFilters])
 
   const drillData = useMemo(() => {
     const d: Record<string, Record<string, DrillDoc[]>> = {}
@@ -58,6 +74,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
         Fornecedor: r.Fornecedor,
         Terceiro: r.Terceiro,
         Documento: r.Documento,
+        Competencia: r.Competencia,
         Status: r.Status,
         Vencimento: r.Vencimento,
       })),
@@ -71,6 +88,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
         Terceiro: r.Terceiro,
         CNPJ_Terceiro: r.CNPJ_Terceiro,
         Documento: r.Documento,
+        Competencia: r.Competencia,
         Status: r.Status,
         Vencimento: r.Vencimento,
       })),
@@ -90,7 +108,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
     }, 50)
   }
 
-  const activeLabel = statusFilters.size > 0
+  const activeLabel = (statusFilters.size > 0 || compFilters.size > 0)
     ? `${filteredData.length} de ${data.length} registro(s)`
     : `${data.length} registro(s)`
 
@@ -148,9 +166,9 @@ export function R3Section({ data, geradoEm = '' }: Props) {
       </div>
 
       {/* Linha 2: filtro de status local */}
-      <div className="flex flex-wrap items-center gap-2 mb-4 bg-white border border-[#e5eef1] rounded-lg px-3 py-2 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2 mb-2 bg-white border border-[#e5eef1] rounded-lg px-3 py-2 shadow-sm">
         <span className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide mr-1">
-          Filtrar por status:
+          Status:
         </span>
         {STATUS_OPTIONS.map(opt => (
           <button
@@ -168,10 +186,41 @@ export function R3Section({ data, geradoEm = '' }: Props) {
             onClick={() => setStatusFilters(new Set())}
             className="ml-2 text-[11px] text-[#999] hover:text-[#DC3545] underline font-semibold"
           >
-            Limpar filtro
+            Limpar
           </button>
         )}
       </div>
+
+      {/* Linha 3: filtro de competência */}
+      {competencias.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 mb-4 bg-white border border-[#e5eef1] rounded-lg px-3 py-2 shadow-sm">
+          <span className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide mr-1">
+            Competência:
+          </span>
+          {competencias.map(comp => (
+            <button
+              key={comp}
+              onClick={() => toggleComp(comp)}
+              className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all ${
+                compFilters.has(comp)
+                  ? 'bg-[#0E8FA3] text-white'
+                  : 'bg-white text-[#0E8FA3] border border-[#0E8FA3] hover:bg-[#e8f7fa]'
+              }`}
+            >
+              {comp}
+            </button>
+          ))}
+          {compFilters.size > 0 && (
+            <button
+              onClick={() => setCompFilters(new Set())}
+              className="ml-2 text-[11px] text-[#999] hover:text-[#DC3545] underline font-semibold"
+            >
+              Limpar
+            </button>
+          )}
+        </div>
+      )}
+
 
       {/* Conteúdo: Drill-Down ou Modo Agrupado */}
       {mode === 'drill' && <DrillDown drillData={drillData} />}

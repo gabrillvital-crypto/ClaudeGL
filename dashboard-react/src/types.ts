@@ -22,6 +22,7 @@ export interface SitTerceiroRow {
   Documento: string
   Status: StatusR3
   Vencimento: string
+  Competencia: string
 }
 
 export interface FornSitRow {
@@ -79,6 +80,7 @@ export interface DrillDoc {
   doc: string
   status: string
   venc: string
+  comp?: string
 }
 
 export interface TerceiroContratoItem {

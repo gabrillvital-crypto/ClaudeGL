@@ -219,9 +219,22 @@ competencias_json  = json.dumps(competencias_lista)
 col_trab_rs = "Terceiro Razão Social" if "Terceiro Razão Social" in df_sit_calc.columns else "Terceiro Razao Social"
 col_trab_cpf = "Terceiro CPF/CNPJ"
 col_dat_venc = "Data de Vencimento"
+col_marcas_sit = next((c for c in df_sit_calc.columns if "marcas" in c.lower()), None)
 
-sit_tabela = df_sit_calc[["Empresa", col_trab_rs, "Terceiro CPF/CNPJ", "Fornecedor CPF/CNPJ", "Documento", "Status_Final", col_dat_venc]].copy()
-sit_tabela.columns = ["Fornecedor", "Terceiro", "CNPJ_Terceiro", "CNPJ_Forn", "Documento", "Status", "Vencimento"]
+_cols_sit = ["Empresa", col_trab_rs, "Terceiro CPF/CNPJ", "Fornecedor CPF/CNPJ", "Documento", "Status_Final", col_dat_venc]
+if col_marcas_sit:
+    _cols_sit.append(col_marcas_sit)
+sit_tabela = df_sit_calc[_cols_sit].copy()
+_col_names = ["Fornecedor", "Terceiro", "CNPJ_Terceiro", "CNPJ_Forn", "Documento", "Status", "Vencimento"]
+if col_marcas_sit:
+    _col_names.append("Competencia")
+sit_tabela.columns = _col_names
+if "Competencia" not in sit_tabela.columns:
+    sit_tabela["Competencia"] = "A classificar"
+else:
+    sit_tabela["Competencia"] = sit_tabela["Competencia"].fillna("").replace("nan", "").apply(
+        lambda v: v.strip() if v.strip() else "A classificar"
+    )
 def _norm_cnpj(v):
     s = str(v).strip()
     if s in ("", "nan", "0", "None"): return ""
@@ -1382,6 +1395,12 @@ html = f"""<!DOCTYPE html>
       </select>
     </div>
     <div>
+      <label>Competência</label><br>
+      <select id="sit-comp" onchange="filtrarSit()">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div>
       <label>Buscar documento</label><br>
       <input type="text" id="sit-busca" placeholder="Ex: ASO, Ficha de EPI..." oninput="filtrarSit()" style="width:220px">
     </div>
@@ -1411,6 +1430,7 @@ html = f"""<!DOCTYPE html>
             <th>Fornecedor</th>
             <th>Terceiro</th>
             <th>Documento</th>
+            <th>Competência</th>
             <th>Status</th>
             <th>Vencimento</th>
           </tr>
@@ -1988,6 +2008,18 @@ buildLfMultiSelect("sit",  buildLfPares([...new Set(SIT.map(r => r["Fornecedor"]
 buildLfMultiSelect("pend", buildLfPares([...new Set(DADOS.map(r => r["Fornecedor"]))]),      pendEmpSet, filtrarTabela);
 buildLfMultiSelect("fs",   buildLfPares([...new Set(FORN_SIT.map(r => r["Fornecedor"]))]),  fsEmpSet,   filtrarFornSit);
 
+// Popular select de competência R3
+(function() {{
+  const sel = document.getElementById("sit-comp");
+  if (!sel) return;
+  const comps = [...new Set(SIT.map(r => r["Competencia"]).filter(Boolean))].sort();
+  comps.forEach(c => {{
+    const opt = document.createElement("option");
+    opt.value = opt.textContent = c;
+    sel.appendChild(opt);
+  }});
+}})();
+
 // ── BADGES ────────────────────────────────────────────────────────────────────
 function badgeStatus(s) {{
   if (!s) return "";
@@ -2021,11 +2053,13 @@ function badgeSit(s) {{
 let sitFiltrado = [];
 function filtrarSit() {{
   const stat  = document.getElementById("sit-status").value;
+  const comp  = document.getElementById("sit-comp").value;
   const busca = document.getElementById("sit-busca").value.toLowerCase();
   sitFiltrado = SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ_Forn"])) return false;
     if (!matchesLocalSet(sitEmpSet, r["Fornecedor"], r["CNPJ_Forn"])) return false;
-    if (stat  && r["Status"]   !== stat)  return false;
+    if (stat  && r["Status"]      !== stat)  return false;
+    if (comp  && r["Competencia"] !== comp)  return false;
     if (busca && !r["Documento"].toLowerCase().includes(busca)) return false;
     return true;
   }});
@@ -2035,6 +2069,7 @@ function filtrarSit() {{
       <td>${{r["Fornecedor"]}}</td>
       <td>${{r["Terceiro"]}}</td>
       <td>${{r["Documento"]}}</td>
+      <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
       <td>${{badgeSit(r["Status"])}}</td>
       <td>${{r["Vencimento"] || "—"}}</td>
     </tr>
@@ -2062,7 +2097,7 @@ function filtrarSit() {{
 }}
 function limparSit() {{
   clearLfSel("sit", sitEmpSet, () => {{}});
-  ["sit-status","sit-busca"].forEach(id => {{
+  ["sit-status","sit-comp","sit-busca"].forEach(id => {{
     const el = document.getElementById(id); if (el) el.value = "";
   }});
   filtrarSit();
@@ -2255,7 +2290,7 @@ function downloadCSV(rows, headers, filename) {{
   a.click(); URL.revokeObjectURL(url);
 }}
 function exportarSit() {{
-  downloadCSV(sitFiltrado, ["Fornecedor","Terceiro","Documento","Status","Vencimento"],
+  downloadCSV(sitFiltrado, ["Fornecedor","Terceiro","Documento","Competencia","Status","Vencimento"],
     "situacao_documental_zurich.csv");
 }}
 function exportarPend() {{
@@ -2274,7 +2309,7 @@ function downloadXLSX(rows, headers, filename) {{
   XLSX.writeFile(wb, filename);
 }}
 function exportarSitXLSX() {{
-  downloadXLSX(sitFiltrado, ["Fornecedor","Terceiro","Documento","Status","Vencimento"],
+  downloadXLSX(sitFiltrado, ["Fornecedor","Terceiro","Documento","Competencia","Status","Vencimento"],
     "situacao_documental_zurich.xlsx");
 }}
 function exportarPendXLSX() {{
@@ -2354,7 +2389,7 @@ function exportarSitPDF() {{
   doc.line(10, y1, 287, y1);
 
   // Tabela de dados
-  const headers = ["Fornecedor", "Terceiro", "Documento", "Status", "Vencimento"];
+  const headers = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
     head: [headers],
     body: sitFiltrado.map(r => headers.map(h => String(r[h] ?? ""))),
@@ -2364,12 +2399,11 @@ function exportarSitPDF() {{
     alternateRowStyles: {{ fillColor: [240, 248, 250] }},
     margin: {{ left: 10, right: 10 }},
     didParseCell: function(data) {{
-      if (data.section === "body" && data.column.index === 3) {{
+      if (data.section === "body" && data.column.index === 4) {{
         const v = String(data.cell.raw || "");
-        if (v === "Aprovado")                data.cell.styles.textColor = [40, 167, 69];
-        else if (v === "Reprovado")          data.cell.styles.textColor = [220, 53, 69];
-        else if (v === "Não anexado")        data.cell.styles.textColor = [133, 100, 4];
-        else if (v === "Aguardando análise")  data.cell.styles.textColor = [244, 121, 59];
+        if (v === "Aprovado")                  data.cell.styles.textColor = [40, 167, 69];
+        else if (v === "Reprovado")            data.cell.styles.textColor = [220, 53, 69];
+        else if (v === "Não anexado")          data.cell.styles.textColor = [133, 100, 4];
         else if (v === "Aguardando Submissão") data.cell.styles.textColor = [133, 100, 4];
         else if (v === "Em Análise")           data.cell.styles.textColor = [14, 143, 163];
       }}
