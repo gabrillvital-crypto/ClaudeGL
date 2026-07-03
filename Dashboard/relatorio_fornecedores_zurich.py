@@ -2389,7 +2389,7 @@ function exportarSitPDF() {{
   doc.line(10, y1, 287, y1);
 
   // Tabela de dados
-  const headers = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
+  const headers = ["Fornecedor", "Terceiro", "Documento", "Status", "Competencia", "Vencimento"];
   doc.autoTable({{
     head: [headers],
     body: sitFiltrado.map(r => headers.map(h => String(r[h] ?? ""))),
@@ -2399,7 +2399,7 @@ function exportarSitPDF() {{
     alternateRowStyles: {{ fillColor: [240, 248, 250] }},
     margin: {{ left: 10, right: 10 }},
     didParseCell: function(data) {{
-      if (data.section === "body" && data.column.index === 4) {{
+      if (data.section === "body" && data.column.index === 3) {{
         const v = String(data.cell.raw || "");
         if (v === "Aprovado")                  data.cell.styles.textColor = [40, 167, 69];
         else if (v === "Reprovado")            data.cell.styles.textColor = [220, 53, 69];

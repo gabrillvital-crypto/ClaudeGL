@@ -242,8 +242,8 @@ export function exportR3PDF({ rows, geradoEm, filename = 'situacao_terceiros' }:
 
   autoTable(doc, {
     startY: yAfterKpis,
-    head: [['Fornecedor', 'Terceiro', 'CNPJ Terceiro', 'Documento', 'Competência', 'Status', 'Vencimento']],
-    body: rows.map(r => [r.Fornecedor, r.Terceiro, r.CNPJ_Terceiro || '—', r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
+    head: [['Fornecedor', 'Terceiro', 'CNPJ Terceiro', 'Documento', 'Status', 'Competência', 'Vencimento']],
+    body: rows.map(r => [r.Fornecedor, r.Terceiro, r.CNPJ_Terceiro || '—', r.Documento, r.Status, r.Competencia || '—', r.Vencimento || '—']),
     styles: { fontSize: 7.5, cellPadding: 2, textColor: TEXT_DARK, font: 'helvetica' },
     headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold', fontSize: 8 },
     alternateRowStyles: { fillColor: GRAY_LIGHT },
@@ -252,12 +252,12 @@ export function exportR3PDF({ rows, geradoEm, filename = 'situacao_terceiros' }:
       1: { cellWidth: 45 },
       2: { cellWidth: 26 },
       3: { cellWidth: 'auto' },
-      4: { cellWidth: 28 },
-      5: { cellWidth: 30 },
+      4: { cellWidth: 30 },
+      5: { cellWidth: 28 },
       6: { cellWidth: 22 },
     },
     didParseCell(data) {
-      if (data.section === 'body' && data.column.index === 5) {
+      if (data.section === 'body' && data.column.index === 4) {
         data.cell.styles.textColor = statusColor(String(data.cell.raw))
         data.cell.styles.fontStyle = 'bold'
       }
