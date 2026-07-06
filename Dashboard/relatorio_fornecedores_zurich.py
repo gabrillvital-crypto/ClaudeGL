@@ -205,12 +205,16 @@ trab_emp_total = trab_emp.groupby("Empresa")["Total"].sum().sort_values(ascendin
 # ── TABELA DE PENDÊNCIAS (inclui Competência) ─────────────────────────────────
 col_marcas = "Marcas e representações" if "Marcas e representações" in df_pend.columns else "Marcas e representacoes"
 col_pend_txt = "Pendência" if "Pendência" in df_pend.columns else "Pendencia"
+col_cnpj_pend = next((c for c in df_pend.columns if "cpf" in c.lower() or "cnpj" in c.lower()), None)
 
 tabela = df_pend[["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas, col_pend_txt]].copy()
 tabela.columns = ["Fornecedor", "Status", "Area", "Documento", "Competencia", "Detalhe"]
 tabela["Competencia"] = tabela["Competencia"].fillna("").astype(str).str.strip()
 tabela["Competencia"] = tabela["Competencia"].replace("nan", "").replace("", "A classificar")
-tabela["Detalhe"] = tabela["Detalhe"].astype(str).str[:250]
+tabela["Detalhe"] = tabela["Detalhe"].astype(str).str.strip()
+tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(
+    lambda v: re.sub(r'\D', '', str(v).split('.')[0])
+).values if col_cnpj_pend else ""
 tabela_json = tabela.to_dict("records")
 competencias_lista = sorted([c for c in tabela["Competencia"].unique() if c and c != "nan"])
 competencias_json  = json.dumps(competencias_lista)
@@ -340,10 +344,13 @@ if _sit_forn_ok:
             if sd_ba == "ALERTA":
                 return "Em análise"
             if sd_ba == "NEUTRO":
-                if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_ba else "Aprovado"
-                if an_ba == "REPROVADO": return "Reprovado"
+                if an_ba == "APROVADO":           return "Aprovado"
+                if an_ba == "REPROVADO":          return "Reprovado"
+                if "não anexado" in st_ba:        return "Não Anexado"
                 return "Em análise"
-            return "Em análise"   # vazio em busca_auto
+            # vazio em busca_auto
+            if "não anexado" in st_ba: return "Não Anexado"
+            return "Em análise"
 
         # Não está em busca_auto → usa colunas da própria linha sitForn
         if sit_doc == "REGULAR":
@@ -370,11 +377,31 @@ if _sit_forn_ok:
     df_sit_forn["Status_Cat"] = df_sit_forn.apply(map_status_r4, axis=1)
     df_sit_forn_calc = df_sit_forn[df_sit_forn["Status_Cat"].notna()].copy()
 
-    forn_sit_tabela = df_sit_forn_calc[["Empresa", "Documento", "Status_Cat", "Data de Vencimento"]].copy()
-    forn_sit_tabela.columns = ["Fornecedor", "Documento", "Status", "Vencimento"]
+    col_marcas_r4 = next((c for c in df_sit_forn_calc.columns if "marcas" in c.lower()), None)
+    _r4_cols = ["Empresa", "Documento", "Status_Cat", "Data de Vencimento"]
+    if col_marcas_r4:
+        _r4_cols.append(col_marcas_r4)
+    forn_sit_tabela = df_sit_forn_calc[_r4_cols].copy()
+    _r4_names = ["Fornecedor", "Documento", "Status", "Vencimento"]
+    if col_marcas_r4:
+        _r4_names.append("Competencia")
+    forn_sit_tabela.columns = _r4_names
     if "CNPJ" in df_sit_forn_calc.columns:
         forn_sit_tabela["CNPJ"] = df_sit_forn_calc["CNPJ"].apply(
             lambda v: re.sub(r'\D', '', str(v))).values
+    if "Competencia" not in forn_sit_tabela.columns:
+        forn_sit_tabela["Competencia"] = ""
+    else:
+        forn_sit_tabela["Competencia"] = forn_sit_tabela["Competencia"].fillna("").replace("nan", "").apply(
+            lambda v: v.strip() if str(v).strip() else ""
+        )
+    # Docs de busca automática não exibem Competência — apenas Vencimento é relevante
+    if _busca_auto_map and "CNPJ" in forn_sit_tabela.columns:
+        _is_auto_mask = forn_sit_tabela.apply(
+            lambda row: (re.sub(r'\D', '', str(row.get("CNPJ", ""))), str(row.get("Documento", "")).strip().upper()) in _busca_auto_map,
+            axis=1
+        )
+        forn_sit_tabela.loc[_is_auto_mask, "Competencia"] = ""
     forn_sit_tabela["Vencimento"] = pd.to_datetime(
         forn_sit_tabela["Vencimento"], errors="coerce"
     ).dt.strftime("%d/%m/%Y").fillna("")
@@ -440,8 +467,8 @@ def _norm_c(v):
     s = str(v).strip()
     if s.endswith(".0"): s = s[:-2]
     if s in ("", "nan", "None"): return ""
-    # CNPJ numérico pode perder zeros à esquerda quando lido como float — repadeia para 14 dígitos
-    if s.isdigit() and len(s) < 14:
+    # CPF tem 11 dígitos — não padeia para 14. CNPJ com < 14 dígitos é repadeia.
+    if s.isdigit() and len(s) > 11 and len(s) < 14:
         s = s.zfill(14)
     return s
 
@@ -521,7 +548,7 @@ for _, _r in df_terc.iterrows():
         continue
     _terc_info = {
         "nome":       str(_r.get(_col_terc_nome_terc, "") if _col_terc_nome_terc else "").strip(),
-        "cnpj":       str(_r.get(_col_terc_cnpj_terc, "") if _col_terc_cnpj_terc else "").strip(),
+        "cnpj":       _cnpj_digits(_r.get(_col_terc_cnpj_terc, "") if _col_terc_cnpj_terc else ""),
         "cargo":      str(_r.get(_col_terc_cargo, "") if _col_terc_cargo else "").strip(),
         "aeroporto":  str(_r.get(_col_terc_aeroporto, "") if _col_terc_aeroporto else "").strip(),
         "status":     str(_r.get(col_status_terc, "")).strip(),
@@ -1046,6 +1073,12 @@ html = f"""<!DOCTYPE html>
     font-family: Calibri, Arial, sans-serif; cursor: pointer; font-weight: 700;
   }}
   #global-filtro-bar .btn-gf-limpar:hover {{ background: rgba(255,255,255,.35); }}
+  #global-filtro-bar .btn-gf-export {{
+    background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.4);
+    color: white; border-radius: 6px; padding: 6px 14px; font-size: 12px;
+    font-family: Calibri, Arial, sans-serif; cursor: pointer; font-weight: 600;
+  }}
+  #global-filtro-bar .btn-gf-export:hover {{ background: rgba(255,255,255,.3); }}
   #gf-hint {{ font-size: 12px; color: rgba(255,255,255,.75); align-self: center; margin-left: auto; font-style: italic; }}
 
   /* MULTI-SELECT GLOBAL — COMPETÊNCIA */
@@ -1168,6 +1201,14 @@ html = f"""<!DOCTYPE html>
   </div>
   <div style="align-self:flex-end">
     <button class="btn-gf-limpar" onclick="limparGlobalFiltro()">&#10005; Limpar filtros</button>
+  </div>
+  <div style="align-self:flex-end;margin-left:auto">
+    <label style="font-size:11px;font-weight:700;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block">Exportar relatório</label>
+    <div style="display:flex;gap:6px">
+      <button class="btn-gf-export" onclick="exportarRelatorioXLSX()" title="Exportar todas as seções em Excel (3 abas)">&#128196; Excel</button>
+      <button class="btn-gf-export" onclick="exportarRelatorioPDF()" title="Exportar todas as seções em PDF">&#128196; PDF</button>
+      <button class="btn-gf-export" onclick="exportarRelatorioCSV()" title="Exportar todas as seções em CSV">&#128196; CSV</button>
+    </div>
   </div>
   <span id="gf-hint"></span>
 </div>
@@ -1589,6 +1630,12 @@ html = f"""<!DOCTYPE html>
       </div>
     </div>
     <div>
+      <label>Competência</label><br>
+      <select id="fs-comp" onchange="filtrarFornSit()">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div>
       <label>Buscar documento</label><br>
       <input type="text" id="forn-sit-busca" placeholder="Ex: FGTS, CND, TRF3..." oninput="filtrarFornSit()" style="width:220px">
     </div>
@@ -1613,6 +1660,7 @@ html = f"""<!DOCTYPE html>
           <tr>
             <th>Fornecedor</th>
             <th>Documento</th>
+            <th>Competência</th>
             <th>Status</th>
             <th>Vencimento</th>
           </tr>
@@ -1736,7 +1784,7 @@ const CONTRATOS      = {contratos_json};
 // ── KPI DINAMICO ──────────────────────────────────────────────────────────────
 function updateKPICards() {{
   const s  = SIT.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn) && matchesCompGlobal(r.Competencia));
-  const fs = FORN_SIT.filter(r => matchesForn(r["Fornecedor"], r["CNPJ"]));
+  const fs = FORN_SIT.filter(r => matchesForn(r["Fornecedor"], r["CNPJ"]) && matchesCompGlobal(r["Competencia"]));
 
   // Bloco 2: docs esperados
   const docsEspForn = fs.length;
@@ -1846,6 +1894,13 @@ function preencherSelect(selectId, dados, campo) {{
     o.value = v; o.text = v; sel.appendChild(o);
   }});
 }}
+// Formata CPF (11 dígitos) ou CNPJ (14 dígitos) com pontuação
+function fmtDoc(d) {{
+  const n = String(d || "").replace(/[^0-9]/g, "");
+  if (n.length === 11) return n.replace(/([0-9]{{3}})([0-9]{{3}})([0-9]{{3}})([0-9]{{2}})/, "$1.$2.$3-$4");
+  if (n.length === 14) return n.replace(/([0-9]{{2}})([0-9]{{3}})([0-9]{{3}})([0-9]{{4}})([0-9]{{2}})/, "$1.$2.$3/$4-$5");
+  return d || "";
+}}
 // Parseia valor composto "nome|||cnpj" ou simples "nome"
 function parseFornVal(val) {{
   if (!val) return {{ nome: "", cnpj: "" }};
@@ -1946,7 +2001,11 @@ function matchesCompGlobal(rowComp) {{
 }}
 
 function buildCompMultiSelect() {{
-  const comps = [...new Set(SIT.map(r => r["Competencia"] || "A classificar"))].sort();
+  const comps = [...new Set([
+    ...SIT.map(r => r["Competencia"] || "A classificar"),
+    ...FORN_SIT.map(r => r["Competencia"]).filter(Boolean),
+    ...DADOS.map(r => r["Competencia"] || "A classificar")
+  ])].filter(Boolean).sort();
   const list = document.getElementById("gfc-multi-list");
   list.innerHTML = "";
   comps.forEach(comp => {{
@@ -2143,6 +2202,18 @@ buildLfMultiSelect("fs",   buildLfPares([...new Set(FORN_SIT.map(r => r["Fornece
   }});
 }})();
 
+// Popular select de competência R4
+(function() {{
+  const sel = document.getElementById("fs-comp");
+  if (!sel) return;
+  const comps = [...new Set(FORN_SIT.map(r => r["Competencia"]).filter(Boolean))].sort();
+  comps.forEach(c => {{
+    const opt = document.createElement("option");
+    opt.value = opt.textContent = c;
+    sel.appendChild(opt);
+  }});
+}})();
+
 // ── BADGES ────────────────────────────────────────────────────────────────────
 function badgeStatus(s) {{
   if (!s) return "";
@@ -2265,6 +2336,7 @@ function filtrarTabela() {{
   const busca = document.getElementById("filtro-busca").value.toLowerCase();
   pendFiltrado = DADOS.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
+    if (!matchesCompGlobal(r["Competencia"])) return false;
     if (!matchesLocalSet(pendEmpSet, r["Fornecedor"], null)) return false;
     if (area && r["Area"]        !== area) return false;
     if (comp && r["Competencia"] !== comp) return false;
@@ -2277,11 +2349,14 @@ function filtrarTabela() {{
   const tbody = document.getElementById("tabela-body");
   tbody.innerHTML = pendFiltrado.map(r => `
     <tr>
-      <td>${{r["Fornecedor"]}}</td>
+      <td>
+        <div>${{r["Fornecedor"]}}</div>
+        ${{r["CNPJ"] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r["CNPJ"]) + '</div>' : ''}}
+      </td>
       <td>${{badgeArea(r["Area"])}}</td>
       <td><strong>${{r["Documento"]}}</strong></td>
       <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
-      <td style="font-size:12px">${{r["Detalhe"]}}</td>
+      <td style="font-size:12px;min-width:220px;max-width:420px;word-break:break-word">${{r["Detalhe"]}}</td>
     </tr>
   `).join("");
   document.getElementById("tabela-count").textContent =
@@ -2346,11 +2421,14 @@ function clearFsStatSel() {{ clearFsStatSilent(); filtrarFornSit(); }}
 let fornSitFiltrado = [];
 function filtrarFornSit() {{
   const busca = document.getElementById("forn-sit-busca").value.toLowerCase();
+  const comp  = (document.getElementById("fs-comp") || {{}}).value || "";
   const cleanDoc = s => String(s || "").replace(/�/g, "");
   fornSitFiltrado = FORN_SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
+    if (!matchesCompGlobal(r["Competencia"])) return false;
     if (!matchesLocalSet(fsEmpSet, r["Fornecedor"], r["CNPJ"])) return false;
     if (fsStatSet.size > 0 && !fsStatSet.has(r["Status"])) return false;
+    if (comp && r["Competencia"] !== comp) return false;
     if (busca && !cleanDoc(r["Documento"]).toLowerCase().includes(busca)) return false;
     if (activeKpiKey) {{
       const fs = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).forn || [];
@@ -2361,8 +2439,12 @@ function filtrarFornSit() {{
   const tbody = document.getElementById("forn-sit-body");
   tbody.innerHTML = fornSitFiltrado.map(r => `
     <tr>
-      <td>${{r["Fornecedor"]}}</td>
+      <td>
+        <div>${{r["Fornecedor"]}}</div>
+        ${{r["CNPJ"] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r["CNPJ"]) + '</div>' : ''}}
+      </td>
       <td>${{cleanDoc(r["Documento"])}}</td>
+      <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
       <td>${{badgeSit(r["Status"])}}</td>
       <td>${{r["Vencimento"] || "—"}}</td>
     </tr>
@@ -2392,10 +2474,11 @@ function limparFornSit() {{
   clearLfSel("fs", fsEmpSet, () => {{}});
   clearFsStatSilent();
   const busca = document.getElementById("forn-sit-busca"); if (busca) busca.value = "";
+  const comp  = document.getElementById("fs-comp"); if (comp) comp.value = "";
   filtrarFornSit();
 }}
 function exportarFornSitXLSX() {{
-  downloadXLSX(fornSitFiltrado, ["Fornecedor","Documento","Status","Vencimento"], "situacao_empresa_zurich.xlsx");
+  downloadXLSX(fornSitFiltrado, ["Fornecedor","CNPJ","Documento","Competencia","Status","Vencimento"], "situacao_empresa_zurich.xlsx");
 }}
 function exportarFornSitPDF() {{
   const {{ jsPDF }} = window.jspdf;
@@ -2477,7 +2560,7 @@ function exportarFornSitPDF() {{
   doc.save("situacao_empresa_zurich.pdf");
 }}
 function exportarFornSitCSV() {{
-  downloadCSV(fornSitFiltrado, ["Fornecedor","Documento","Status","Vencimento"], "situacao_empresa_zurich.csv");
+  downloadCSV(fornSitFiltrado, ["Fornecedor","CNPJ","Documento","Competencia","Status","Vencimento"], "situacao_empresa_zurich.csv");
 }}
 
 // ── EXPORTAR CSV ──────────────────────────────────────────────────────────────
@@ -2497,7 +2580,7 @@ function exportarSit() {{
     "situacao_documental_zurich.csv");
 }}
 function exportarPend() {{
-  downloadCSV(pendFiltrado, ["Fornecedor","Area","Documento","Competencia","Detalhe"],
+  downloadCSV(pendFiltrado, ["Fornecedor","CNPJ","Area","Documento","Competencia","Detalhe"],
     "pendencias_zurich.csv");
 }}
 
@@ -2516,7 +2599,7 @@ function exportarSitXLSX() {{
     "situacao_documental_zurich.xlsx");
 }}
 function exportarPendXLSX() {{
-  downloadXLSX(pendFiltrado, ["Fornecedor","Area","Documento","Competencia","Detalhe"],
+  downloadXLSX(pendFiltrado, ["Fornecedor","CNPJ","Area","Documento","Competencia","Detalhe"],
     "pendencias_zurich.xlsx");
 }}
 
@@ -2616,7 +2699,7 @@ function exportarSitPDF() {{
   doc.save("situacao_documental_zurich.pdf");
 }}
 function exportarPendPDF() {{
-  downloadPDF(pendFiltrado, ["Fornecedor","Area","Documento","Competencia","Detalhe"],
+  downloadPDF(pendFiltrado, ["Fornecedor","CNPJ","Area","Documento","Competencia","Detalhe"],
     "pendencias_zurich.pdf", "Detalhamento de Pendências — Zurich Airport");
 }}
 
@@ -2774,6 +2857,10 @@ function ctShowLevel(n) {{
 function ctRenderL1(q) {{
   const lq = (q || "").toLowerCase();
   let lista = CONTRATOS.filter(f => !lq || f.nome.toLowerCase().includes(lq) || f.nome_full.toLowerCase().includes(lq));
+  if (selectedFornSet.size > 0) {{
+    const nomes = new Set([...selectedFornSet].map(r => parseFornVal(r).nome));
+    lista = lista.filter(f => nomes.has(f.nome) || nomes.has(f.nome_full));
+  }}
   document.getElementById("ct-l1-count").textContent = lista.length + " fornecedor(es)";
   document.getElementById("ct-cards").innerHTML = lista.map(f => {{
     // Usa a mesma união que o L2 — contratos do CSV + contratos com terceiros vinculados
@@ -2784,6 +2871,7 @@ function ctRenderL1(q) {{
     const more    = nContr > 3 ? ` <span style="color:#999;font-size:10px">+${{nContr-3}}</span>` : "";
     return `<div class="ct-card" onclick="ctRenderL2('${{encodeURIComponent(f.cnpj)}}')">
       <div class="ct-card-name">${{f.nome}}</div>
+      ${{f.cnpj ? '<div style="font-size:11px;color:#999;font-family:monospace;margin:-2px 0 4px">' + fmtDoc(f.cnpj) + '</div>' : ''}}
       <div class="ct-card-codes">
         ${{preview.map(c=>`<span class="ct-code-chip" title="${{c}}">${{c}}</span>`).join("")}}${{more}}
         ${{nContr===0 ? '<span style="color:#bbb;font-size:11px">Sem contratos</span>' : ""}}
@@ -2864,7 +2952,7 @@ function ctRenderL3(ctEnc) {{
     const badgeCls = t.status === "Ativo" ? "badge-conforme" : "badge-nao-enviado";
     return `<tr>
       <td>${{t.nome || "—"}}</td>
-      <td style="font-family:monospace;font-size:12px">${{t.cnpj || "—"}}</td>
+      <td style="font-family:monospace;font-size:12px">${{fmtDoc(t.cnpj) || "—"}}</td>
       <td>${{t.cargo || "—"}}</td>
       <td>${{t.aeroporto || "—"}}</td>
       <td><span class="badge ${{badgeCls}}">${{t.status || "—"}}</span></td>
@@ -2974,6 +3062,108 @@ function toggleSection(id, btn) {{
   btn.textContent = isCollapsed ? '▼ Expandir' : '▲ Recolher';
 }}
 
+// ── EXPORTAÇÃO GLOBAL ─────────────────────────────────────────────────────────
+function _filtroAtivоLabel() {{
+  const fCount = selectedFornSet.size;
+  const cCount = selectedCompSet.size;
+  const parts = [];
+  if (fCount > 0) parts.push(fCount <= 2 ? [...selectedFornSet].map(r => parseFornVal(r).nome).join(", ") : fCount + " fornecedores");
+  if (cCount > 0) parts.push(cCount <= 2 ? [...selectedCompSet].join(", ") : cCount + " competências");
+  return parts.length ? "Filtro: " + parts.join(" · ") : "Todos os fornecedores e competências";
+}}
+
+function exportarRelatorioXLSX() {{
+  const wb = XLSX.utils.book_new();
+
+  const hdR3 = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
+  const wsR3Data = [hdR3, ...sitFiltrado.map(r => hdR3.map(h => r[h] ?? ""))];
+  const wsR3 = XLSX.utils.aoa_to_sheet(wsR3Data);
+  wsR3["!cols"] = hdR3.map(h => ({{wch: Math.max(h.length, 18)}}));
+  XLSX.utils.book_append_sheet(wb, wsR3, "R3 - Terceiros");
+
+  const hdR4 = ["Fornecedor", "Documento", "Competencia", "Status", "Vencimento"];
+  const wsR4Data = [hdR4, ...fornSitFiltrado.map(r => hdR4.map(h => r[h] ?? ""))];
+  const wsR4 = XLSX.utils.aoa_to_sheet(wsR4Data);
+  wsR4["!cols"] = hdR4.map(h => ({{wch: Math.max(h.length, 18)}}));
+  XLSX.utils.book_append_sheet(wb, wsR4, "R4 - Empresa");
+
+  const hdPend = ["Fornecedor", "CNPJ", "Area", "Documento", "Competencia", "Detalhe"];
+  const wsPendData = [hdPend, ...pendFiltrado.map(r => hdPend.map(h => r[h] ?? ""))];
+  const wsPend = XLSX.utils.aoa_to_sheet(wsPendData);
+  wsPend["!cols"] = hdPend.map(h => ({{wch: Math.max(h.length, 18)}}));
+  XLSX.utils.book_append_sheet(wb, wsPend, "Pendencias");
+
+  XLSX.writeFile(wb, "relatorio_zurich.xlsx");
+}}
+
+function exportarRelatorioPDF() {{
+  const {{ jsPDF }} = window.jspdf;
+  const doc = new jsPDF({{ orientation: "landscape", unit: "mm", format: "a4" }});
+  const filtroLabel = _filtroAtivоLabel();
+  let y = 14;
+
+  const _titulo = (txt) => {{
+    doc.setFontSize(13); doc.setTextColor(14, 143, 163);
+    doc.text(txt, 14, y); y += 7;
+    doc.setFontSize(8); doc.setTextColor(100);
+    doc.text(filtroLabel, 14, y); y += 6;
+  }};
+
+  _titulo("R3 — Situação Documental dos Terceiros");
+  const hdR3 = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
+  doc.autoTable({{
+    head: [hdR3],
+    body: sitFiltrado.map(r => hdR3.map(h => String(r[h] ?? ""))),
+    startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
+    headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
+    alternateRowStyles: {{ fillColor: [240, 248, 250] }},
+    margin: {{ left: 10, right: 10 }},
+  }});
+  y = doc.lastAutoTable.finalY + 10;
+
+  if (y > 175) {{ doc.addPage(); y = 14; }}
+  _titulo("R4 — Situação Documental da Empresa");
+  const hdR4 = ["Fornecedor", "CNPJ", "Documento", "Competencia", "Status", "Vencimento"];
+  doc.autoTable({{
+    head: [hdR4],
+    body: fornSitFiltrado.map(r => hdR4.map(h => String(r[h] ?? ""))),
+    startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
+    headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
+    alternateRowStyles: {{ fillColor: [240, 248, 250] }},
+    margin: {{ left: 10, right: 10 }},
+  }});
+  y = doc.lastAutoTable.finalY + 10;
+
+  if (y > 175) {{ doc.addPage(); y = 14; }}
+  _titulo("Pendências");
+  const hdPend = ["Fornecedor", "CNPJ", "Area", "Documento", "Competencia", "Detalhe"];
+  doc.autoTable({{
+    head: [hdPend],
+    body: pendFiltrado.map(r => hdPend.map(h => String(r[h] ?? ""))),
+    startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
+    headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
+    alternateRowStyles: {{ fillColor: [240, 248, 250] }},
+    margin: {{ left: 10, right: 10 }},
+  }});
+
+  doc.save("relatorio_zurich.pdf");
+}}
+
+function exportarRelatorioCSV() {{
+  const hdR3  = ["Secao","Fornecedor","CNPJ","Terceiro","Documento","Competencia","Status","Vencimento"];
+  const rows = [
+    hdR3,
+    ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
+    ...fornSitFiltrado.map(r=> ["R4-Empresa",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
+    ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
+  ];
+  const lines = rows.map(r => r.map(v => csvEscape(v)).join(","));
+  const blob = new Blob([lines.join("\\n")], {{type: "text/csv;charset=utf-8;"}});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "relatorio_zurich.csv";
+  a.click(); URL.revokeObjectURL(url);
+}}
+
 // ── FILTRO GLOBAL ─────────────────────────────────────────────────────────────
 function expandSection(id) {{
   const el = document.getElementById(id);
@@ -2994,6 +3184,7 @@ function applyGlobalFilter() {{
   filtrarFornSit();
   updateKPICards();
   renderLevel1();
+  ctRenderL1();
 
   // Expande secoes quando filtro ativo
   if (fCount > 0 || cCount > 0) {{
