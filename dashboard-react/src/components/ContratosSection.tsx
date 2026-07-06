@@ -333,6 +333,7 @@ export function ContratosSection({ data }: Props) {
               contrato{f.totalContratos !== 1 ? 's' : ''}
             </div>
             <div className="text-[12px] font-bold text-[#333] mt-1.5 leading-snug min-h-[32px]">{f.nome}</div>
+            {f.cnpj && <div className="text-[11px] text-[#999] font-mono mt-0.5">{fmtDoc(f.cnpj)}</div>}
             <div className="text-[11px] text-[#888] mt-1">
               {f.totalTerceiros > 0
                 ? `${f.totalTerceiros} terceiro${f.totalTerceiros !== 1 ? 's' : ''} vinculado${f.totalTerceiros !== 1 ? 's' : ''}`

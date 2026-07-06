@@ -51,7 +51,8 @@ function normCNPJ(v: unknown): string {
   const withoutFloat = s.endsWith('.0') ? s.slice(0, -2) : s
   const digits = withoutFloat.replace(/[.\-/]/g, '')
   if (/^\d+$/.test(digits)) {
-    return digits.length < 14 ? digits.padStart(14, '0') : digits
+    if (digits.length <= 11) return digits        // CPF — não padeia para tamanho de CNPJ
+    return digits.padStart(14, '0')              // CNPJ — normaliza para 14 dígitos
   }
   return withoutFloat
 }
@@ -333,7 +334,8 @@ export function processAllData(
         Documento: doc,
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
-        Competencia: (rawComp && rawComp !== 'nan') ? rawComp : '',
+        // Docs de busca automática nunca exibem Competência — só Vencimento é relevante
+        Competencia: autoEntry ? '' : ((rawComp && rawComp !== 'nan') ? rawComp : ''),
       }
     })
     .filter((r) => r !== null) as FornSitRow[]
@@ -430,7 +432,7 @@ export function processAllData(
       Area: String(row[colAreaPend] || '').trim(),
       Documento: extractDoc(row),
       Competencia: comp || 'A classificar',
-      Detalhe: String(row[colPendTxt] ?? '').slice(0, 250),
+      Detalhe: String(row[colPendTxt] ?? '').trim(),
     }
   })
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()
@@ -566,7 +568,7 @@ export function processAllData(
   rawTerc.forEach(row => {
     const cnpj = normCNPJ(row[colCNPJTercForn])
     const nomeTerceiro = String(row[colRsTercNome] ?? '').trim()
-    const cpfTerceiro = String(row[colCPFTerc] ?? '').trim()
+    const cpfTerceiro = normCNPJ(row[colCPFTerc])
     const codContratosRaw = String(row[colCodContrato] ?? '').trim()
     const cargo = String(row[colCargo] ?? '').trim()
     const status = String(row[colStatusTerc2] ?? '').trim()

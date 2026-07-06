@@ -19,6 +19,13 @@ interface Props {
   geradoEm?: string
 }
 
+function fmtCNPJ(d: string): string {
+  const n = d.replace(/\D/g, '')
+  if (n.length === 11) return n.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  if (n.length === 14) return n.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  return d
+}
+
 const STATUS_OPTIONS: { value: string; label: string; active: string; inactive: string }[] = [
   { value: 'Aprovado',    label: 'Aprovado',          active: 'bg-[#28A745] text-white',                  inactive: 'bg-white text-[#28A745] border border-[#28A745] hover:bg-[#eafaf1]' },
   { value: 'Reprovado',   label: 'Reprovado',         active: 'bg-[#DC3545] text-white',                  inactive: 'bg-white text-[#DC3545] border border-[#DC3545] hover:bg-[#fdf2f3]' },
@@ -126,7 +133,7 @@ export function SituacaoEmpresaSection({
 
   function clear() { setFilt(''); setCompFilt(''); setStatFilters(new Set()); setBusca('') }
 
-  const rows = filtered.map(r => ({ Fornecedor: r.Fornecedor, Documento: r.Documento, Competencia: r.Competencia, Status: r.Status, Vencimento: r.Vencimento }))
+  const rows = filtered.map(r => ({ Fornecedor: r.Fornecedor, CNPJ: fmtCNPJ(r.CNPJ_Forn), Documento: r.Documento, Competencia: r.Competencia, Status: r.Status, Vencimento: r.Vencimento }))
 
   function handlePDF() {
     setPdfLoading(true)
@@ -229,7 +236,10 @@ export function SituacaoEmpresaSection({
             <tbody>
               {filtered.map((r, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
-                  <td className="px-3 py-2">{r.Fornecedor}</td>
+                  <td className="px-3 py-2">
+                    <div className="font-medium">{r.Fornecedor}</div>
+                    {r.CNPJ_Forn && <div className="text-[11px] text-[#999] font-mono mt-0.5">{fmtCNPJ(r.CNPJ_Forn)}</div>}
+                  </td>
                   <td className="px-3 py-2">{r.Documento}</td>
                   <td className="px-3 py-2">
                     {r.Competencia

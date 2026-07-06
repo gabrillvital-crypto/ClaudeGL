@@ -38,6 +38,13 @@ function areaBadge(a: string) {
   )
 }
 
+function fmtCNPJ(d: string): string {
+  const n = d.replace(/\D/g, '')
+  if (n.length === 11) return n.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  if (n.length === 14) return n.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  return d
+}
+
 export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }: Props) {
   const [filt, setFilt] = useState('')
   const [area, setArea] = useState('')
@@ -71,6 +78,7 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
 
   const rows = filtered.map(r => ({
     Fornecedor: r.Fornecedor,
+    CNPJ: fmtCNPJ(r.CNPJ_Forn),
     Area: r.Area,
     Documento: r.Documento,
     Competencia: r.Competencia,
@@ -135,7 +143,10 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
             <tbody>
               {filtered.map((r, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
-                  <td className="px-3 py-2">{r.Fornecedor}</td>
+                  <td className="px-3 py-2">
+                    <div className="font-medium">{r.Fornecedor}</div>
+                    {r.CNPJ_Forn && <div className="text-[11px] text-[#999] font-mono mt-0.5">{fmtCNPJ(r.CNPJ_Forn)}</div>}
+                  </td>
                   <td className="px-3 py-2">{areaBadge(r.Area)}</td>
                   <td className="px-3 py-2 font-semibold">{r.Documento}</td>
                   <td className="px-3 py-2">
@@ -143,7 +154,7 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
                       ? <span className="bg-[#e8f7fa] text-[#0E8FA3] text-[11px] px-2 py-0.5 rounded">{r.Competencia}</span>
                       : <span className="text-[#ccc]">—</span>}
                   </td>
-                  <td className="px-3 py-2 text-[12px] text-[#666] max-w-xs break-words">{r.Detalhe}</td>
+                  <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '240px', maxWidth: '420px' }}>{r.Detalhe}</td>
                 </tr>
               ))}
               {filtered.length === 0 && (

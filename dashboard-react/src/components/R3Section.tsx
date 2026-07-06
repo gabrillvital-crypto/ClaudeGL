@@ -73,7 +73,9 @@ export function R3Section({ data, geradoEm = '' }: Props) {
     () =>
       filteredData.map(r => ({
         Fornecedor: r.Fornecedor,
+        CNPJ_Forn: r.CNPJ_Forn,
         Terceiro: r.Terceiro,
+        CNPJ_Terceiro: r.CNPJ_Terceiro,
         Documento: r.Documento,
         Competencia: r.Competencia,
         Status: r.Status,
