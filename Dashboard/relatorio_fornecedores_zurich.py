@@ -402,6 +402,16 @@ if _sit_forn_ok:
             axis=1
         )
         forn_sit_tabela.loc[_is_auto_mask, "Competencia"] = ""
+    # Apenas estes docs exibem Competência no R4 — todos os demais ficam em branco
+    _DOCS_COM_COMP_R4 = {
+        "GFD - GUIA DO FGTS DIGITAL MENSAL",
+        "DCTFWEB",
+        "FOPAG - (FOLHA DE PAGAMENTO + RESUMO)",
+        "COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS",
+    }
+    _doc_upper_r4 = forn_sit_tabela["Documento"].str.strip().str.upper()
+    _sem_comp_r4  = ~_doc_upper_r4.isin({d.upper() for d in _DOCS_COM_COMP_R4})
+    forn_sit_tabela.loc[_sem_comp_r4, "Competencia"] = ""
     forn_sit_tabela["Vencimento"] = pd.to_datetime(
         forn_sit_tabela["Vencimento"], errors="coerce"
     ).dt.strftime("%d/%m/%Y").fillna("")
