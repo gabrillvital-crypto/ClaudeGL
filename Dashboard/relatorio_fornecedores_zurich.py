@@ -265,7 +265,7 @@ if _col_cnpj_sit in df_sit_calc.columns:
             if str(v).strip() not in ("", "nan", "0")
         )))
     )
-    forn_cnpj_map = {k: v for k, v in _grp.items() if len(v) > 1}
+    forn_cnpj_map = {k: v for k, v in _grp.items() if len(v) >= 1}
 else:
     forn_cnpj_map = {}
 forn_cnpj_json = json.dumps(forn_cnpj_map, ensure_ascii=False)
@@ -445,7 +445,7 @@ if _os.path.exists(FORNECEDORES_CSV):
     _cad_grp = df_forn_geral.groupby(col_rs_forn)[col_cnpj_forn].apply(
         lambda x: sorted(set(str(v).strip() for v in x.dropna() if str(v).strip() not in ("", "nan")))
     )
-    forn_cnpj_map.update({k: v for k, v in _cad_grp.items() if len(v) > 1})
+    forn_cnpj_map.update({k: v for k, v in _cad_grp.items() if len(v) >= 1})
     forn_cnpj_json = json.dumps(forn_cnpj_map, ensure_ascii=False)
     all_cadastro_names_json = json.dumps(sorted(df_forn_geral[col_rs_forn].dropna().unique().tolist()), ensure_ascii=False)
 else:
@@ -561,6 +561,16 @@ contratos_list = sorted(
     key=lambda x: x["nome"]
 )
 contratos_json = json.dumps(contratos_list, ensure_ascii=False)
+
+# Enriquecer forn_cnpj_map com _contratos_map (fonte autoritativa — cobre todos os fornecedores)
+_ct_nome_cnpjs: dict = {}
+for _ct_entry in _contratos_map.values():
+    _n, _c = _ct_entry.get("nome", ""), _ct_entry.get("cnpj", "")
+    if _n and _c:
+        _ct_nome_cnpjs.setdefault(_n, set()).add(_c)
+for _n, _cnpj_set in _ct_nome_cnpjs.items():
+    forn_cnpj_map[_n] = sorted(set(forn_cnpj_map.get(_n, []) + list(_cnpj_set)))
+forn_cnpj_json = json.dumps(forn_cnpj_map, ensure_ascii=False)
 
 # ── SIMULAÇÃO COM DADOS DO BD (dados simulados para demo) ─────────────────────
 np.random.seed(42)
@@ -1935,13 +1945,13 @@ function buildFornMultiSelect() {{
     if (isDup) {{
       cnpjs.forEach(cnpj => {{
         const key = nome + "|||" + cnpj;
-        if (!seen.has(key)) {{ seen.add(key); pares.push({{key, label: nome + " (" + cnpj + ")"}}); }}
+        if (!seen.has(key)) {{ seen.add(key); pares.push({{key, label: nome + " (" + fmtDoc(cnpj) + ")"}}); }}
       }});
     }} else {{
       if (!seen.has(nome)) {{
         seen.add(nome);
         const cnpj = cnpjs[0] || "";
-        pares.push({{key: nome, label: cnpj ? nome + " (" + cnpj + ")" : nome}});
+        pares.push({{key: nome, label: cnpj ? nome + " (" + fmtDoc(cnpj) + ")" : nome}});
       }}
     }}
   }});
