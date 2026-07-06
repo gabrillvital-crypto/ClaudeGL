@@ -266,6 +266,15 @@ export function processAllData(
   //   ALERTA    → Alerta    (busca não executou — verificar manualmente)
   //   NEUTRO/vazio → usar "Situação Análise Documento": APROVADO→Aprovado, REPROVADO→Reprovado, else→Em análise
   //   Quando doc aparece em busca_auto: busca_auto tem prioridade (Situação Documento busca_auto + Status sitForn)
+
+  // Apenas estes documentos exibem Competência no R4 — todos os demais ficam em branco
+  const DOCS_COM_COMP_R4 = new Set([
+    'GFD - GUIA DO FGTS DIGITAL MENSAL',
+    'DCTFWEB',
+    'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
+    'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
+  ])
+
   const forn_sit: FornSitRow[] = rawFornSit
     .map(row => {
       const cnpj = colCnpjR4 ? normCNPJ(row[colCnpjR4]) : ''
@@ -328,14 +337,15 @@ export function processAllData(
       }
       if (!status) return null
       const rawComp = colMarcasR4 ? String(row[colMarcasR4] ?? '').trim() : ''
+      const docAllowsComp = DOCS_COM_COMP_R4.has(doc.toUpperCase().trim())
       return {
         Fornecedor: abbrev(String(row[colR4RS] || '')),
         CNPJ_Forn: cnpj,
         Documento: doc,
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
-        // Docs de busca automática nunca exibem Competência — só Vencimento é relevante
-        Competencia: autoEntry ? '' : ((rawComp && rawComp !== 'nan') ? rawComp : ''),
+        // Competência só aparece para os 4 docs autorizados e nunca para busca_auto
+        Competencia: (autoEntry || !docAllowsComp) ? '' : ((rawComp && rawComp !== 'nan') ? rawComp : ''),
       }
     })
     .filter((r) => r !== null) as FornSitRow[]
