@@ -286,12 +286,28 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
 export function ContratosSection({ data }: Props) {
   const [selForn, setSelForn] = useState<FornContratoItem | null>(null)
   const [busca, setBusca] = useState('')
+  const [buscaCont, setBuscaCont] = useState('')
 
   const dataFiltrada = useMemo(() => {
     const q = busca.trim().toLowerCase()
-    if (!q) return data
-    return data.filter(f => f.nome.toLowerCase().includes(q))
-  }, [data, busca])
+    const qc = buscaCont.trim().toLowerCase()
+    let res = data
+    if (q) {
+      const qDigits = q.replace(/\D/g, '')
+      res = res.filter(f =>
+        f.nome.toLowerCase().includes(q) ||
+        (qDigits && f.cnpj && f.cnpj.includes(qDigits))
+      )
+    }
+    if (qc) {
+      res = res.filter(f =>
+        f.contratos.some(c => c.codigo.toLowerCase().includes(qc))
+      )
+    }
+    return res
+  }, [data, busca, buscaCont])
+
+  function clearAll() { setBusca(''); setBuscaCont('') }
 
   if (selForn) {
     return (
@@ -303,23 +319,37 @@ export function ContratosSection({ data }: Props) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-5">
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <p className="text-[13px] text-[#666] flex-1">
-          Clique num fornecedor para ver os contratos. Clique num contrato para ver os terceiros vinculados.
-        </p>
-        <input
-          type="text"
-          value={busca}
-          onChange={e => setBusca(e.target.value)}
-          placeholder="Buscar fornecedor..."
-          className="border border-[#e0e0e0] rounded-lg px-3 py-1.5 text-[13px] text-[#333] outline-none focus:border-[#0E8FA3] w-64"
-        />
-        {busca && (
-          <button onClick={() => setBusca('')}
-            className="text-[11px] text-[#888] hover:text-[#333] cursor-pointer border-0 bg-transparent underline">
-            Limpar
-          </button>
-        )}
+      <p className="text-[13px] text-[#666] mb-3">
+        Clique num fornecedor para ver os contratos. Clique num contrato para ver os terceiros vinculados.
+      </p>
+      <div className="flex items-end gap-3 mb-4 flex-wrap">
+        <div className="flex flex-col gap-1">
+          <label className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide">Buscar Fornecedor</label>
+          <input
+            type="text"
+            value={busca}
+            onChange={e => setBusca(e.target.value)}
+            placeholder="Nome ou CNPJ..."
+            className="border border-[#cde] rounded-lg px-3 py-1.5 text-[13px] text-[#333] outline-none focus:border-[#0E8FA3] w-56"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide">Buscar Contrato</label>
+          <input
+            type="text"
+            value={buscaCont}
+            onChange={e => setBuscaCont(e.target.value)}
+            placeholder="Código do contrato..."
+            className="border border-[#cde] rounded-lg px-3 py-1.5 text-[13px] text-[#333] outline-none focus:border-[#0E8FA3] w-56"
+          />
+        </div>
+        <button onClick={clearAll}
+          className="bg-[#0E8FA3] text-white font-bold text-[13px] px-4 py-1.5 rounded-lg hover:bg-[#0a7a8d] border-0 cursor-pointer h-[34px]">
+          Limpar
+        </button>
+        <span className="text-[12px] text-[#999] self-center">
+          {dataFiltrada.length} fornecedor{dataFiltrada.length !== 1 ? 'es' : ''}
+        </span>
       </div>
 
       <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
@@ -356,7 +386,7 @@ export function ContratosSection({ data }: Props) {
         ))}
         {dataFiltrada.length === 0 && (
           <p className="text-[#999] text-[13px] text-center py-6 col-span-full">
-            {busca ? `Nenhum fornecedor encontrado para "${busca}"` : 'Nenhum dado disponível'}
+            {busca || buscaCont ? 'Nenhum fornecedor encontrado para os filtros aplicados' : 'Nenhum dado disponível'}
           </p>
         )}
       </div>
