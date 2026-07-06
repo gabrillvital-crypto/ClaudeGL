@@ -78,6 +78,7 @@ interface Props {
   docs_em_analise: number
   docs_vencidos: number
   hideGlobal?: boolean
+  hideDocsEsp?: boolean
   activeKpi?: string | null
   onKpiClick?: (key: string) => void
 }
@@ -157,8 +158,9 @@ export function KPIGrid(props: Props) {
     },
   ]
 
-  const visibleKpis = props.hideGlobal ? activeKpis : [...globalKpis, ...activeKpis]
-  const cols = visibleKpis.length <= 8 ? 'repeat(4, 1fr)' : 'repeat(5, 1fr)'
+  const finalActiveKpis = props.hideDocsEsp ? activeKpis.slice(2) : activeKpis
+  const visibleKpis = props.hideGlobal ? finalActiveKpis : [...globalKpis, ...finalActiveKpis]
+  const cols = visibleKpis.length <= 6 ? 'repeat(3, 1fr)' : visibleKpis.length <= 8 ? 'repeat(4, 1fr)' : 'repeat(5, 1fr)'
 
   return (
     <div className="grid gap-3 mb-7" style={{ gridTemplateColumns: cols }}>

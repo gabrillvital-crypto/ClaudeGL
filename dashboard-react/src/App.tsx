@@ -253,8 +253,8 @@ export function App() {
 
       <div className="max-w-[1400px] mx-auto px-5 py-6">
 
-        {/* KPIs — 2 globais somem quando filtro ativo */}
-        <KPIGrid {...kpis} hideGlobal={hasFilter} activeKpi={activeKpi} onKpiClick={toggleKpi} />
+        {/* KPIs — 2 globais somem com qualquer filtro; docs esperados somem quando comp ativo */}
+        <KPIGrid {...kpis} hideGlobal={hasFilter} hideDocsEsp={selectedCompSet.size > 0} activeKpi={activeKpi} onKpiClick={toggleKpi} />
 
         {/* 3 donuts de conformidade */}
         <ConformidadeCharts sitData={sitFiltered} fornData={fornSitFiltered} />

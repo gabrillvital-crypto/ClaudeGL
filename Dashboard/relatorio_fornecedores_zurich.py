@@ -1252,13 +1252,13 @@ html = f"""<!DOCTYPE html>
       <div class="kpi-val" id="kpi-exec-plat">{total_forn_com_execucao}</div>
       <div class="kpi-label">Fornecedores com<br>Execução na Plataforma</div>
     </div>
-    <!-- Bloco 2: docs esperados — atualizam com filtro -->
-    <div class="kpi-card"
+    <!-- Bloco 2: docs esperados — somem quando filtro de competência ativo -->
+    <div class="kpi-card" id="kpi-card-docs-esp-forn"
          data-tooltip="Quantidade total de documentos que a empresa contratada precisa enviar para a plataforma.">
       <div class="kpi-val" id="kpi-docs-esp-forn">{r4_total}</div>
       <div class="kpi-label">Docs Esperados<br>Fornecedor</div>
     </div>
-    <div class="kpi-card"
+    <div class="kpi-card" id="kpi-card-docs-esp-terc"
          data-tooltip="Quantidade total de documentos exigidos dos funcionários ou prestadores vinculados ao fornecedor.">
       <div class="kpi-val" id="kpi-docs-esp-terc">{total_docs_sit}</div>
       <div class="kpi-label">Docs Esperados<br>Terceiros</div>
@@ -3269,6 +3269,13 @@ function applyGlobalFilter() {{
   ["kpi-card-total-forn","kpi-card-exec-plat"].forEach(id => {{
     const el = document.getElementById(id);
     if (el) el.style.display = displayGlobal;
+  }});
+
+  // Cards "docs esperados" somem quando filtro de competência ativo
+  const displayEsp = cCount > 0 ? "none" : "";
+  ["kpi-card-docs-esp-forn","kpi-card-docs-esp-terc"].forEach(id => {{
+    const el = document.getElementById(id);
+    if (el) el.style.display = displayEsp;
   }});
 }}
 
