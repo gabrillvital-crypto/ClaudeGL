@@ -941,10 +941,14 @@ html = f"""<!DOCTYPE html>
   .ct-contract-code {{ font-size: 14px; font-weight: 700; color: {COR_TEAL}; min-width: 140px; }}
   .ct-contract-meta {{ flex: 1; font-size: 12px; color: #666; }}
   .ct-contract-arrow {{ font-size: 22px; color: #bbb; font-weight: 300; }}
-  .ct-search-wrap {{ display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }}
+  .ct-search-wrap {{ display: flex; align-items: flex-end; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }}
+  .ct-search-wrap .ct-search-field {{ display: flex; flex-direction: column; gap: 4px; }}
+  .ct-search-wrap .ct-search-field label {{
+    font-size: 11px; font-weight: 700; color: {COR_TEAL}; text-transform: uppercase; letter-spacing: .04em;
+  }}
   .ct-search-wrap input {{
     border: 1px solid #cde; border-radius: 6px; padding: 7px 12px;
-    font-size: 13px; font-family: Calibri, Arial, sans-serif; width: 280px;
+    font-size: 13px; font-family: Calibri, Arial, sans-serif; width: 240px;
   }}
   .ct-search-wrap input:focus {{ outline: 2px solid {COR_TEAL}; border-color: {COR_TEAL}; }}
   .ct-chip-filter {{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }}
@@ -1382,8 +1386,16 @@ html = f"""<!DOCTYPE html>
     <!-- L1: grid de cards de fornecedores -->
     <div id="ct-level1">
       <div class="ct-search-wrap">
-        <input type="text" id="ct-search" placeholder="Buscar fornecedor..." oninput="ctFilterL1(this.value)">
-        <span id="ct-l1-count" style="font-size:12px;color:#999"></span>
+        <div class="ct-search-field">
+          <label for="ct-search">Buscar Fornecedor</label>
+          <input type="text" id="ct-search" placeholder="Nome ou CNPJ..." oninput="ctRenderL1()">
+        </div>
+        <div class="ct-search-field">
+          <label for="ct-search-cont">Buscar Contrato</label>
+          <input type="text" id="ct-search-cont" placeholder="Código do contrato..." oninput="ctRenderL1()">
+        </div>
+        <button onclick="ctClearSearch()" style="background:{COR_TEAL};color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;height:36px">Limpar</button>
+        <span id="ct-l1-count" style="font-size:12px;color:#999;align-self:center"></span>
       </div>
       <div class="ct-cards-grid" id="ct-cards"></div>
     </div>
@@ -2874,9 +2886,26 @@ function ctShowLevel(n) {{
   [1,2,3].forEach(i => document.getElementById("ct-level"+i).style.display = i===n ? "block" : "none");
 }}
 
-function ctRenderL1(q) {{
-  const lq = (q || "").toLowerCase();
-  let lista = CONTRATOS.filter(f => !lq || f.nome.toLowerCase().includes(lq) || f.nome_full.toLowerCase().includes(lq));
+function ctRenderL1() {{
+  const qForn = (document.getElementById("ct-search")?.value || "").toLowerCase().trim();
+  const qCont = (document.getElementById("ct-search-cont")?.value || "").toLowerCase().trim();
+  let lista = CONTRATOS;
+  // Filtro fornecedor — busca em nome, nome_full e CNPJ (dígitos)
+  if (qForn) {{
+    const qDigits = qForn.replace(/\D/g, "");
+    lista = lista.filter(f =>
+      f.nome.toLowerCase().includes(qForn) ||
+      f.nome_full.toLowerCase().includes(qForn) ||
+      (qDigits && f.cnpj && f.cnpj.includes(qDigits))
+    );
+  }}
+  // Filtro contrato — busca nos códigos de contrato do fornecedor
+  if (qCont) {{
+    lista = lista.filter(f => {{
+      const allCt = [...new Set([...f.contratos, ...Object.keys(f.terceiros_by_contract)])];
+      return allCt.some(c => c.toLowerCase().includes(qCont));
+    }});
+  }}
   if (selectedFornSet.size > 0) {{
     const nomes = new Set([...selectedFornSet].map(r => parseFornVal(r).nome));
     lista = lista.filter(f => nomes.has(f.nome) || nomes.has(f.nome_full));
@@ -2901,7 +2930,13 @@ function ctRenderL1(q) {{
   }}).join("") || '<div class="drill-hint">Nenhum fornecedor encontrado</div>';
 }}
 
-function ctFilterL1(q) {{ ctRenderL1(q); }}
+function ctClearSearch() {{
+  const s = document.getElementById("ct-search");
+  const sc = document.getElementById("ct-search-cont");
+  if (s) s.value = "";
+  if (sc) sc.value = "";
+  ctRenderL1();
+}}
 
 function ctRenderL2(cnpjEnc) {{
   ctShowLevel(2);
@@ -2985,7 +3020,7 @@ function ctRenderL3(ctEnc) {{
 
 function ctBackToL1() {{
   ctShowLevel(1);
-  ctRenderL1(document.getElementById("ct-search").value);
+  ctRenderL1();
 }}
 
 // Exportações L2 — listagem de terceiros do fornecedor (todos os contratos visíveis)
@@ -3073,7 +3108,7 @@ function ctExportL3PDF() {{
 }}
 
 // Init L1
-ctRenderL1("");
+ctRenderL1();
 
 // ── TOGGLE SECOES ─────────────────────────────────────────────────────────────
 function toggleSection(id, btn) {{
