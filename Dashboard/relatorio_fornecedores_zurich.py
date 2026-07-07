@@ -211,6 +211,21 @@ tabela = df_pend[["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas
 tabela.columns = ["Fornecedor", "Status", "Area", "Documento", "Competencia", "Detalhe"]
 tabela["Competencia"] = tabela["Competencia"].fillna("").astype(str).str.strip()
 tabela["Competencia"] = tabela["Competencia"].replace("nan", "").replace("", "A classificar")
+# Regra: apenas 4 docs exibem Competência nas pendências de Fornecedor (Area=DOCUMENTOS)
+_DOCS_COM_COMP_PEND = {
+    "GFD - GUIA DO FGTS DIGITAL MENSAL",
+    "DCTFWEB",
+    "FOPAG - (FOLHA DE PAGAMENTO + RESUMO)",
+    "COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS",
+}
+_eh_forn_pend  = tabela["Area"] == "DOCUMENTOS"
+_doc_upper_pen = tabela["Documento"].str.strip().str.upper()
+_sem_comp_pen  = _eh_forn_pend & ~_doc_upper_pen.isin({d.upper() for d in _DOCS_COM_COMP_PEND})
+tabela.loc[_sem_comp_pen, "Competencia"] = "Não possui competência"
+# ASO, Ordens de Serviço e Ficha de EPI nunca possuem Competência (qualquer área)
+_DOCS_SEM_COMP_TERC = {"aso", "ordens de serviço", "ficha de epi"}
+_mask_sc_terc = tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_TERC)
+tabela.loc[_mask_sc_terc, "Competencia"] = "Não possui competência"
 tabela["Detalhe"] = tabela["Detalhe"].astype(str).str.strip()
 tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(
     lambda v: re.sub(r'\D', '', str(v).split('.')[0])
@@ -253,6 +268,10 @@ sit_tabela["Vencimento"] = pd.to_datetime(sit_tabela["Vencimento"], errors="coer
 _DOCS_SEM_VENCIMENTO = {"ficha de epi", "cartão ponto com total de horas extras ou noturnas"}
 _mask_sem_venc = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_VENCIMENTO)
 sit_tabela.loc[_mask_sem_venc, "Vencimento"] = ""
+# Documentos sem Competência no R3 — exibem só Vencimento (se houver)
+_DOCS_SEM_COMP_R3 = {"aso", "ordens de serviço", "ficha de epi"}
+_mask_sem_comp_r3 = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_R3)
+sit_tabela.loc[_mask_sem_comp_r3, "Competencia"] = ""
 
 # Mapa Python de duplicatas: nome_abrev -> [cnpj1, cnpj2, ...] (só nomes com 2+ CNPJs distintos)
 _col_cnpj_sit = "Fornecedor CPF/CNPJ"
@@ -904,7 +923,8 @@ html = f"""<!DOCTYPE html>
   .badge-nao-enviado        {{ background: #f0f0f0; color: {COR_CINZA}; }}
   .badge-aprovado           {{ background: #d4edda; color: {COR_VERDE}; }}
   .badge-reprovado          {{ background: #ffeaea; color: {COR_VERMELHO}; }}
-  .badge-competencia   {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 11px; padding: 2px 7px; border-radius: 8px; }}
+  .badge-competencia     {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 11px; padding: 2px 7px; border-radius: 8px; }}
+  .badge-sem-competencia {{ background: #f0f0f0; color: #999; font-size: 11px; padding: 2px 7px; border-radius: 8px; font-style: italic; }}
   .badge-irregular     {{ background: #fff0e0; color: #b35a00; }}
   .badge-alerta        {{ background: #fef3c7; color: #d97706; }}
   .kpi-card.amber      {{ border-top-color: #d97706; }}
@@ -2387,7 +2407,11 @@ function filtrarTabela() {{
       </td>
       <td>${{badgeArea(r["Area"])}}</td>
       <td><strong>${{r["Documento"]}}</strong></td>
-      <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
+      <td>${{r["Competencia"] === "Não possui competência"
+        ? '<span class="badge-sem-competencia">Não possui competência</span>'
+        : r["Competencia"]
+          ? '<span class="badge-competencia">' + r["Competencia"] + '</span>'
+          : '<span style="color:#aaa">—</span>'}}</td>
       <td style="font-size:12px;min-width:220px;max-width:420px;word-break:break-word">${{r["Detalhe"]}}</td>
     </tr>
   `).join("");
