@@ -221,6 +221,9 @@ export function processAllData(
     'cartão ponto com total de horas extras ou noturnas',
   ])
 
+  // Documentos R3 sem Competência — exibem só Vencimento (se houver)
+  const DOCS_SEM_COMP_R3 = new Set(['aso', 'ordens de serviço', 'ficha de epi'])
+
   // ── R3 — Situação por Terceiro ────────────────────────────────────────────
   const sitCalc: SitTerceiroRow[] = rawSit
     .map(row => {
@@ -228,7 +231,8 @@ export function processAllData(
       if (!status) return null
       const comp = colMarcasSit ? String(row[colMarcasSit] ?? '').trim().replace(/^nan$/, '') : ''
       const docNome = String(row['Documento'] ?? '').trim()
-      const venc = DOCS_SEM_VENCIMENTO.has(docNome.toLowerCase())
+      const docLower = docNome.toLowerCase()
+      const venc = DOCS_SEM_VENCIMENTO.has(docLower)
         ? ''
         : fmtDate(row[colDatVenc] ?? row['Data de Vencimento'])
       return {
@@ -239,7 +243,7 @@ export function processAllData(
         Documento: docNome,
         Status: status,
         Vencimento: venc,
-        Competencia: comp || 'A classificar',
+        Competencia: DOCS_SEM_COMP_R3.has(docLower) ? '' : (comp || 'A classificar'),
       }
     })
     .filter((r): r is SitTerceiroRow => r !== null)
@@ -432,16 +436,35 @@ export function processAllData(
 
   const total_forn_com_execucao = total_forn_geral - total_sem_execucao
 
+  // Regras de Competência para pendências
+  const DOCS_COM_COMP_PEND = new Set([
+    'GFD - GUIA DO FGTS DIGITAL MENSAL',
+    'DCTFWEB',
+    'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
+    'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
+  ])
+  const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO', 'FICHA DE EPI'])
+
   // ── Tabela de pendências ───────────────────────────────────────────────────
   const tabela: PendRow[] = rawPend.map(row => {
     const comp = String(row[colMarcasPend] ?? '').trim().replace(/^nan$/, '')
+    const area = String(row[colAreaPend] || '').trim()
+    const docUpper = extractDoc(row)
+    let competencia: string
+    if (DOCS_SEM_COMP_PEND.has(docUpper)) {
+      competencia = 'Não possui competência'
+    } else if (area === 'DOCUMENTOS' && !DOCS_COM_COMP_PEND.has(docUpper)) {
+      competencia = 'Não possui competência'
+    } else {
+      competencia = comp || 'A classificar'
+    }
     return {
       Fornecedor: abbrev(String(row[colRsPend] || '')),
       CNPJ_Forn: colCNPJPend ? normCNPJ(row[colCNPJPend]) : '',
       Status: String(row[colSitPend] || '').trim(),
-      Area: String(row[colAreaPend] || '').trim(),
-      Documento: extractDoc(row),
-      Competencia: comp || 'A classificar',
+      Area: area,
+      Documento: docUpper,
+      Competencia: competencia,
       Detalhe: String(row[colPendTxt] ?? '').trim(),
     }
   })

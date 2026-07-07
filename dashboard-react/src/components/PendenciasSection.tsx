@@ -150,9 +150,11 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
                   <td className="px-3 py-2">{areaBadge(r.Area)}</td>
                   <td className="px-3 py-2 font-semibold">{r.Documento}</td>
                   <td className="px-3 py-2">
-                    {r.Competencia
-                      ? <span className="bg-[#e8f7fa] text-[#0E8FA3] text-[11px] px-2 py-0.5 rounded">{r.Competencia}</span>
-                      : <span className="text-[#ccc]">—</span>}
+                    {r.Competencia === 'Não possui competência'
+                      ? <span className="bg-[#f0f0f0] text-[#999] text-[11px] px-2 py-0.5 rounded italic">{r.Competencia}</span>
+                      : r.Competencia
+                        ? <span className="bg-[#e8f7fa] text-[#0E8FA3] text-[11px] px-2 py-0.5 rounded">{r.Competencia}</span>
+                        : <span className="text-[#ccc]">—</span>}
                   </td>
                   <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '240px', maxWidth: '420px' }}>{r.Detalhe}</td>
                 </tr>
