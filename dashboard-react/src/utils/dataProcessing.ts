@@ -222,7 +222,7 @@ export function processAllData(
   ])
 
   // Documentos R3 sem Competência — exibem só Vencimento (se houver)
-  const DOCS_SEM_COMP_R3 = new Set(['aso', 'ordens de serviço', 'ficha de epi'])
+  const DOCS_SEM_COMP_R3 = new Set(['aso', 'ordens de serviço'])
 
   // ── R3 — Situação por Terceiro ────────────────────────────────────────────
   const sitCalc: SitTerceiroRow[] = rawSit
@@ -443,7 +443,7 @@ export function processAllData(
     'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
     'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
   ])
-  const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO', 'FICHA DE EPI'])
+  const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO'])
 
   // ── Tabela de pendências ───────────────────────────────────────────────────
   const tabela: PendRow[] = rawPend.map(row => {

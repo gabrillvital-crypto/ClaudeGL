@@ -222,8 +222,8 @@ _eh_forn_pend  = tabela["Area"] == "DOCUMENTOS"
 _doc_upper_pen = tabela["Documento"].str.strip().str.upper()
 _sem_comp_pen  = _eh_forn_pend & ~_doc_upper_pen.isin({d.upper() for d in _DOCS_COM_COMP_PEND})
 tabela.loc[_sem_comp_pen, "Competencia"] = "Não possui competência"
-# ASO, Ordens de Serviço e Ficha de EPI nunca possuem Competência (qualquer área)
-_DOCS_SEM_COMP_TERC = {"aso", "ordens de serviço", "ficha de epi"}
+# ASO e Ordens de Serviço nunca possuem Competência (qualquer área)
+_DOCS_SEM_COMP_TERC = {"aso", "ordens de serviço"}
 _mask_sc_terc = tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_TERC)
 tabela.loc[_mask_sc_terc, "Competencia"] = "Não possui competência"
 tabela["Detalhe"] = tabela["Detalhe"].astype(str).str.strip()
@@ -269,7 +269,7 @@ _DOCS_SEM_VENCIMENTO = {"ficha de epi", "cartão ponto com total de horas extras
 _mask_sem_venc = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_VENCIMENTO)
 sit_tabela.loc[_mask_sem_venc, "Vencimento"] = ""
 # Documentos sem Competência no R3 — exibem só Vencimento (se houver)
-_DOCS_SEM_COMP_R3 = {"aso", "ordens de serviço", "ficha de epi"}
+_DOCS_SEM_COMP_R3 = {"aso", "ordens de serviço"}
 _mask_sem_comp_r3 = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_R3)
 sit_tabela.loc[_mask_sem_comp_r3, "Competencia"] = ""
 
