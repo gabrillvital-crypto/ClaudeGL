@@ -457,18 +457,33 @@ export function processAllData(
   ])
   const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO'])
 
+  // Extrai competência MM/AAAA de qualquer texto que contenha padrão MM/AA ou MM/AAAA
+  function extractCompetenciaFromText(text: string): string | null {
+    const m = text.match(/\b(0[1-9]|1[0-2])\/(20\d{2}|\d{2})\b/)
+    if (!m) return null
+    const mm = m[1]
+    const rawY = m[2]
+    const yyyy = rawY.length === 4 ? rawY : `20${rawY}`
+    return `${mm}/${yyyy}`
+  }
+
   // ── Tabela de pendências ───────────────────────────────────────────────────
   const tabela: PendRow[] = rawPend.map(row => {
     const comp = String(row[colMarcasPend] ?? '').trim().replace(/^nan$/, '')
     const area = String(row[colAreaPend] || '').trim()
     const docUpper = extractDoc(row, area)
+    const pendText = String(row[colPendTxt] ?? '').trim()
     let competencia: string
     if (DOCS_SEM_COMP_PEND.has(docUpper)) {
       competencia = 'Não possui competência'
     } else if (area === 'DOCUMENTOS' && !DOCS_COM_COMP_PEND.has(docUpper)) {
       competencia = 'Não possui competência'
     } else {
-      competencia = comp || 'A classificar'
+      // Prioridade: coluna Marcas → data extraída do texto → fallback
+      competencia = comp
+        || extractCompetenciaFromText(pendText)
+        || extractCompetenciaFromText(docUpper)
+        || 'A classificar'
     }
     return {
       Fornecedor: abbrev(String(row[colRsPend] || '')),
