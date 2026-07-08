@@ -5,7 +5,7 @@ interface Option {
   label: string
 }
 
-const AEROPORTOS = ['CAIF', 'VIX', 'MEIA', 'CAIN']
+const AEROPORTOS = ['CAIF', 'VIX', 'MEA', 'CAIN']
 
 interface Props {
   fornOptions: Option[]
