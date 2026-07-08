@@ -33,15 +33,25 @@ function fmtDate(v: unknown): string {
   return isNaN(d.getTime()) ? s : d.toLocaleDateString('pt-BR')
 }
 
-function extractDoc(row: Record<string, string>): string {
+function extractDoc(row: Record<string, string>, area = ''): string {
   const doc = String(row['Documento'] ?? '').trim()
-  if (doc && doc !== 'nan') return doc.toUpperCase().slice(0, 50)
+  if (doc && doc !== 'nan') return doc.toUpperCase().slice(0, 80)
   const pend = String(row['Pendencia'] || row['Pendência'] || '')
-  const m1 = pend.match(/[A-Z\s]+ - ([^,]+)/)
-  if (m1) return m1[1].trim().toUpperCase().slice(0, 50)
-  const m2 = pend.match(/^([^,]+),/)
-  if (m2) return m2[1].trim().toUpperCase().slice(0, 50)
-  return 'OUTROS'
+  // Apenas a primeira linha contém o nome do documento; o restante é descrição
+  const firstLine = pend.split(/\r?\n/)[0].trim()
+  if (area === 'TERCEIROS') {
+    // Formato: "NOME TERCEIRO - NOME DOCUMENTO, descrição..."
+    const dashIdx = firstLine.indexOf(' - ')
+    if (dashIdx >= 0) {
+      const afterDash = firstLine.slice(dashIdx + 3)
+      const commaIdx = afterDash.indexOf(',')
+      return (commaIdx >= 0 ? afterDash.slice(0, commaIdx) : afterDash).trim().toUpperCase().slice(0, 80)
+    }
+    return firstLine.toUpperCase().slice(0, 80) || 'OUTROS'
+  }
+  // DOCUMENTOS: formato "NOME DOC, descrição..." (o nome pode conter " - ", ex: "GRRF - GUIA DO FGTS")
+  const commaIdx = firstLine.indexOf(',')
+  return (commaIdx >= 0 ? firstLine.slice(0, commaIdx) : firstLine).trim().toUpperCase().slice(0, 80) || 'OUTROS'
 }
 
 function normCNPJ(v: unknown): string {
@@ -449,7 +459,7 @@ export function processAllData(
   const tabela: PendRow[] = rawPend.map(row => {
     const comp = String(row[colMarcasPend] ?? '').trim().replace(/^nan$/, '')
     const area = String(row[colAreaPend] || '').trim()
-    const docUpper = extractDoc(row)
+    const docUpper = extractDoc(row, area)
     let competencia: string
     if (DOCS_SEM_COMP_PEND.has(docUpper)) {
       competencia = 'Não possui competência'
@@ -485,7 +495,7 @@ export function processAllData(
   // fig2: top 15 tipo doc
   const tipo_doc_map: Record<string, number> = {}
   rawPend.forEach(row => {
-    const doc = extractDoc(row)
+    const doc = extractDoc(row, String(row[colAreaPend] || '').trim())
     tipo_doc_map[doc] = (tipo_doc_map[doc] || 0) + 1
   })
   const tipo_doc: BarEntry[] = Object.entries(tipo_doc_map)
