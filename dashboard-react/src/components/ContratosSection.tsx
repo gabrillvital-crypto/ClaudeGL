@@ -186,7 +186,17 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
     return res
   }, [forn.contratos, contratoFilter, selectedAeroporto])
 
-  const fornRows = useMemo(() => buildRowsForn(contratosFiltrados), [contratosFiltrados])
+  // Versão para export: terceiros de cada contrato já filtrados pelo aeroporto
+  const contratosParaExport = useMemo(() => {
+    if (selectedAeroporto.size === 0) return contratosFiltrados
+    return contratosFiltrados.map(c => ({
+      ...c,
+      terceiros: c.terceiros.filter(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? '')),
+      totalTerceiros: c.terceiros.filter(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? '')).length,
+    }))
+  }, [contratosFiltrados, selectedAeroporto])
+
+  const fornRows = useMemo(() => buildRowsForn(contratosParaExport), [contratosParaExport])
   const slug = `contratos_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}`
 
   function toggleContrato(cod: string) {
@@ -229,7 +239,7 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
           <span className="text-[#bbb] text-lg">›</span>
           <span className="font-bold text-sm text-[#333]">{forn.nome}</span>
         </div>
-        <ExportBar rows={fornRows} slug={slug} onPDF={() => exportFornPDF(forn.nome, contratosFiltrados)} />
+        <ExportBar rows={fornRows} slug={slug} onPDF={() => exportFornPDF(forn.nome, contratosParaExport)} />
       </div>
 
       <div className="text-[12px] text-[#888] mb-3">
