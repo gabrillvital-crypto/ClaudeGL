@@ -49,11 +49,29 @@ function fmtCNPJ(digits: string): string {
 
 export function App() {
   const { data, state, error } = useDashboardData()
-  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, clearAll, matchesForn } = useGlobalFilter()
+  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, selectedAeroportoSet, toggleAeroporto, clearAll, matchesForn } = useGlobalFilter()
   const [activeKpi, setActiveKpi] = useState<string | null>(null)
   const toggleKpi = useCallback((key: string) => setActiveKpi(prev => prev === key ? null : key), [])
 
-  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0
+  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0
+
+  // Cross-reference: aeroporto → CNPJs de terceiros e de fornecedores
+  const aeroportoFilter = useMemo(() => {
+    if (!data || selectedAeroportoSet.size === 0) return null
+    const terceirosCPFs = new Set<string>()
+    const fornCNPJs = new Set<string>()
+    data.contratosData.forEach(f => {
+      f.contratos.forEach(c => {
+        c.terceiros.forEach(t => {
+          if (selectedAeroportoSet.has(t.aeroporto?.toUpperCase() ?? '')) {
+            terceirosCPFs.add(t.cpf.replace(/\D/g, ''))
+            fornCNPJs.add(f.cnpj.replace(/\D/g, ''))
+          }
+        })
+      })
+    })
+    return { terceirosCPFs, fornCNPJs }
+  }, [data, selectedAeroportoSet])
 
   // Opções para o dropdown — fonte: relatório de contratos (autoritativo) + fallback R3/R4
   // Uma linha por CNPJ único; filiais com mesmo nome ganham checkboxes independentes
@@ -111,8 +129,10 @@ export function App() {
         STATUS_GROUPS[key]?.sit.forEach(s => sitStatuses.add(s))
       rows = rows.filter(r => sitStatuses.has(r.Status))
     }
+    if (aeroportoFilter)
+      rows = rows.filter(r => aeroportoFilter.terceirosCPFs.has(r.CNPJ_Terceiro.replace(/\D/g, '')))
     return rows
-  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi, selectedStatusSet])
+  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi, selectedStatusSet, aeroportoFilter])
 
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
@@ -130,21 +150,32 @@ export function App() {
         STATUS_GROUPS[key]?.forn.forEach(s => fornStatuses.add(s))
       rows = rows.filter(r => fornStatuses.has(r.Status))
     }
+    if (aeroportoFilter)
+      rows = rows.filter(r => aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, '')))
     return rows
-  }, [data, hasFilter, matchesForn, selectedCompSet, activeKpi, selectedStatusSet])
+  }, [data, hasFilter, matchesForn, selectedCompSet, activeKpi, selectedStatusSet, aeroportoFilter])
 
   const tabelaFiltered = useMemo(() => {
     if (!data) return []
     let rows = hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
     if (selectedCompSet.size > 0)
       rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
+    if (aeroportoFilter)
+      rows = rows.filter(r => aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, '')))
     return rows
-  }, [data, hasFilter, matchesForn, selectedCompSet])
+  }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter])
 
   const contratosFiltered = useMemo(() => {
     if (!data) return []
-    return hasFilter ? data.contratosData.filter(f => matchesForn(f.nome, f.cnpj)) : data.contratosData
-  }, [data, hasFilter, matchesForn])
+    let res = hasFilter ? data.contratosData.filter(f => matchesForn(f.nome, f.cnpj)) : data.contratosData
+    if (selectedAeroportoSet.size > 0)
+      res = res.filter(f =>
+        f.contratos.some(c =>
+          c.terceiros.some(t => selectedAeroportoSet.has(t.aeroporto?.toUpperCase() ?? ''))
+        )
+      )
+    return res
+  }, [data, hasFilter, matchesForn, selectedAeroportoSet])
 
   // KPIs reativos ao filtro
   const kpis = useMemo(() => {
@@ -280,6 +311,8 @@ export function App() {
         selectedStatusSet={selectedStatusSet}
         onStatusToggle={toggleStatus}
         onStatusClear={clearStatus}
+        selectedAeroportoSet={selectedAeroportoSet}
+        onAeroportoToggle={toggleAeroporto}
         onClear={clearAll}
         onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
         onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}
@@ -311,7 +344,7 @@ export function App() {
 
         {/* Contratos por Fornecedor */}
         <Section title={`Contratos por Fornecedor — Drill-Down Interativo`}>
-          <ContratosSection data={contratosFiltered} />
+          <ContratosSection data={contratosFiltered} selectedAeroporto={selectedAeroportoSet} />
         </Section>
 
         {/* Fornecedores sem Execução */}

@@ -5,6 +5,8 @@ interface Option {
   label: string
 }
 
+const AEROPORTOS = ['CAIF', 'VIX', 'MEIA', 'CAIM']
+
 interface Props {
   fornOptions: Option[]
   selectedFornSet: Set<string>
@@ -18,6 +20,8 @@ interface Props {
   selectedStatusSet: Set<string>
   onStatusToggle: (key: string) => void
   onStatusClear: () => void
+  selectedAeroportoSet: Set<string>
+  onAeroportoToggle: (key: string) => void
   onClear: () => void
   onExportXLSX?: () => void
   onExportPDF?: () => void
@@ -28,14 +32,16 @@ export function GlobalFilter({
   fornOptions, selectedFornSet, onFornToggle, onFornClear,
   compOptions, selectedCompSet, onCompToggle, onCompClear,
   statusOptions, selectedStatusSet, onStatusToggle, onStatusClear,
+  selectedAeroportoSet, onAeroportoToggle,
   onClear, onExportXLSX, onExportPDF, onExportCSV,
 }: Props) {
-  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0
+  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0
 
   const activeLabel = [
     selectedFornSet.size > 0 ? `${selectedFornSet.size} fornecedor(es)` : '',
     selectedCompSet.size > 0 ? `${selectedCompSet.size} competência(s)` : '',
     selectedStatusSet.size > 0 ? `${selectedStatusSet.size} status` : '',
+    selectedAeroportoSet.size > 0 ? `aeroporto: ${[...selectedAeroportoSet].join('+')}` : '',
   ].filter(Boolean).join(' · ') + ' selecionado(s) — KPIs atualizados'
 
   return (
@@ -74,6 +80,22 @@ export function GlobalFilter({
           placeholder="Todos os status"
           minWidth="260px"
         />
+      </div>
+
+      <div>
+        <label className="block text-[11px] font-bold text-white/85 uppercase tracking-wide mb-1">Aeroporto</label>
+        <div className="flex gap-1.5 h-[34px] items-center">
+          {AEROPORTOS.map(a => (
+            <button key={a} onClick={() => onAeroportoToggle(a)}
+              className={`text-[12px] font-bold px-3 py-1 rounded-full border transition-colors cursor-pointer ${
+                selectedAeroportoSet.has(a)
+                  ? 'bg-white text-[#0A6A7A] border-white'
+                  : 'bg-white/15 text-white border-white/50 hover:bg-white/30'
+              }`}>
+              {a}
+            </button>
+          ))}
+        </div>
       </div>
 
       <button

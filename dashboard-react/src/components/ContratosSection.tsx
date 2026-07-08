@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable'
 
 interface Props {
   data: FornContratoItem[]
+  selectedAeroporto?: Set<string>
 }
 
 function fmtDoc(v: string): string {
@@ -118,8 +119,11 @@ function ExportBar({ rows, slug, onPDF }: { rows: Record<string, unknown>[]; slu
   )
 }
 
-function Level3({ forn, contrato, onBack }: { forn: FornContratoItem; contrato: ContratoItem; onBack: () => void }) {
-  const rows = buildRows(contrato.terceiros)
+function Level3({ forn, contrato, onBack, selectedAeroporto = new Set() }: { forn: FornContratoItem; contrato: ContratoItem; onBack: () => void; selectedAeroporto?: Set<string> }) {
+  const terceirosVisiveis = selectedAeroporto.size > 0
+    ? contrato.terceiros.filter(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? ''))
+    : contrato.terceiros
+  const rows = buildRows(terceirosVisiveis)
   const slug = `terceiros_${contrato.codigo.replace(/[^a-zA-Z0-9]/g, '_')}`
   return (
     <div>
@@ -131,16 +135,16 @@ function Level3({ forn, contrato, onBack }: { forn: FornContratoItem; contrato: 
           </button>
         </div>
         <ExportBar rows={rows} slug={slug}
-          onPDF={() => exportPDF(contrato.codigo, forn.nome, contrato.terceiros)} />
+          onPDF={() => exportPDF(contrato.codigo, forn.nome, terceirosVisiveis)} />
       </div>
       <div className="text-[12px] text-[#888] mb-3">
-        {contrato.totalTerceiros} terceiro{contrato.totalTerceiros !== 1 ? 's' : ''} vinculado{contrato.totalTerceiros !== 1 ? 's' : ''}
+        {terceirosVisiveis.length} terceiro{terceirosVisiveis.length !== 1 ? 's' : ''} vinculado{terceirosVisiveis.length !== 1 ? 's' : ''}
         {contrato.aeroporto && (
           <span className="ml-2 bg-[#e8f7fa] text-[#0E8FA3] px-2 py-0.5 rounded font-semibold">{contrato.aeroporto}</span>
         )}
       </div>
-      {contrato.terceiros.length === 0 ? (
-        <p className="text-[#999] text-[13px] text-center py-8">Nenhum terceiro vinculado a este contrato</p>
+      {terceirosVisiveis.length === 0 ? (
+        <p className="text-[#999] text-[13px] text-center py-8">Nenhum terceiro vinculado a este contrato{selectedAeroporto.size > 0 ? ' para o aeroporto selecionado' : ''}</p>
       ) : (
         <div className="rounded-lg overflow-hidden border border-[#e5eef1]">
           <table className="w-full text-[13px] border-collapse">
@@ -154,7 +158,7 @@ function Level3({ forn, contrato, onBack }: { forn: FornContratoItem; contrato: 
               </tr>
             </thead>
             <tbody>
-              {contrato.terceiros.map((t, i) => (
+              {terceirosVisiveis.map((t, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#f0f8fa] ${i % 2 === 1 ? 'bg-[#f8fafb]' : ''}`}>
                   <td className="px-3 py-2 font-medium text-[#222]">{t.nome || '—'}</td>
                   <td className="px-3 py-2 font-mono text-[12px] text-[#555]">{fmtDoc(t.cpf) || '—'}</td>
@@ -171,14 +175,16 @@ function Level3({ forn, contrato, onBack }: { forn: FornContratoItem; contrato: 
   )
 }
 
-function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }) {
+function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornContratoItem; onBack: () => void; selectedAeroporto?: Set<string> }) {
   const [selContrato, setSelContrato] = useState<ContratoItem | null>(null)
   const [contratoFilter, setContratoFilter] = useState<Set<string>>(new Set())
 
   const contratosFiltrados = useMemo(() => {
-    if (contratoFilter.size === 0) return forn.contratos
-    return forn.contratos.filter(c => contratoFilter.has(c.codigo))
-  }, [forn.contratos, contratoFilter])
+    let res = contratoFilter.size === 0 ? forn.contratos : forn.contratos.filter(c => contratoFilter.has(c.codigo))
+    if (selectedAeroporto.size > 0)
+      res = res.filter(c => c.terceiros.some(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? '')))
+    return res
+  }, [forn.contratos, contratoFilter, selectedAeroporto])
 
   const fornRows = useMemo(() => buildRowsForn(contratosFiltrados), [contratosFiltrados])
   const slug = `contratos_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}`
@@ -207,7 +213,7 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
           <span className="text-[#bbb] text-lg">›</span>
           <span className="font-bold text-sm text-[#333]">{selContrato.codigo}</span>
         </div>
-        <Level3 forn={forn} contrato={selContrato} onBack={() => setSelContrato(null)} />
+        <Level3 forn={forn} contrato={selContrato} onBack={() => setSelContrato(null)} selectedAeroporto={selectedAeroporto} />
       </div>
     )
   }
@@ -283,21 +289,10 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
   )
 }
 
-const AEROPORTOS = ['CAIF', 'VIX', 'MEIA', 'CAIM']
-
-export function ContratosSection({ data }: Props) {
+export function ContratosSection({ data, selectedAeroporto = new Set() }: Props) {
   const [selForn, setSelForn] = useState<FornContratoItem | null>(null)
   const [busca, setBusca] = useState('')
   const [buscaCont, setBuscaCont] = useState('')
-  const [selectedAeroporto, setSelectedAeroporto] = useState<Set<string>>(new Set())
-
-  function toggleAeroporto(a: string) {
-    setSelectedAeroporto(prev => {
-      const next = new Set(prev)
-      next.has(a) ? next.delete(a) : next.add(a)
-      return next
-    })
-  }
 
   const dataFiltrada = useMemo(() => {
     const q = busca.trim().toLowerCase()
@@ -315,22 +310,15 @@ export function ContratosSection({ data }: Props) {
         f.contratos.some(c => c.codigo.toLowerCase().includes(qc))
       )
     }
-    if (selectedAeroporto.size > 0) {
-      res = res.filter(f =>
-        f.contratos.some(c =>
-          c.terceiros.some(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? ''))
-        )
-      )
-    }
     return res
-  }, [data, busca, buscaCont, selectedAeroporto])
+  }, [data, busca, buscaCont])
 
-  function clearAll() { setBusca(''); setBuscaCont(''); setSelectedAeroporto(new Set()) }
+  function clearAll() { setBusca(''); setBuscaCont('') }
 
   if (selForn) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-5">
-        <Level2 forn={selForn} onBack={() => setSelForn(null)} />
+        <Level2 forn={selForn} onBack={() => setSelForn(null)} selectedAeroporto={selectedAeroporto} />
       </div>
     )
   }
@@ -360,19 +348,6 @@ export function ContratosSection({ data }: Props) {
             placeholder="Código do contrato..."
             className="border border-[#cde] rounded-lg px-3 py-1.5 text-[13px] text-[#333] outline-none focus:border-[#0E8FA3] w-56"
           />
-        </div>
-        <div className="flex items-center gap-2 self-center">
-          <span className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide">Aeroporto:</span>
-          {AEROPORTOS.map(a => (
-            <button key={a} onClick={() => toggleAeroporto(a)}
-              className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-colors cursor-pointer ${
-                selectedAeroporto.has(a)
-                  ? 'bg-[#0E8FA3] text-white border-[#0E8FA3]'
-                  : 'bg-white text-[#0E8FA3] border-[#0E8FA3] hover:bg-[#e8f7fa]'
-              }`}>
-              {a}
-            </button>
-          ))}
         </div>
         <button onClick={clearAll}
           className="bg-[#0E8FA3] text-white font-bold text-[13px] px-4 py-1.5 rounded-lg hover:bg-[#0a7a8d] border-0 cursor-pointer h-[34px]">

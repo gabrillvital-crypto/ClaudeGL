@@ -12,6 +12,7 @@ export function useGlobalFilter() {
   const [selectedFornSet, setSelectedFornSet] = useState<Set<string>>(new Set())
   const [selectedCompSet, setSelectedCompSet] = useState<Set<string>>(new Set())
   const [selectedStatusSet, setSelectedStatusSet] = useState<Set<string>>(new Set())
+  const [selectedAeroportoSet, setSelectedAeroportoSet] = useState<Set<string>>(new Set())
 
   const toggleForn = useCallback((key: string) => {
     setSelectedFornSet(prev => {
@@ -48,10 +49,21 @@ export function useGlobalFilter() {
     setSelectedStatusSet(new Set())
   }, [])
 
+  const toggleAeroporto = useCallback((key: string) => {
+    setSelectedAeroportoSet(prev => {
+      const next = new Set(prev)
+      next.has(key) ? next.delete(key) : next.add(key)
+      return next
+    })
+  }, [])
+
+  const clearAeroporto = useCallback(() => setSelectedAeroportoSet(new Set()), [])
+
   const clearAll = useCallback(() => {
     setSelectedFornSet(new Set())
     setSelectedCompSet(new Set())
     setSelectedStatusSet(new Set())
+    setSelectedAeroportoSet(new Set())
   }, [])
 
   const matchesForn = useCallback(
@@ -77,6 +89,7 @@ export function useGlobalFilter() {
     selectedFornSet, toggleForn,
     selectedCompSet, toggleComp, clearComp,
     selectedStatusSet, toggleStatus, clearStatus,
+    selectedAeroportoSet, toggleAeroporto, clearAeroporto,
     clearAll, matchesForn, label,
   }
 }
