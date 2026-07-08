@@ -55,11 +55,11 @@ function fmtCNPJ(digits: string): string {
 
 export function App() {
   const { data, state, error } = useDashboardData()
-  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, selectedAeroportoSet, toggleAeroporto, clearAll, matchesForn } = useGlobalFilter()
+  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, selectedAeroportoSet, toggleAeroporto, selectedStatusTerc, setSelectedStatusTerc, clearAll, matchesForn } = useGlobalFilter()
   const [activeKpi, setActiveKpi] = useState<string | null>(null)
   const toggleKpi = useCallback((key: string) => setActiveKpi(prev => prev === key ? null : key), [])
 
-  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0
+  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all'
 
   // Cross-reference: aeroporto → CPFs de terceiros, CNPJs de fornecedores, nomes de terceiros
   const aeroportoFilter = useMemo(() => {
@@ -80,6 +80,24 @@ export function App() {
     })
     return { terceirosCPFs, fornCNPJs, terceirosNomes }
   }, [data, selectedAeroportoSet])
+
+  // Cross-reference: status do terceiro (Ativo/Inativo) → CPFs e nomes
+  const statusTercFilter = useMemo(() => {
+    if (!data || selectedStatusTerc === 'all') return null
+    const cpfs = new Set<string>()
+    const nomes = new Set<string>()
+    data.contratosData.forEach(f => {
+      f.contratos.forEach(c => {
+        c.terceiros.forEach(t => {
+          if (t.status === selectedStatusTerc) {
+            cpfs.add(t.cpf.replace(/\D/g, ''))
+            if (t.nome) nomes.add(t.nome.toUpperCase().trim())
+          }
+        })
+      })
+    })
+    return { cpfs, nomes }
+  }, [data, selectedStatusTerc])
 
   // Opções para o dropdown — fonte: relatório de contratos (autoritativo) + fallback R3/R4
   // Uma linha por CNPJ único; filiais com mesmo nome ganham checkboxes independentes
@@ -139,8 +157,10 @@ export function App() {
     }
     if (aeroportoFilter)
       rows = rows.filter(r => aeroportoFilter.terceirosCPFs.has(r.CNPJ_Terceiro.replace(/\D/g, '')))
+    if (statusTercFilter)
+      rows = rows.filter(r => statusTercFilter.cpfs.has(r.CNPJ_Terceiro.replace(/\D/g, '')))
     return rows
-  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi, selectedStatusSet, aeroportoFilter])
+  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi, selectedStatusSet, aeroportoFilter, statusTercFilter])
 
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
@@ -171,16 +191,23 @@ export function App() {
     if (aeroportoFilter) {
       rows = rows.filter(r => {
         if (r.Area === 'TERCEIROS') {
-          // Pendência de terceiro: verifica se o nome do terceiro (no Detalhe) está vinculado ao aeroporto
           const det = r.Detalhe.toUpperCase()
           return [...aeroportoFilter.terceirosNomes].some(nome => det.includes(nome))
         }
-        // Pendência de documento do fornecedor: filtra pelo CNPJ do fornecedor
         return aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, ''))
       })
     }
+    if (statusTercFilter) {
+      rows = rows.filter(r => {
+        if (r.Area === 'TERCEIROS') {
+          const det = r.Detalhe.toUpperCase()
+          return [...statusTercFilter.nomes].some(nome => det.includes(nome))
+        }
+        return true // pendências de documentos do fornecedor não filtradas por status de terceiro
+      })
+    }
     return rows
-  }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter])
+  }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter, statusTercFilter])
 
   const contratosFiltered = useMemo(() => {
     if (!data) return []
@@ -191,8 +218,12 @@ export function App() {
           c.terceiros.some(t => selectedAeroportoSet.has(normalizeAeroporto(t.aeroporto ?? '')))
         )
       )
+    if (selectedStatusTerc !== 'all')
+      res = res.filter(f =>
+        f.contratos.some(c => c.terceiros.some(t => t.status === selectedStatusTerc))
+      )
     return res
-  }, [data, hasFilter, matchesForn, selectedAeroportoSet])
+  }, [data, hasFilter, matchesForn, selectedAeroportoSet, selectedStatusTerc])
 
   // KPIs reativos ao filtro
   const kpis = useMemo(() => {
@@ -330,6 +361,8 @@ export function App() {
         onStatusClear={clearStatus}
         selectedAeroportoSet={selectedAeroportoSet}
         onAeroportoToggle={toggleAeroporto}
+        selectedStatusTerc={selectedStatusTerc}
+        onStatusTercChange={setSelectedStatusTerc}
         onClear={clearAll}
         onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
         onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}
@@ -361,7 +394,7 @@ export function App() {
 
         {/* Contratos por Fornecedor */}
         <Section title={`Contratos por Fornecedor — Drill-Down Interativo`}>
-          <ContratosSection data={contratosFiltered} selectedAeroporto={selectedAeroportoSet} />
+          <ContratosSection data={contratosFiltered} selectedAeroporto={selectedAeroportoSet} selectedStatusTerc={selectedStatusTerc} />
         </Section>
 
         {/* Fornecedores sem Execução */}

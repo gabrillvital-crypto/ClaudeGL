@@ -7,6 +7,7 @@ import autoTable from 'jspdf-autotable'
 interface Props {
   data: FornContratoItem[]
   selectedAeroporto?: Set<string>
+  selectedStatusTerc?: 'all' | 'Ativo' | 'Inativo'
 }
 
 function normalizeAeroporto(code: string): string {
@@ -124,10 +125,12 @@ function ExportBar({ rows, slug, onPDF }: { rows: Record<string, unknown>[]; slu
   )
 }
 
-function Level3({ forn, contrato, onBack, selectedAeroporto = new Set() }: { forn: FornContratoItem; contrato: ContratoItem; onBack: () => void; selectedAeroporto?: Set<string> }) {
-  const terceirosVisiveis = selectedAeroporto.size > 0
+function Level3({ forn, contrato, onBack, selectedAeroporto = new Set(), selectedStatusTerc = 'all' }: { forn: FornContratoItem; contrato: ContratoItem; onBack: () => void; selectedAeroporto?: Set<string>; selectedStatusTerc?: 'all' | 'Ativo' | 'Inativo' }) {
+  let terceirosVisiveis = selectedAeroporto.size > 0
     ? contrato.terceiros.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? '')))
     : contrato.terceiros
+  if (selectedStatusTerc !== 'all')
+    terceirosVisiveis = terceirosVisiveis.filter(t => t.status === selectedStatusTerc)
   const rows = buildRows(terceirosVisiveis)
   const slug = `terceiros_${contrato.codigo.replace(/[^a-zA-Z0-9]/g, '_')}`
   return (
@@ -180,7 +183,7 @@ function Level3({ forn, contrato, onBack, selectedAeroporto = new Set() }: { for
   )
 }
 
-function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornContratoItem; onBack: () => void; selectedAeroporto?: Set<string> }) {
+function Level2({ forn, onBack, selectedAeroporto = new Set(), selectedStatusTerc = 'all' }: { forn: FornContratoItem; onBack: () => void; selectedAeroporto?: Set<string>; selectedStatusTerc?: 'all' | 'Ativo' | 'Inativo' }) {
   const [selContrato, setSelContrato] = useState<ContratoItem | null>(null)
   const [contratoFilter, setContratoFilter] = useState<Set<string>>(new Set())
 
@@ -191,15 +194,17 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
     return res
   }, [forn.contratos, contratoFilter, selectedAeroporto])
 
-  // Versão para export: terceiros de cada contrato já filtrados pelo aeroporto
+  // Versão para export: terceiros filtrados por aeroporto e status
   const contratosParaExport = useMemo(() => {
-    if (selectedAeroporto.size === 0) return contratosFiltrados
-    return contratosFiltrados.map(c => ({
-      ...c,
-      terceiros: c.terceiros.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? ''))),
-      totalTerceiros: c.terceiros.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? ''))).length,
-    }))
-  }, [contratosFiltrados, selectedAeroporto])
+    return contratosFiltrados.map(c => {
+      let tercs = c.terceiros
+      if (selectedAeroporto.size > 0)
+        tercs = tercs.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? '')))
+      if (selectedStatusTerc !== 'all')
+        tercs = tercs.filter(t => t.status === selectedStatusTerc)
+      return { ...c, terceiros: tercs, totalTerceiros: tercs.length }
+    })
+  }, [contratosFiltrados, selectedAeroporto, selectedStatusTerc])
 
   const fornRows = useMemo(() => buildRowsForn(contratosParaExport), [contratosParaExport])
   const slug = `contratos_${forn.nome.replace(/[^a-zA-Z0-9]/g, '_')}`
@@ -228,7 +233,7 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
           <span className="text-[#bbb] text-lg">›</span>
           <span className="font-bold text-sm text-[#333]">{selContrato.codigo}</span>
         </div>
-        <Level3 forn={forn} contrato={selContrato} onBack={() => setSelContrato(null)} selectedAeroporto={selectedAeroporto} />
+        <Level3 forn={forn} contrato={selContrato} onBack={() => setSelContrato(null)} selectedAeroporto={selectedAeroporto} selectedStatusTerc={selectedStatusTerc} />
       </div>
     )
   }
@@ -304,7 +309,7 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
   )
 }
 
-export function ContratosSection({ data, selectedAeroporto = new Set() }: Props) {
+export function ContratosSection({ data, selectedAeroporto = new Set(), selectedStatusTerc = 'all' }: Props) {
   const [selForn, setSelForn] = useState<FornContratoItem | null>(null)
   const [busca, setBusca] = useState('')
   const [buscaCont, setBuscaCont] = useState('')
@@ -333,7 +338,7 @@ export function ContratosSection({ data, selectedAeroporto = new Set() }: Props)
   if (selForn) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-5">
-        <Level2 forn={selForn} onBack={() => setSelForn(null)} selectedAeroporto={selectedAeroporto} />
+        <Level2 forn={selForn} onBack={() => setSelForn(null)} selectedAeroporto={selectedAeroporto} selectedStatusTerc={selectedStatusTerc} />
       </div>
     )
   }

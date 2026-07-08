@@ -6,6 +6,11 @@ interface Option {
 }
 
 const AEROPORTOS = ['CAIF', 'VIX', 'MEA', 'CAIN']
+const STATUS_TERC_OPTIONS: { key: 'all' | 'Ativo' | 'Inativo'; label: string }[] = [
+  { key: 'all',     label: 'Todos' },
+  { key: 'Ativo',   label: 'Ativos' },
+  { key: 'Inativo', label: 'Inativos' },
+]
 
 interface Props {
   fornOptions: Option[]
@@ -22,6 +27,8 @@ interface Props {
   onStatusClear: () => void
   selectedAeroportoSet: Set<string>
   onAeroportoToggle: (key: string) => void
+  selectedStatusTerc: 'all' | 'Ativo' | 'Inativo'
+  onStatusTercChange: (v: 'all' | 'Ativo' | 'Inativo') => void
   onClear: () => void
   onExportXLSX?: () => void
   onExportPDF?: () => void
@@ -33,15 +40,17 @@ export function GlobalFilter({
   compOptions, selectedCompSet, onCompToggle, onCompClear,
   statusOptions, selectedStatusSet, onStatusToggle, onStatusClear,
   selectedAeroportoSet, onAeroportoToggle,
+  selectedStatusTerc, onStatusTercChange,
   onClear, onExportXLSX, onExportPDF, onExportCSV,
 }: Props) {
-  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0
+  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all'
 
   const activeLabel = [
     selectedFornSet.size > 0 ? `${selectedFornSet.size} fornecedor(es)` : '',
     selectedCompSet.size > 0 ? `${selectedCompSet.size} competência(s)` : '',
     selectedStatusSet.size > 0 ? `${selectedStatusSet.size} status` : '',
     selectedAeroportoSet.size > 0 ? `aeroporto: ${[...selectedAeroportoSet].join('+')}` : '',
+    selectedStatusTerc !== 'all' ? `terceiros: ${selectedStatusTerc === 'Ativo' ? 'Ativos' : 'Inativos'}` : '',
   ].filter(Boolean).join(' · ') + ' selecionado(s) — KPIs atualizados'
 
   return (
@@ -93,6 +102,22 @@ export function GlobalFilter({
                   : 'bg-white/15 text-white border-white/50 hover:bg-white/30'
               }`}>
               {a}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-[11px] font-bold text-white/85 uppercase tracking-wide mb-1">Terceiros</label>
+        <div className="flex gap-1.5 h-[34px] items-center">
+          {STATUS_TERC_OPTIONS.map(opt => (
+            <button key={opt.key} onClick={() => onStatusTercChange(opt.key)}
+              className={`text-[12px] font-bold px-3 py-1 rounded-full border transition-colors cursor-pointer ${
+                selectedStatusTerc === opt.key
+                  ? 'bg-white text-[#0A6A7A] border-white'
+                  : 'bg-white/15 text-white border-white/50 hover:bg-white/30'
+              }`}>
+              {opt.label}
             </button>
           ))}
         </div>
