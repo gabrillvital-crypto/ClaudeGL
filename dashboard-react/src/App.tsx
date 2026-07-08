@@ -21,6 +21,25 @@ const KPI_STATUS_MAP: Record<string, { sit: string[]; forn: string[] }> = {
   docs_vencidos:     { sit: [],                       forn: ['Vencido'] },
 }
 
+// Agrupamentos do filtro de Status — mesma lógica dos cards KPI
+const STATUS_GROUPS: Record<string, { sit: string[]; forn: string[] }> = {
+  aprovados:    { sit: ['Aprovado'],            forn: ['Aprovado'] },
+  reprovados:   { sit: ['Reprovado'],            forn: ['Reprovado', 'Irregular', 'Alerta'] },
+  nao_enviados: { sit: ['Não anexado'],          forn: ['Não Anexado'] },
+  aguard_sub:   { sit: ['Aguardando Submissão'], forn: [] },
+  em_analise:   { sit: ['Em Análise'],           forn: ['Em análise'] },
+  vencidos:     { sit: [],                       forn: ['Vencido'] },
+}
+
+const STATUS_OPTIONS = [
+  { key: 'aprovados',    label: 'Aprovados' },
+  { key: 'reprovados',   label: 'Reprovados' },
+  { key: 'nao_enviados', label: 'Não Enviados' },
+  { key: 'aguard_sub',   label: 'Aguardando Submissão' },
+  { key: 'em_analise',   label: 'Em Análise' },
+  { key: 'vencidos',     label: 'Vencidos' },
+]
+
 function fmtCNPJ(digits: string): string {
   const d = digits.replace(/\D/g, '')
   if (d.length === 11) return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
@@ -86,8 +105,12 @@ export function App() {
       if (sitStatuses.length > 0)
         rows = rows.filter(r => sitStatuses.includes(r.Status))
     }
-    if (selectedStatusSet.size > 0)
-      rows = rows.filter(r => selectedStatusSet.has(r.Status))
+    if (selectedStatusSet.size > 0) {
+      const sitStatuses = new Set<string>()
+      for (const key of selectedStatusSet)
+        STATUS_GROUPS[key]?.sit.forEach(s => sitStatuses.add(s))
+      rows = rows.filter(r => sitStatuses.has(r.Status))
+    }
     return rows
   }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi, selectedStatusSet])
 
@@ -101,8 +124,12 @@ export function App() {
       if (fornStatuses.length > 0)
         rows = rows.filter(r => fornStatuses.includes(r.Status))
     }
-    if (selectedStatusSet.size > 0)
-      rows = rows.filter(r => selectedStatusSet.has(r.Status))
+    if (selectedStatusSet.size > 0) {
+      const fornStatuses = new Set<string>()
+      for (const key of selectedStatusSet)
+        STATUS_GROUPS[key]?.forn.forEach(s => fornStatuses.add(s))
+      rows = rows.filter(r => fornStatuses.has(r.Status))
+    }
     return rows
   }, [data, hasFilter, matchesForn, selectedCompSet, activeKpi, selectedStatusSet])
 
@@ -249,18 +276,7 @@ export function App() {
         selectedCompSet={selectedCompSet}
         onCompToggle={toggleComp}
         onCompClear={clearComp}
-        statusOptions={[
-          { key: 'Aprovado',             label: 'Aprovado' },
-          { key: 'Reprovado',            label: 'Reprovado' },
-          { key: 'Não anexado',          label: 'Não Enviado (R3)' },
-          { key: 'Aguardando Submissão', label: 'Aguard. Submissão (R3)' },
-          { key: 'Em Análise',           label: 'Em Análise (R3)' },
-          { key: 'Não Anexado',          label: 'Não Anexado (R4)' },
-          { key: 'Em análise',           label: 'Em análise (R4)' },
-          { key: 'Irregular',            label: 'Irregular (R4)' },
-          { key: 'Alerta',               label: 'Alerta (R4)' },
-          { key: 'Vencido',              label: 'Vencido (R4)' },
-        ]}
+        statusOptions={STATUS_OPTIONS}
         selectedStatusSet={selectedStatusSet}
         onStatusToggle={toggleStatus}
         onStatusClear={clearStatus}
