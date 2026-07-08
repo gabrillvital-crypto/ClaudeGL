@@ -9,6 +9,11 @@ interface Props {
   selectedAeroporto?: Set<string>
 }
 
+function normalizeAeroporto(code: string): string {
+  const c = (code ?? '').toUpperCase().trim()
+  return c === 'FLN' ? 'CAIF' : c
+}
+
 function fmtDoc(v: string): string {
   const d = v.replace(/\D/g, '')
   if (d.length === 11) return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
@@ -121,7 +126,7 @@ function ExportBar({ rows, slug, onPDF }: { rows: Record<string, unknown>[]; slu
 
 function Level3({ forn, contrato, onBack, selectedAeroporto = new Set() }: { forn: FornContratoItem; contrato: ContratoItem; onBack: () => void; selectedAeroporto?: Set<string> }) {
   const terceirosVisiveis = selectedAeroporto.size > 0
-    ? contrato.terceiros.filter(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? ''))
+    ? contrato.terceiros.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? '')))
     : contrato.terceiros
   const rows = buildRows(terceirosVisiveis)
   const slug = `terceiros_${contrato.codigo.replace(/[^a-zA-Z0-9]/g, '_')}`
@@ -182,7 +187,7 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
   const contratosFiltrados = useMemo(() => {
     let res = contratoFilter.size === 0 ? forn.contratos : forn.contratos.filter(c => contratoFilter.has(c.codigo))
     if (selectedAeroporto.size > 0)
-      res = res.filter(c => c.terceiros.some(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? '')))
+      res = res.filter(c => c.terceiros.some(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? ''))))
     return res
   }, [forn.contratos, contratoFilter, selectedAeroporto])
 
@@ -191,8 +196,8 @@ function Level2({ forn, onBack, selectedAeroporto = new Set() }: { forn: FornCon
     if (selectedAeroporto.size === 0) return contratosFiltrados
     return contratosFiltrados.map(c => ({
       ...c,
-      terceiros: c.terceiros.filter(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? '')),
-      totalTerceiros: c.terceiros.filter(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? '')).length,
+      terceiros: c.terceiros.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? ''))),
+      totalTerceiros: c.terceiros.filter(t => selectedAeroporto.has(normalizeAeroporto(t.aeroporto ?? ''))).length,
     }))
   }, [contratosFiltrados, selectedAeroporto])
 

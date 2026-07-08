@@ -40,6 +40,12 @@ const STATUS_OPTIONS = [
   { key: 'vencidos',     label: 'Vencidos' },
 ]
 
+// FLN é o código IATA de Florianópolis — na base Zurich equivale ao aeroporto CAIF
+function normalizeAeroporto(code: string): string {
+  const c = (code ?? '').toUpperCase().trim()
+  return c === 'FLN' ? 'CAIF' : c
+}
+
 function fmtCNPJ(digits: string): string {
   const d = digits.replace(/\D/g, '')
   if (d.length === 11) return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
@@ -64,7 +70,7 @@ export function App() {
     data.contratosData.forEach(f => {
       f.contratos.forEach(c => {
         c.terceiros.forEach(t => {
-          if (selectedAeroportoSet.has(t.aeroporto?.toUpperCase() ?? '')) {
+          if (selectedAeroportoSet.has(normalizeAeroporto(t.aeroporto ?? ''))) {
             terceirosCPFs.add(t.cpf.replace(/\D/g, ''))
             fornCNPJs.add(f.cnpj.replace(/\D/g, ''))
             if (t.nome) terceirosNomes.add(t.nome.toUpperCase().trim())
@@ -182,7 +188,7 @@ export function App() {
     if (selectedAeroportoSet.size > 0)
       res = res.filter(f =>
         f.contratos.some(c =>
-          c.terceiros.some(t => selectedAeroportoSet.has(t.aeroporto?.toUpperCase() ?? ''))
+          c.terceiros.some(t => selectedAeroportoSet.has(normalizeAeroporto(t.aeroporto ?? '')))
         )
       )
     return res
