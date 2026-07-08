@@ -283,10 +283,21 @@ function Level2({ forn, onBack }: { forn: FornContratoItem; onBack: () => void }
   )
 }
 
+const AEROPORTOS = ['CAIF', 'VIX', 'MEIA', 'CAIM']
+
 export function ContratosSection({ data }: Props) {
   const [selForn, setSelForn] = useState<FornContratoItem | null>(null)
   const [busca, setBusca] = useState('')
   const [buscaCont, setBuscaCont] = useState('')
+  const [selectedAeroporto, setSelectedAeroporto] = useState<Set<string>>(new Set())
+
+  function toggleAeroporto(a: string) {
+    setSelectedAeroporto(prev => {
+      const next = new Set(prev)
+      next.has(a) ? next.delete(a) : next.add(a)
+      return next
+    })
+  }
 
   const dataFiltrada = useMemo(() => {
     const q = busca.trim().toLowerCase()
@@ -304,10 +315,17 @@ export function ContratosSection({ data }: Props) {
         f.contratos.some(c => c.codigo.toLowerCase().includes(qc))
       )
     }
+    if (selectedAeroporto.size > 0) {
+      res = res.filter(f =>
+        f.contratos.some(c =>
+          c.terceiros.some(t => selectedAeroporto.has(t.aeroporto?.toUpperCase() ?? ''))
+        )
+      )
+    }
     return res
-  }, [data, busca, buscaCont])
+  }, [data, busca, buscaCont, selectedAeroporto])
 
-  function clearAll() { setBusca(''); setBuscaCont('') }
+  function clearAll() { setBusca(''); setBuscaCont(''); setSelectedAeroporto(new Set()) }
 
   if (selForn) {
     return (
@@ -342,6 +360,19 @@ export function ContratosSection({ data }: Props) {
             placeholder="Código do contrato..."
             className="border border-[#cde] rounded-lg px-3 py-1.5 text-[13px] text-[#333] outline-none focus:border-[#0E8FA3] w-56"
           />
+        </div>
+        <div className="flex items-center gap-2 self-center">
+          <span className="text-[11px] font-bold text-[#0E8FA3] uppercase tracking-wide">Aeroporto:</span>
+          {AEROPORTOS.map(a => (
+            <button key={a} onClick={() => toggleAeroporto(a)}
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-colors cursor-pointer ${
+                selectedAeroporto.has(a)
+                  ? 'bg-[#0E8FA3] text-white border-[#0E8FA3]'
+                  : 'bg-white text-[#0E8FA3] border-[#0E8FA3] hover:bg-[#e8f7fa]'
+              }`}>
+              {a}
+            </button>
+          ))}
         </div>
         <button onClick={clearAll}
           className="bg-[#0E8FA3] text-white font-bold text-[13px] px-4 py-1.5 rounded-lg hover:bg-[#0a7a8d] border-0 cursor-pointer h-[34px]">

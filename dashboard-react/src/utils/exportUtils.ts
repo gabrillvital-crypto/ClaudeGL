@@ -73,8 +73,8 @@ function addPDFHeader(doc: jsPDF, title: string, subtitle: string, geradoEm: str
   doc.text(title, pageW / 2, 10, { align: 'center' })
 
   // Data de geração
-  doc.setFontSize(7)
-  doc.text(geradoEm, pageW - 10, 10, { align: 'right' })
+  doc.setFontSize(8)
+  doc.text(`Emitido em: ${geradoEm}`, pageW - 10, 10, { align: 'right' })
 
   // Subtítulo
   doc.setFontSize(9)
@@ -82,6 +82,23 @@ function addPDFHeader(doc: jsPDF, title: string, subtitle: string, geradoEm: str
   doc.setTextColor(...TEAL)
   doc.text(subtitle, 10, 22)
 
+  doc.setTextColor(...TEXT_DARK)
+}
+
+function addFooters(doc: jsPDF) {
+  const total  = doc.getNumberOfPages()
+  const pageW  = doc.internal.pageSize.getWidth()
+  const pageH  = doc.internal.pageSize.getHeight()
+  for (let i = 1; i <= total; i++) {
+    doc.setPage(i)
+    doc.setFontSize(7)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(150, 150, 150)
+    doc.text(
+      `Efcaz — Relatório Confidencial  ·  Página ${i} de ${total}`,
+      pageW / 2, pageH - 5, { align: 'center' }
+    )
+  }
   doc.setTextColor(...TEXT_DARK)
 }
 
@@ -196,6 +213,7 @@ export function exportR4PDF({ rows, kpis, geradoEm, filename = 'situacao_empresa
     showHead: 'everyPage',
   })
 
+  addFooters(doc)
   doc.save(`${filename}.pdf`)
 }
 
@@ -267,6 +285,7 @@ export function exportR3PDF({ rows, geradoEm, filename = 'situacao_terceiros' }:
     showHead: 'everyPage',
   })
 
+  addFooters(doc)
   doc.save(`${filename}.pdf`)
 }
 
@@ -317,6 +336,7 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
     showHead: 'everyPage',
   })
 
+  addFooters(doc)
   doc.save(`${filename}.pdf`)
 }
 
@@ -410,6 +430,7 @@ export function exportRelatorioPDF(
     showHead: 'everyPage',
   })
 
+  addFooters(doc)
   doc.save(`${filename}.pdf`)
 }
 

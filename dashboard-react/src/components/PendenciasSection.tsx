@@ -4,8 +4,6 @@ import { exportCSV, exportXLSX, exportPendPDF } from '../utils/exportUtils'
 
 interface Props {
   data: PendRow[]
-  gfForn: string
-  competencias: string[]
   geradoEm?: string
 }
 
@@ -45,28 +43,17 @@ function fmtCNPJ(d: string): string {
   return d
 }
 
-export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }: Props) {
-  const [filt, setFilt] = useState('')
-  const [area, setArea] = useState('')
-  const [comp, setComp] = useState('')
-  const [busca, setBusca] = useState('')
+export function PendenciasSection({ data, geradoEm = '' }: Props) {
   const [pdfLoading, setPdfLoading] = useState(false)
 
-  const fornList = useMemo(() => [...new Set(data.map(r => r.Fornecedor))].sort(), [data])
-
-  const filtered = useMemo(() => {
-    let d = gfForn ? data.filter(r => r.Fornecedor === gfForn) : data
-    if (filt) d = d.filter(r => r.Fornecedor === filt)
-    if (area) d = d.filter(r => r.Area === area)
-    if (comp) d = d.filter(r => r.Competencia === comp)
-    if (busca) {
-      const b = busca.toLowerCase()
-      d = d.filter(r => r.Documento.toLowerCase().includes(b) || r.Detalhe.toLowerCase().includes(b))
-    }
-    return d
-  }, [data, gfForn, filt, area, comp, busca])
-
-  function clear() { setFilt(''); setArea(''); setComp(''); setBusca('') }
+  const rows = useMemo(() => data.map(r => ({
+    Fornecedor: r.Fornecedor,
+    CNPJ: fmtCNPJ(r.CNPJ_Forn),
+    Area: r.Area,
+    Documento: r.Documento,
+    Competencia: r.Competencia,
+    Detalhe: r.Detalhe,
+  })), [data])
 
   function handlePDF() {
     setPdfLoading(true)
@@ -76,61 +63,24 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
     }, 50)
   }
 
-  const rows = filtered.map(r => ({
-    Fornecedor: r.Fornecedor,
-    CNPJ: fmtCNPJ(r.CNPJ_Forn),
-    Area: r.Area,
-    Documento: r.Documento,
-    Competencia: r.Competencia,
-    Detalhe: r.Detalhe,
-  }))
+  // suppress unused warning — statusBadge kept for future use
+  void statusBadge
 
   return (
     <div id="section-pendencias">
-      {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-end">
-        <div>
-          <label className="block text-[12px] font-bold text-[#0E8FA3] uppercase mb-1">Fornecedor</label>
-          <select value={filt} onChange={e => setFilt(e.target.value)} className="border border-[#cde] rounded px-2 py-1.5 text-[13px]">
-            <option value="">Todos</option>
-            {fornList.map(f => <option key={f} value={f}>{f}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="block text-[12px] font-bold text-[#0E8FA3] uppercase mb-1">Área</label>
-          <select value={area} onChange={e => setArea(e.target.value)} className="border border-[#cde] rounded px-2 py-1.5 text-[13px]">
-            <option value="">Todas</option>
-            <option value="TERCEIROS">Terceiros</option>
-            <option value="DOCUMENTOS">Documental</option>
-          </select>
-        </div>
-        {competencias.length > 0 && (
-          <div>
-            <label className="block text-[12px] font-bold text-[#0E8FA3] uppercase mb-1">Competência</label>
-            <select value={comp} onChange={e => setComp(e.target.value)} className="border border-[#cde] rounded px-2 py-1.5 text-[13px]">
-              <option value="">Todas</option>
-              {competencias.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-        )}
-        <div>
-          <label className="block text-[12px] font-bold text-[#0E8FA3] uppercase mb-1">Buscar</label>
-          <input value={busca} onChange={e => setBusca(e.target.value)} placeholder="Documento ou pendência..." className="border border-[#cde] rounded px-2 py-1.5 text-[13px] w-48" />
-        </div>
-        <button onClick={clear} className="bg-[#0E8FA3] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#0a7a8d]">Limpar</button>
-        <div className="ml-auto flex items-center gap-1.5">
-          <span className="text-[11px] text-[#999] font-semibold uppercase mr-1">Exportar:</span>
-          <button onClick={() => exportXLSX(rows, 'pendencias_zurich')} className="bg-[#28A745] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#1e7e34]">Excel</button>
-          <button onClick={() => exportCSV(rows, 'pendencias_zurich')} className="bg-[#6C757D] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#545b62]">CSV</button>
-          <button onClick={handlePDF} disabled={pdfLoading} className="bg-[#DC3545] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#b02a37] disabled:opacity-60 disabled:cursor-wait flex items-center gap-1">
-            {pdfLoading ? '⏳' : '⬇'} PDF
-          </button>
-        </div>
+      {/* Export bar */}
+      <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-center justify-end">
+        <span className="text-[11px] text-[#999] font-semibold uppercase mr-1">Exportar:</span>
+        <button onClick={() => exportXLSX(rows, 'pendencias_zurich')} className="bg-[#28A745] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#1e7e34]">Excel</button>
+        <button onClick={() => exportCSV(rows, 'pendencias_zurich')} className="bg-[#6C757D] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#545b62]">CSV</button>
+        <button onClick={handlePDF} disabled={pdfLoading} className="bg-[#DC3545] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#b02a37] disabled:opacity-60 disabled:cursor-wait flex items-center gap-1">
+          {pdfLoading ? '⏳' : '⬇'} PDF
+        </button>
       </div>
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm p-4">
-        <p className="text-[13px] text-[#6C757D] mb-2">{filtered.length} pendência(s) de {data.length} no total</p>
+        <p className="text-[13px] text-[#6C757D] mb-2">{data.length} pendência(s)</p>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px] border-collapse">
             <thead>
@@ -141,7 +91,7 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r, i) => (
+              {data.map((r, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
                   <td className="px-3 py-2">
                     <div className="font-medium">{r.Fornecedor}</div>
@@ -159,7 +109,7 @@ export function PendenciasSection({ data, gfForn, competencias, geradoEm = '' }:
                   <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '240px', maxWidth: '420px' }}>{r.Detalhe}</td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
+              {data.length === 0 && (
                 <tr><td colSpan={5} className="px-3 py-6 text-center text-[#999]">Nenhuma pendência encontrada</td></tr>
               )}
             </tbody>

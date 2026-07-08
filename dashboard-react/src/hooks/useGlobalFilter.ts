@@ -11,6 +11,7 @@ export function parseFornVal(val: string): { nome: string; cnpj: string } {
 export function useGlobalFilter() {
   const [selectedFornSet, setSelectedFornSet] = useState<Set<string>>(new Set())
   const [selectedCompSet, setSelectedCompSet] = useState<Set<string>>(new Set())
+  const [selectedStatusSet, setSelectedStatusSet] = useState<Set<string>>(new Set())
 
   const toggleForn = useCallback((key: string) => {
     setSelectedFornSet(prev => {
@@ -30,13 +31,27 @@ export function useGlobalFilter() {
     })
   }, [])
 
+  const toggleStatus = useCallback((key: string) => {
+    setSelectedStatusSet(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }, [])
+
   const clearComp = useCallback(() => {
     setSelectedCompSet(new Set())
+  }, [])
+
+  const clearStatus = useCallback(() => {
+    setSelectedStatusSet(new Set())
   }, [])
 
   const clearAll = useCallback(() => {
     setSelectedFornSet(new Set())
     setSelectedCompSet(new Set())
+    setSelectedStatusSet(new Set())
   }, [])
 
   const matchesForn = useCallback(
@@ -58,5 +73,10 @@ export function useGlobalFilter() {
       ? parseFornVal([...selectedFornSet][0]).nome
       : `${selectedFornSet.size} fornecedores selecionados`
 
-  return { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, clearAll, matchesForn, label }
+  return {
+    selectedFornSet, toggleForn,
+    selectedCompSet, toggleComp, clearComp,
+    selectedStatusSet, toggleStatus, clearStatus,
+    clearAll, matchesForn, label,
+  }
 }

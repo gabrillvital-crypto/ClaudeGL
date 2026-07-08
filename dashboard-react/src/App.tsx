@@ -30,11 +30,11 @@ function fmtCNPJ(digits: string): string {
 
 export function App() {
   const { data, state, error } = useDashboardData()
-  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, clearAll, matchesForn } = useGlobalFilter()
+  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, clearAll, matchesForn } = useGlobalFilter()
   const [activeKpi, setActiveKpi] = useState<string | null>(null)
   const toggleKpi = useCallback((key: string) => setActiveKpi(prev => prev === key ? null : key), [])
 
-  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0
+  const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0
 
   // Opções para o dropdown — fonte: relatório de contratos (autoritativo) + fallback R3/R4
   // Uma linha por CNPJ único; filiais com mesmo nome ganham checkboxes independentes
@@ -86,8 +86,10 @@ export function App() {
       if (sitStatuses.length > 0)
         rows = rows.filter(r => sitStatuses.includes(r.Status))
     }
+    if (selectedStatusSet.size > 0)
+      rows = rows.filter(r => selectedStatusSet.has(r.Status))
     return rows
-  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi])
+  }, [data, selectedFornSet, selectedCompSet, matchesForn, activeKpi, selectedStatusSet])
 
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
@@ -99,8 +101,10 @@ export function App() {
       if (fornStatuses.length > 0)
         rows = rows.filter(r => fornStatuses.includes(r.Status))
     }
+    if (selectedStatusSet.size > 0)
+      rows = rows.filter(r => selectedStatusSet.has(r.Status))
     return rows
-  }, [data, hasFilter, matchesForn, selectedCompSet, activeKpi])
+  }, [data, hasFilter, matchesForn, selectedCompSet, activeKpi, selectedStatusSet])
 
   const tabelaFiltered = useMemo(() => {
     if (!data) return []
@@ -245,6 +249,21 @@ export function App() {
         selectedCompSet={selectedCompSet}
         onCompToggle={toggleComp}
         onCompClear={clearComp}
+        statusOptions={[
+          { key: 'Aprovado',             label: 'Aprovado' },
+          { key: 'Reprovado',            label: 'Reprovado' },
+          { key: 'Não anexado',          label: 'Não Enviado (R3)' },
+          { key: 'Aguardando Submissão', label: 'Aguard. Submissão (R3)' },
+          { key: 'Em Análise',           label: 'Em Análise (R3)' },
+          { key: 'Não Anexado',          label: 'Não Anexado (R4)' },
+          { key: 'Em análise',           label: 'Em análise (R4)' },
+          { key: 'Irregular',            label: 'Irregular (R4)' },
+          { key: 'Alerta',               label: 'Alerta (R4)' },
+          { key: 'Vencido',              label: 'Vencido (R4)' },
+        ]}
+        selectedStatusSet={selectedStatusSet}
+        onStatusToggle={toggleStatus}
+        onStatusClear={clearStatus}
         onClear={clearAll}
         onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
         onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}
@@ -266,12 +285,12 @@ export function App() {
 
         {/* Situação R4 */}
         <Section title="Situação Documental da Empresa (Documentação Corporativa)">
-          <SituacaoEmpresaSection data={fornSitFiltered} gfForn="" geradoEm={data.geradoEm} {...r4Kpis} />
+          <SituacaoEmpresaSection data={fornSitFiltered} geradoEm={data.geradoEm} {...r4Kpis} />
         </Section>
 
         {/* Pendências */}
         <Section title="Detalhamento das Pendências (com Competência)">
-          <PendenciasSection data={tabelaFiltered} gfForn="" competencias={data.competencias} geradoEm={data.geradoEm} />
+          <PendenciasSection data={tabelaFiltered} geradoEm={data.geradoEm} />
         </Section>
 
         {/* Contratos por Fornecedor */}

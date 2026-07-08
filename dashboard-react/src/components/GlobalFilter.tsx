@@ -14,6 +14,10 @@ interface Props {
   selectedCompSet: Set<string>
   onCompToggle: (key: string) => void
   onCompClear: () => void
+  statusOptions: Option[]
+  selectedStatusSet: Set<string>
+  onStatusToggle: (key: string) => void
+  onStatusClear: () => void
   onClear: () => void
   onExportXLSX?: () => void
   onExportPDF?: () => void
@@ -23,13 +27,15 @@ interface Props {
 export function GlobalFilter({
   fornOptions, selectedFornSet, onFornToggle, onFornClear,
   compOptions, selectedCompSet, onCompToggle, onCompClear,
+  statusOptions, selectedStatusSet, onStatusToggle, onStatusClear,
   onClear, onExportXLSX, onExportPDF, onExportCSV,
 }: Props) {
-  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0
+  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0
 
   const activeLabel = [
     selectedFornSet.size > 0 ? `${selectedFornSet.size} fornecedor(es)` : '',
     selectedCompSet.size > 0 ? `${selectedCompSet.size} competência(s)` : '',
+    selectedStatusSet.size > 0 ? `${selectedStatusSet.size} status` : '',
   ].filter(Boolean).join(' · ') + ' selecionado(s) — KPIs atualizados'
 
   return (
@@ -55,6 +61,18 @@ export function GlobalFilter({
           onClear={onCompClear}
           placeholder="Todas as competências"
           minWidth="220px"
+        />
+      </div>
+
+      <div>
+        <label className="block text-[11px] font-bold text-white/85 uppercase tracking-wide mb-1">Status</label>
+        <MultiSelectDropdown
+          options={statusOptions}
+          selected={selectedStatusSet}
+          onToggle={onStatusToggle}
+          onClear={onStatusClear}
+          placeholder="Todos os status"
+          minWidth="260px"
         />
       </div>
 
