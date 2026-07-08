@@ -16,6 +16,27 @@ function stripContratos(rows: Record<string, string>[]): Record<string, string>[
   })
 }
 
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+
+// Normaliza qualquer formato de competência para "MM/YY - Mês AAAA"
+// Aceita: "01/2026", "01/26", "01/26 - Janeiro 2026" (já no formato correto)
+function normalizeCompetencia(comp: string): string {
+  const s = (comp ?? '').trim()
+  if (!s || s === 'nan' || s === 'A classificar' || s === 'Não possui competência') return s
+  // Já está no formato longo — retorna como está
+  if (/^\d{2}\/\d{2}\s*-\s*.+\d{4}/.test(s)) return s
+  // MM/AAAA ou MM/AA
+  const m = s.match(/^(0[1-9]|1[0-2])\/(20\d{2}|\d{2})$/)
+  if (m) {
+    const mm = m[1]
+    const rawY = m[2]
+    const yyyy = rawY.length === 4 ? parseInt(rawY) : 2000 + parseInt(rawY)
+    const yy = String(yyyy).slice(2)
+    return `${mm}/${yy} - ${MONTHS_PT[parseInt(mm, 10) - 1]} ${yyyy}`
+  }
+  return s
+}
+
 export function abbrev(name: string, n = 40): string {
   const s = String(name || '').trim()
   const short = s.replace(/\s+(LTDA|LTDA\.|S\/A|SA|EIRELI|ME|EPP).*/i, '')
@@ -255,7 +276,7 @@ export function processAllData(
         Documento: docNome,
         Status: status,
         Vencimento: venc,
-        Competencia: DOCS_SEM_COMP_R3.has(docLower) ? '' : (comp || 'A classificar'),
+        Competencia: DOCS_SEM_COMP_R3.has(docLower) ? '' : (normalizeCompetencia(comp) || 'A classificar'),
       }
     })
     .filter((r): r is SitTerceiroRow => r !== null)
@@ -361,7 +382,7 @@ export function processAllData(
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
         // Competência só aparece para os 4 docs autorizados e nunca para busca_auto
-        Competencia: (autoEntry || !docAllowsComp) ? '' : ((rawComp && rawComp !== 'nan') ? rawComp : ''),
+        Competencia: (autoEntry || !docAllowsComp) ? '' : ((rawComp && rawComp !== 'nan') ? normalizeCompetencia(rawComp) : ''),
       }
     })
     .filter((r) => r !== null) as FornSitRow[]
@@ -457,14 +478,11 @@ export function processAllData(
   ])
   const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO'])
 
-  // Extrai competência MM/AAAA de qualquer texto que contenha padrão MM/AA ou MM/AAAA
+  // Extrai e normaliza competência de qualquer texto que contenha padrão MM/AA ou MM/AAAA
   function extractCompetenciaFromText(text: string): string | null {
     const m = text.match(/\b(0[1-9]|1[0-2])\/(20\d{2}|\d{2})\b/)
     if (!m) return null
-    const mm = m[1]
-    const rawY = m[2]
-    const yyyy = rawY.length === 4 ? rawY : `20${rawY}`
-    return `${mm}/${yyyy}`
+    return normalizeCompetencia(`${m[1]}/${m[2]}`)
   }
 
   // ── Tabela de pendências ───────────────────────────────────────────────────
@@ -480,7 +498,7 @@ export function processAllData(
       competencia = 'Não possui competência'
     } else {
       // Prioridade: coluna Marcas → data extraída do texto → fallback
-      competencia = comp
+      competencia = normalizeCompetencia(comp)
         || extractCompetenciaFromText(pendText)
         || extractCompetenciaFromText(docUpper)
         || 'A classificar'
