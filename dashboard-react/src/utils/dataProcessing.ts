@@ -40,12 +40,14 @@ function extractDoc(row: Record<string, string>, area = ''): string {
   // Apenas a primeira linha contém o nome do documento; o restante é descrição
   const firstLine = pend.split(/\r?\n/)[0].trim()
   if (area === 'TERCEIROS') {
-    // Formato: "NOME TERCEIRO - NOME DOCUMENTO, descrição..."
+    // Formato: "NOME TERCEIRO - NOME DOCUMENTO, descrição..." ou "... - NOME DOC. descrição..."
     const dashIdx = firstLine.indexOf(' - ')
     if (dashIdx >= 0) {
       const afterDash = firstLine.slice(dashIdx + 3)
-      const commaIdx = afterDash.indexOf(',')
-      return (commaIdx >= 0 ? afterDash.slice(0, commaIdx) : afterDash).trim().toUpperCase().slice(0, 80)
+      // Separador pode ser vírgula ou ponto (ambos são usados na base)
+      const m = afterDash.match(/^([^,.]+)/)
+      if (m) return m[1].trim().toUpperCase().slice(0, 80)
+      return afterDash.trim().toUpperCase().slice(0, 80)
     }
     return firstLine.toUpperCase().slice(0, 80) || 'OUTROS'
   }
