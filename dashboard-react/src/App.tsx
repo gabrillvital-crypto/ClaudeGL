@@ -55,22 +55,24 @@ export function App() {
 
   const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0
 
-  // Cross-reference: aeroporto → CNPJs de terceiros e de fornecedores
+  // Cross-reference: aeroporto → CPFs de terceiros, CNPJs de fornecedores, nomes de terceiros
   const aeroportoFilter = useMemo(() => {
     if (!data || selectedAeroportoSet.size === 0) return null
     const terceirosCPFs = new Set<string>()
     const fornCNPJs = new Set<string>()
+    const terceirosNomes = new Set<string>()
     data.contratosData.forEach(f => {
       f.contratos.forEach(c => {
         c.terceiros.forEach(t => {
           if (selectedAeroportoSet.has(t.aeroporto?.toUpperCase() ?? '')) {
             terceirosCPFs.add(t.cpf.replace(/\D/g, ''))
             fornCNPJs.add(f.cnpj.replace(/\D/g, ''))
+            if (t.nome) terceirosNomes.add(t.nome.toUpperCase().trim())
           }
         })
       })
     })
-    return { terceirosCPFs, fornCNPJs }
+    return { terceirosCPFs, fornCNPJs, terceirosNomes }
   }, [data, selectedAeroportoSet])
 
   // Opções para o dropdown — fonte: relatório de contratos (autoritativo) + fallback R3/R4
@@ -160,8 +162,17 @@ export function App() {
     let rows = hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
     if (selectedCompSet.size > 0)
       rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
-    if (aeroportoFilter)
-      rows = rows.filter(r => aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, '')))
+    if (aeroportoFilter) {
+      rows = rows.filter(r => {
+        if (r.Area === 'TERCEIROS') {
+          // Pendência de terceiro: verifica se o nome do terceiro (no Detalhe) está vinculado ao aeroporto
+          const det = r.Detalhe.toUpperCase()
+          return [...aeroportoFilter.terceirosNomes].some(nome => det.includes(nome))
+        }
+        // Pendência de documento do fornecedor: filtra pelo CNPJ do fornecedor
+        return aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, ''))
+      })
+    }
     return rows
   }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter])
 
