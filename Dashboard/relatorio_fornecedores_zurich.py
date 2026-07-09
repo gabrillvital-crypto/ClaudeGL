@@ -1603,42 +1603,14 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="filtro-bar">
-    <div>
-      <label>Status</label><br>
-      <select id="sit-status" onchange="filtrarSit()">
-        <option value="">Todos</option>
-        <option value="Aprovado">Aprovado</option>
-        <option value="Reprovado">Reprovado</option>
-        <option value="Não anexado">Não anexado</option>
-        <option value="Aguardando Submissão">Aguardando Submissão</option>
-        <option value="Em Análise">Em Análise</option>
-      </select>
-    </div>
-    <div>
-      <label>Competência</label><br>
-      <select id="sit-comp" onchange="filtrarSit()">
-        <option value="">Todas</option>
-      </select>
-    </div>
-    <div>
-      <label>Buscar documento</label><br>
-      <input type="text" id="sit-busca" placeholder="Ex: ASO, Ficha de EPI..." oninput="dbFiltrarSit()" style="width:220px">
-    </div>
-    <div style="align-self:flex-end">
-      <button class="btn-action btn-limpar" onclick="limparSit()">Limpar</button>
-    </div>
-    <div style="align-self:flex-end">
-      <button id="btn-modo-sit" class="btn-action btn-toggle" onclick="toggleModoAgrupado()">Modo Agrupado</button>
-    </div>
-    <div style="align-self:flex-end">
-      <span class="export-label">Exportar:</span>
-      <span class="export-group">
-        <button class="btn-action btn-export" onclick="exportarSitXLSX()">Excel</button>
-        <button class="btn-action btn-export-pdf" onclick="exportarSitPDF()">PDF</button>
-        <button class="btn-action btn-export-csv" onclick="exportarSit()">CSV</button>
-      </span>
-    </div>
+  <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap">
+    <button id="btn-modo-sit" class="btn-action btn-toggle" onclick="toggleModoAgrupado()">Modo Agrupado</button>
+    <span class="export-label">Exportar:</span>
+    <span class="export-group">
+      <button class="btn-action btn-export" onclick="exportarSitXLSX()">Excel</button>
+      <button class="btn-action btn-export-pdf" onclick="exportarSitPDF()">PDF</button>
+      <button class="btn-action btn-export-csv" onclick="exportarSit()">CSV</button>
+    </span>
   </div>
 
   <div class="chart-card">
@@ -1720,40 +1692,13 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="filtro-bar">
-    <div>
-      <label>Status</label><br>
-      <div class="lf-multi-wrap" id="fss-emp-wrap">
-        <div class="lf-multi-btn" onclick="toggleLfDropdown('fss',event)">
-          <span id="fss-emp-lbl">Todos</span><span id="fss-emp-arr">&#9660;</span>
-        </div>
-        <div class="lf-multi-panel" id="fss-emp-panel">
-          <div class="lf-multi-list" id="fss-emp-list"></div>
-          <div class="lf-multi-footer" onclick="clearFsStatSel()">Limpar seleção</div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <label>Competência</label><br>
-      <select id="fs-comp" onchange="filtrarFornSit()">
-        <option value="">Todas</option>
-      </select>
-    </div>
-    <div>
-      <label>Buscar documento</label><br>
-      <input type="text" id="forn-sit-busca" placeholder="Ex: FGTS, CND, TRF3..." oninput="dbFiltrarFornSit()" style="width:220px">
-    </div>
-    <div style="align-self:flex-end">
-      <button class="btn-action btn-limpar" onclick="limparFornSit()">Limpar</button>
-    </div>
-    <div style="align-self:flex-end">
-      <span class="export-label">Exportar:</span>
-      <span class="export-group">
-        <button class="btn-action btn-export" onclick="exportarFornSitXLSX()">Excel</button>
-        <button class="btn-action btn-export-pdf" onclick="exportarFornSitPDF()">PDF</button>
-        <button class="btn-action btn-export-csv" onclick="exportarFornSitCSV()">CSV</button>
-      </span>
-    </div>
+  <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap">
+    <span class="export-label">Exportar:</span>
+    <span class="export-group">
+      <button class="btn-action btn-export" onclick="exportarFornSitXLSX()">Excel</button>
+      <button class="btn-action btn-export-pdf" onclick="exportarFornSitPDF()">PDF</button>
+      <button class="btn-action btn-export-csv" onclick="exportarFornSitCSV()">CSV</button>
+    </span>
   </div>
 
   <div class="chart-card">
@@ -1783,37 +1728,13 @@ html = f"""<!DOCTYPE html>
   </div>
   <div id="pend-section" class="section-collapsible collapsed">
 
-  <div class="filtro-bar">
-    <div>
-      <label>Area</label><br>
-      <select id="filtro-area" onchange="filtrarTabela()">
-        <option value="">Todas</option>
-        <option value="TERCEIROS">Terceiros</option>
-        <option value="DOCUMENTOS">Fornecedor</option>
-      </select>
-    </div>
-    <div>
-      <label>Competencia</label><br>
-      <select id="filtro-competencia" onchange="filtrarTabela()">
-        <option value="">Todas</option>
-        {competencias_opts}
-      </select>
-    </div>
-    <div>
-      <label>Buscar</label><br>
-      <input type="text" id="filtro-busca" placeholder="Documento ou pendencia..." oninput="dbFiltrarTabela()" style="width:200px">
-    </div>
-    <div style="align-self:flex-end">
-      <button class="btn-action btn-limpar" onclick="limparFiltros()">Limpar</button>
-    </div>
-    <div style="align-self:flex-end">
-      <span class="export-label">Exportar:</span>
-      <span class="export-group">
-        <button class="btn-action btn-export" onclick="exportarPendXLSX()">Excel</button>
-        <button class="btn-action btn-export-pdf" onclick="exportarPendPDF()">PDF</button>
-        <button class="btn-action btn-export-csv" onclick="exportarPend()">CSV</button>
-      </span>
-    </div>
+  <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap">
+    <span class="export-label">Exportar:</span>
+    <span class="export-group">
+      <button class="btn-action btn-export" onclick="exportarPendXLSX()">Excel</button>
+      <button class="btn-action btn-export-pdf" onclick="exportarPendPDF()">PDF</button>
+      <button class="btn-action btn-export-csv" onclick="exportarPend()">CSV</button>
+    </span>
   </div>
 
   <div class="chart-card">
@@ -2421,29 +2342,6 @@ document.addEventListener("click", e => {{
 }});
 
 
-// Popular select de competência R3
-(function() {{
-  const sel = document.getElementById("sit-comp");
-  if (!sel) return;
-  const comps = [...new Set(SIT.map(r => r["Competencia"]).filter(Boolean))].sort();
-  comps.forEach(c => {{
-    const opt = document.createElement("option");
-    opt.value = opt.textContent = c;
-    sel.appendChild(opt);
-  }});
-}})();
-
-// Popular select de competência R4
-(function() {{
-  const sel = document.getElementById("fs-comp");
-  if (!sel) return;
-  const comps = [...new Set(FORN_SIT.map(r => r["Competencia"]).filter(Boolean))].sort();
-  comps.forEach(c => {{
-    const opt = document.createElement("option");
-    opt.value = opt.textContent = c;
-    sel.appendChild(opt);
-  }});
-}})();
 
 // ── BADGES ────────────────────────────────────────────────────────────────────
 function badgeStatus(s) {{
@@ -2503,17 +2401,11 @@ function toggleKpiCard(key) {{
 // ── TABELA SITUACAO ───────────────────────────────────────────────────────────
 let sitFiltrado = [];
 function filtrarSit() {{
-  const stat  = document.getElementById("sit-status").value;
-  const comp  = document.getElementById("sit-comp").value;
-  const busca = document.getElementById("sit-busca").value.toLowerCase();
   const stSet   = buildStatusTercSet();
   const aeroFlt = buildAeroportoFilter();
   sitFiltrado = SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ_Forn"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
-    if (stat  && r["Status"]      !== stat)  return false;
-    if (comp  && r["Competencia"] !== comp)  return false;
-    if (busca && !r["Documento"].toLowerCase().includes(busca)) return false;
     if (stSet) {{
       const cpfTerc = (r["CNPJ_Terceiro"] || '').replace(/\D/g,'');
       if (!stSet.has(cpfTerc)) return false;
@@ -2551,29 +2443,15 @@ function filtrarSit() {{
    ["sit-kpi-aguard-real", emAnal3], ["sit-kpi-terc", terc3]
   ].forEach(([id, val]) => {{ const e = document.getElementById(id); if (e) e.textContent = val; }});
 }}
-function limparSit() {{
-  ["sit-status","sit-comp","sit-busca"].forEach(id => {{
-    const el = document.getElementById(id); if (el) el.value = "";
-  }});
-  filtrarSit();
-}}
+function limparSit() {{ filtrarSit(); }}
 
 // ── TABELA PENDENCIAS ─────────────────────────────────────────────────────────
 let pendFiltrado = [];
 function filtrarTabela() {{
-  const area  = document.getElementById("filtro-area").value;
-  const comp  = document.getElementById("filtro-competencia").value;
-  const busca = document.getElementById("filtro-busca").value.toLowerCase();
   const aeroFltPend = buildAeroportoFilter();
   pendFiltrado = DADOS.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
-    if (area && r["Area"]        !== area) return false;
-    if (comp && r["Competencia"] !== comp) return false;
-    if (busca) {{
-      const txt = (r["Documento"] + " " + r["Detalhe"]).toLowerCase();
-      if (!txt.includes(busca)) return false;
-    }}
     if (aeroFltPend) {{
       if (r["Area"] === "TERCEIROS") {{
         const det = (r["Detalhe"] || "").toUpperCase();
@@ -2590,73 +2468,17 @@ function filtrarTabela() {{
   document.getElementById("tabela-count").textContent =
     `${{pendFiltrado.length}} pendencia(s) exibida(s) de ${{DADOS.length}} no total`;
 }}
-function limparFiltros() {{
-  ["filtro-area","filtro-competencia","filtro-busca"].forEach(id => {{
-    const el = document.getElementById(id); if (el) el.value = "";
-  }});
-  filtrarTabela();
-}}
+function limparFiltros() {{ filtrarTabela(); }}
 
-// ── STATUS MULTI-SELECT R4 ────────────────────────────────────────────────────
-const FS_STATUS_OPTIONS = [
-  {{ key: "Aprovado",    label: "Aprovado" }},
-  {{ key: "Reprovado",   label: "Reprovado" }},
-  {{ key: "Irregular",   label: "Irregular (Débito)" }},
-  {{ key: "Alerta",      label: "Alerta" }},
-  {{ key: "Não Anexado", label: "Não Anexado" }},
-  {{ key: "Em análise",  label: "Em análise" }},
-  {{ key: "Vencido",     label: "Vencido" }},
-];
-let fsStatSet = new Set();
-function buildFsStatMultiSelect() {{
-  const list = document.getElementById("fss-emp-list");
-  if (!list) return;
-  list.innerHTML = "";
-  FS_STATUS_OPTIONS.forEach(({{key, label}}) => {{
-    const div = document.createElement("div");
-    div.className = "lf-item";
-    div.dataset.key = key;
-    const cbId = "fss-lf-" + key.replace(/[^a-z0-9]/gi, "_");
-    div.innerHTML = `<input type="checkbox" id="${{cbId}}"><label for="${{cbId}}">${{label}}</label>`;
-    div.querySelector("input").addEventListener("change", e => {{
-      if (e.target.checked) {{ fsStatSet.add(key); div.classList.add("lf-selected"); }}
-      else {{ fsStatSet.delete(key); div.classList.remove("lf-selected"); }}
-      updateFsStatLabel();
-      filtrarFornSit();
-    }});
-    list.appendChild(div);
-  }});
-}}
-function updateFsStatLabel() {{
-  const lbl = document.getElementById("fss-emp-lbl");
-  if (!lbl) return;
-  lbl.textContent = fsStatSet.size === 0 ? "Todos"
-    : fsStatSet.size === 1 ? [...fsStatSet][0]
-    : fsStatSet.size + " selecionados";
-}}
-function clearFsStatSilent() {{
-  fsStatSet.clear();
-  document.querySelectorAll("#fss-emp-list .lf-item").forEach(div => {{
-    div.classList.remove("lf-selected");
-    const cb = div.querySelector("input"); if (cb) cb.checked = false;
-  }});
-  updateFsStatLabel();
-}}
-function clearFsStatSel() {{ clearFsStatSilent(); filtrarFornSit(); }}
 
 // ── TABELA SITUACAO DA EMPRESA (R4) ───────────────────────────────────────────
 let fornSitFiltrado = [];
 function filtrarFornSit() {{
-  const busca = document.getElementById("forn-sit-busca").value.toLowerCase();
-  const comp  = (document.getElementById("fs-comp") || {{}}).value || "";
   const cleanDoc = s => String(s || "").replace(/�/g, "");
   const aeroFltR4 = buildAeroportoFilter();
   fornSitFiltrado = FORN_SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
-    if (fsStatSet.size > 0 && !fsStatSet.has(r["Status"])) return false;
-    if (comp && r["Competencia"] !== comp) return false;
-    if (busca && !cleanDoc(r["Documento"]).toLowerCase().includes(busca)) return false;
     if (aeroFltR4) {{
       const cnpjForn = (r["CNPJ"] || '').replace(/\D/g,'');
       if (!aeroFltR4.fornCNPJs.has(cnpjForn)) return false;
@@ -2701,12 +2523,7 @@ function filtrarFornSit() {{
    ["r4-kpi-em-analise", emAnalise4], ["r4-kpi-vencido", vencido4], ["r4-kpi-forn", forn4]
   ].forEach(([id, val]) => {{ const e=document.getElementById(id); if(e) e.textContent=val; }});
 }}
-function limparFornSit() {{
-  clearFsStatSilent();
-  const busca = document.getElementById("forn-sit-busca"); if (busca) busca.value = "";
-  const comp  = document.getElementById("fs-comp"); if (comp) comp.value = "";
-  filtrarFornSit();
-}}
+function limparFornSit() {{ filtrarFornSit(); }}
 function exportarFornSitXLSX() {{
   downloadXLSX(fornSitFiltrado, ["Fornecedor","CNPJ","Documento","Competencia","Status","Vencimento"], "situacao_empresa_zurich.xlsx");
 }}
@@ -3527,7 +3344,6 @@ function limparGlobalFiltro() {{
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildFornMultiSelect();
 buildCompMultiSelect();
-buildFsStatMultiSelect();
 
 // ── TABELA SEM EXECUÇÃO ──────────────────────────────────────────────────────
 (function() {{
