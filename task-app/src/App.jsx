@@ -36,14 +36,14 @@ export default function App() {
     <div className="h-screen flex" style={{ background: '#F8FAFC' }}>
 
       {/* Sidebar */}
-      <aside className="w-56 flex flex-col shrink-0" style={{ background: '#111827' }}>
+      <aside className="w-56 flex flex-col shrink-0" style={{ background: '#153C5C' }}>
 
         {/* Logo */}
         <div className="px-4 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center gap-2.5">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-              style={{ background: '#0E8FA3' }}
+              style={{ background: '#14B3CC' }}
             >
               <span className="text-white text-xs font-bold tracking-tight">GE</span>
             </div>
@@ -76,7 +76,7 @@ export default function App() {
                         ? 'text-white'
                         : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
                     }`}
-                    style={active ? { background: '#0E8FA3' } : {}}
+                    style={active ? { background: '#14B3CC' } : {}}
                   >
                     <span className="text-sm leading-none">{t.emoji}</span>
                     <span>{t.label}</span>

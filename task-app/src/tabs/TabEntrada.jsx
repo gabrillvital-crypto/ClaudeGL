@@ -139,7 +139,7 @@ export default function TabEntrada({ onSaved }) {
             onClick={handleExtract}
             disabled={loading || !text.trim()}
             className="ml-auto text-sm font-bold px-6 py-2 rounded-xl text-white disabled:opacity-40"
-            style={{ background: '#0E8FA3' }}
+            style={{ background: '#14B3CC' }}
           >
             {loading ? 'Extraindo…' : '→ Extrair tarefas'}
           </button>

@@ -34,7 +34,7 @@ export default function ReviewModal({ tasks, onConfirm, onClose }) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
 
         {/* Header */}
-        <div className="px-5 py-4 text-white" style={{ background: '#0E8FA3' }}>
+        <div className="px-5 py-4 text-white" style={{ background: '#14B3CC' }}>
           <p className="font-bold text-base">✨ {tasks.length} tarefa{tasks.length !== 1 ? 's' : ''} identificada{tasks.length !== 1 ? 's' : ''}</p>
           <p className="text-sm opacity-80">Ajuste e confirme antes de salvar.</p>
         </div>
@@ -71,7 +71,7 @@ export default function ReviewModal({ tasks, onConfirm, onClose }) {
                   onClick={() => setShowDateFor(showDateFor === i ? null : i)}
                   className="text-xs px-2 py-1 rounded-lg border"
                   style={row.deadline
-                    ? { background: '#e0f7fa', color: '#0E8FA3', borderColor: '#0E8FA3' }
+                    ? { background: '#e0f7fa', color: '#14B3CC', borderColor: '#14B3CC' }
                     : { background: '#f3f4f6', color: '#6b7280', borderColor: '#e5e7eb' }
                   }
                 >
@@ -98,7 +98,7 @@ export default function ReviewModal({ tasks, onConfirm, onClose }) {
               onClick={() => { onConfirm(selected); onClose() }}
               disabled={!selected.length}
               className="text-sm font-bold px-5 py-2 rounded-lg text-white disabled:opacity-40"
-              style={{ background: '#0E8FA3' }}
+              style={{ background: '#14B3CC' }}
             >
               Salvar tarefas ✓
             </button>

@@ -53,7 +53,7 @@ export default function ReportModal({ onClose }) {
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Atalhos rápidos</p>
           <div className="flex gap-2 mb-4 flex-wrap">
             {[['Esta semana', setWeek], ['Últimos 15 dias', set15], ['Este mês', setMonth]].map(([lbl, fn]) => (
-              <button key={lbl} onClick={fn} className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{ background: '#e0f7fa', color: '#0E8FA3' }}>
+              <button key={lbl} onClick={fn} className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{ background: '#e0f7fa', color: '#14B3CC' }}>
                 {lbl}
               </button>
             ))}
@@ -80,7 +80,7 @@ export default function ReportModal({ onClose }) {
                 key={v}
                 onClick={() => setTabFilter(v)}
                 className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${tabFilter === v ? 'text-white' : 'bg-gray-100 text-gray-500'}`}
-                style={tabFilter === v ? { background: '#0E8FA3' } : {}}
+                style={tabFilter === v ? { background: '#14B3CC' } : {}}
               >{l}</button>
             ))}
           </div>
@@ -90,7 +90,7 @@ export default function ReportModal({ onClose }) {
           <button onClick={onClose} className="flex-1 text-sm py-2 rounded-xl bg-gray-100 text-gray-600">
             Cancelar
           </button>
-          <button onClick={generate} disabled={loading} className="flex-1 text-sm font-bold py-2 rounded-xl text-white disabled:opacity-40" style={{ background: '#0E8FA3' }}>
+          <button onClick={generate} disabled={loading} className="flex-1 text-sm font-bold py-2 rounded-xl text-white disabled:opacity-40" style={{ background: '#14B3CC' }}>
             {loading ? 'Gerando…' : 'Abrir no navegador'}
           </button>
         </div>

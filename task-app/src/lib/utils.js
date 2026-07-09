@@ -1,4 +1,10 @@
-export const TEAL = '#0E8FA3'
+// Paleta oficial Efcaz — verificada via CSS do site efcaz.com.br (09/07/2026)
+export const TEAL         = '#14B3CC'   // cyan-400 — primária (botões, links, accent)
+export const TEAL_HOVER   = '#0BA2B9'   // cyan-500 — hover
+export const TEAL_DARK    = '#0E8FA3'   // cyan-600 — dark variant
+export const NAVY         = '#153C5C'   // navy-700 — sidebar, elementos escuros
+export const NAVY_DARK    = '#112F47'   // navy-800 — hover do navy
+export const TEAL_SOFT    = 'rgba(20, 179, 204, 0.10)'  // fundo hover suave
 
 export const PRIORITY = {
   alta:  { label: 'Alta',  color: '#B83232', bg: '#FDECEA', ring: 'ring-red-300' },
@@ -71,14 +77,14 @@ export function generateReportHTML(tasks, tabFilter, dateFrom, dateTo) {
 <title>Relatório — Efcaz CS</title>
 <style>
 body{font-family:Calibri,Arial,sans-serif;margin:0;background:#f4f6f7;color:#333}
-.hdr{background:#0E8FA3;color:#fff;padding:24px 40px}
+.hdr{background:#14B3CC;color:#fff;padding:24px 40px}
 .hdr h1{margin:0;font-size:22px}.hdr p{margin:4px 0 0;opacity:.8;font-size:13px}
 .body{padding:28px 40px}
 .stats{display:flex;gap:16px;margin-bottom:28px}
-.stat{background:#fff;border-radius:8px;padding:14px 22px;text-align:center;border-top:4px solid #0E8FA3;min-width:100px}
-.stat .n{font-size:28px;font-weight:bold;color:#0E8FA3}.stat .l{font-size:11px;color:#999;margin-top:2px}
+.stat{background:#fff;border-radius:8px;padding:14px 22px;text-align:center;border-top:4px solid #14B3CC;min-width:100px}
+.stat .n{font-size:28px;font-weight:bold;color:#14B3CC}.stat .l{font-size:11px;color:#999;margin-top:2px}
 .sec{font-size:11px;font-weight:bold;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid #e0e0e0}
-.task{background:#fff;border-radius:8px;margin-bottom:8px;padding:14px 18px;border-left:4px solid #0E8FA3}
+.task{background:#fff;border-radius:8px;margin-bottom:8px;padding:14px 18px;border-left:4px solid #14B3CC}
 .ttl{font-size:14px;font-weight:bold;margin-bottom:4px}
 .desc,.note{font-size:12px;color:#666;margin-bottom:4px}.note{font-style:italic}
 .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:bold;color:#fff;margin-right:8px}

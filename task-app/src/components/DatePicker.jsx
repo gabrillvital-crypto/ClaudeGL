@@ -53,7 +53,7 @@ export default function DatePicker({ value, onChange, onClose }) {
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3" style={{ background: '#0E8FA3' }}>
+        <div className="flex items-center justify-between px-4 py-3" style={{ background: '#14B3CC' }}>
           <button
             onClick={prevMonth}
             className="text-white font-bold text-xl w-8 h-8 flex items-center justify-center rounded hover:bg-white/20"
@@ -88,7 +88,7 @@ export default function DatePicker({ value, onChange, onClose }) {
                 className={`h-9 w-full rounded text-sm font-medium transition-colors
                   ${isSel ? 'text-white' : isToday ? 'font-bold' : 'text-gray-700 hover:bg-teal-light'}
                 `}
-                style={isSel ? { background: '#0E8FA3' } : isToday ? { border: '2px solid #0E8FA3', color: '#0E8FA3' } : {}}
+                style={isSel ? { background: '#14B3CC' } : isToday ? { border: '2px solid #14B3CC', color: '#14B3CC' } : {}}
               >
                 {day}
               </button>
@@ -107,7 +107,7 @@ export default function DatePicker({ value, onChange, onClose }) {
           <button
             onClick={() => { onChange(todayStr); onClose() }}
             className="text-xs font-semibold px-3 py-1 rounded-full"
-            style={{ background: '#e0f7fa', color: '#0E8FA3' }}
+            style={{ background: '#e0f7fa', color: '#14B3CC' }}
           >
             Hoje
           </button>

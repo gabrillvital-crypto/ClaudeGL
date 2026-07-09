@@ -127,7 +127,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
       <div className="bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-3xl sm:mx-6 max-h-[95vh] flex flex-col shadow-2xl">
 
         {/* Action bar */}
-        <div className="flex items-center gap-2 px-4 py-3 rounded-t-3xl sm:rounded-t-2xl" style={{ background: '#0E8FA3' }}>
+        <div className="flex items-center gap-2 px-4 py-3 rounded-t-3xl sm:rounded-t-2xl" style={{ background: '#14B3CC' }}>
           <button
             onClick={handleDelete}
             className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded-lg"
@@ -136,7 +136,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
           <button onClick={onClose} className="text-white/80 hover:text-white text-xs px-3 py-2 rounded-lg border border-white/30">
             Cancelar
           </button>
-          <button onClick={save} disabled={saving} className="bg-white text-sm font-bold px-4 py-2 rounded-lg" style={{ color: '#0E8FA3' }}>
+          <button onClick={save} disabled={saving} className="bg-white text-sm font-bold px-4 py-2 rounded-lg" style={{ color: '#14B3CC' }}>
             {saving ? '…' : 'Salvar'}
           </button>
           <button
@@ -159,7 +159,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Título</label>
             <input
               className="w-full mt-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
-              style={{ '--tw-ring-color': '#0E8FA3' }}
+              style={{ '--tw-ring-color': '#14B3CC' }}
               value={task.title}
               onChange={e => setField('title', e.target.value)}
             />
@@ -195,7 +195,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
                 onClick={() => setShowDatePicker(true)}
                 className="text-xs px-3 py-2 rounded-lg border"
                 style={task.deadline
-                  ? { background: '#e0f7fa', color: '#0E8FA3', borderColor: '#0E8FA3' }
+                  ? { background: '#e0f7fa', color: '#14B3CC', borderColor: '#14B3CC' }
                   : { background: '#f3f4f6', color: '#6b7280', borderColor: '#e5e7eb' }
                 }
               >
@@ -239,7 +239,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
             <button
               onClick={save}
               className="mt-1 text-xs font-bold px-3 py-1 rounded-lg"
-              style={{ background: '#e0f7fa', color: '#0E8FA3' }}
+              style={{ background: '#e0f7fa', color: '#14B3CC' }}
             >✓ Salvar nota</button>
           </div>
 
@@ -287,7 +287,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
               <button
                 onClick={addItem}
                 className="text-xs font-bold px-3 py-1.5 rounded-lg text-white"
-                style={{ background: '#0E8FA3' }}
+                style={{ background: '#14B3CC' }}
               >+ Add</button>
             </div>
           </div>

@@ -78,7 +78,7 @@ export default function TabList({ tab, onOpenTask }) {
               onClick={() => setPrio(p)}
               className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
               style={prio === p
-                ? { background: '#0E8FA3', color: '#fff' }
+                ? { background: '#14B3CC', color: '#fff' }
                 : { background: '#F1F5F9', color: '#64748B' }
               }
             >
@@ -107,7 +107,7 @@ export default function TabList({ tab, onOpenTask }) {
         <button
           onClick={() => setShowAdd(v => !v)}
           className="text-xs font-semibold px-4 py-1.5 rounded-lg text-white transition-opacity hover:opacity-90"
-          style={{ background: '#0E8FA3' }}
+          style={{ background: '#14B3CC' }}
         >
           + Nova tarefa
         </button>
@@ -149,7 +149,7 @@ export default function TabList({ tab, onOpenTask }) {
               onClick={() => setShowDateAdd(true)}
               className="text-xs px-2.5 py-1 rounded-lg font-medium transition-all"
               style={newDeadline
-                ? { background: '#E6F4F7', color: '#0E8FA3', border: '1px solid #0E8FA3' }
+                ? { background: '#E6F4F7', color: '#14B3CC', border: '1px solid #14B3CC' }
                 : { background: '#F1F5F9', color: '#64748B', border: '1px solid transparent' }
               }
             >
@@ -159,7 +159,7 @@ export default function TabList({ tab, onOpenTask }) {
               onClick={handleAdd}
               disabled={saving}
               className="ml-auto text-xs font-semibold px-4 py-1.5 rounded-lg text-white disabled:opacity-60"
-              style={{ background: '#0E8FA3' }}
+              style={{ background: '#14B3CC' }}
             >
               {saving ? 'Salvando…' : 'Adicionar'}
             </button>
