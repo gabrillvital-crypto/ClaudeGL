@@ -14,6 +14,8 @@ export default function TabList({ tab, onOpenTask }) {
   const [newPrio, setNewPrio] = useState('media')
   const [newDeadline, setNewDeadline] = useState(null)
   const [showDateAdd, setShowDateAdd] = useState(false)
+  const [addError, setAddError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   const load = useCallback(async () => {
     const data = await fetchTasks(tab, showDone, prio)
@@ -43,9 +45,17 @@ export default function TabList({ tab, onOpenTask }) {
   async function handleAdd() {
     const title = newTitle.trim()
     if (!title) return
-    await addTask({ tab, title, priority: newPrio, deadline: newDeadline })
-    setNewTitle(''); setNewPrio('media'); setNewDeadline(null); setShowAdd(false)
-    load()
+    setSaving(true)
+    setAddError('')
+    try {
+      await addTask({ tab, title, priority: newPrio, deadline: newDeadline })
+      setNewTitle(''); setNewPrio('media'); setNewDeadline(null); setShowAdd(false)
+      await load()
+    } catch (err) {
+      setAddError('Erro ao salvar: ' + (err.message || 'verifique a conexão'))
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleStatusChange(id, status) {
@@ -100,6 +110,7 @@ export default function TabList({ tab, onOpenTask }) {
             onChange={e => setNewTitle(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleAdd()}
           />
+          {addError && <p className="text-xs text-red-600">{addError}</p>}
           <div className="flex gap-2 flex-wrap">
             {['alta', 'media', 'baixa'].map(p => (
               <button
@@ -118,10 +129,15 @@ export default function TabList({ tab, onOpenTask }) {
             >
               📅 {newDeadline ? newDeadline.split('-').reverse().join('/') : 'Prazo'}
             </button>
-            <button onClick={handleAdd} className="ml-auto text-xs font-bold px-4 py-1 rounded-full text-white" style={{ background: '#0E8FA3' }}>
-              Adicionar
+            <button
+              onClick={handleAdd}
+              disabled={saving}
+              className="ml-auto text-xs font-bold px-4 py-1 rounded-full text-white disabled:opacity-60"
+              style={{ background: '#0E8FA3' }}
+            >
+              {saving ? 'Salvando…' : 'Adicionar'}
             </button>
-            <button onClick={() => setShowAdd(false)} className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-500">
+            <button onClick={() => { setShowAdd(false); setAddError('') }} className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-500">
               Cancelar
             </button>
           </div>
