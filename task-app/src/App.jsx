@@ -10,10 +10,16 @@ import ReportModal from './components/ReportModal'
 const TABS = [
   { id: 'pessoal',      label: 'Pessoal',      emoji: '👤' },
   { id: 'profissional', label: 'Profissional',  emoji: '💼' },
-  { id: 'hoje',         label: 'Hoje',          emoji: '📅', color: '#ea580c' },
-  { id: 'atividades',   label: 'Atividades',    emoji: '✅', color: '#059669' },
-  { id: 'andamento',    label: 'Andamento',     emoji: '▶',  color: '#b45309' },
-  { id: 'entrada',      label: 'Entrada',       emoji: '📥', color: '#7c3aed' },
+  { id: 'hoje',         label: 'Hoje',          emoji: '📅' },
+  { id: 'andamento',    label: 'Andamento',     emoji: '▶' },
+  { id: 'atividades',   label: 'Concluídas',    emoji: '✅' },
+  { id: 'entrada',      label: 'Entrada IA',    emoji: '✨' },
+]
+
+const TAB_GROUPS = [
+  { label: 'Áreas',       ids: ['pessoal', 'profissional'] },
+  { label: 'Focado',      ids: ['hoje', 'andamento'] },
+  { label: 'Ferramentas', ids: ['atividades', 'entrada'] },
 ]
 
 export default function App() {
@@ -27,44 +33,65 @@ export default function App() {
   const tab = TABS.find(t => t.id === activeTab)
 
   return (
-    <div className="h-screen flex bg-gray-100">
+    <div className="h-screen flex" style={{ background: '#F8FAFC' }}>
 
       {/* Sidebar */}
-      <aside className="w-52 flex flex-col bg-white border-r border-gray-200 shadow-sm shrink-0">
+      <aside className="w-56 flex flex-col shrink-0" style={{ background: '#111827' }}>
+
         {/* Logo */}
-        <div className="px-5 py-5" style={{ background: '#0E8FA3' }}>
-          <h1 className="text-white font-bold text-sm leading-tight tracking-wide">Gestão Efcaz</h1>
-          <p className="text-white/60 text-xs mt-0.5">CS Task Manager</p>
+        <div className="px-4 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: '#0E8FA3' }}
+            >
+              <span className="text-white text-xs font-bold tracking-tight">GE</span>
+            </div>
+            <div>
+              <p className="text-white font-semibold text-sm leading-tight">Gestão Efcaz</p>
+              <p className="text-xs leading-tight" style={{ color: '#6B7280' }}>CS Task Manager</p>
+            </div>
+          </div>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 py-3 overflow-y-auto">
-          {TABS.map(t => {
-            const active = activeTab === t.id
-            const color = t.color || '#0E8FA3'
-            return (
-              <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id)}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all text-left ${
-                  active
-                    ? 'text-white rounded-none'
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
-                }`}
-                style={active ? { background: color } : {}}
+        {/* Nav agrupada */}
+        <nav className="flex-1 py-4 px-2 overflow-y-auto">
+          {TAB_GROUPS.map((group, gi) => (
+            <div key={group.label} className={gi > 0 ? 'mt-5' : ''}>
+              <p
+                className="px-3 mb-1.5 font-semibold tracking-widest uppercase"
+                style={{ fontSize: '9px', color: '#4B5563' }}
               >
-                <span className="text-base">{t.emoji}</span>
-                <span>{t.label}</span>
-              </button>
-            )
-          })}
+                {group.label}
+              </p>
+              {group.ids.map(id => {
+                const t = TABS.find(x => x.id === id)
+                const active = activeTab === id
+                return (
+                  <button
+                    key={id}
+                    onClick={() => setActiveTab(id)}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg mb-0.5 transition-colors text-left font-medium ${
+                      active
+                        ? 'text-white'
+                        : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+                    }`}
+                    style={active ? { background: '#0E8FA3' } : {}}
+                  >
+                    <span className="text-sm leading-none">{t.emoji}</span>
+                    <span>{t.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          ))}
         </nav>
 
-        {/* Report */}
-        <div className="p-3 border-t border-gray-100">
+        {/* Rodapé sidebar */}
+        <div className="p-3" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <button
             onClick={() => setShowReport(true)}
-            className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-gray-400 hover:bg-white/5 hover:text-gray-200 transition-colors"
           >
             <span>📊</span>
             <span>Relatório</span>
@@ -72,16 +99,16 @@ export default function App() {
         </div>
       </aside>
 
-      {/* Content */}
+      {/* Área de conteúdo */}
       <main className="flex-1 flex flex-col overflow-hidden">
 
-        {/* Content header */}
-        <div className="flex items-center px-6 py-3 bg-white border-b border-gray-200 shrink-0">
-          <span className="text-lg mr-2">{tab.emoji}</span>
-          <h2 className="font-semibold text-gray-800">{tab.label}</h2>
+        {/* Header da aba */}
+        <div className="flex items-center gap-3 px-6 py-4 bg-white shrink-0" style={{ borderBottom: '1px solid #E8EEF4' }}>
+          <span className="text-lg leading-none">{tab.emoji}</span>
+          <h2 className="font-semibold text-gray-900">{tab.label}</h2>
         </div>
 
-        {/* Tab content */}
+        {/* Conteúdo */}
         <div className="flex-1 overflow-hidden">
           {activeTab === 'pessoal' && (
             <TabList key={`pessoal-${refreshKey}`} tab="pessoal" onOpenTask={setOpenTaskId} />
@@ -104,7 +131,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Modals */}
+      {/* Modais */}
       {openTaskId && (
         <TaskDetailModal
           taskId={openTaskId}

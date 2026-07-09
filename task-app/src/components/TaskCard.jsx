@@ -5,14 +5,15 @@ export default function TaskCard({ task, onOpen, onStatusChange }) {
   const dl = deadlineStatus(task.deadline)
   const ck = task._checklist || []
   const ckDone = ck.filter(i => i.is_done).length
-
-  const dlBadge = dl === 'overdue'
-    ? 'bg-red-100 text-red-700'
-    : dl === 'today'
-    ? 'bg-orange-100 text-orange-700'
-    : 'bg-gray-100 text-gray-500'
-
   const isIP = task.status === 'in_progress'
+
+  const dotColor = isIP ? IN_PROGRESS_COLOR : p.color
+
+  const dlStyle = dl === 'overdue'
+    ? { background: '#FEE2E2', color: '#B91C1C' }
+    : dl === 'today'
+    ? { background: '#FEF9C3', color: '#854D0E' }
+    : { background: '#F1F5F9', color: '#64748B' }
 
   function handleContext(e) {
     e.preventDefault()
@@ -22,60 +23,67 @@ export default function TaskCard({ task, onOpen, onStatusChange }) {
         : { label: '▶ Marcar em andamento', status: 'in_progress' },
       { label: '✓ Concluir', status: 'done' },
     ]
-    showContextMenu(e.clientX, e.clientY, menu, (s) => onStatusChange(task.id, s))
+    showContextMenu(e.clientX, e.clientY, menu, s => onStatusChange(task.id, s))
   }
 
   return (
     <div
       onClick={() => onOpen(task.id)}
       onContextMenu={handleContext}
-      className="bg-white rounded-xl p-4 cursor-pointer border-l-4 shadow-sm hover:shadow-md transition-all select-none"
-      style={{ borderLeftColor: isIP ? IN_PROGRESS_COLOR : '#E5E7EB' }}
+      className="bg-white rounded-xl p-4 cursor-pointer transition-all select-none hover:shadow-md"
+      style={{ border: '1px solid #E8EEF4' }}
     >
-      <div className="flex items-start gap-3">
-        {/* Prioridade pill */}
+      {/* Linha título */}
+      <div className="flex items-start gap-2.5">
         <span
-          className="mt-0.5 shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full"
+          className="mt-[5px] w-2 h-2 rounded-full shrink-0"
+          style={{ backgroundColor: dotColor }}
+        />
+        <p className="text-sm font-medium leading-snug flex-1 min-w-0" style={{ color: isIP ? IN_PROGRESS_COLOR : '#1E293B' }}>
+          {isIP && <span className="mr-1 text-xs">▶</span>}
+          {task.title}
+        </p>
+      </div>
+
+      {/* Linha de badges */}
+      <div className="flex items-center gap-1.5 flex-wrap mt-2.5 ml-[18px]">
+        <span
+          className="text-xs font-medium px-1.5 py-0.5 rounded"
           style={{ backgroundColor: p.bg, color: p.color }}
         >
           {p.label}
         </span>
 
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-800 truncate" style={isIP ? { color: IN_PROGRESS_COLOR } : {}}>
-            {isIP && <span className="mr-1 text-xs">▶</span>}
-            {task.title}
-          </p>
+        {task.deadline && (
+          <span className="text-xs font-medium px-1.5 py-0.5 rounded" style={dlStyle}>
+            📅 {fmtDate(task.deadline)}
+          </span>
+        )}
 
-          {task.notes && (
-            <p className="text-xs text-gray-400 mt-0.5 truncate">{task.notes}</p>
-          )}
+        {ck.length > 0 && (
+          <span className="text-xs" style={{ color: '#94A3B8' }}>
+            ☑ {ckDone}/{ck.length}
+          </span>
+        )}
 
-          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {task.deadline && (
-              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${dlBadge}`}>
-                📅 {fmtDate(task.deadline)}
-              </span>
-            )}
-            {ck.length > 0 && (
-              <span className="text-xs text-gray-400">
-                ☑ {ckDone}/{ck.length}
-              </span>
-            )}
-            {task.clients?.name && (
-              <span className="text-xs px-2 py-0.5 rounded-full truncate max-w-[140px]"
-                style={{ background: '#EFF6FF', color: '#2563EB' }}>
-                {task.clients.name}
-              </span>
-            )}
-          </div>
-        </div>
+        {task.clients?.name && (
+          <span
+            className="text-xs px-1.5 py-0.5 rounded truncate max-w-[130px]"
+            style={{ background: '#EFF6FF', color: '#3B82F6' }}
+          >
+            {task.clients.name}
+          </span>
+        )}
       </div>
+
+      {task.notes && (
+        <p className="text-xs mt-2 ml-[18px] truncate" style={{ color: '#94A3B8' }}>{task.notes}</p>
+      )}
     </div>
   )
 }
 
-// ── Context menu imperativo (simples, sem dependência) ────────────────────────
+// ── Context menu ──────────────────────────────────────────────────────────────
 
 function showContextMenu(x, y, items, onSelect) {
   const existing = document.getElementById('ctx-menu')
@@ -83,14 +91,19 @@ function showContextMenu(x, y, items, onSelect) {
 
   const menu = document.createElement('div')
   menu.id = 'ctx-menu'
-  menu.style.cssText = `position:fixed;top:${y}px;left:${x}px;z-index:9999;background:white;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);min-width:200px;overflow:hidden`
+  menu.style.cssText = [
+    `position:fixed`, `top:${y}px`, `left:${x}px`, `z-index:9999`,
+    `background:#fff`, `border:1px solid #E8EEF4`, `border-radius:10px`,
+    `box-shadow:0 8px 30px rgba(0,0,0,.12)`, `min-width:210px`, `overflow:hidden`,
+    `padding:4px`,
+  ].join(';')
 
   items.forEach(item => {
     const btn = document.createElement('button')
     btn.textContent = item.label
-    btn.style.cssText = 'display:block;width:100%;text-align:left;padding:10px 16px;font-size:13px;background:none;border:none;cursor:pointer;color:#374151'
-    btn.onmouseenter = () => btn.style.background = '#f3f4f6'
-    btn.onmouseleave = () => btn.style.background = 'none'
+    btn.style.cssText = 'display:block;width:100%;text-align:left;padding:8px 12px;font-size:13px;background:none;border:none;cursor:pointer;color:#374151;border-radius:6px'
+    btn.onmouseenter = () => { btn.style.background = '#F8FAFC'; btn.style.color = '#111827' }
+    btn.onmouseleave = () => { btn.style.background = 'none'; btn.style.color = '#374151' }
     btn.onclick = () => { onSelect(item.status); menu.remove() }
     menu.appendChild(btn)
   })
