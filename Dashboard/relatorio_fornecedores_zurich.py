@@ -1605,19 +1605,6 @@ html = f"""<!DOCTYPE html>
 
   <div class="filtro-bar">
     <div>
-      <label>Fornecedor</label><br>
-      <div class="lf-multi-wrap" id="sit-emp-wrap">
-        <div class="lf-multi-btn" onclick="toggleLfDropdown('sit',event)">
-          <span id="sit-emp-lbl">Todos</span><span id="sit-emp-arr">&#9660;</span>
-        </div>
-        <div class="lf-multi-panel" id="sit-emp-panel">
-          <input class="lf-multi-search" placeholder="Buscar fornecedor..." oninput="filterLfItems('sit',this.value)">
-          <div class="lf-multi-list" id="sit-emp-list"></div>
-          <div class="lf-multi-footer" onclick="clearLfSel('sit',sitEmpSet,filtrarSit)">Limpar seleção</div>
-        </div>
-      </div>
-    </div>
-    <div>
       <label>Status</label><br>
       <select id="sit-status" onchange="filtrarSit()">
         <option value="">Todos</option>
@@ -1735,19 +1722,6 @@ html = f"""<!DOCTYPE html>
 
   <div class="filtro-bar">
     <div>
-      <label>Fornecedor</label><br>
-      <div class="lf-multi-wrap" id="fs-emp-wrap">
-        <div class="lf-multi-btn" onclick="toggleLfDropdown('fs',event)">
-          <span id="fs-emp-lbl">Todos</span><span id="fs-emp-arr">&#9660;</span>
-        </div>
-        <div class="lf-multi-panel" id="fs-emp-panel">
-          <input class="lf-multi-search" placeholder="Buscar fornecedor..." oninput="filterLfItems('fs',this.value)">
-          <div class="lf-multi-list" id="fs-emp-list"></div>
-          <div class="lf-multi-footer" onclick="clearLfSel('fs',fsEmpSet,filtrarFornSit)">Limpar seleção</div>
-        </div>
-      </div>
-    </div>
-    <div>
       <label>Status</label><br>
       <div class="lf-multi-wrap" id="fss-emp-wrap">
         <div class="lf-multi-btn" onclick="toggleLfDropdown('fss',event)">
@@ -1810,19 +1784,6 @@ html = f"""<!DOCTYPE html>
   <div id="pend-section" class="section-collapsible collapsed">
 
   <div class="filtro-bar">
-    <div>
-      <label>Fornecedor</label><br>
-      <div class="lf-multi-wrap" id="pend-emp-wrap">
-        <div class="lf-multi-btn" onclick="toggleLfDropdown('pend',event)">
-          <span id="pend-emp-lbl">Todos</span><span id="pend-emp-arr">&#9660;</span>
-        </div>
-        <div class="lf-multi-panel" id="pend-emp-panel">
-          <input class="lf-multi-search" placeholder="Buscar fornecedor..." oninput="filterLfItems('pend',this.value)">
-          <div class="lf-multi-list" id="pend-emp-list"></div>
-          <div class="lf-multi-footer" onclick="clearLfSel('pend',pendEmpSet,filtrarTabela)">Limpar seleção</div>
-        </div>
-      </div>
-    </div>
     <div>
       <label>Area</label><br>
       <select id="filtro-area" onchange="filtrarTabela()">
@@ -2361,9 +2322,6 @@ function buildFornSelect(selId, names) {{
 }}
 
 // ── MULTI-SELECT LOCAL — Sets de seleção por seção ────────────────────────────
-const sitEmpSet  = new Set();
-const pendEmpSet = new Set();
-const fsEmpSet   = new Set();
 
 function matchesLocalSet(set, nome, cnpj) {{
   if (set.size === 0) return true;
@@ -2462,10 +2420,6 @@ document.addEventListener("click", e => {{
   }}
 }});
 
-// Inicializar os 3 multi-selects locais
-buildLfMultiSelect("sit",  buildLfPares([...new Set(SIT.map(r => r["Fornecedor"]))]),        sitEmpSet,  filtrarSit);
-buildLfMultiSelect("pend", buildLfPares([...new Set(DADOS.map(r => r["Fornecedor"]))]),      pendEmpSet, filtrarTabela);
-buildLfMultiSelect("fs",   buildLfPares([...new Set(FORN_SIT.map(r => r["Fornecedor"]))]),  fsEmpSet,   filtrarFornSit);
 
 // Popular select de competência R3
 (function() {{
@@ -2557,7 +2511,6 @@ function filtrarSit() {{
   sitFiltrado = SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ_Forn"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
-    if (!matchesLocalSet(sitEmpSet, r["Fornecedor"], r["CNPJ_Forn"])) return false;
     if (stat  && r["Status"]      !== stat)  return false;
     if (comp  && r["Competencia"] !== comp)  return false;
     if (busca && !r["Documento"].toLowerCase().includes(busca)) return false;
@@ -2599,7 +2552,6 @@ function filtrarSit() {{
   ].forEach(([id, val]) => {{ const e = document.getElementById(id); if (e) e.textContent = val; }});
 }}
 function limparSit() {{
-  clearLfSel("sit", sitEmpSet, () => {{}});
   ["sit-status","sit-comp","sit-busca"].forEach(id => {{
     const el = document.getElementById(id); if (el) el.value = "";
   }});
@@ -2616,7 +2568,6 @@ function filtrarTabela() {{
   pendFiltrado = DADOS.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
-    if (!matchesLocalSet(pendEmpSet, r["Fornecedor"], null)) return false;
     if (area && r["Area"]        !== area) return false;
     if (comp && r["Competencia"] !== comp) return false;
     if (busca) {{
@@ -2640,7 +2591,6 @@ function filtrarTabela() {{
     `${{pendFiltrado.length}} pendencia(s) exibida(s) de ${{DADOS.length}} no total`;
 }}
 function limparFiltros() {{
-  clearLfSel("pend", pendEmpSet, () => {{}});
   ["filtro-area","filtro-competencia","filtro-busca"].forEach(id => {{
     const el = document.getElementById(id); if (el) el.value = "";
   }});
@@ -2704,7 +2654,6 @@ function filtrarFornSit() {{
   fornSitFiltrado = FORN_SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
-    if (!matchesLocalSet(fsEmpSet, r["Fornecedor"], r["CNPJ"])) return false;
     if (fsStatSet.size > 0 && !fsStatSet.has(r["Status"])) return false;
     if (comp && r["Competencia"] !== comp) return false;
     if (busca && !cleanDoc(r["Documento"]).toLowerCase().includes(busca)) return false;
@@ -2753,7 +2702,6 @@ function filtrarFornSit() {{
   ].forEach(([id, val]) => {{ const e=document.getElementById(id); if(e) e.textContent=val; }});
 }}
 function limparFornSit() {{
-  clearLfSel("fs", fsEmpSet, () => {{}});
   clearFsStatSilent();
   const busca = document.getElementById("forn-sit-busca"); if (busca) busca.value = "";
   const comp  = document.getElementById("fs-comp"); if (comp) comp.value = "";
