@@ -4,7 +4,7 @@ import {
   fetchChecklist, addChecklistItem, toggleChecklistItem, deleteChecklistItem,
   fetchClients,
 } from '../lib/supabase'
-import { PRIORITY, fmtDate } from '../lib/utils'
+import { PRIORITY, IN_PROGRESS_COLOR, fmtDate } from '../lib/utils'
 import DatePicker from './DatePicker'
 
 export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted }) {
@@ -124,7 +124,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
 
   return (
     <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center bg-black/40">
-      <div className="bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-2xl sm:mx-4 max-h-[95vh] flex flex-col shadow-2xl">
+      <div className="bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-3xl sm:mx-6 max-h-[95vh] flex flex-col shadow-2xl">
 
         {/* Action bar */}
         <div className="flex items-center gap-2 px-4 py-3 rounded-t-3xl sm:rounded-t-2xl" style={{ background: '#0E8FA3' }}>
@@ -141,7 +141,8 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
           </button>
           <button
             onClick={handleToggleAndamento}
-            className={`text-xs font-bold px-3 py-2 rounded-lg ${isIP ? 'bg-white/20 text-white' : 'bg-amber-500 text-white'}`}
+            className="text-xs font-bold px-3 py-2 rounded-lg text-white"
+            style={{ background: isIP ? 'rgba(255,255,255,0.2)' : IN_PROGRESS_COLOR }}
           >
             {isIP ? '↩ Voltar' : '▶ Andamento'}
           </button>

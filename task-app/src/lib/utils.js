@@ -1,10 +1,12 @@
 export const TEAL = '#0E8FA3'
 
 export const PRIORITY = {
-  alta:  { label: 'Alta',  color: '#DC2626', bg: '#FEE2E2', ring: 'ring-red-400' },
-  media: { label: 'Média', color: '#D97706', bg: '#FEF3C7', ring: 'ring-amber-400' },
-  baixa: { label: 'Baixa', color: '#059669', bg: '#D1FAE5', ring: 'ring-green-400' },
+  alta:  { label: 'Alta',  color: '#B83232', bg: '#FDECEA', ring: 'ring-red-300' },
+  media: { label: 'Média', color: '#8B6A10', bg: '#FDF4DC', ring: 'ring-amber-300' },
+  baixa: { label: 'Baixa', color: '#27875A', bg: '#E8F7EE', ring: 'ring-green-300' },
 }
+
+export const IN_PROGRESS_COLOR = '#5B7FA6'
 
 export function fmtDate(iso) {
   if (!iso) return ''

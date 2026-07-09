@@ -151,14 +151,16 @@ export default function TabList({ tab, onOpenTask }) {
         ) : tasks.length === 0 ? (
           <p className="text-center text-gray-400 mt-8 text-sm">Nenhuma tarefa em {tabLabel} 🎉</p>
         ) : (
-          tasks.map(t => (
-            <TaskCard
-              key={t.id}
-              task={t}
-              onOpen={onOpenTask}
-              onStatusChange={handleStatusChange}
-            />
-          ))
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+            {tasks.map(t => (
+              <TaskCard
+                key={t.id}
+                task={t}
+                onOpen={onOpenTask}
+                onStatusChange={handleStatusChange}
+              />
+            ))}
+          </div>
         )}
       </div>
 

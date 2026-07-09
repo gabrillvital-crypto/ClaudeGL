@@ -1,4 +1,4 @@
-import { PRIORITY, fmtDate, deadlineStatus } from '../lib/utils'
+import { PRIORITY, IN_PROGRESS_COLOR, fmtDate, deadlineStatus } from '../lib/utils'
 
 export default function TaskCard({ task, onOpen, onStatusChange }) {
   const p = PRIORITY[task.priority] || PRIORITY.media
@@ -29,22 +29,21 @@ export default function TaskCard({ task, onOpen, onStatusChange }) {
     <div
       onClick={() => onOpen(task.id)}
       onContextMenu={handleContext}
-      className={`bg-white rounded-xl p-4 mb-2 cursor-pointer border-l-4 shadow-sm hover:shadow-md transition-shadow select-none ${
-        isIP ? 'border-amber-500' : 'border-gray-200'
-      }`}
+      className="bg-white rounded-xl p-4 cursor-pointer border-l-4 shadow-sm hover:shadow-md transition-all select-none"
+      style={{ borderLeftColor: isIP ? IN_PROGRESS_COLOR : '#E5E7EB' }}
     >
       <div className="flex items-start gap-3">
         {/* Prioridade pill */}
         <span
-          className="mt-0.5 shrink-0 text-xs font-bold px-2 py-0.5 rounded-full text-white"
-          style={{ backgroundColor: p.color }}
+          className="mt-0.5 shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full"
+          style={{ backgroundColor: p.bg, color: p.color }}
         >
           {p.label}
         </span>
 
         <div className="flex-1 min-w-0">
-          <p className={`text-sm font-semibold text-gray-800 truncate ${isIP ? 'text-amber-700' : ''}`}>
-            {isIP && <span className="mr-1">▶</span>}
+          <p className="text-sm font-semibold text-gray-800 truncate" style={isIP ? { color: IN_PROGRESS_COLOR } : {}}>
+            {isIP && <span className="mr-1 text-xs">▶</span>}
             {task.title}
           </p>
 
@@ -53,23 +52,19 @@ export default function TaskCard({ task, onOpen, onStatusChange }) {
           )}
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {/* Deadline badge */}
             {task.deadline && (
               <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${dlBadge}`}>
                 📅 {fmtDate(task.deadline)}
               </span>
             )}
-
-            {/* Checklist badge */}
             {ck.length > 0 && (
               <span className="text-xs text-gray-400">
                 ☑ {ckDone}/{ck.length}
               </span>
             )}
-
-            {/* Cliente badge */}
             {task.clients?.name && (
-              <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+              <span className="text-xs px-2 py-0.5 rounded-full truncate max-w-[140px]"
+                style={{ background: '#EFF6FF', color: '#2563EB' }}>
                 {task.clients.name}
               </span>
             )}
