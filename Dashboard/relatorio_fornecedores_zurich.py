@@ -59,6 +59,29 @@ def abbrev(name, n=40):
     short = re.sub(r'\s+(LTDA|LTDA\.|S/A|SA|EIRELI|ME|EPP).*', '', s, flags=re.I)
     return short[:n] + "..." if len(short) > n else short
 
+MONTHS_PT = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+             "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
+
+def normalize_competencia(comp):
+    s = str(comp).strip()
+    if not s or s in ("nan", "A classificar", "Não possui competência"):
+        return s
+    if re.match(r'^\d{2}/\d{2}\s*-\s*.+\d{4}', s):
+        return s
+    m = re.match(r'^(0[1-9]|1[0-2])/(20\d{2}|\d{2})$', s)
+    if m:
+        mm, raw_y = m.group(1), m.group(2)
+        yyyy = int(raw_y) if len(raw_y) == 4 else 2000 + int(raw_y)
+        yy = str(yyyy)[2:]
+        return f"{mm}/{yy} - {MONTHS_PT[int(mm)-1]} {yyyy}"
+    return s
+
+def extract_competencia_from_text(text):
+    m = re.search(r'\b(0[1-9]|1[0-2])/(20\d{2}|\d{2})\b', str(text))
+    if not m:
+        return None
+    return normalize_competencia(f"{m.group(1)}/{m.group(2)}")
+
 df_pend = read_csv_safe(PENDENCIAS_CSV)
 df_terc = read_csv_safe(TERCEIROS_CSV)
 df_sit  = read_csv_safe(SITUACAO_CSV)
@@ -75,21 +98,33 @@ df_pend["Empresa"] = df_pend[col_rs_pend].apply(abbrev)
 df_terc["Empresa"] = df_terc[col_rs_terc].apply(abbrev)
 
 # ── TIPO DE DOCUMENTO ─────────────────────────────────────────────────────────
-def extrair_doc(row):
+def extrair_doc(row, area=""):
     doc = str(row.get("Documento", "")).strip()
     if doc and doc != "nan":
-        return doc.upper()
+        return doc.upper()[:80]
     pend = str(row.get("Pendencia", row.get("Pendência", "")))
-    m = re.match(r"[A-Z\s]+ - ([^,]+)", pend)
-    if m:
-        return m.group(1).strip().upper()
-    m2 = re.match(r"^([^,]+),", pend)
-    if m2:
-        return m2.group(1).strip().upper()
-    return "OUTROS"
+    # Apenas a primeira linha contém o nome do documento
+    first_line = pend.split('\n')[0].strip()
+    if area == "TERCEIROS":
+        # "NOME TERCEIRO - NOME DOC, detalhe" ou "NOME - NOME DOC. detalhe"
+        dash_idx = first_line.find(" - ")
+        if dash_idx >= 0:
+            after_dash = first_line[dash_idx + 3:]
+            m = re.match(r"^([^,.]+)", after_dash)
+            if m:
+                return m.group(1).strip().upper()[:80]
+        return first_line.upper()[:80] or "OUTROS"
+    else:
+        # DOCUMENTOS: "NOME DOC, detalhe"
+        comma_idx = first_line.find(",")
+        return (first_line[:comma_idx] if comma_idx >= 0 else first_line).strip().upper()[:80] or "OUTROS"
 
-df_pend["Tipo_Doc"] = df_pend.apply(extrair_doc, axis=1)
-df_pend["Tipo_Doc"] = df_pend["Tipo_Doc"].str[:50]
+_col_area_for_doc = "Área da pendência" if "Área da pendência" in df_pend.columns else "Area da pendencia"
+df_pend["Tipo_Doc"] = df_pend.apply(
+    lambda row: extrair_doc(row, str(row.get(_col_area_for_doc, "")).strip()),
+    axis=1
+)
+df_pend["Tipo_Doc"] = df_pend["Tipo_Doc"].str[:80]
 
 # ── CONFORMIDADE — NOVA LÓGICA (27/05/2026) ────────────────────────────────────
 # "Situação Análise Documento" é a coluna mandatória e tem precedência absoluta:
@@ -210,7 +245,7 @@ col_cnpj_pend = next((c for c in df_pend.columns if "cpf" in c.lower() or "cnpj"
 tabela = df_pend[["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas, col_pend_txt]].copy()
 tabela.columns = ["Fornecedor", "Status", "Area", "Documento", "Competencia", "Detalhe"]
 tabela["Competencia"] = tabela["Competencia"].fillna("").astype(str).str.strip()
-tabela["Competencia"] = tabela["Competencia"].replace("nan", "").replace("", "A classificar")
+tabela["Competencia"] = tabela["Competencia"].replace("nan", "")
 # Regra: apenas 4 docs exibem Competência nas pendências de Fornecedor (Area=DOCUMENTOS)
 _DOCS_COM_COMP_PEND = {
     "GFD - GUIA DO FGTS DIGITAL MENSAL",
@@ -226,7 +261,24 @@ tabela.loc[_sem_comp_pen, "Competencia"] = "Não possui competência"
 _DOCS_SEM_COMP_TERC = {"aso", "ordens de serviço"}
 _mask_sc_terc = tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_TERC)
 tabela.loc[_mask_sc_terc, "Competencia"] = "Não possui competência"
+
+def _calc_comp_pend(row):
+    comp = str(row["Competencia"]).strip()
+    if comp == "Não possui competência":
+        return comp
+    norm = normalize_competencia(comp) if comp not in ("", "A classificar") else ""
+    if norm and norm not in ("A classificar", ""):
+        return norm
+    from_pend = extract_competencia_from_text(row["Detalhe"])
+    if from_pend:
+        return from_pend
+    from_doc = extract_competencia_from_text(row["Documento"])
+    if from_doc:
+        return from_doc
+    return "A classificar"
+
 tabela["Detalhe"] = tabela["Detalhe"].astype(str).str.strip()
+tabela["Competencia"] = tabela.apply(_calc_comp_pend, axis=1)
 tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(
     lambda v: re.sub(r'\D', '', str(v).split('.')[0])
 ).values if col_cnpj_pend else ""
@@ -252,7 +304,7 @@ if "Competencia" not in sit_tabela.columns:
     sit_tabela["Competencia"] = "A classificar"
 else:
     sit_tabela["Competencia"] = sit_tabela["Competencia"].fillna("").replace("nan", "").apply(
-        lambda v: v.strip() if v.strip() else "A classificar"
+        lambda v: normalize_competencia(v.strip()) if v.strip() else "A classificar"
     )
 def _norm_cnpj(v):
     s = str(v).strip()
@@ -412,7 +464,7 @@ if _sit_forn_ok:
         forn_sit_tabela["Competencia"] = ""
     else:
         forn_sit_tabela["Competencia"] = forn_sit_tabela["Competencia"].fillna("").replace("nan", "").apply(
-            lambda v: v.strip() if str(v).strip() else ""
+            lambda v: normalize_competencia(v.strip()) if str(v).strip() else ""
         )
     # Docs de busca automática não exibem Competência — apenas Vencimento é relevante
     if _busca_auto_map and "CNPJ" in forn_sit_tabela.columns:
@@ -575,11 +627,12 @@ for _, _r in df_terc.iterrows():
     _contratos_terc = [c.strip() for c in _cod_raw.split("/") if c.strip() and c.strip() != "nan"]
     if not _contratos_terc:
         continue
+    _aero_raw = str(_r.get(_col_terc_aeroporto, "") if _col_terc_aeroporto else "").strip().upper()
     _terc_info = {
         "nome":       str(_r.get(_col_terc_nome_terc, "") if _col_terc_nome_terc else "").strip(),
         "cnpj":       _cnpj_digits(_r.get(_col_terc_cnpj_terc, "") if _col_terc_cnpj_terc else ""),
         "cargo":      str(_r.get(_col_terc_cargo, "") if _col_terc_cargo else "").strip(),
-        "aeroporto":  str(_r.get(_col_terc_aeroporto, "") if _col_terc_aeroporto else "").strip(),
+        "aeroporto":  "CAIF" if _aero_raw == "FLN" else _aero_raw,
         "status":     str(_r.get(col_status_terc, "")).strip(),
     }
     for _ct in _contratos_terc:
@@ -1243,6 +1296,30 @@ html = f"""<!DOCTYPE html>
       </div>
     </div>
   </div>
+  <div>
+    <label>Aeroporto</label>
+    <div style="display:flex;gap:6px;height:34px;align-items:center">
+      <button id="gf-aero-CAIF" onclick="toggleAeroporto('CAIF')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.15);color:white">CAIF</button>
+      <button id="gf-aero-VIX"  onclick="toggleAeroporto('VIX')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.15);color:white">VIX</button>
+      <button id="gf-aero-MEA"  onclick="toggleAeroporto('MEA')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.15);color:white">MEA</button>
+      <button id="gf-aero-CAIN" onclick="toggleAeroporto('CAIN')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.15);color:white">CAIN</button>
+    </div>
+  </div>
+  <div>
+    <label>Terceiros</label>
+    <div style="display:flex;gap:6px;height:34px;align-items:center">
+      <button id="gf-status-terc-all"    onclick="setStatusTerc('all')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:white;color:{COR_TEAL_ESCURO}">Todos</button>
+      <button id="gf-status-terc-ativo"  onclick="setStatusTerc('Ativo')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.15);color:white">Ativos</button>
+      <button id="gf-status-terc-inativo" onclick="setStatusTerc('Inativo')"
+        style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.5);cursor:pointer;background:rgba(255,255,255,.15);color:white">Inativos</button>
+    </div>
+  </div>
   <div style="align-self:flex-end">
     <button class="btn-gf-limpar" onclick="limparGlobalFiltro()">&#10005; Limpar filtros</button>
   </div>
@@ -1559,7 +1636,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div>
       <label>Buscar documento</label><br>
-      <input type="text" id="sit-busca" placeholder="Ex: ASO, Ficha de EPI..." oninput="filtrarSit()" style="width:220px">
+      <input type="text" id="sit-busca" placeholder="Ex: ASO, Ficha de EPI..." oninput="dbFiltrarSit()" style="width:220px">
     </div>
     <div style="align-self:flex-end">
       <button class="btn-action btn-limpar" onclick="limparSit()">Limpar</button>
@@ -1595,6 +1672,7 @@ html = f"""<!DOCTYPE html>
         <tbody id="sit-body"></tbody>
       </table>
     </div>
+    <div id="sit-pagination" style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:{COR_CINZA}"></div>
     </div>
     <div id="sit-modo-agrupado" style="display:none">
       <div id="sit-grupos"></div>
@@ -1689,7 +1767,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div>
       <label>Buscar documento</label><br>
-      <input type="text" id="forn-sit-busca" placeholder="Ex: FGTS, CND, TRF3..." oninput="filtrarFornSit()" style="width:220px">
+      <input type="text" id="forn-sit-busca" placeholder="Ex: FGTS, CND, TRF3..." oninput="dbFiltrarFornSit()" style="width:220px">
     </div>
     <div style="align-self:flex-end">
       <button class="btn-action btn-limpar" onclick="limparFornSit()">Limpar</button>
@@ -1762,7 +1840,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div>
       <label>Buscar</label><br>
-      <input type="text" id="filtro-busca" placeholder="Documento ou pendencia..." oninput="filtrarTabela()" style="width:200px">
+      <input type="text" id="filtro-busca" placeholder="Documento ou pendencia..." oninput="dbFiltrarTabela()" style="width:200px">
     </div>
     <div style="align-self:flex-end">
       <button class="btn-action btn-limpar" onclick="limparFiltros()">Limpar</button>
@@ -1793,6 +1871,7 @@ html = f"""<!DOCTYPE html>
         <tbody id="tabela-body"></tbody>
       </table>
     </div>
+    <div id="pend-pagination" style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:{COR_CINZA}"></div>
   </div><!-- /pend-section -->
 
 </div>
@@ -1960,9 +2039,155 @@ function parseFornVal(val) {{
   return idx === -1 ? {{ nome: val, cnpj: "" }} : {{ nome: val.slice(0, idx), cnpj: val.slice(idx + 3) }};
 }}
 
+// ── UTILITÁRIOS DE PERFORMANCE ────────────────────────────────────────────────
+function debounce(fn, delay) {{
+  let timer;
+  return function(...args) {{ clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); }};
+}}
+
+// Paginação R3
+const SIT_PAGE_SIZE = 150;
+let sitPage = 0;
+function renderSitPage() {{
+  const start = sitPage * SIT_PAGE_SIZE;
+  const rows  = sitFiltrado.slice(start, start + SIT_PAGE_SIZE);
+  const tbody = document.getElementById("sit-body");
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${{r["Fornecedor"]}}</td>
+      <td>${{r["Terceiro"]}}</td>
+      <td>${{r["Documento"]}}</td>
+      <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
+      <td>${{badgeSit(r["Status"])}}</td>
+      <td>${{r["Vencimento"] || "—"}}</td>
+    </tr>
+  `).join("");
+  const total = sitFiltrado.length;
+  const pages = Math.ceil(total / SIT_PAGE_SIZE);
+  const el = document.getElementById("sit-pagination");
+  if (!el) return;
+  if (pages <= 1) {{ el.innerHTML = ""; return; }}
+  el.innerHTML = `
+    <button onclick="sitPage=Math.max(0,sitPage-1);renderSitPage()"
+      style="padding:4px 12px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:white" ${{sitPage===0?'disabled':''}}>‹ Anterior</button>
+    <span>Página ${{sitPage+1}} de ${{pages}} &nbsp;(${{total}} registros)</span>
+    <button onclick="sitPage=Math.min(${{pages-1}},sitPage+1);renderSitPage()"
+      style="padding:4px 12px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:white" ${{sitPage===pages-1?'disabled':''}}>Próximo ›</button>
+  `;
+}}
+
+// Paginação Pendências
+const PEND_PAGE_SIZE = 150;
+let pendPage = 0;
+function renderPendPage() {{
+  const start = pendPage * PEND_PAGE_SIZE;
+  const rows  = pendFiltrado.slice(start, start + PEND_PAGE_SIZE);
+  const tbody = document.getElementById("tabela-body");
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>
+        <div>${{r["Fornecedor"]}}</div>
+        ${{r["CNPJ"] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r["CNPJ"]) + '</div>' : ''}}
+      </td>
+      <td>${{badgeArea(r["Area"])}}</td>
+      <td><strong>${{r["Documento"]}}</strong></td>
+      <td>${{r["Competencia"] === "Não possui competência"
+        ? '<span style="color:#aaa;font-size:11px">Não possui</span>'
+        : r["Competencia"] && r["Competencia"] !== "A classificar"
+          ? '<span class="badge-competencia">' + r["Competencia"] + '</span>'
+          : '<span style="color:#aaa">—</span>'}}</td>
+      <td style="max-width:380px;white-space:pre-wrap;font-size:12px">${{r["Detalhe"] || "—"}}</td>
+    </tr>
+  `).join("");
+  const total = pendFiltrado.length;
+  const pages = Math.ceil(total / PEND_PAGE_SIZE);
+  const el = document.getElementById("pend-pagination");
+  if (!el) return;
+  if (pages <= 1) {{ el.innerHTML = ""; return; }}
+  el.innerHTML = `
+    <button onclick="pendPage=Math.max(0,pendPage-1);renderPendPage()"
+      style="padding:4px 12px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:white" ${{pendPage===0?'disabled':''}}>‹ Anterior</button>
+    <span>Página ${{pendPage+1}} de ${{pages}} &nbsp;(${{total}} registros)</span>
+    <button onclick="pendPage=Math.min(${{pages-1}},pendPage+1);renderPendPage()"
+      style="padding:4px 12px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:white" ${{pendPage===pages-1?'disabled':''}}>Próximo ›</button>
+  `;
+}}
+
+// Aliases debounced para inputs de busca (300ms)
+const dbFiltrarSit      = debounce(filtrarSit, 300);
+const dbFiltrarFornSit  = debounce(filtrarFornSit, 300);
+const dbFiltrarTabela   = debounce(filtrarTabela, 300);
+
 // ── MULTI-SELECT GLOBAL FILTER ─────────────────────────────────────────────
 let selectedFornSet = new Set();
 let selectedCompSet = new Set();
+let gfStatusTerc    = 'all';
+
+// Retorna Set de CPFs (dígitos) dos terceiros com status selecionado
+function buildStatusTercSet() {{
+  if (gfStatusTerc === 'all') return null;
+  const cpfs = new Set();
+  CONTRATOS.forEach(f => {{
+    Object.values(f.terceiros_by_contract).forEach(tercs => {{
+      tercs.forEach(t => {{
+        if (t.status === gfStatusTerc) {{
+          const c = (t.cnpj || '').replace(/\D/g,'');
+          if (c) cpfs.add(c);
+        }}
+      }});
+    }});
+  }});
+  return cpfs;
+}}
+
+function setStatusTerc(val) {{
+  gfStatusTerc = val;
+  ['all','Ativo','Inativo'].forEach(v => {{
+    const id  = 'gf-status-terc-' + (v === 'all' ? 'all' : v.toLowerCase());
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.style.background = (v === val) ? 'white' : 'rgba(255,255,255,.15)';
+    btn.style.color      = (v === val) ? '{COR_TEAL_ESCURO}' : 'white';
+  }});
+  applyGlobalFilter();
+}}
+
+// ── FILTRO AEROPORTO ──────────────────────────────────────────────────────────
+let gfAeroportoSet = new Set();
+
+// Constrói índice de CPFs de terceiros, CNPJs de fornecedores e nomes de terceiros
+// para os aeroportos selecionados — mesma lógica do React aeroportoFilter useMemo
+function buildAeroportoFilter() {{
+  if (gfAeroportoSet.size === 0) return null;
+  const terceirosCPFs  = new Set();
+  const fornCNPJs      = new Set();
+  const terceirosNomes = new Set();
+  CONTRATOS.forEach(f => {{
+    Object.values(f.terceiros_by_contract).forEach(tercs => {{
+      tercs.forEach(t => {{
+        const aero = (t.aeroporto || '').toUpperCase().trim();
+        if (gfAeroportoSet.has(aero)) {{
+          const c = (t.cnpj || '').replace(/\D/g,'');
+          if (c) terceirosCPFs.add(c);
+          fornCNPJs.add(f.cnpj);
+          if (t.nome) terceirosNomes.add(t.nome.toUpperCase().trim());
+        }}
+      }});
+    }});
+  }});
+  return {{ terceirosCPFs, fornCNPJs, terceirosNomes }};
+}}
+
+function toggleAeroporto(code) {{
+  if (gfAeroportoSet.has(code)) gfAeroportoSet.delete(code);
+  else gfAeroportoSet.add(code);
+  const btn = document.getElementById('gf-aero-' + code);
+  if (btn) {{
+    btn.style.background = gfAeroportoSet.has(code) ? 'white' : 'rgba(255,255,255,.15)';
+    btn.style.color      = gfAeroportoSet.has(code) ? '{COR_TEAL_ESCURO}' : 'white';
+  }}
+  applyGlobalFilter();
+}}
 
 function matchesForn(rowNome, rowCNPJ) {{
   if (selectedFornSet.size === 0) return true;
@@ -2327,6 +2552,8 @@ function filtrarSit() {{
   const stat  = document.getElementById("sit-status").value;
   const comp  = document.getElementById("sit-comp").value;
   const busca = document.getElementById("sit-busca").value.toLowerCase();
+  const stSet   = buildStatusTercSet();
+  const aeroFlt = buildAeroportoFilter();
   sitFiltrado = SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ_Forn"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
@@ -2334,23 +2561,22 @@ function filtrarSit() {{
     if (stat  && r["Status"]      !== stat)  return false;
     if (comp  && r["Competencia"] !== comp)  return false;
     if (busca && !r["Documento"].toLowerCase().includes(busca)) return false;
+    if (stSet) {{
+      const cpfTerc = (r["CNPJ_Terceiro"] || '').replace(/\D/g,'');
+      if (!stSet.has(cpfTerc)) return false;
+    }}
+    if (aeroFlt) {{
+      const cpfTerc = (r["CNPJ_Terceiro"] || '').replace(/\D/g,'');
+      if (!aeroFlt.terceirosCPFs.has(cpfTerc)) return false;
+    }}
     if (activeKpiKey) {{
       const ss = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).sit || [];
       if (ss.length > 0 && !ss.includes(r["Status"])) return false;
     }}
     return true;
   }});
-  const tbody = document.getElementById("sit-body");
-  tbody.innerHTML = sitFiltrado.map(r => `
-    <tr>
-      <td>${{r["Fornecedor"]}}</td>
-      <td>${{r["Terceiro"]}}</td>
-      <td>${{r["Documento"]}}</td>
-      <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
-      <td>${{badgeSit(r["Status"])}}</td>
-      <td>${{r["Vencimento"] || "—"}}</td>
-    </tr>
-  `).join("");
+  sitPage = 0;
+  renderSitPage();
   document.getElementById("sit-count").textContent =
     `${{sitFiltrado.length}} registro(s) exibido(s) de ${{SIT.length}} no total`;
   if (modoAgrupado) renderSitAgrupado(sitFiltrado);
@@ -2386,6 +2612,7 @@ function filtrarTabela() {{
   const area  = document.getElementById("filtro-area").value;
   const comp  = document.getElementById("filtro-competencia").value;
   const busca = document.getElementById("filtro-busca").value.toLowerCase();
+  const aeroFltPend = buildAeroportoFilter();
   pendFiltrado = DADOS.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
@@ -2396,25 +2623,19 @@ function filtrarTabela() {{
       const txt = (r["Documento"] + " " + r["Detalhe"]).toLowerCase();
       if (!txt.includes(busca)) return false;
     }}
+    if (aeroFltPend) {{
+      if (r["Area"] === "TERCEIROS") {{
+        const det = (r["Detalhe"] || "").toUpperCase();
+        if (![...aeroFltPend.terceirosNomes].some(nome => det.includes(nome))) return false;
+      }} else {{
+        const cnpjForn = (r["CNPJ"] || "").replace(/\D/g,"");
+        if (!aeroFltPend.fornCNPJs.has(cnpjForn)) return false;
+      }}
+    }}
     return true;
   }});
-  const tbody = document.getElementById("tabela-body");
-  tbody.innerHTML = pendFiltrado.map(r => `
-    <tr>
-      <td>
-        <div>${{r["Fornecedor"]}}</div>
-        ${{r["CNPJ"] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r["CNPJ"]) + '</div>' : ''}}
-      </td>
-      <td>${{badgeArea(r["Area"])}}</td>
-      <td><strong>${{r["Documento"]}}</strong></td>
-      <td>${{r["Competencia"] === "Não possui competência"
-        ? '<span class="badge-sem-competencia">Não possui competência</span>'
-        : r["Competencia"]
-          ? '<span class="badge-competencia">' + r["Competencia"] + '</span>'
-          : '<span style="color:#aaa">—</span>'}}</td>
-      <td style="font-size:12px;min-width:220px;max-width:420px;word-break:break-word">${{r["Detalhe"]}}</td>
-    </tr>
-  `).join("");
+  pendPage = 0;
+  renderPendPage();
   document.getElementById("tabela-count").textContent =
     `${{pendFiltrado.length}} pendencia(s) exibida(s) de ${{DADOS.length}} no total`;
 }}
@@ -2479,6 +2700,7 @@ function filtrarFornSit() {{
   const busca = document.getElementById("forn-sit-busca").value.toLowerCase();
   const comp  = (document.getElementById("fs-comp") || {{}}).value || "";
   const cleanDoc = s => String(s || "").replace(/�/g, "");
+  const aeroFltR4 = buildAeroportoFilter();
   fornSitFiltrado = FORN_SIT.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
@@ -2486,6 +2708,10 @@ function filtrarFornSit() {{
     if (fsStatSet.size > 0 && !fsStatSet.has(r["Status"])) return false;
     if (comp && r["Competencia"] !== comp) return false;
     if (busca && !cleanDoc(r["Documento"]).toLowerCase().includes(busca)) return false;
+    if (aeroFltR4) {{
+      const cnpjForn = (r["CNPJ"] || '').replace(/\D/g,'');
+      if (!aeroFltR4.fornCNPJs.has(cnpjForn)) return false;
+    }}
     if (activeKpiKey) {{
       const fs = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).forn || [];
       if (fs.length > 0 && !fs.includes(r["Status"])) return false;
@@ -2934,6 +3160,20 @@ function ctRenderL1() {{
     const nomes = new Set([...selectedFornSet].map(r => parseFornVal(r).nome));
     lista = lista.filter(f => nomes.has(f.nome) || nomes.has(f.nome_full));
   }}
+  if (gfAeroportoSet.size > 0) {{
+    lista = lista.filter(f =>
+      Object.values(f.terceiros_by_contract).some(tercs =>
+        tercs.some(t => gfAeroportoSet.has((t.aeroporto || '').toUpperCase().trim()))
+      )
+    );
+  }}
+  if (gfStatusTerc !== 'all') {{
+    lista = lista.filter(f =>
+      Object.values(f.terceiros_by_contract).some(tercs =>
+        tercs.some(t => t.status === gfStatusTerc)
+      )
+    );
+  }}
   document.getElementById("ct-l1-count").textContent = lista.length + " fornecedor(es)";
   document.getElementById("ct-cards").innerHTML = lista.map(f => {{
     // Usa a mesma união que o L2 — contratos do CSV + contratos com terceiros vinculados
@@ -3020,7 +3260,12 @@ function ctRenderL3(ctEnc) {{
   ctShowLevel(3);
   const ct = decodeURIComponent(ctEnc);
   if (!ctFornAtual) return;
-  const tercs = ctFornAtual.terceiros_by_contract[ct] || [];
+  const tercsAll = ctFornAtual.terceiros_by_contract[ct] || [];
+  const tercs = tercsAll.filter(t => {{
+    if (gfStatusTerc !== 'all' && t.status !== gfStatusTerc) return false;
+    if (gfAeroportoSet.size > 0 && !gfAeroportoSet.has((t.aeroporto || '').toUpperCase().trim())) return false;
+    return true;
+  }});
 
   document.getElementById("ct-breadcrumb3").innerHTML =
     `<span class="drill-back" onclick="ctShowLevel(2)">← ${{ctFornAtual.nome}}</span>
@@ -3286,6 +3531,8 @@ function applyGlobalFilter() {{
   const parts = [];
   if (fCount > 0) parts.push(fCount <= 2 ? [...selectedFornSet].map(r => parseFornVal(r).nome).join(", ") : fCount + " fornecedores");
   if (cCount > 0) parts.push(cCount <= 2 ? [...selectedCompSet].join(", ") : cCount + " competências");
+  if (gfAeroportoSet.size > 0) parts.push("aeroporto: " + [...gfAeroportoSet].join("+"));
+  if (gfStatusTerc !== 'all') parts.push("terceiros: " + (gfStatusTerc === 'Ativo' ? 'Ativos' : 'Inativos'));
   document.getElementById("gf-hint").textContent = parts.length ? "Filtro ativo: " + parts.join(" · ") : "";
 
   // Cards globais somem com qualquer seleção
@@ -3313,6 +3560,19 @@ function limparGlobalFiltro() {{
   const search = document.getElementById("gf-multi-search");
   if (search) {{ search.value = ""; filterFornItems(""); }}
   limparCompFiltroSilent();
+  gfAeroportoSet.clear();
+  ['CAIF','VIX','MEA','CAIN'].forEach(a => {{
+    const btn = document.getElementById('gf-aero-' + a);
+    if (btn) {{ btn.style.background = 'rgba(255,255,255,.15)'; btn.style.color = 'white'; }}
+  }});
+  gfStatusTerc = 'all';
+  ['all','ativo','inativo'].forEach(v => {{
+    const btn = document.getElementById('gf-status-terc-' + v);
+    if (btn) {{
+      btn.style.background = v === 'all' ? 'white' : 'rgba(255,255,255,.15)';
+      btn.style.color      = v === 'all' ? '{COR_TEAL_ESCURO}' : 'white';
+    }}
+  }});
   applyGlobalFilter();
 }}
 

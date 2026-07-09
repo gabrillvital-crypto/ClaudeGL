@@ -119,9 +119,12 @@ def calcular_kpis(pendencias_csv, terceiros_csv, situacao_terceiro_csv,
                 if sd_ba == "IRREGULAR": return "Irregular"
                 if sd_ba == "ALERTA":    return "Em análise"
                 if sd_ba == "NEUTRO":
-                    if an_ba == "APROVADO":  return "Vencido" if "vencido" in st_ba else "Aprovado"
-                    if an_ba == "REPROVADO": return "Reprovado"
+                    if an_ba == "APROVADO":          return "Aprovado"
+                    if an_ba == "REPROVADO":         return "Reprovado"
+                    if "não anexado" in st_ba:       return "Não Anexado"
                     return "Em análise"
+                # vazio em busca_auto
+                if "não anexado" in st_ba: return "Não Anexado"
                 return "Em análise"
 
             # Não está em busca_auto → usa Situação Documento da própria linha
@@ -205,12 +208,12 @@ DOC = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Documentos"
 DST = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
 sem_ant = calcular_kpis(
-    pendencias_csv       = DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-06-30T17_55_36.270947Z.csv",
-    terceiros_csv        = DOC + r"\relatorio_de_terceiros_cadastrados_2026-06-30T17_56_39.367188Z.csv",
-    situacao_terceiro_csv= DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-06-30T17_56_26.439497Z.csv",
-    situacao_forn_csv    = DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-06-30T17_55_57.834161Z.csv",
-    busca_auto_csv       = DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-06-30T17_55_47.39577Z.csv",
-    fornecedores_csv     = DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-06-30T17_57_04.519922Z.csv",
+    pendencias_csv       = DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-07-07T12_26_07.543517-04_00.csv",
+    terceiros_csv        = DOC + r"\relatorio_de_terceiros_cadastrados_2026-07-07T12_28_28.485887-04_00.csv",
+    situacao_terceiro_csv= DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-07-07T12_28_01.102479-04_00.csv",
+    situacao_forn_csv    = DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-07-07T12_27_29.142125-04_00.csv",
+    busca_auto_csv       = DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-07-07T12_27_07.413415-04_00.csv",
+    fornecedores_csv     = DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-07-07T12_29_13.673701-04_00.csv",
 )
 
 sem_atual = calcular_kpis(
@@ -240,7 +243,7 @@ def deltapct(a, b, inverso=False):
     return f"  {sinal} {abs(d):.1f}pp {cor}"
 
 linhas = [
-    ("", "MÉTRICA", "26/06/2026", "30/06/2026", "VARIAÇÃO"),
+    ("", "MÉTRICA", "07/07/2026", "09/07/2026", "VARIAÇÃO"),
     ("─", "", "", "", ""),
     ("📋", "VISÃO GERAL", "", "", ""),
     ("", "Fornecedores cadastrados",  sem_ant["forn_cadastro"],    sem_atual["forn_cadastro"],    delta(sem_ant["forn_cadastro"],    sem_atual["forn_cadastro"],    inverso=True)),
@@ -277,7 +280,7 @@ linhas = [
 
 print("\n" + "═"*85)
 print(f"  COMPARATIVO SEMANAL — ZURICH AIRPORT")
-print(f"  Semana anterior: 30/06/2026  →  Semana atual: 03/07/2026")
+print(f"  Semana anterior: 07/07/2026  →  Semana atual: 09/07/2026")
 print("═"*85)
 
 for row in linhas:
