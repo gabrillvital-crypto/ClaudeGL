@@ -1070,44 +1070,11 @@ html = f"""<!DOCTYPE html>
 
   .footer {{ text-align: center; color: #aaa; font-size: 12px; padding: 24px 0 12px; }}
 
-  /* DRILL-DOWN */
-  .drill-cards-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; margin-top: 16px; }}
-  .drill-card {{
-    background: #f8f9fa; border-radius: 10px; padding: 16px; cursor: pointer;
-    border: 2px solid #e0e0e0; transition: all 0.15s; user-select: none;
-  }}
-  .drill-card:hover {{ border-color: {COR_TEAL}; box-shadow: 0 4px 14px rgba(14,143,163,.18); transform: translateY(-2px); }}
-  .drill-card-pct {{ font-size: 30px; font-weight: 800; line-height: 1; }}
-  .drill-card-label {{ font-size: 10px; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 2px; }}
-  .drill-card-name {{ font-size: 12px; font-weight: 700; color: #333; margin-top: 6px; line-height: 1.3; min-height: 32px; }}
-  .drill-card-meta {{ font-size: 11px; color: #888; margin-top: 4px; }}
-  .drill-card-bars {{ display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 10px; background: #ddd; }}
-  .mini-bar {{ height: 100%; display: inline-block; transition: width 0.3s; }}
-
   .drill-breadcrumb {{ padding: 0 0 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }}
   .drill-back {{ color: {COR_TEAL}; cursor: pointer; font-weight: 700; font-size: 14px; padding: 4px 10px; border-radius: 6px; background: #e8f7fa; }}
   .drill-back:hover {{ background: #d0eff5; }}
   .drill-crumb-sep {{ color: #bbb; font-size: 18px; }}
   .drill-crumb-current {{ font-weight: 700; color: #333; font-size: 14px; }}
-
-  .drill-worker-list {{ display: flex; flex-direction: column; gap: 0; }}
-  .drill-worker {{
-    display: flex; align-items: center; padding: 12px 16px; cursor: pointer;
-    gap: 14px; border-radius: 8px; transition: background 0.1s; border-bottom: 1px solid #f0f0f0;
-  }}
-  .drill-worker:hover {{ background: #f0f8fa; }}
-  .drill-worker-name {{ font-weight: 700; flex: 1; font-size: 14px; color: #222; }}
-  .drill-worker-badges {{ display: flex; gap: 6px; flex-wrap: wrap; }}
-  .drill-worker-arrow {{ font-size: 22px; color: #bbb; font-weight: 300; }}
-
-  .drill-doc-list {{ display: flex; flex-direction: column; gap: 0; }}
-  .drill-doc {{
-    display: flex; align-items: center; padding: 11px 16px;
-    gap: 14px; border-bottom: 1px solid #f0f0f0;
-  }}
-  .drill-doc:nth-child(even) {{ background: #fafafa; }}
-  .drill-doc-name {{ flex: 1; font-size: 13px; color: #333; }}
-  .drill-doc-venc {{ font-size: 12px; color: #888; min-width: 90px; text-align: right; }}
 
   .drill-hint {{ color: #999; font-size: 13px; text-align: center; padding: 24px 0; }}
   .section-collapsible.collapsed {{ display: none; }}
@@ -1215,6 +1182,39 @@ html = f"""<!DOCTYPE html>
     font-size: 13px !important;
   }}
 
+  /* FILTRO GLOBAL STATUS */
+  #gfs-multi-wrap {{ position: relative; display: inline-block; }}
+  #gfs-multi-btn {{
+    border: none; border-radius: 6px; padding: 7px 12px;
+    font-size: 13px; font-family: Calibri, Arial, sans-serif;
+    background: white; color: #333; cursor: pointer; min-width: 200px;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; user-select: none;
+  }}
+  #gfs-multi-btn:hover {{ background: #f0f8fa; }}
+  #gfs-multi-panel {{
+    display: none; position: absolute; top: calc(100% + 4px); left: 0;
+    min-width: 230px; background: white; border: 1px solid #ccc; border-radius: 6px;
+    z-index: 2000; box-shadow: 0 6px 18px rgba(0,0,0,.18); overflow: hidden;
+  }}
+  #gfs-multi-list {{ max-height: 260px; overflow-y: auto; }}
+  .gfs-item {{
+    display: flex; align-items: center; gap: 9px; padding: 7px 12px;
+    cursor: pointer; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5;
+  }}
+  .gfs-item:hover {{ background: #f0f8fa; }}
+  .gfs-item.gfs-selected {{ background: #e4f4f8; font-weight: 700; }}
+  .gfs-item input[type=checkbox] {{ cursor: pointer; accent-color: {COR_TEAL}; width: 15px; height: 15px; flex-shrink: 0; }}
+  #gfs-multi-footer {{
+    padding: 7px 12px; border-top: 1px solid #eee; text-align: right;
+    font-size: 12px; color: {COR_TEAL}; cursor: pointer; font-weight: 700;
+  }}
+  #gfs-multi-footer:hover {{ background: #f0f8fa; }}
+  #gfs-multi-panel label {{
+    color: #333 !important; font-weight: normal !important; text-transform: none !important;
+    letter-spacing: 0 !important; display: inline !important; margin-bottom: 0 !important;
+    font-size: 13px !important;
+  }}
+
   /* MULTI-SELECT LOCAL (filtros internos de cada seção) */
   .lf-multi-wrap {{ position: relative; display: inline-block; }}
   .lf-multi-btn {{
@@ -1297,6 +1297,19 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
   <div>
+    <label>Status</label>
+    <div id="gfs-multi-wrap">
+      <div id="gfs-multi-btn" onclick="toggleStatDropdown(event)">
+        <span id="gfs-selected-label">Todos os status</span>
+        <span id="gfs-multi-arrow">▾</span>
+      </div>
+      <div id="gfs-multi-panel">
+        <div id="gfs-multi-list"></div>
+        <div id="gfs-multi-footer" onclick="limparStatFiltroSilent(); applyGlobalFilter()">Limpar seleção</div>
+      </div>
+    </div>
+  </div>
+  <div>
     <label>Aeroporto</label>
     <div style="display:flex;gap:6px;height:34px;align-items:center">
       <button id="gf-aero-CAIF" onclick="toggleAeroporto('CAIF')"
@@ -1332,6 +1345,7 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
   <span id="gf-hint"></span>
+  <span style="font-size:11px;color:rgba(255,255,255,.6);align-self:center;white-space:nowrap;margin-left:6px">Gerado em {DATA_HOJE}</span>
 </div>
 
 <div class="container">
@@ -1538,32 +1552,9 @@ html = f"""<!DOCTYPE html>
   </div>
   </div><!-- /ct-section -->
 
-  <!-- DRILL-DOWN INTERATIVO -->
-  <div class="section-title">Análise Interativa — Fornecedor › Terceiro › Documentos
-    <span class="section-toggle" onclick="toggleSection('drill-section', this)">▼ Expandir</span>
-  </div>
-  <div id="drill-section" class="section-collapsible collapsed">
-  <div class="chart-card">
-    <p style="font-size:13px;color:#666;margin-bottom:16px;">
-      Clique num fornecedor para ver os terceiros. Clique num terceiro para ver os documentos e o status de cada um.
-    </p>
-    <div id="drill-level1">
-      <div class="drill-cards-grid" id="supplier-cards"></div>
-    </div>
-    <div id="drill-level2" style="display:none">
-      <div class="drill-breadcrumb" id="breadcrumb2"></div>
-      <div class="drill-worker-list" id="worker-list"></div>
-    </div>
-    <div id="drill-level3" style="display:none">
-      <div class="drill-breadcrumb" id="breadcrumb3"></div>
-      <div class="drill-doc-list" id="doc-list"></div>
-    </div>
-  </div>
-  </div><!-- /drill-section -->
-
   <!-- SITUACAO DOCUMENTAL POR TRABALHADOR -->
   <div class="section-title">
-    Situação Documental por Terceiro — Aprovado / Reprovado / Não Anexado / Aguardando Submissão / Em Análise
+    Situação Documental por Terceiro
     <span class="section-toggle" onclick="toggleSection('sit-section', this)">▼ Expandir</span>
   </div>
   <div id="sit-section" class="section-collapsible collapsed">
@@ -2003,6 +1994,16 @@ const dbFiltrarTabela   = debounce(filtrarTabela, 300);
 // ── MULTI-SELECT GLOBAL FILTER ─────────────────────────────────────────────
 let selectedFornSet = new Set();
 let selectedCompSet = new Set();
+let selectedStatSet = new Set();
+
+const GFS_OPTIONS = [
+  {{ label: "Aprovados",            r3: ["Aprovado"],                          r4: ["Aprovado"] }},
+  {{ label: "Reprovados",           r3: ["Reprovado"],                         r4: ["Reprovado","Irregular","Alerta"] }},
+  {{ label: "Não Enviados",         r3: ["Não anexado"],                       r4: ["Não Anexado"] }},
+  {{ label: "Aguardando Submissão", r3: ["Aguardando Submissão"],              r4: [] }},
+  {{ label: "Em Análise",           r3: ["Em Análise"],                        r4: ["Em análise"] }},
+  {{ label: "Vencidos",             r3: [],                                    r4: ["Vencido"] }},
+];
 let gfStatusTerc    = 'all';
 
 // Retorna Set de CPFs (dígitos) dos terceiros com status selecionado
@@ -2152,6 +2153,11 @@ document.addEventListener("click", e => {{
     document.getElementById("gfc-multi-panel").style.display = "none";
     document.getElementById("gfc-multi-arrow").textContent = "▾";
   }}
+  const wrapS = document.getElementById("gfs-multi-wrap");
+  if (wrapS && !wrapS.contains(e.target)) {{
+    document.getElementById("gfs-multi-panel").style.display = "none";
+    document.getElementById("gfs-multi-arrow").textContent = "▾";
+  }}
 }});
 
 function matchesCompGlobal(rowComp) {{
@@ -2210,6 +2216,63 @@ function limparCompFiltroSilent() {{
   const s = document.getElementById("gfc-multi-search");
   if (s) {{ s.value = ""; filterCompItems(""); }}
   document.getElementById("gfc-selected-label").textContent = "Todas as competências";
+}}
+
+function matchesGlobalStat(statusVal, section) {{
+  if (selectedStatSet.size === 0) return true;
+  for (const lbl of selectedStatSet) {{
+    const opt = GFS_OPTIONS.find(o => o.label === lbl);
+    if (!opt) continue;
+    const vals = section === "r3" ? opt.r3 : opt.r4;
+    if (vals.includes(statusVal)) return true;
+  }}
+  return false;
+}}
+
+function buildStatMultiSelect() {{
+  const list = document.getElementById("gfs-multi-list");
+  list.innerHTML = "";
+  GFS_OPTIONS.forEach(opt => {{
+    const div = document.createElement("div");
+    div.className = "gfs-item";
+    div.dataset.key = opt.label;
+    const cbId = "gfs-cb-" + opt.label.replace(/[^a-z0-9]/gi, "_");
+    div.innerHTML = `<input type="checkbox" id="${{cbId}}"><label for="${{cbId}}" style="cursor:pointer;flex:1;font-size:13px">${{opt.label}}</label>`;
+    div.querySelector("input").addEventListener("change", e => {{
+      if (e.target.checked) {{ selectedStatSet.add(opt.label); div.classList.add("gfs-selected"); }}
+      else {{ selectedStatSet.delete(opt.label); div.classList.remove("gfs-selected"); }}
+      updateStatLabel();
+      applyGlobalFilter();
+    }});
+    list.appendChild(div);
+  }});
+}}
+
+function updateStatLabel() {{
+  const count = selectedStatSet.size;
+  document.getElementById("gfs-selected-label").textContent =
+    count === 0 ? "Todos os status" :
+    count === 1 ? [...selectedStatSet][0] :
+    count + " status selecionados";
+}}
+
+function toggleStatDropdown(e) {{
+  e.stopPropagation();
+  const panel = document.getElementById("gfs-multi-panel");
+  const arrow = document.getElementById("gfs-multi-arrow");
+  const isOpen = panel.style.display === "block";
+  panel.style.display = isOpen ? "none" : "block";
+  arrow.textContent = isOpen ? "▾" : "▴";
+}}
+
+function limparStatFiltroSilent() {{
+  selectedStatSet.clear();
+  document.querySelectorAll("#gfs-multi-list .gfs-item").forEach(div => {{
+    const cb = div.querySelector("input[type=checkbox]");
+    if (cb) cb.checked = false;
+    div.classList.remove("gfs-selected");
+  }});
+  document.getElementById("gfs-selected-label").textContent = "Todos os status";
 }}
 
 // Popula select de fornecedor; usa FORN_CNPJ_MAP (gerado pelo Python) para detectar
@@ -2414,6 +2477,7 @@ function filtrarSit() {{
       const cpfTerc = (r["CNPJ_Terceiro"] || '').replace(/\D/g,'');
       if (!aeroFlt.terceirosCPFs.has(cpfTerc)) return false;
     }}
+    if (!matchesGlobalStat(r["Status"], "r3")) return false;
     if (activeKpiKey) {{
       const ss = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).sit || [];
       if (ss.length > 0 && !ss.includes(r["Status"])) return false;
@@ -2483,6 +2547,7 @@ function filtrarFornSit() {{
       const cnpjForn = (r["CNPJ"] || '').replace(/\D/g,'');
       if (!aeroFltR4.fornCNPJs.has(cnpjForn)) return false;
     }}
+    if (!matchesGlobalStat(r["Status"], "r4")) return false;
     if (activeKpiKey) {{
       const fs = (KPI_STATUS_MAP_GLOBAL[activeKpiKey] || {{}}).forn || [];
       if (fs.length > 0 && !fs.includes(r["Status"])) return false;
@@ -2788,110 +2853,6 @@ function renderSitAgrupado(dados) {{
   document.getElementById("sit-grupos").innerHTML = html || '<p style="color:#aaa;text-align:center;padding:24px">Nenhum resultado</p>';
 }}
 
-// ── DRILL-DOWN ────────────────────────────────────────────────────────────────
-const drillData = {{}};
-SIT.forEach(r => {{
-  const f = r["Fornecedor"], t = r["Terceiro"];
-  if (!drillData[f]) drillData[f] = {{}};
-  if (!drillData[f][t]) drillData[f][t] = [];
-  drillData[f][t].push({{ doc: r["Documento"], status: r["Status"], venc: r["Vencimento"] }});
-}});
-
-const fornStats = {{}};
-Object.keys(drillData).forEach(f => {{
-  let conf=0, venc=0, pend=0;
-  Object.values(drillData[f]).forEach(docs => docs.forEach(d => {{
-    if (d.status==="Aprovado") conf++;
-    else if (d.status==="Reprovado") venc++;
-    else pend++;
-  }}));
-  const total = conf+venc+pend;
-  const pctC = total>0 ? Math.round(conf/total*100) : 0;
-  fornStats[f] = {{conf, venc, pend, total, pctC,
-                   trabCount: Object.keys(drillData[f]).length}};
-}});
-
-function corC(pct) {{ return pct>=70 ? "#28A745" : pct>=40 ? "#FFC107" : "#DC3545"; }}
-
-function showLevel(n) {{
-  [1,2,3].forEach(i => document.getElementById("drill-level"+i).style.display = i===n ? "block" : "none");
-}}
-
-function renderLevel1() {{
-  showLevel(1);
-  let keys = Object.keys(fornStats).sort((a,b) => fornStats[a].pctC - fornStats[b].pctC);
-  if (selectedFornSet.size > 0) {{
-    const nomes = new Set([...selectedFornSet].map(r => parseFornVal(r).nome));
-    keys = keys.filter(f => nomes.has(f));
-  }}
-  document.getElementById("supplier-cards").innerHTML = keys.map(f => {{
-    const s = fornStats[f];
-    const cor = corC(s.pctC);
-    const pConf = s.total>0 ? (s.conf/s.total*100).toFixed(1) : 0;
-    const pVenc = s.total>0 ? (s.venc/s.total*100).toFixed(1) : 0;
-    const pPend = s.total>0 ? (s.pend/s.total*100).toFixed(1) : 0;
-    return `<div class="drill-card" data-forn="${{encodeURIComponent(f)}}" onclick="renderLevel2(decodeURIComponent(this.dataset.forn))">
-      <div class="drill-card-pct" style="color:${{cor}}">${{s.pctC}}%</div>
-      <div class="drill-card-label">conforme</div>
-      <div class="drill-card-name">${{f}}</div>
-      <div class="drill-card-meta">${{s.trabCount}} terceiros &middot; ${{s.total}} docs</div>
-      <div class="drill-card-bars">
-        <span class="mini-bar" style="background:#28A745;width:${{pConf}}%" title="Conforme: ${{s.conf}}"></span>
-        <span class="mini-bar" style="background:#FFC107;width:${{pPend}}%" title="Pendente: ${{s.pend}}"></span>
-        <span class="mini-bar" style="background:#DC3545;width:${{pVenc}}%" title="Vencido: ${{s.venc}}"></span>
-      </div>
-    </div>`;
-  }}).join("");
-}}
-
-function renderLevel2(forn) {{
-  showLevel(2);
-  document.getElementById("breadcrumb2").innerHTML =
-    `<span class="drill-back" onclick="renderLevel1()">← Todos os fornecedores</span>
-     <span class="drill-crumb-sep">›</span>
-     <span class="drill-crumb-current">${{forn}}</span>`;
-
-  const workers = Object.keys(drillData[forn] || {{}}).sort();
-  document.getElementById("worker-list").innerHTML = workers.map(t => {{
-    const docs = drillData[forn][t];
-    const conf = docs.filter(d=>d.status==="Aprovado").length;
-    const venc = docs.filter(d=>d.status==="Reprovado").length;
-    const pend = docs.filter(d=>d.status==="Não anexado"||d.status==="Aguardando Submissão"||d.status==="Em Análise").length;
-    const arrowCor = venc>0 ? "#DC3545" : pend>0 ? "#FFC107" : "#28A745";
-    return `<div class="drill-worker" data-forn="${{encodeURIComponent(forn)}}" data-trab="${{encodeURIComponent(t)}}"
-               onclick="renderLevel3(decodeURIComponent(this.dataset.forn), decodeURIComponent(this.dataset.trab))">
-      <div class="drill-worker-name">${{t}}</div>
-      <div class="drill-worker-badges">
-        ${{conf>0 ? `<span class="badge badge-conforme">${{conf}} conforme</span>` : ""}}
-        ${{venc>0 ? `<span class="badge badge-vencido">${{venc}} vencido</span>` : ""}}
-        ${{pend>0 ? `<span class="badge badge-pendente">${{pend}} pendente</span>` : ""}}
-      </div>
-      <div class="drill-worker-arrow" style="color:${{arrowCor}}">›</div>
-    </div>`;
-  }}).join("");
-}}
-
-function renderLevel3(forn, trab) {{
-  showLevel(3);
-  document.getElementById("breadcrumb3").innerHTML =
-    `<span class="drill-back" data-forn="${{encodeURIComponent(forn)}}"
-        onclick="renderLevel2(decodeURIComponent(this.dataset.forn))">← ${{forn}}</span>
-     <span class="drill-crumb-sep">›</span>
-     <span class="drill-crumb-current">${{trab}}</span>`;
-
-  const docs = (drillData[forn] || {{}})[trab] || [];
-  document.getElementById("doc-list").innerHTML = docs.map(d => {{
-    const cls = d.status==="Aprovado" ? "badge-conforme" : d.status==="Reprovado" ? "badge-vencido" : "badge-pendente";
-    return `<div class="drill-doc">
-      <div class="drill-doc-name">${{d.doc}}</div>
-      <span class="badge ${{cls}}">${{d.status}}</span>
-      <div class="drill-doc-venc">${{d.venc || "—"}}</div>
-    </div>`;
-  }}).join("") || '<div class="drill-hint">Nenhum documento encontrado</div>';
-}}
-
-renderLevel1();
-
 // ── CONTRATOS DRILL-DOWN ──────────────────────────────────────────────────────
 let ctFornAtual = null;
 let ctContratosAtual = [];
@@ -3191,6 +3152,9 @@ function exportarRelatorioPDF() {{
   const filtroLabel = _filtroAtivоLabel();
   let y = 14;
 
+  doc.setFontSize(9); doc.setTextColor(120);
+  doc.text("Gerado em: " + new Date().toLocaleString("pt-BR"), 14, y); y += 8;
+
   const _titulo = (txt) => {{
     doc.setFontSize(13); doc.setTextColor(14, 143, 163);
     doc.text(txt, 14, y); y += 7;
@@ -3198,7 +3162,7 @@ function exportarRelatorioPDF() {{
     doc.text(filtroLabel, 14, y); y += 6;
   }};
 
-  _titulo("R3 — Situação Documental dos Terceiros");
+  _titulo("Situação Documental dos Terceiros");
   const hdR3 = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
     head: [hdR3],
@@ -3211,7 +3175,7 @@ function exportarRelatorioPDF() {{
   y = doc.lastAutoTable.finalY + 10;
 
   if (y > 175) {{ doc.addPage(); y = 14; }}
-  _titulo("R4 — Situação Documental da Empresa");
+  _titulo("Situação Documental da Empresa");
   const hdR4 = ["Fornecedor", "CNPJ", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
     head: [hdR4],
@@ -3267,17 +3231,17 @@ function expandSection(id) {{
 function applyGlobalFilter() {{
   const fCount = selectedFornSet.size;
   const cCount = selectedCompSet.size;
+  const sCount = selectedStatSet.size;
 
   filtrarTabela();
   filtrarSit();
   filtrarFornSit();
   updateKPICards();
-  renderLevel1();
   ctRenderL1();
 
   // Expande secoes quando filtro ativo
-  if (fCount > 0 || cCount > 0) {{
-    ["ct-section","drill-section","pend-section","sit-section","forn-sit-section"].forEach(expandSection);
+  if (fCount > 0 || cCount > 0 || sCount > 0) {{
+    ["ct-section","pend-section","sit-section","forn-sit-section"].forEach(expandSection);
   }}
 
   // Label do botao fornecedor
@@ -3292,10 +3256,14 @@ function applyGlobalFilter() {{
     : cCount + " competências selecionadas";
   document.getElementById("gfc-selected-label").textContent = compLbl;
 
+  // Label do botao status
+  updateStatLabel();
+
   // Hint
   const parts = [];
   if (fCount > 0) parts.push(fCount <= 2 ? [...selectedFornSet].map(r => parseFornVal(r).nome).join(", ") : fCount + " fornecedores");
   if (cCount > 0) parts.push(cCount <= 2 ? [...selectedCompSet].join(", ") : cCount + " competências");
+  if (sCount > 0) parts.push(sCount === 1 ? [...selectedStatSet][0] : sCount + " status");
   if (gfAeroportoSet.size > 0) parts.push("aeroporto: " + [...gfAeroportoSet].join("+"));
   if (gfStatusTerc !== 'all') parts.push("terceiros: " + (gfStatusTerc === 'Ativo' ? 'Ativos' : 'Inativos'));
   document.getElementById("gf-hint").textContent = parts.length ? "Filtro ativo: " + parts.join(" · ") : "";
@@ -3325,6 +3293,7 @@ function limparGlobalFiltro() {{
   const search = document.getElementById("gf-multi-search");
   if (search) {{ search.value = ""; filterFornItems(""); }}
   limparCompFiltroSilent();
+  limparStatFiltroSilent();
   gfAeroportoSet.clear();
   ['CAIF','VIX','MEA','CAIN'].forEach(a => {{
     const btn = document.getElementById('gf-aero-' + a);
@@ -3344,6 +3313,7 @@ function limparGlobalFiltro() {{
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildFornMultiSelect();
 buildCompMultiSelect();
+buildStatMultiSelect();
 
 // ── TABELA SEM EXECUÇÃO ──────────────────────────────────────────────────────
 (function() {{
