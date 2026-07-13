@@ -13,6 +13,7 @@
 | `1. Módulo pré-cadastro - Como funciona - EFCAZ TECNOLOGIA LTDA.pdf` | Fluxo de pré-cadastro: convite → fornecedor preenche → vínculo criado | Homologação |
 | `7. Página inicial - Dashboard e indicadores - EFCAZ TECNOLOGIA LTDA.pdf` | Painéis do dashboard: Meus Fornecedores, Meus Terceiros, Buscas Automáticas | Dashboard |
 | `8. API EFCAZ – Visão Geral e Funcionalidades - EFCAZ TECNOLOGIA LTDA.pdf` | Endpoints disponíveis, autenticação, casos de uso | Integração |
+| `5. Como cadastrar ou atualizar colaboradores (Gestão de Terceiros) - EFCAZ TECNOLOGIA LTDA.pdf` | Cadastro e atualização de terceiros (KB90017): fluxo novo colaborador, atualizar existente, N/A, contratações, dúvidas frequentes | Gestão de Terceiros |
 
 ---
 
