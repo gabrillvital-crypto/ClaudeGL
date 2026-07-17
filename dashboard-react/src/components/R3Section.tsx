@@ -35,6 +35,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
       data.map(r => ({
         Fornecedor: r.Fornecedor,
         CNPJ_Forn: r.CNPJ_Forn,
+        Aeroporto: r.Aeroporto ?? '',
         Terceiro: r.Terceiro,
         CNPJ_Terceiro: r.CNPJ_Terceiro,
         Documento: r.Documento,
@@ -49,6 +50,7 @@ export function R3Section({ data, geradoEm = '' }: Props) {
     () =>
       data.map(r => ({
         Fornecedor: r.Fornecedor,
+        Aeroporto: r.Aeroporto ?? '',
         Terceiro: r.Terceiro,
         CNPJ_Terceiro: r.CNPJ_Terceiro,
         Documento: r.Documento,
