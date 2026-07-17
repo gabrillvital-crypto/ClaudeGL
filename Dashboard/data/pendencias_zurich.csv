@@ -9303,19 +9303,179 @@ PROTEG SEGURANCA PATRIMONIAL LTDA,08699066000123,APROVADO,TERCEIROS,,,"ADRIANO D
 PROTEG SEGURANCA PATRIMONIAL LTDA,08699066000123,APROVADO,TERCEIROS,,,"ADRIANO DE CARVALHO - 03/26 - Março 2026 - Ficha de EPI, sem relatório de assinatura digital."
 PROTEG SEGURANCA PATRIMONIAL LTDA,08699066000123,APROVADO,TERCEIROS,,,"ADRIANO DE CARVALHO - 06/26 - Junho 2026 - Cartão ponto com total de horas extras ou noturnas, sem relatório de assinatura digital."
 KARUANA SERVICOS AUXILIARES DE TRANSPORTE AEREO LTDA,13389550000358,EM_ELABORACAO,TERCEIROS,,,Preencher os campos de DADOS COMPLEMENTARES dos inativos.
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,CERTIDÃO JUDICIAL CÍVEL - TRF,,"CERTIDÃO JUDICIAL CÍVEL - TRF:
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,CERTIDÃO JUDICIAL CÍVEL - TRF,,"CERTIDÃO JUDICIAL CÍVEL - TRF:
 
 Regularizar documento."
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,PCMSO,,"PCMSO:
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,PCMSO,,"PCMSO:
 Divergência: o PCMSO exige audiometria para Auxiliar de Serviços Gerais, mas o PGR omite o risco de ruído para o cargo. Além disso, o documento traz referências obsoletas de portarias de 1994/1996, ignorando a atualização vigente da NR-7. O programa deve ser revisado e harmonizado com o inventário de riscos atual do PGR."
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,PGR,,"PGR:
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,PGR,,"PGR:
 
 Após o alinhamento com o PCMSO, será realizada nova análise."
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,,,"Laudo de Periculosidade: 
-Assinatura Técnica Autorizada: O laudo técnico deve ser refeito e assinado obrigatoriamente por um Engenheiro de Segurança do Trabalho (com registro ativo no CREA) ou por um Médico do Trabalho (com registro ativo no CRM), conforme manda a legislação federal vigente (Artigo 195 da CLT)."
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,Laudo de Periculosidade,,Laudo de Periculosidade:  Solicitamos anexar como documento complementar: a Certidão de Registro Profissional do CAU com a especialização em Engenharia de Segurança do Trabalho averbada e a RRT (Registro de Responsabilidade Técnica) quitada referente a este laudo.
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,,,Laudo de insalubridade: Solicitamos anexar como documento complementar: a Certidão de Registro Profissional do CAU com a especialização em Engenharia de Segurança do Trabalho averbada e a RRT (Registro de Responsabilidade Técnica) quitada referente a este laudo. Para validação da assinatura do responsável técnico pela emissão do documento.
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,Laudo de insalubridade,,Laudo de insalubridade:  Solicitamos anexar como documento complementar: a Certidão de Registro Profissional do CAU com a especialização em Engenharia de Segurança do Trabalho averbada e a RRT (Registro de Responsabilidade Técnica) quitada referente a este laudo. Para validação da assinatura do responsável técnico pela emissão do documento.
-CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,EM_ELABORACAO,DOCUMENTOS,Avaliação ergonômica,,"Avaliação ergonômica: 
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,Laudo de insalubridade,,Laudo de insalubridade:  Solicitamos anexar como documento complementar: a Certidão de Registro Profissional do CAU com a especialização em Engenharia de Segurança do Trabalho averbada e a RRT (Registro de Responsabilidade Técnica) quitada referente a este laudo. Para validação da assinatura do responsável técnico pela emissão do documento.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,Avaliação ergonômica,,"Avaliação ergonômica: 
 
 Ausência de documento complementar que comprove a habilitação legal e valide a assinatura da arquiteta. Necessário a apresentação de registro de especialização em Engenharia de Segurança do Trabalho e a respectiva ART/RRT do laudo, conforme a Lei nº 7.410/85 e NR-17."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,,,"SESMT - composição de acordo com NR 04. Caso não haja, justificar com ""N/A""."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,,,Seguro de Responsabilidade Civil: Necessário anexar documento solicitado.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,,,Seguro garantia: Necessário anexar documento solicitado.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,Laudo de Periculosidade,,Laudo de Periculosidade: Solicitamos anexar como documento complementar: a Certidão de Registro Profissional do CAU com a especialização em Engenharia de Segurança do Trabalho averbada e a RRT (Registro de Responsabilidade Técnica) quitada referente a este laudo. Para validação da assinatura do responsável técnico pela emissão do documento.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JACKSON OLIVEIRA DA SILVA - Cartão ponto com total de horas extras ou noturnas:
+
+Reprovado devido a inconsistências nas saídas dos dias 01/05, 03/05 e 13/05 (Esquecimento, Horário Inválido e Inserção Manual). Solicito o envio do Protocolo de Assinatura Eletrônica do Espelho de Ponto e do Relatório de Trilha de Auditoria (Log de Alterações) ou, o Termo de Retificação de Jornada assinado fisicamente pelo colaborador, visando mitigar riscos fiscais. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JACKSON OLIVEIRA DA SILVA - Ordens de Serviço
+
+Após alinhamento PGR/PCMSO será realizada nova análise.
+
+Atenção a descrição dos EPIs obrigatórios, termo não deve ser expresso de maneira genérica. ( Quais ? Analisando os fatores de risco e exposição para os funcionários). "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"ITAMAR ALVES DA SILVA - Ordens de Serviço:
+
+Após alinhamento do PCMSO/PGR, será realizada nova análise do documento. 
+
+Atenção: Para evitar qualquer divergência técnica em fiscalizações do Ministério do Trabalho, recomendamos atualizar a descrição do risco ergonômico na OS para: ""Risco Ergonômico: Levantamento e transporte manual de cargas (movimentação de carrinhos de bagagem).       Analisar os textos das descrições, se estão em conformidade com os alinhamentos do PGR. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"ITAMAR ALVES DA SILVA - Ficha de EPI:
+
+Documento sem descrição de C.A dos EPIs entregues, sem assinatura do responsável pela entrega.
+
+ATENÇÃO: EPIs entregues, e códigos de C.A devem estar em conformidade com PGR/PCMSO.  "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"ITAMAR ALVES DA SILVA - Cartão ponto com total de horas extras ou noturnas:
+STATUS descritos ""B"" (inválidas), com destaque para o dia 08/05 (folga), onde houve labor de 5h59 não validado e desconto indevido de falta. Necessário: regularização sistêmica de todos os horários inválidos, remoção da falta/folga do dia 08/05 com o devido pagamento das horas e emissão de novo espelho retificado para assinatura. Anexar Termo de Retificação de Jornada assinado fisicamente pelo colaborador. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JEVEL GOES DIAS - Cartão ponto com total de horas extras ou noturnas:
+O espelho viola o art. 134, §3º da CLT ao iniciar as férias em 30/04/2026, quinta-feira que antecede o feriado de 01/05. A empresa deve retificar o período de férias no sistema de folha e ponto para iniciar em dia permitido (pelo menos 3 dias antes de feriado ou DSR, como uma segunda-feira), recalculando e pagando eventuais reflexos financeiros e gerando um novo espelho corrigido para assinatura.
+
+"
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JEVEL GOES DIAS - Ficha de EPI.
+
+Após alinhamento PCMSO/PGR será realizada nova análise. 
+
+ATENÇÃO: Certificado de C.A deve ser legível, e estar em conformidade com os programas de PGR/PCMSO, e atentar-se com assinaturas do colaborador, e responsável pela entrega dos EPIs, e datas expressas no documento.
+"
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JEVEL GOES DIAS - Ordens de Serviço.
+
+Descumpre a NR-01 (item 1.4.1, 'g') devido a emissão em 14/04/2026, 15 meses após a admissão (14/01/2025), cláusula de proibições errônea (item 7) e falta de assinaturas. Necessário: Emitir imediatamente nova OS com data retroativa à admissão (ou atualizada com justificativa), corrigir o texto do item 7 para ""não inerentes"", e coletar as assinaturas eletrônicas ou físicas de todas as partes envolvidas. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JALISSON NERY DA SILVA - Ordens de Serviço: Ordem de serviço emitida e assinada em 14/04/2026, quatro meses após a admissão do colaborador (16/12/2025), a lei exige a instrução antes do início das atividades. Além disso, o item 7 possui erro jurídico crítico ao proibir o funcionário de exercer ""atividades inerentes à função"". Corrigir texto: Retificar a redação do item 7 para ""não inerentes"", emitir nova via revisada e colher as assinaturas."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JALISSON NERY DA SILVA - Ficha de EPI:
+
+Coletar imediatamente a assinatura pendente de Jalisson na linha do item 03. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JALISSON NERY DA SILVA - Ficha de EPI:
+
+Coletar imediatamente a assinatura pendente de Jalisson na linha do item 03, assim como assinatura do responsável pela entrega dos EPIs. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JALISSON NERY DA SILVA - Cartão ponto com total de horas extras ou noturnas:
+
+Constam marcações de ""horário inválido"" (B) nos dias 21/04 e 26/04. Embora haja justificativa de troca de escala registrada no espelho, marcações inválidas não tratadas geram risco de passivo trabalhista. 
+Orientação: O gestor deve validar formalmente no sistema de ponto os alertas de inconsistência, e se preciso, emitir Termo de Retificação de Jornada, assinado fisicamente pelo colaborador. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JUAN CARLOS RODRIGUES GUERRA - Ordens de Serviço:
+
+Tendo sido emitida em 14/04/2026, quase dois meses após a admissão (19/02/2026), além de estar sem a assinatura do colaborador. Persiste também o erro no item 7, que proíbe atividades ""inerentes à função"". Orientação: Ajustar o texto do item 7 para ""não inerentes"", colher a assinatura de Juan Carlos e do técnico de segurança, e justificar formalmente o atraso na emissão."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JUAN CARLOS RODRIGUES GUERRA - Ficha de EPI:
+
+Após alinhamento de PCMSO/PGR será realizada nova análise.
+
+ATENÇÃO: Documento deve conter assinatura do gestor responsável pela entrega de EPIs. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"JUAN CARLOS RODRIGUES GUERRA - Cartão ponto com total de horas extras ou noturnas:
+
+Há marcações inconsistentes com status ""B"" (horário inválido) em 29/04 e, de forma mais grave, em 08/05 (dia de folga), onde constam 06h12 de trabalho sem o devido tratamento ou justificativa legal no sistema. Necessário: Tratar sistemicamente os alertas de erro ""B"", validar as horas laboradas na folga e gerar um novo espelho de ponto corrigido, se preciso, anexar Termo de Retificação de Jornada assinado. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"ROBERTH LEONARDO FERREIRA - Ordens de Serviço:
+
+Documento foi assinada em 14/04/2026, quatro meses após a admissão do colaborador (16/12/2025). O documento também apresenta erro jurídico grave no item 7 ao proibir expressamente o empregado de realizar ""atividades inerentes a sua função"". Necessário corrigir, e manter devidamente alinhado com PCMSO/PGR. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"ROBERTH LEONARDO FERREIRA - Ficha de EPI:
+
+Após o alinhamento do PCMSO/PGR, será realizada nova análise do documento.
+
+ATENÇÃO: Documento deve conter assinaturas do colaborador e gestor responsável pela entrega dos EPIs. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"ROBERTH LEONARDO FERREIRA - Cartão ponto com total de horas extras ou noturnas:
+
+Foram identificadas marcações com o alerta ""B"" (horário inválido) em vários dias da jornada (como em 16/04, 20/04, 24/04, 26/04, 30/04, 06/05, 08/05, 10/05 e 14/05), incluindo desvios graves no registro do intervalo intrajornada e atrasos/saídas sem a devida validação ou abono legal. Necessário correção, se preciso, anexar Termo de Retificação de Jornada assinado fisicamente pelo colaborador. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"DEMERSON DOS SANTOS GOMES - Ordens de Serviço:
+
+Foi emitida e assinada em 14/04/2026, mais de um ano após a admissão do colaborador (07/04/2025). Além disso, o documento apresenta um erro conceitual grave no item 7, proibindo expressamente o funcionário de realizar ""atividades que sejam inerentes à sua função"". Necessário corrigir a redação do item 7 para ""não inerentes"", emitir uma nova via revisada e colher as assinaturas atualizadas."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"DEMERSON DOS SANTOS GOMES - Ficha de EPI:
+
+Os itens 01 a 07 foram entregues sem a identificação do Certificado de Aprovação (C.A.), o que é obrigatório para garantir a eficácia do equipamento. Necessário,  preencher os números de C.A. corretos e ajustar os registros de data de entrega de forma legível. Documento deve estar alinhado ao PCMSO/PGR, assim como estar devidamente assinado, por colaborador e gestor responsável pela entrega dos EPIs. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"DEMERSON DOS SANTOS GOMES - Cartão ponto com total de horas extras ou noturnas:
+
+Constam diversos alertas ""B"" (horário inválido) tanto nas marcações de entrada quanto nas de intervalo (como em 17/04, 21/04, 29/04, 09/05 e 15/05), além de atrasos expressivos acumulados sem validação (total de 12h22). Necessário tratar todas as marcações inválidas ""B"", formalizar as justificativas para os atrasos e emitir novo espelho corrigido, se preciso,  anexar Termo de Retificação de Jornada assinado. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"GABRIEL JOSE BESSA - Ficha de EPI:
+Inconformidade Legal (NR-06): Todos os campos de Certificado de Aprovação (CA) estão em branco, invalida a comprovação de eficácia do EPI.  
+Divergência com o PGR: Ausência de registro de protetor auricular para o risco de ruído indicado na OS, e de colete refletivo para áreas externas.  
+Falha de Controle: Itens como jaqueta, botina e camisas constam sem assinatura de recebimento do colaborador, assim como não há assinatura do gestor responsável pela entrega. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"GABRIEL JOSE BESSA - Ordens de Serviço:
+Omissão de Riscos: Não mapeia o risco de atropelamento externo nem o esforço ergonômico ao empurrar as filas de carrinhos.  
+EPIs Omissos: Cita o ruído como risco físico, mas não prescreve o uso de protetor auricular.  Erros de Escrita: Contém falhas de revisão, item 7 possui erro jurídico crítico ao proibir o funcionário de exercer ""atividades inerentes à função"".  "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"VICTOR ARAUJO RODRIGUES - Ficha de EPI:
+Omissão com PGR: Falta o registro de fornecimento de protetor auricular (para o risco de ruído) e de colete refletivo (para o risco de atropelamento). 
+
+ATENÇÃO : Datas de emissão dos documentos devem estar em conformidade com a contratação. 
+
+Após o alinhamento de PCMSO/PGR será realizada nova análise do documento. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"VICTOR A. RODRIGUES - Ordens de Serviço: 
+NR-01 (PGR): Omite o risco de atropelamento nas vias externas do aeroporto e a sobrecarga lombar gerada pelo transporte manual de longas filas de carrinhos.  
+Medidas de Controle: Identifica o risco físico ""Ruído"", mas falha em não prescrever o uso de protetor auricular ou de colete de alta visibilidade nas prevenções.  
+NR-07 (PCMSO): Não correlaciona a exposição ao ruído com a necessidade de exames periódicos de audiometria.  "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"VICTOR ARAUJO RODRIGUES - Cartão ponto com total de horas extras ou noturnas:
+
+Quebra da Escala 12x36: O colaborador trabalhou em dias consecutivos sem o descanso de 36 horas (ex: 03 e 04/05). 
+Há ainda sequências críticas de 3 dias seguidos de trabalho (08 a 10/05 e 12 a 14/05).   
+No dia 24/04, usufruiu de apenas 30 minutos de intervalo intrajornada, descumprindo o limite mínimo de 1 hora da escala.
+Necessário correção, e retificação de folha ponto.  "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"CARLOS KAUAN COUTINHO CRUZ - Ficha de EPI:
+*Brecha Legal (NR-06): Campos de Certificado de Aprovação (C.A.) estão em branco, impossibilitando comprovar a regularidade dos EPIs fornecidos.  
+Divergência com o PGR: 
+*Falta o registro de fornecimento de protetor auricular para o risco físico ruído.  
+*Incompletude do Kit Uniforme: Foi entregue apenas uma muda de cada. 
+Documentos devem estar alinhados com PCMSO/PGR, e devidamente assinados, por gestores responsáveis e colaborador. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"CARLOS KAUAN COUTINHO CRUZ - Cartão ponto com total de horas extras ou noturnas:
+*Quebra de Escala 12x36 (Art. 59-A da CLT): O colaborador trabalhou em dias consecutivos sem o descanso de 36 horas em várias ocasiões (ex: 18 e 19/04, 02 e 03/05, 09 e 10/05, e 10 e 11/05).  
+ *Intervalo (Art. 71 da CLT): No dia 01/05, realizou apenas 39 minutos de intervalo intrajornada, descumprindo o mínimo legal de 1 hora.  
+*Atrasos Recorrentes: Registro frequente de atrasos superiores ao limite legal."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"VITOR HUGO FURTADO RIBEIRO - Cartão ponto com total de horas extras ou noturnas:
+
+*Em diversos dias (como 16/04, 18/04, 28/04 e 04/05), o intervalo intrajornada foi inferior a 1 hora (registrando entre 52 e 56 minutos).
+*Há atrasos superiores ao limite de tolerância do Art. 58, da CLT (como 56 minutos em 06/05), sem desconto ou compensação clara. 
+"
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"VITOR HUGO FURTADO RIBEIRO - Ficha de EPI:
+
+Ficha de EPI (NR-06): Entrega realizada um ano após a admissão (13/01/25 x 16/01/26), ausência total de Certificados de Aprovação (C.A.) e omissão de protetor auricular e colete refletivo, e ausência de assinatura do gestor responsável pela entrega dos EPIs. 
+Documentos devem ser alinhados conforme programas PGR/PCMSO. "
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"VITOR HUGO FURTADO RIBEIRO - Ordens de Serviço:
+
+Mapeamento incompleto de riscos, cita ruído sem prever EPI.
+Documento deve estar em conformidade com PCMSO/PGR.
+
+
+"
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,DOCUMENTOS,PGR,,"PGR:  Documento reprovado devido a erro metodológico na classificação de riscos (pág. 6), que ilegalmente insere a variável ""Custo"" para mitigar o nível de risco, violando a NR-01 (item 1.5.4.4.2), a qual exige exclusivamente a relação entre Severidade e Probabilidade. Além disso, há divergência na codificação do posto de trabalho (CR 13427-22231 vs CR 22231) entre o inventário e o cronograma (págs. 10 e 16). Necessita de correção técnica."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,DOCUMENTOS,PCMSO,,"PCMSO: 
+Documento reprovado por quebra gravíssima de rastreabilidade e inconsistência de dados. A página 4 cita falsamente que o programa se baseia em um PGR de fevereiro/2026 emitido por Julia Allgayer, divergindo do PGR real (janeiro/2026 por Barbara Schmidt). O PCMSO também indica 10 funcionários, enquanto o PGR lista 8. Por fim, apresenta excesso de anexos de riscos inexistentes no posto (calor, químico, ruído)."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,DOCUMENTOS,CERTIDÃO JUDICIAL CÍVEL - TRF,,CERTIDÃO JUDICIAL CÍVEL - TRF: Regularizar documento.
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,DOCUMENTOS,CND Federal,,CND Federal: Regularizar documento.
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"VERA LUCIA DOS SANTOS DA SILVA - 03/26 - Março 2026 : 
+
+Documento reprovado por inconsistência na parametrização de cálculos. No dia 11/03, o sistema realizou o desconto incorreto de 11h pela falta integral, divergindo da jornada de 12h do plantão contratual da escala 12x36. Além disso, nos dias 07 e 09/03, o evento de intervalo suprimido consta como ""Hora intra jornada 150%"", necessitando de revisão matemática para adequação ao Art. 71, §4º da CLT (adicional de 50%) ou à CCT da categoria. "
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"SAMANTHA BASON KLEIS - 12/25 - Dezembro 2025 - Cartão ponto com total de horas extras ou noturnas:
+
+Folha sem assinatura do colaborador e gestor imediato. Verificar configuração do equipamento quanto cálculos de extras e descanso. "
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"SAMANTHA BASON KLEIS - 01/26: 
+Folha reprovada por erro de cálculo em feriados trabalhados. Nos dias 25/12 e 01/01 (feriados natais e de ano novo), a colaboradora realizou o plantão de 12 horas. Porém, o sistema computou apenas 1 hora intrajornada por dia, deixando de calcular o adicional de 100% sobre as horas regulamentares trabalhadas em feriado, o que diverge da legislação para a escala 12x36. o evento de intervalo suprimido permanece incorretamente nomeado como ""Hora intra jornada"". "
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"SAMANTHA BASON KLEIS - 02/26 - Fevereiro 2026 :
+Documento reprovado por erro em dias de folga trabalhados. Nos dias 01, 03 e 05/02, que constam como folga na escala, a colaboradora trabalhou em treinamentos. O sistema computou essas horas integralmente como extras, porém computou incorretamente uma hora a mais por dia como ""Hora intra jornada 150%"", duplicando indevidamente o evento de intervalo para dias em que ela sequer possuía jornada regular contratada."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"SAMANTHA BASON KLEIS - 03/26 - Março 2026 - Cartão ponto com total de horas extras ou noturnas:
+
+Permanece o erro de nomenclatura no cálculo do intervalo intrajornada suprimido, classificado erroneamente como ""Hora intra jornada 150%"" para computar o adicional de 50% previsto no Art. 71, §4º da CLT."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"MILENA DA SILVA REITZ - 01/26 - Janeiro 2026 - Cartão ponto com total de horas extras ou noturnas:
+
+Contudo, o sistema registrou o tempo de repouso suprimido sob o nome incorreto de ""Hora intra jornada 150%"", quando a verba indenizatória deve ser parametrizada com o percentual correto de 50%, em estrita conformidade com o Art. 71, §4º da CLT."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"MILENA DA SILVA REITZ - 02/26 - Fevereiro 2026 - Cartão ponto com total de horas extras ou noturnas:
+
+O sistema mantém o erro de nomenclatura ao computar o intervalo intrajornada suprimido sob a rubrica ""Hora intra jornada 150%"", sendo necessária a correção para o percentual legal de 50% previsto no Art. 71, §4º da CLT."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"MILENA DA SILVA REITZ - 03/26 - Março 2026 - Cartão ponto com total de horas extras ou noturnas:
+
+O espelho de ponto registra o acumulado de 15:00 horas sob o evento ""Hora intra jornada 150%"". A nomenclatura permanece incorreta no sistema da empresa, visto que o pagamento do intervalo intrajornada suprimido deve carregar o adicional legal de 50%, conforme determina o Art. 71, §4º da CLT."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"MILENA DA SILVA REITZ - 03/26 - Março 2026 - Cartão ponto com total de horas extras ou noturnas:
+
+O sistema mantém a falha conceitual ao computar o intervalo intrajornada sob a rubrica ""Hora intra jornada 150%"", sendo necessária a retificação para o percentual legal de 50% previsto no Art. 71, §4º da CLT."
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,"THALITA SANTOS COSTA - 12/25 - Dezembro 2025 - Cartão ponto com total de horas extras ou noturnas:
+
+Folha sem assinatura da colaboradora, e gestor imediato. 
+Dias de férias precisam ter a justificativa descrita em todas as datas relacionadas. "
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,THALITA SANTOS COSTA - 12/25 - Dezembro 2025 - Cartão ponto com total de horas extras ou noturnas: Folha ponto sem assinaturas do gestor imediato e colaborador. 
+TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115,EM_ELABORACAO,TERCEIROS,,,ANTONIO FABIO SOARES DA SILVA - 04/26 - Abril 2026 - Cartão ponto com total de horas extras ou noturnas:      Necessário Kit rescisão para análise. 
