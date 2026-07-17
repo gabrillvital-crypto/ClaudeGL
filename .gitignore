@@ -23,7 +23,6 @@ gerar_planilha_gastos_pai*
 *.pptx
 *.zip
 *.zip
-*.md
 # Arquivos temporários do Claude Code
 *scratchpad*
 *transcript*
