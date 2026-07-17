@@ -26,8 +26,7 @@ A Efcaz (https://www.efcaz.com.br/) é uma plataforma SRM (Supplier Relationship
 - Relatórios gerenciais e análise financeira de fornecedores
 - Integração via API
 
-**Base de conhecimento Efcaz:** https://efcaz.movidesk.com/kb/pt-br/article/552858/kb90069-srm-planilhas-de-onboarding
-> Consulte sempre que houver dúvida sobre funcionalidades, configurações ou processos da plataforma antes de responder. Se a resposta não estiver na base, sinalize que é necessário validar com o time técnico.
+**Base de conhecimento Efcaz:** consulte sempre a pasta base de conehcimentos em caso de duvidas, ela se encontra dentro da pasta CLAUDEGL
 
 ## Módulos da plataforma
 
@@ -60,6 +59,7 @@ Foco de atuação:
 - Maximização de ROI do cliente
 - Renovações e retenção
 - Expansão: upsell de módulos e cross-sell
+- Criação de novos produtos
 
 **Ferramentas do dia a dia:**
 
@@ -69,6 +69,7 @@ Foco de atuação:
 | **CustomerX** | CRM — método de uso ainda em construção. Registrar etapas, checklists e marcos do playbook conforme processo for sendo definido. |
 | **WhatsApp Business** | Canal de comunicação direta com clientes |
 | **Excel / Google Sheets** | Análises e controles internos |
+| ** Gmail** | Interação com clientes e envio de campanhas 
 
 ---
 
