@@ -220,7 +220,7 @@ export function exportR4PDF({ rows, kpis, geradoEm, filename = 'situacao_empresa
 // ── Relatório R3 — Situação de Terceiros ───────────────────────────────────
 
 interface R3PDFOptions {
-  rows: { Fornecedor: string; Terceiro: string; CNPJ_Terceiro: string; Documento: string; Competencia: string; Status: string; Vencimento: string }[]
+  rows: { Fornecedor: string; Aeroporto: string; Terceiro: string; CNPJ_Terceiro: string; Documento: string; Competencia: string; Status: string; Vencimento: string }[]
   geradoEm: string
   filename?: string
 }
@@ -261,22 +261,23 @@ export function exportR3PDF({ rows, geradoEm, filename = 'situacao_terceiros' }:
 
   autoTable(doc, {
     startY: yAfterKpis,
-    head: [['Fornecedor', 'Terceiro', 'CNPJ Terceiro', 'Documento', 'Status', 'Competência', 'Vencimento']],
-    body: rows.map(r => [r.Fornecedor, r.Terceiro, r.CNPJ_Terceiro || '—', r.Documento, r.Status, r.Competencia || '—', r.Vencimento || '—']),
+    head: [['Fornecedor', 'Aeroporto', 'Terceiro', 'CNPJ Terceiro', 'Documento', 'Status', 'Competência', 'Vencimento']],
+    body: rows.map(r => [r.Fornecedor, r.Aeroporto || '—', r.Terceiro, r.CNPJ_Terceiro || '—', r.Documento, r.Status, r.Competencia || '—', r.Vencimento || '—']),
     styles: { fontSize: 7.5, cellPadding: 2, textColor: TEXT_DARK, font: 'helvetica' },
     headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold', fontSize: 8 },
     alternateRowStyles: { fillColor: GRAY_LIGHT },
     columnStyles: {
-      0: { cellWidth: 45 },
-      1: { cellWidth: 45 },
-      2: { cellWidth: 26 },
-      3: { cellWidth: 'auto' },
-      4: { cellWidth: 30 },
+      0: { cellWidth: 40 },
+      1: { cellWidth: 18 },
+      2: { cellWidth: 40 },
+      3: { cellWidth: 24 },
+      4: { cellWidth: 'auto' },
       5: { cellWidth: 28 },
-      6: { cellWidth: 22 },
+      6: { cellWidth: 26 },
+      7: { cellWidth: 20 },
     },
     didParseCell(data) {
-      if (data.section === 'body' && data.column.index === 4) {
+      if (data.section === 'body' && data.column.index === 5) {
         data.cell.styles.textColor = statusColor(String(data.cell.raw))
         data.cell.styles.fontStyle = 'bold'
       }

@@ -23,6 +23,7 @@ export interface SitTerceiroRow {
   Status: StatusR3
   Vencimento: string
   Competencia: string
+  Aeroporto: string
 }
 
 export interface FornSitRow {

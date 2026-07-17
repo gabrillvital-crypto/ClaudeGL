@@ -229,6 +229,19 @@ export function processAllData(
   // Coluna "Marcas e Representações" → Competência R3
   const colMarcasSit = sitCols.find(c => c.toLowerCase().includes('marcas')) ?? null
 
+  // Lookup: normCNPJ(terceiro CPF) → aeroportos (do relatório de terceiros cadastrados)
+  const _tercCols0 = rawTerc[0] ? Object.keys(rawTerc[0]) : []
+  const _colCPFTerc0 = _tercCols0.find(c => c.toLowerCase().includes('terceiro') && c.toLowerCase().includes('cpf')) ?? 'CPF/CNPJ Terceiro'
+  const _colAero0 = _tercCols0.find(c => c.toLowerCase().includes('aeroporto')) ?? 'Código do aeroporto'
+  const tercAeroportoMap = new Map<string, Set<string>>()
+  rawTerc.forEach(row => {
+    const cpf = normCNPJ(row[_colCPFTerc0])
+    const aero = String(row[_colAero0] ?? '').trim().replace(/^nan$/, '')
+    if (!cpf || !aero) return
+    if (!tercAeroportoMap.has(cpf)) tercAeroportoMap.set(cpf, new Set())
+    tercAeroportoMap.get(cpf)!.add(aero)
+  })
+
   const colCNPJPend = pendCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
 
   const fornSitCols = rawFornSit[0] ? Object.keys(rawFornSit[0]) : []
@@ -268,15 +281,18 @@ export function processAllData(
       const venc = DOCS_SEM_VENCIMENTO.has(docLower)
         ? ''
         : fmtDate(row[colDatVenc] ?? row['Data de Vencimento'])
+      const cpfTerceiro = normCNPJ(row[colTercCNPJ])
+      const aeroSet = tercAeroportoMap.get(cpfTerceiro)
       return {
         Fornecedor: abbrev(String(row[colFornRS] || row['Fornecedor Razao Social'] || '')),
         Terceiro: String(row[colTercRS] || row['Terceiro Razao Social'] || '').trim(),
-        CNPJ_Terceiro: normCNPJ(row[colTercCNPJ]),
+        CNPJ_Terceiro: cpfTerceiro,
         CNPJ_Forn: normCNPJ(row[colFornCNPJ]),
         Documento: docNome,
         Status: status,
         Vencimento: venc,
         Competencia: DOCS_SEM_COMP_R3.has(docLower) ? '' : (normalizeCompetencia(comp) || 'A classificar'),
+        Aeroporto: aeroSet ? [...aeroSet].join(' / ') : '',
       }
     })
     .filter((r): r is SitTerceiroRow => r !== null)

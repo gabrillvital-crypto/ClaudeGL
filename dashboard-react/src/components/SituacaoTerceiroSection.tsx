@@ -35,6 +35,7 @@ export function SituacaoTerceiroSection({ data, gfForn, geradoEm = '' }: Props) 
 
   const rows = filtered.map(r => ({
     Fornecedor: r.Fornecedor,
+    Aeroporto: r.Aeroporto ?? '',
     Terceiro: r.Terceiro,
     Documento: r.Documento,
     Status: r.Status,
@@ -43,6 +44,7 @@ export function SituacaoTerceiroSection({ data, gfForn, geradoEm = '' }: Props) 
 
   const pdfRows = filtered.map(r => ({
     Fornecedor: r.Fornecedor,
+    Aeroporto: r.Aeroporto ?? '',
     Terceiro: r.Terceiro,
     CNPJ_Terceiro: r.CNPJ_Terceiro,
     Documento: r.Documento,
@@ -100,7 +102,7 @@ export function SituacaoTerceiroSection({ data, gfForn, geradoEm = '' }: Props) 
           <table className="w-full text-[13px] border-collapse">
             <thead>
               <tr className="bg-[#0E8FA3] text-white">
-                {['Fornecedor','Terceiro','Documento','Status','Vencimento'].map(h => (
+                {['Fornecedor','Aeroporto','Terceiro','Documento','Status','Vencimento'].map(h => (
                   <th key={h} className="px-3 py-2.5 text-left font-bold">{h}</th>
                 ))}
               </tr>
@@ -109,6 +111,7 @@ export function SituacaoTerceiroSection({ data, gfForn, geradoEm = '' }: Props) 
               {filtered.map((r, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
                   <td className="px-3 py-2">{r.Fornecedor}</td>
+                  <td className="px-3 py-2 text-[12px] font-semibold text-[#0E8FA3]">{r.Aeroporto || '—'}</td>
                   <td className="px-3 py-2">{r.Terceiro}</td>
                   <td className="px-3 py-2">{r.Documento}</td>
                   <td className="px-3 py-2">{badge(r.Status)}</td>
@@ -116,7 +119,7 @@ export function SituacaoTerceiroSection({ data, gfForn, geradoEm = '' }: Props) 
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-3 py-6 text-center text-[#999]">Nenhum registro encontrado</td></tr>
+                <tr><td colSpan={6} className="px-3 py-6 text-center text-[#999]">Nenhum registro encontrado</td></tr>
               )}
             </tbody>
           </table>
