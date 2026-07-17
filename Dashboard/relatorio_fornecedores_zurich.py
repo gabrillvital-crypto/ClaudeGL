@@ -325,6 +325,26 @@ _DOCS_SEM_COMP_R3 = {"aso", "ordens de serviço"}
 _mask_sem_comp_r3 = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_R3)
 sit_tabela.loc[_mask_sem_comp_r3, "Competencia"] = ""
 
+# Enriquecer sit_tabela com Aeroporto (lookup via terceiros_zurich.csv)
+_col_aero_sit = next((c for c in df_terc.columns if "aeroporto" in c.lower() or ("digo" in c.lower() and "aero" in c.lower())), None)
+_col_cpf_terc_sit = next((c for c in df_terc.columns if "terceiro" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())), None)
+if _col_aero_sit and _col_cpf_terc_sit:
+    def _cpf_digits_sit(v):
+        return re.sub(r'\D', '', str(v).split('.')[0])
+    _aero_lookup: dict = {}
+    for _, _tr in df_terc.iterrows():
+        _k = _cpf_digits_sit(_tr.get(_col_cpf_terc_sit, ""))
+        _av = str(_tr.get(_col_aero_sit, "")).strip().upper()
+        if _av == "FLN":
+            _av = "CAIF"
+        if _k and _av and _av != "NAN":
+            _aero_lookup.setdefault(_k, set()).add(_av)
+    sit_tabela["Aeroporto"] = sit_tabela["CNPJ_Terceiro"].apply(
+        lambda v: " / ".join(sorted(_aero_lookup.get(_cpf_digits_sit(v), set())))
+    )
+else:
+    sit_tabela["Aeroporto"] = ""
+
 # Mapa Python de duplicatas: nome_abrev -> [cnpj1, cnpj2, ...] (só nomes com 2+ CNPJs distintos)
 _col_cnpj_sit = "Fornecedor CPF/CNPJ"
 if _col_cnpj_sit in df_sit_calc.columns:
@@ -1612,6 +1632,7 @@ html = f"""<!DOCTYPE html>
         <thead>
           <tr>
             <th>Fornecedor</th>
+            <th>Aeroporto</th>
             <th>Terceiro</th>
             <th>Documento</th>
             <th>Competência</th>
@@ -1928,6 +1949,7 @@ function renderSitPage() {{
   tbody.innerHTML = rows.map(r => `
     <tr>
       <td>${{r["Fornecedor"]}}</td>
+      <td style="font-size:12px;font-weight:600;color:#0E8FA3">${{r["Aeroporto"] || "—"}}</td>
       <td>${{r["Terceiro"]}}</td>
       <td>${{r["Documento"]}}</td>
       <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
@@ -2688,7 +2710,7 @@ function downloadCSV(rows, headers, filename) {{
   a.click(); URL.revokeObjectURL(url);
 }}
 function exportarSit() {{
-  downloadCSV(sitFiltrado, ["Fornecedor","Terceiro","Documento","Competencia","Status","Vencimento"],
+  downloadCSV(sitFiltrado, ["Fornecedor","Aeroporto","Terceiro","Documento","Competencia","Status","Vencimento"],
     "situacao_documental_zurich.csv");
 }}
 function exportarPend() {{
@@ -2707,7 +2729,7 @@ function downloadXLSX(rows, headers, filename) {{
   XLSX.writeFile(wb, filename);
 }}
 function exportarSitXLSX() {{
-  downloadXLSX(sitFiltrado, ["Fornecedor","Terceiro","Documento","Competencia","Status","Vencimento"],
+  downloadXLSX(sitFiltrado, ["Fornecedor","Aeroporto","Terceiro","Documento","Competencia","Status","Vencimento"],
     "situacao_documental_zurich.xlsx");
 }}
 function exportarPendXLSX() {{
@@ -2787,7 +2809,7 @@ function exportarSitPDF() {{
   doc.line(10, y1, 287, y1);
 
   // Tabela de dados
-  const headers = ["Fornecedor", "Terceiro", "Documento", "Status", "Competencia", "Vencimento"];
+  const headers = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Status", "Competencia", "Vencimento"];
   doc.autoTable({{
     head: [headers],
     body: sitFiltrado.map(r => headers.map(h => String(r[h] ?? ""))),
@@ -2796,8 +2818,9 @@ function exportarSitPDF() {{
     headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
     alternateRowStyles: {{ fillColor: [240, 248, 250] }},
     margin: {{ left: 10, right: 10 }},
+    columnStyles: {{ 1: {{ cellWidth: 18 }} }},
     didParseCell: function(data) {{
-      if (data.section === "body" && data.column.index === 3) {{
+      if (data.section === "body" && data.column.index === 4) {{
         const v = String(data.cell.raw || "");
         if (v === "Aprovado")                  data.cell.styles.textColor = [40, 167, 69];
         else if (v === "Reprovado")            data.cell.styles.textColor = [220, 53, 69];
@@ -3125,7 +3148,7 @@ function _filtroAtivоLabel() {{
 function exportarRelatorioXLSX() {{
   const wb = XLSX.utils.book_new();
 
-  const hdR3 = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
+  const hdR3 = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   const wsR3Data = [hdR3, ...sitFiltrado.map(r => hdR3.map(h => r[h] ?? ""))];
   const wsR3 = XLSX.utils.aoa_to_sheet(wsR3Data);
   wsR3["!cols"] = hdR3.map(h => ({{wch: Math.max(h.length, 18)}}));
@@ -3163,13 +3186,14 @@ function exportarRelatorioPDF() {{
   }};
 
   _titulo("Situação Documental dos Terceiros");
-  const hdR3 = ["Fornecedor", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
+  const hdR3 = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
     head: [hdR3],
     body: sitFiltrado.map(r => hdR3.map(h => String(r[h] ?? ""))),
     startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
     headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
     alternateRowStyles: {{ fillColor: [240, 248, 250] }},
+    columnStyles: {{ 1: {{ cellWidth: 16 }} }},
     margin: {{ left: 10, right: 10 }},
   }});
   y = doc.lastAutoTable.finalY + 10;
@@ -3203,10 +3227,10 @@ function exportarRelatorioPDF() {{
 }}
 
 function exportarRelatorioCSV() {{
-  const hdR3  = ["Secao","Fornecedor","CNPJ","Terceiro","Documento","Competencia","Status","Vencimento"];
+  const hdR3  = ["Secao","Fornecedor","CNPJ","Aeroporto","Terceiro","Documento","Competencia","Status","Vencimento"];
   const rows = [
     hdR3,
-    ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
+    ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Aeroporto"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
     ...fornSitFiltrado.map(r=> ["R4-Empresa",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
     ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
   ];
