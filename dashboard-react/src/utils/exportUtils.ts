@@ -351,7 +351,7 @@ export function exportRelatorioXLSX(
 ) {
   const wb = XLSX.utils.book_new()
 
-  const hdR3 = ['Fornecedor', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
+  const hdR3 = ['Fornecedor', 'Aeroporto', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
   const wsR3 = XLSX.utils.aoa_to_sheet([hdR3, ...sitRows.map(r => hdR3.map(h => (r as any)[h] ?? ''))])
   wsR3['!cols'] = hdR3.map(() => ({ wch: 22 }))
   XLSX.utils.book_append_sheet(wb, wsR3, 'R3 - Terceiros')
@@ -396,8 +396,8 @@ export function exportRelatorioPDF(
   drawSection('R3 — Situação Documental por Terceiro')
   autoTable(doc, {
     startY: y,
-    head: [['Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Status', 'Vencimento']],
-    body: sitRows.map(r => [r.Fornecedor, r.Terceiro, r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
+    head: [['Fornecedor', 'Aeroporto', 'Terceiro', 'Documento', 'Competência', 'Status', 'Vencimento']],
+    body: sitRows.map(r => [r.Fornecedor, r.Aeroporto || '—', r.Terceiro, r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
     styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
     headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
     alternateRowStyles: { fillColor: GRAY_LIGHT },
@@ -445,11 +445,11 @@ export function exportRelatorioCSV(
     const s = String(v ?? '')
     return s.includes(',') || s.includes('"') || s.includes('\n') ? '"' + s.replace(/"/g, '""') + '"' : s
   }
-  const hd = ['Secao', 'Fornecedor', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
+  const hd = ['Secao', 'Fornecedor', 'Aeroporto', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
   const lines = [
     hd.join(','),
     ...sitRows.map(r => [
-      'R3-Terceiros', r.Fornecedor, r.Terceiro || '', r.Documento, r.Competencia || '', r.Status, r.Vencimento || '',
+      'R3-Terceiros', r.Fornecedor, r.Aeroporto || '', r.Terceiro || '', r.Documento, r.Competencia || '', r.Status, r.Vencimento || '',
     ].map(escape).join(',')),
     ...fornSitRows.map(r => [
       'R4-Empresa', r.Fornecedor, '', r.Documento, r.Competencia || '', r.Status, r.Vencimento || '',
