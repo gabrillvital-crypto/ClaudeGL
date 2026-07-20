@@ -169,7 +169,6 @@ export function processAllData(
   rawTerc: Record<string, string>[],
   rawSit: Record<string, string>[],
   rawFornSit: Record<string, string>[],
-  rawFornCad: Record<string, string>[],
   rawContratos: Record<string, string>[] = [],
   rawBuscaAuto: Record<string, string>[] = []
 ): DashboardData {
@@ -198,7 +197,6 @@ export function processAllData(
   rawTerc      = stripContratos(rawTerc)
   rawSit       = stripContratos(rawSit)
   rawFornSit   = stripContratos(rawFornSit)
-  rawFornCad   = stripContratos(rawFornCad)
   rawContratos = stripContratos(rawContratos)
 
   // ── Descoberta de colunas ─────────────────────────────────────────────────
@@ -254,12 +252,6 @@ export function processAllData(
   }) ?? null
   const colCnpjR4   = fornSitCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
   const colMarcasR4 = fornSitCols.find(c => c.toLowerCase().includes('marcas')) ?? null
-
-  // Fornecedores cadastro CSV
-  // Suporta formato antigo (CPF/CNPJ + Razao Social) e novo (Documento Fornecedor + Fornecedor)
-  const fornCadCols = rawFornCad[0] ? Object.keys(rawFornCad[0]) : []
-  const colCNPJForn = findCol(fornCadCols, 'cpf') ?? findCol(fornCadCols, 'cnpj') ?? findCol(fornCadCols, 'documento') ?? ''
-  const colRsFornCad = findCol(fornCadCols, 'raz') ?? fornCadCols.find(c => c.trim().toLowerCase() === 'fornecedor') ?? (fornCadCols[0] ?? '')
 
   // Documentos que exibem Competência mas não têm Vencimento relevante
   const DOCS_SEM_VENCIMENTO = new Set([
@@ -460,25 +452,6 @@ export function processAllData(
       .map(row => ({
         Razao_Social: String(row['Fornecedor'] ?? '').trim(),
         CPF_CNPJ: normCNPJ(row['Documento Fornecedor']),
-      }))
-    total_sem_execucao = sem_execucao.length
-  } else if (rawFornCad.length > 0 && colCNPJForn) {
-    total_forn_geral = new Set(rawFornCad.map(r => normCNPJ(r[colCNPJForn])).filter(Boolean)).size
-    const semExecRows = rawFornCad.filter(row => {
-      const cnpj = normCNPJ(row[colCNPJForn])
-      return cnpj && !cnpjsExec.has(cnpj)
-    })
-    const seen = new Set<string>()
-    sem_execucao = semExecRows
-      .filter(row => {
-        const cnpj = normCNPJ(row[colCNPJForn])
-        if (seen.has(cnpj)) return false
-        seen.add(cnpj)
-        return true
-      })
-      .map(row => ({
-        Razao_Social: String(row[colRsFornCad] ?? '').trim(),
-        CPF_CNPJ: normCNPJ(row[colCNPJForn]),
       }))
     total_sem_execucao = sem_execucao.length
   }
@@ -726,11 +699,6 @@ export function processAllData(
   sitCalc.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
   forn_sit.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
   tabela.forEach(r => _addCNPJ(r.Fornecedor, r.CNPJ_Forn))
-  rawFornCad.forEach(row => {
-    const rs = abbrev(String(row[colRsFornCad] ?? ''))
-    const cnpj = normCNPJ(row[colCNPJForn])
-    _addCNPJ(rs, cnpj)
-  })
 
   return {
     total_forn_geral,
