@@ -119,6 +119,17 @@ Dashboard mostra painel "Meus Terceiros" separado de "Meus Fornecedores"
 - Endpoints: buscar fornecedores, fornecedor com documento vencido, solicitações, pedido de homologação, avaliações
 - Autenticação via token fornecido pela Efcaz
 
+### Módulo de Contratos e Reprovação Definitiva (jul/2026)
+
+**Artigo local:** [`modulo_contratos_e_reprovacao_definitiva.md`](modulo_contratos_e_reprovacao_definitiva.md)
+
+- **Módulo Contratos:** centraliza contratos de fornecedores/terceiros — vigências, aditivos, medições, documentos
+- **Fase 1 (jul/2026):** disponível somente dentro do fornecedor; sem análise na solicitação; sem notificações de vencimento
+- **Fase 2 (ago/2026):** integração com histórico de solicitações prevista para 2ª quinzena de agosto
+- **Configuração:** Configurações > Documentos (criar docs internos e do fornecedor) → vincular linhas → menu Fornecedor > aba Contratos
+- **Reprovação Definitiva:** novo status de análise que bloqueia permanentemente novo fornecedor; apenas em solicitações de novo fornecedor; workaround para reverter: cancelar encaminhamento
+- **Filtro Responsável análise:** novo filtro na tela de Solicitações para filtrar por analista
+
 ---
 
 > **Como adicionar:** salvar o PDF do artigo Movidesk em `../Documentos/` e registrar neste índice.

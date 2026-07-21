@@ -1,0 +1,738 @@
+<title>Ação de Marketing CS — Jul–Dez 2026</title>
+<style>
+  :root {
+    --brand: #0E8FA3;
+    --brand-dark: #0A7488;
+    --brand-light: #E4F4F7;
+    --amber: #D98C00;
+    --amber-light: #FFF7E0;
+    --green: #1A9E6A;
+    --green-light: #E6F7F0;
+    --purple: #6B42B8;
+    --purple-light: #EDE8F8;
+    --surface: #FFFFFF;
+    --surface-2: #F4F9FA;
+    --border: #D0E8ED;
+    --text: #152830;
+    --text-2: #456068;
+    --text-3: #7AABB5;
+    --radius: 8px;
+    --r-sm: 4px;
+    --f-serif: Georgia, 'Times New Roman', serif;
+    --f-sans: system-ui, -apple-system, 'Segoe UI', Helvetica, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface: #0C1E23;
+      --surface-2: #132830;
+      --border: #1D3D47;
+      --text: #DCF0F4;
+      --text-2: #7AB5C0;
+      --text-3: #3D7A88;
+      --brand-light: #0B2730;
+      --amber-light: #271C00;
+      --green-light: #0A2218;
+      --purple-light: #1A1030;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #0C1E23; --surface-2: #132830; --border: #1D3D47;
+    --text: #DCF0F4; --text-2: #7AB5C0; --text-3: #3D7A88;
+    --brand-light: #0B2730; --amber-light: #271C00;
+    --green-light: #0A2218; --purple-light: #1A1030;
+  }
+  :root[data-theme="light"] {
+    --surface: #FFFFFF; --surface-2: #F4F9FA; --border: #D0E8ED;
+    --text: #152830; --text-2: #456068; --text-3: #7AABB5;
+    --brand-light: #E4F4F7; --amber-light: #FFF7E0;
+    --green-light: #E6F7F0; --purple-light: #EDE8F8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--f-sans);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    background: var(--brand);
+    padding: 44px 52px 40px;
+    color: #fff;
+  }
+  .header-eyebrow {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .75;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-family: var(--f-serif);
+    font-size: 34px;
+    font-weight: normal;
+    line-height: 1.22;
+    text-wrap: balance;
+    margin-bottom: 24px;
+  }
+  .header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    font-size: 13px;
+    opacity: .88;
+  }
+  .meta-block { display: flex; flex-direction: column; gap: 2px; }
+  .meta-lbl {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    opacity: .65;
+  }
+
+  /* ─── BODY ─── */
+  .body {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 52px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  /* ─── SECTION ─── */
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 18px;
+  }
+  h2 {
+    font-family: var(--f-serif);
+    font-size: 23px;
+    font-weight: normal;
+    line-height: 1.3;
+    text-wrap: balance;
+    margin-bottom: 20px;
+  }
+
+  /* ─── CONTEXT BOX ─── */
+  .context-box {
+    background: var(--brand-light);
+    border-left: 4px solid var(--brand);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .context-box strong { color: var(--brand); }
+
+  /* ─── OBJECTIVES ─── */
+  .obj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .obj-card {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--brand);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    background: var(--surface-2);
+  }
+  .obj-icon { font-size: 24px; margin-bottom: 10px; }
+  .obj-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; color: var(--text); }
+  .obj-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+
+  /* ─── PREMISES ─── */
+  .premise-list { display: flex; flex-direction: column; gap: 8px; }
+  .premise {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 11px 16px;
+    background: var(--surface-2);
+    border-radius: var(--r-sm);
+    border-left: 3px solid var(--brand);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .premise strong { color: var(--brand); white-space: nowrap; }
+
+  /* ─── EMAIL PREVIEW ─── */
+  .email-wrap {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(14,143,163,.07);
+  }
+  .email-chrome {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .email-row { display: flex; gap: 10px; font-size: 13px; }
+  .email-lbl { color: var(--text-3); min-width: 62px; font-size: 12px; padding-top: 1px; }
+  .email-val { color: var(--text); }
+  .email-val.subj { font-weight: 600; }
+  .email-body-wrap { padding: 36px 44px; background: var(--surface); }
+  .email-p { margin-bottom: 18px; font-size: 15px; color: var(--text); line-height: 1.72; }
+  .email-divider { border: none; border-top: 1px solid var(--border); margin: 26px 0; }
+  .email-h3 {
+    font-family: var(--f-serif);
+    font-size: 19px;
+    font-weight: normal;
+    color: var(--brand);
+    margin-bottom: 14px;
+    text-wrap: balance;
+    line-height: 1.35;
+  }
+  .email-ul { padding-left: 22px; margin-bottom: 18px; }
+  .email-ul li { margin-bottom: 7px; font-size: 15px; line-height: 1.62; color: var(--text); }
+  .email-cta {
+    display: inline-block;
+    background: var(--brand);
+    color: #fff;
+    padding: 12px 26px;
+    border-radius: var(--r-sm);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 4px 0 18px;
+    letter-spacing: .01em;
+  }
+  .email-sig {
+    margin-top: 28px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+  .email-sig strong { display: block; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+
+  /* design note */
+  .design-note {
+    background: var(--amber-light);
+    border: 1px solid color-mix(in srgb, var(--amber) 30%, transparent);
+    border-radius: var(--r-sm);
+    padding: 12px 16px;
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin-top: 14px;
+    line-height: 1.55;
+  }
+  .design-note strong { color: var(--amber); }
+
+  /* ─── TIMELINE ─── */
+  .phase-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .phase-row + .timeline-group { margin-top: 0; }
+  .phase-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 11px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .phase-badge.geral { background: var(--brand-light); color: var(--brand); }
+  .phase-badge.segmented { background: var(--purple-light); color: var(--purple); }
+  .phase-badge.results { background: var(--green-light); color: var(--green); }
+  .phase-divider { flex: 1; height: 1px; background: var(--border); }
+
+  .timeline-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .tl-item { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: start; }
+  .tl-date { text-align: right; padding-top: 13px; }
+  .tl-month { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--brand); }
+  .tl-sub { font-size: 10px; color: var(--text-3); }
+  .tl-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 13px 18px;
+  }
+  .tl-card.special {
+    background: var(--amber-light);
+    border-color: color-mix(in srgb, var(--amber) 40%, transparent);
+  }
+  .tl-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 5px; }
+  .tl-title { font-weight: 700; font-size: 14px; color: var(--text); line-height: 1.35; }
+  .tl-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 2px 9px;
+    border-radius: 10px;
+    background: var(--brand-light);
+    color: var(--brand);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tl-tag.seg { background: var(--purple-light); color: var(--purple); }
+  .tl-tag.special-tag { background: color-mix(in srgb, var(--amber) 18%, transparent); color: var(--amber); }
+  .tl-hook { font-size: 13px; color: var(--text-2); font-style: italic; margin-bottom: 4px; line-height: 1.5; }
+  .tl-obj { font-size: 12px; color: var(--text-3); }
+
+  /* ─── CHECKLIST ─── */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 13px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--surface-2);
+  }
+  .check-box {
+    width: 17px;
+    height: 17px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .check-text { flex: 1; font-size: 14px; color: var(--text); line-height: 1.55; }
+  .check-deadline {
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--amber);
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ─── METRICS ─── */
+  .metrics-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .metric-card {
+    flex: 1;
+    min-width: 160px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+  }
+  .metric-value {
+    font-family: var(--f-serif);
+    font-size: 30px;
+    color: var(--brand);
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-label { font-size: 13px; color: var(--text-2); }
+  .metric-target { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    padding: 18px 44px;
+    font-size: 12px;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .header { padding: 28px 24px; }
+    .header h1 { font-size: 26px; }
+    .body { padding: 32px 20px; }
+    .obj-grid { grid-template-columns: 1fr; }
+    .email-body-wrap { padding: 24px 22px; }
+    .tl-item { grid-template-columns: 58px 1fr; }
+    .metrics-row { flex-direction: column; }
+  }
+</style>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-eyebrow">Efcaz · Customer Success</div>
+  <h1>Ação de Comunicação CS<br>Jul–Dez 2026</h1>
+  <div class="header-meta">
+    <div class="meta-block">
+      <span class="meta-lbl">Data</span>
+      <span>21 de julho de 2026</span>
+    </div>
+    <div class="meta-block">
+      <span class="meta-lbl">Responsável</span>
+      <span>Gabriel Vital</span>
+    </div>
+    <div class="meta-block">
+      <span class="meta-lbl">Ferramenta</span>
+      <span>RD Station</span>
+    </div>
+    <div class="meta-block">
+      <span class="meta-lbl">Cadência</span>
+      <span>~2x por mês</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ BODY ═══ -->
+<main class="body">
+
+  <!-- Contexto -->
+  <section>
+    <div class="section-eyebrow">Contexto</div>
+    <div class="context-box">
+      Esta é uma <strong>ação contínua de CS</strong> — não uma campanha isolada. O objetivo é criar uma cadência de comunicação periódica com a base de clientes, com uma abordagem diferente das news de produto: <strong>traduzir funcionalidades em impacto real para a operação de cada cliente</strong>, posicionando o Gabriel como a ponte consultiva entre o cliente e a plataforma.
+    </div>
+  </section>
+
+  <!-- Objetivos -->
+  <section>
+    <div class="section-eyebrow">Objetivos</div>
+    <h2>Por que estamos fazendo isso</h2>
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-icon">📊</div>
+        <div class="obj-title">Mapear engajamento real</div>
+        <div class="obj-desc">Identificar quais contatos abrem, quem usa a plataforma de fato e se a base está atualizada.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-icon">🤝</div>
+        <div class="obj-title">Gabriel como ponte</div>
+        <div class="obj-desc">Posicionar o CS como referência consultiva antes de qualquer abordagem de expansão ou renovação.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-icon">🔄</div>
+        <div class="obj-title">Cadência sustentável</div>
+        <div class="obj-desc">Criar uma rotina de comunicação que não sobrecarregue a agenda e gere previsibilidade para ambos os lados.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Premissas -->
+  <section>
+    <div class="section-eyebrow">Premissas</div>
+    <h2>O que ficou definido na reunião</h2>
+    <div class="premise-list">
+      <div class="premise"><strong>Benefício primeiro —</strong> cada comunicação traduz a funcionalidade em impacto prático, não descreve o que ela faz tecnicamente.</div>
+      <div class="premise"><strong>Fase 1: geral —</strong> os dois primeiros disparos vão para toda a base para validar taxas de abertura e atualizar contatos.</div>
+      <div class="premise"><strong>Fase 2: segmentado —</strong> a partir do email 3, a comunicação é personalizada por perfil de uso da plataforma.</div>
+      <div class="premise"><strong>Volume controlado —</strong> o link da agenda abre slots com periodicidade maior para evitar avalanche de agendamentos simultâneos.</div>
+      <div class="premise"><strong>CS ≠ produto —</strong> a news do Ricardo permanece técnica. A comunicação do Gabriel tem tom próprio: consultivo, próximo e orientado a resultado.</div>
+      <div class="premise"><strong>Webinar em setembro —</strong> Ricardo propõe um release webinar sobre as novidades da plataforma. Gabriel e Ricardo coordenam. Sem cunho comercial — foco em relacionamento e produto.</div>
+    </div>
+  </section>
+
+  <!-- Email 1 -->
+  <section>
+    <div class="section-eyebrow">Primeiro Disparo</div>
+    <h2>Email 1 — Módulo de Contratos</h2>
+
+    <div class="email-wrap">
+      <!-- Chrome bar -->
+      <div class="email-chrome">
+        <div class="email-row">
+          <span class="email-lbl">De</span>
+          <span class="email-val">Gabriel Vital — Customer Success · Efcaz</span>
+        </div>
+        <div class="email-row">
+          <span class="email-lbl">Para</span>
+          <span class="email-val">[Nome] &lt;[contato@empresa.com.br]&gt;</span>
+        </div>
+        <div class="email-row">
+          <span class="email-lbl">Assunto</span>
+          <span class="email-val subj">Uma novidade que pode mudar como você controla contratos de fornecedores</span>
+        </div>
+      </div>
+
+      <!-- Email body -->
+      <div class="email-body-wrap">
+        <p class="email-p">Olá, [Nome],</p>
+        <p class="email-p">Meu nome é Gabriel, e sou o responsável pela sua conta aqui na Efcaz.</p>
+        <p class="email-p">A partir de agora, além do suporte que você já tem, vou te enviar comunicações periódicas com uma perspectiva diferente das news de produto: <strong>o que as novidades da plataforma mudam na prática da sua operação.</strong></p>
+
+        <hr class="email-divider">
+
+        <h3 class="email-h3">A estreia: Módulo de Contratos</h3>
+        <p class="email-p">Uma pergunta rápida: onde ficam os contratos dos seus fornecedores hoje?</p>
+        <p class="email-p">Para muitas empresas, a resposta é e-mail, pasta compartilhada ou planilha. Funciona — até o dia em que um contrato vence sem que ninguém perceba, ou quando você precisa encontrar uma vigência específica às pressas.</p>
+        <p class="email-p">Acabamos de liberar o <strong>Módulo de Contratos</strong> na plataforma. Com ele, você centraliza em um só lugar:</p>
+        <ul class="email-ul">
+          <li>Vigências, aditivos e valores contratuais</li>
+          <li>Documentos obrigatórios vinculados ao contrato</li>
+          <li>Visibilidade antecipada de vencimentos</li>
+        </ul>
+        <p class="email-p">Tudo no mesmo ambiente onde você já gerencia seus fornecedores.</p>
+
+        <hr class="email-divider">
+
+        <p class="email-p">Cada empresa trabalha de um jeito — por isso, antes de qualquer coisa, queria entender se vale a pena te mostrar como isso ficaria configurado no ambiente de vocês.</p>
+
+        <a class="email-cta" href="#">Reservar 20 minutos na agenda →</a>
+
+        <p class="email-p">Ou responde esse e-mail que eu te retorno.</p>
+        <p class="email-p">Um abraço,</p>
+
+        <div class="email-sig">
+          <strong>Gabriel Vital</strong>
+          Customer Success Specialist · Efcaz
+        </div>
+      </div>
+    </div>
+
+    <div class="design-note">
+      <strong>Nota para o Alison (RD Station):</strong> header com bloco de cor #0E8FA3, foto do Gabriel na assinatura, botão CTA em destaque (não só link de texto), separador visual entre as seções. Conteúdo curto é intencional — o objetivo é gerar resposta, não informar tudo.
+    </div>
+  </section>
+
+  <!-- Métricas -->
+  <section>
+    <div class="section-eyebrow">Métricas — Email 1</div>
+    <h2>O que vamos acompanhar</h2>
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-value">&gt;25%</div>
+        <div class="metric-label">Taxa de abertura</div>
+        <div class="metric-target">Referência: últimas news atingiram 35%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">Cliques</div>
+        <div class="metric-label">Links da agenda</div>
+        <div class="metric-target">Indica interesse qualificado</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">Bounce</div>
+        <div class="metric-label">Taxa de bounces</div>
+        <div class="metric-target">Valida atualização da base</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">Replies</div>
+        <div class="metric-label">Respostas diretas</div>
+        <div class="metric-target">Contatos mais engajados</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plano do Semestre -->
+  <section>
+    <div class="section-eyebrow">Plano do Semestre</div>
+    <h2>10 ações · Jul–Dez 2026</h2>
+
+    <!-- FASE 1 -->
+    <div class="phase-row">
+      <span class="phase-badge geral">Fase 1 — Geral</span>
+      <div class="phase-divider"></div>
+    </div>
+    <div class="timeline-group">
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Jul</div>
+          <div class="tl-sub">agora</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Módulo de Contratos</span>
+            <span class="tl-tag">Toda a base</span>
+          </div>
+          <div class="tl-hook">"Onde ficam os contratos dos seus fornecedores hoje?"</div>
+          <div class="tl-obj">Validar abertura, mapear contatos ativos, medir engajamento inicial</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Ago</div>
+          <div class="tl-sub">1ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Background Check / Compliance</span>
+            <span class="tl-tag">Toda a base</span>
+          </div>
+          <div class="tl-hook">"Você sabe se seus fornecedores estão regulares hoje?"</div>
+          <div class="tl-obj">Mapear interesse em compliance · Identificar quem abre 2 disparos seguidos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="phase-row">
+      <span class="phase-badge segmented">Fase 2 — Segmentado por uso</span>
+      <div class="phase-divider"></div>
+    </div>
+    <div class="timeline-group">
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Ago</div>
+          <div class="tl-sub">2ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Início da segmentação — 2 versões paralelas</span>
+            <span class="tl-tag seg">Segmentado</span>
+          </div>
+          <div class="tl-hook">A: "Você gerencia colaboradores de fornecedores fora da plataforma?" · B: "Como você avalia a performance dos seus fornecedores?"</div>
+          <div class="tl-obj">Perfil A (só homologação) → foco em Terceiros · Perfil B (com Terceiros) → foco em RFI</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Set</div>
+          <div class="tl-sub">1ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Avaliação de Performance (RFI)</span>
+            <span class="tl-tag seg">Sem RFI ativo</span>
+          </div>
+          <div class="tl-hook">"Como você documenta quando um fornecedor entrega mal?"</div>
+          <div class="tl-obj">Abrir conversa sobre expansão do módulo de avaliações</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Set</div>
+          <div class="tl-sub">2ª quinzena</div>
+        </div>
+        <div class="tl-card special">
+          <div class="tl-top">
+            <span class="tl-title">⭐ Webinar — Novidades da Plataforma</span>
+            <span class="tl-tag special-tag">Gabriel + Ricardo</span>
+          </div>
+          <div class="tl-hook">Release webinar: novidades do 2º semestre ao vivo · Participação opcional · Gravação disponível</div>
+          <div class="tl-obj">Reativar contatos frios · Gerar cases de uso · Dar insumo ao time comercial</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Out</div>
+          <div class="tl-sub">1ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Dossiê + Score de Confiabilidade</span>
+            <span class="tl-tag seg">Baixo uso do dossiê</span>
+          </div>
+          <div class="tl-hook">"Você já usou o dossiê para tomar uma decisão sobre um fornecedor?"</div>
+          <div class="tl-obj">Engajar recurso subutilizado · Abrir conversa de valor com usuários operacionais</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Out</div>
+          <div class="tl-sub">2ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Gestão de Terceiros</span>
+            <span class="tl-tag seg">Módulo ativo</span>
+          </div>
+          <div class="tl-hook">"Quantos colaboradores de fornecedores estão ativos e regularizados hoje?"</div>
+          <div class="tl-obj">Reforçar adoção · Identificar gaps de regularização na base de terceiros</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 3 -->
+    <div class="phase-row">
+      <span class="phase-badge results">Fase 3 — Expansão e Resultados</span>
+      <div class="phase-divider"></div>
+    </div>
+    <div class="timeline-group">
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Nov</div>
+          <div class="tl-sub">1ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Ocorrências + Planos de Ação</span>
+            <span class="tl-tag" style="background:var(--green-light);color:var(--green)">Sem Ocorrências</span>
+          </div>
+          <div class="tl-hook">"Quando algo dá errado com um fornecedor, como você registra e cobra?"</div>
+          <div class="tl-obj">Ampliar uso além da homologação · Mostrar rastreabilidade como diferencial</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Nov</div>
+          <div class="tl-sub">2ª quinzena</div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Relatórios Gerenciais</span>
+            <span class="tl-tag" style="background:var(--green-light);color:var(--green)">Decisores</span>
+          </div>
+          <div class="tl-hook">"Seu gestor consegue ver a saúde da base de fornecedores em 5 minutos?"</div>
+          <div class="tl-obj">Abrir conversa com liderança · Preparar terreno para renovações de início de ano</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">
+          <div class="tl-month">Dez</div>
+          <div class="tl-sub"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-top">
+            <span class="tl-title">Balanço 2026 + Olhar para 2027</span>
+            <span class="tl-tag" style="background:var(--green-light);color:var(--green)">Toda a base</span>
+          </div>
+          <div class="tl-hook">"O que a sua empresa conquistou na gestão de fornecedores esse ano?"</div>
+          <div class="tl-obj">Relacionamento · Retenção · NPS · Abertura natural de renovações</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Próximos Passos -->
+  <section>
+    <div class="section-eyebrow">Próximos Passos</div>
+    <h2>O que precisa acontecer agora</h2>
+    <div class="checklist">
+      <div class="check">
+        <div class="check-box"></div>
+        <div class="check-text">Compartilhar esta pasta com <strong>Renato, Ricardo e Alison</strong> para validação do conteúdo e abordagem</div>
+        <div class="check-deadline">22/07 — amanhã</div>
+      </div>
+      <div class="check">
+        <div class="check-box"></div>
+        <div class="check-text">Puxar agenda com <strong>Alison</strong> para rodar o Email 1 no RD Station e receber acesso de usuário na ferramenta</div>
+        <div class="check-deadline">23–24/07</div>
+      </div>
+      <div class="check">
+        <div class="check-box"></div>
+        <div class="check-text">Verificar com o <strong>CustomerX</strong> se já existe integração desenvolvida com RD Station — pode centralizar dados de abertura sem custo adicional</div>
+        <div class="check-deadline">Próxima reunião CX</div>
+      </div>
+      <div class="check">
+        <div class="check-box"></div>
+        <div class="check-text">Confirmar com <strong>Ricardo</strong> a data do webinar de setembro e alinhar com o calendário de releases do produto</div>
+        <div class="check-deadline">Próxima semana</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Reunião de origem: "Campanha de marketing CS" · 17/07/2026</span>
+  <span>Participantes: Gabriel Vital · Renato Pedroso · Ricardo Pedroso da Silva · Alison Morais de Oliveira</span>
+</footer>
