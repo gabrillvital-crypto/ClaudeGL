@@ -208,12 +208,12 @@ DOC = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Documentos"
 DST = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
 sem_ant = calcular_kpis(
-    pendencias_csv       = DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-07-10T12_17_44.353886-04_00.csv",
-    terceiros_csv        = DOC + r"\relatorio_de_terceiros_cadastrados_2026-07-10T12_18_29.201194-04_00.csv",
-    situacao_terceiro_csv= DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-07-10T12_18_18.566043-04_00.csv",
-    situacao_forn_csv    = DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-07-10T12_18_07.111579-04_00.csv",
-    busca_auto_csv       = DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-07-10T12_17_57.065664-04_00.csv",
-    fornecedores_csv     = DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-07-10T12_18_42.519594-04_00.csv",
+    pendencias_csv       = DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-07-20T12_54_33.441841-04_00.csv",
+    terceiros_csv        = DOC + r"\relatorio_de_terceiros_cadastrados_2026-07-20T12_55_29.39197-04_00.csv",
+    situacao_terceiro_csv= DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-07-20T12_55_17.565889-04_00.csv",
+    situacao_forn_csv    = DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-07-20T12_55_07.00726-04_00.csv",
+    busca_auto_csv       = DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-07-20T12_54_56.244759-04_00.csv",
+    fornecedores_csv     = DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-07-20T12_55_39.484518-04_00.csv",
 )
 
 sem_atual = calcular_kpis(
@@ -243,7 +243,7 @@ def deltapct(a, b, inverso=False):
     return f"  {sinal} {abs(d):.1f}pp {cor}"
 
 linhas = [
-    ("", "MÉTRICA", "10/07/2026", "20/07/2026", "VARIAÇÃO"),
+    ("", "MÉTRICA", "20/07/2026", "22/07/2026", "VARIAÇÃO"),
     ("─", "", "", "", ""),
     ("📋", "VISÃO GERAL", "", "", ""),
     ("", "Fornecedores cadastrados",  sem_ant["forn_cadastro"],    sem_atual["forn_cadastro"],    delta(sem_ant["forn_cadastro"],    sem_atual["forn_cadastro"],    inverso=True)),
