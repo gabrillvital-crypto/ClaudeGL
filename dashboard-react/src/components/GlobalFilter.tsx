@@ -29,6 +29,10 @@ interface Props {
   onAeroportoToggle: (key: string) => void
   selectedStatusTerc: 'all' | 'Ativo' | 'Inativo'
   onStatusTercChange: (v: 'all' | 'Ativo' | 'Inativo') => void
+  filtroSit: 'ativas' | 'gerais'
+  onFiltroSitChange: (v: 'ativas' | 'gerais') => void
+  totalAtivas: number
+  totalGerais: number
   onClear: () => void
   onExportXLSX?: () => void
   onExportPDF?: () => void
@@ -41,9 +45,10 @@ export function GlobalFilter({
   statusOptions, selectedStatusSet, onStatusToggle, onStatusClear,
   selectedAeroportoSet, onAeroportoToggle,
   selectedStatusTerc, onStatusTercChange,
+  filtroSit, onFiltroSitChange, totalAtivas, totalGerais,
   onClear, onExportXLSX, onExportPDF, onExportCSV,
 }: Props) {
-  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all'
+  const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all' || filtroSit !== 'ativas'
 
   const activeLabel = [
     selectedFornSet.size > 0 ? `${selectedFornSet.size} fornecedor(es)` : '',
@@ -51,6 +56,7 @@ export function GlobalFilter({
     selectedStatusSet.size > 0 ? `${selectedStatusSet.size} status` : '',
     selectedAeroportoSet.size > 0 ? `aeroporto: ${[...selectedAeroportoSet].join('+')}` : '',
     selectedStatusTerc !== 'all' ? `terceiros: ${selectedStatusTerc === 'Ativo' ? 'Ativos' : 'Inativos'}` : '',
+    filtroSit !== 'ativas' ? 'pendências: gerais' : '',
   ].filter(Boolean).join(' · ') + ' selecionado(s) — KPIs atualizados'
 
   return (
@@ -118,6 +124,22 @@ export function GlobalFilter({
                   : 'bg-white/15 text-white border-white/50 hover:bg-white/30'
               }`}>
               {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-[11px] font-bold text-white/85 uppercase tracking-wide mb-1">Pendências</label>
+        <div className="flex gap-1.5 h-[34px] items-center">
+          {([['ativas', `Ativas (${totalAtivas})`], ['gerais', `Gerais (${totalGerais})`]] as const).map(([val, lbl]) => (
+            <button key={val} onClick={() => onFiltroSitChange(val)}
+              className={`text-[12px] font-bold px-3 py-1 rounded-full border transition-colors cursor-pointer ${
+                filtroSit === val
+                  ? 'bg-white text-[#0A6A7A] border-white'
+                  : 'bg-white/15 text-white border-white/50 hover:bg-white/30'
+              }`}>
+              {lbl}
             </button>
           ))}
         </div>

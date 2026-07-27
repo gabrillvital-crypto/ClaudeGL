@@ -55,7 +55,7 @@ function fmtCNPJ(digits: string): string {
 
 export function App() {
   const { data, state, error } = useDashboardData()
-  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, selectedAeroportoSet, toggleAeroporto, selectedStatusTerc, setSelectedStatusTerc, clearAll, matchesForn } = useGlobalFilter()
+  const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, selectedAeroportoSet, toggleAeroporto, selectedStatusTerc, setSelectedStatusTerc, filtroSit, setFiltroSit, clearAll, matchesForn } = useGlobalFilter()
   const [activeKpi, setActiveKpi] = useState<string | null>(null)
   const toggleKpi = useCallback((key: string) => setActiveKpi(prev => prev === key ? null : key), [])
 
@@ -206,8 +206,10 @@ export function App() {
         return true // pendências de documentos do fornecedor não filtradas por status de terceiro
       })
     }
+    if (filtroSit === 'ativas')
+      rows = rows.filter(r => r.Status === 'EM_ELABORACAO')
     return rows
-  }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter, statusTercFilter])
+  }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter, statusTercFilter, filtroSit])
 
   const contratosFiltered = useMemo(() => {
     if (!data) return []
@@ -363,6 +365,10 @@ export function App() {
         onAeroportoToggle={toggleAeroporto}
         selectedStatusTerc={selectedStatusTerc}
         onStatusTercChange={setSelectedStatusTerc}
+        filtroSit={filtroSit}
+        onFiltroSitChange={setFiltroSit}
+        totalAtivas={data ? data.tabela.filter(r => r.Status === 'EM_ELABORACAO').length : 0}
+        totalGerais={data ? data.tabela.length : 0}
         onClear={clearAll}
         onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
         onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}

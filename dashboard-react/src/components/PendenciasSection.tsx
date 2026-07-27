@@ -45,20 +45,15 @@ function fmtCNPJ(d: string): string {
 
 export function PendenciasSection({ data, geradoEm = '' }: Props) {
   const [pdfLoading, setPdfLoading] = useState(false)
-  const [filtroSit, setFiltroSit] = useState<'ativas' | 'gerais'>('ativas')
 
-  const dataFiltrada = useMemo(() =>
-    filtroSit === 'ativas' ? data.filter(r => r.Status === 'EM_ELABORACAO') : data
-  , [data, filtroSit])
-
-  const rows = useMemo(() => dataFiltrada.map(r => ({
+  const rows = useMemo(() => data.map(r => ({
     Fornecedor: r.Fornecedor,
     CNPJ: fmtCNPJ(r.CNPJ_Forn),
     Area: r.Area,
     Documento: r.Documento,
     Competencia: r.Competencia,
     Detalhe: r.Detalhe,
-  })), [dataFiltrada])
+  })), [data])
 
   function handlePDF() {
     setPdfLoading(true)
@@ -71,31 +66,10 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
   // suppress unused warning — statusBadge kept for future use
   void statusBadge
 
-  const totalAtivas = data.filter(r => r.Status === 'EM_ELABORACAO').length
-
   return (
     <div id="section-pendencias">
-      {/* Filter + Export bar */}
-      <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-center">
-        {/* Filtro Ativas / Gerais */}
-        <div className="flex items-center gap-2 mr-auto">
-          <span className="text-[11px] text-[#999] font-semibold uppercase">Exibir:</span>
-          {(['ativas', 'gerais'] as const).map(op => (
-            <button
-              key={op}
-              onClick={() => setFiltroSit(op)}
-              className={`px-3 py-1 rounded-full text-[12px] font-semibold border transition-colors ${
-                filtroSit === op
-                  ? 'bg-[#0E8FA3] text-white border-[#0E8FA3]'
-                  : 'bg-white text-[#0E8FA3] border-[#0E8FA3] hover:bg-[#e8f7fa]'
-              }`}
-            >
-              {op === 'ativas' ? `Ativas (${totalAtivas})` : `Gerais (${data.length})`}
-            </button>
-          ))}
-        </div>
-
-        {/* Exportar */}
+      {/* Export bar */}
+      <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-center justify-end">
         <span className="text-[11px] text-[#999] font-semibold uppercase mr-1">Exportar:</span>
         <button onClick={() => exportXLSX(rows, 'pendencias_zurich')} className="bg-[#28A745] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#1e7e34]">Excel</button>
         <button onClick={() => exportCSV(rows, 'pendencias_zurich')} className="bg-[#6C757D] text-white rounded px-3 py-1.5 text-[13px] font-semibold hover:bg-[#545b62]">CSV</button>
@@ -106,7 +80,7 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm p-4">
-        <p className="text-[13px] text-[#6C757D] mb-2">{dataFiltrada.length} pendência(s)</p>
+        <p className="text-[13px] text-[#6C757D] mb-2">{data.length} pendência(s)</p>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px] border-collapse">
             <thead>
@@ -117,7 +91,7 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
               </tr>
             </thead>
             <tbody>
-              {dataFiltrada.map((r, i) => (
+              {data.map((r, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
                   <td className="px-3 py-2">
                     <div className="font-medium">{r.Fornecedor}</div>
@@ -135,7 +109,7 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
                   <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '240px', maxWidth: '420px' }}>{r.Detalhe}</td>
                 </tr>
               ))}
-              {dataFiltrada.length === 0 && (
+              {data.length === 0 && (
                 <tr><td colSpan={5} className="px-3 py-6 text-center text-[#999]">Nenhuma pendência encontrada</td></tr>
               )}
             </tbody>
