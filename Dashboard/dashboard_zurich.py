@@ -153,17 +153,45 @@ area_emp = df_pend.groupby(["Empresa", col_area_pend]).size().reset_index(name="
 trab_emp = df_terc.groupby(["Empresa", col_status_terc]).size().reset_index(name="Total")
 trab_emp_total = trab_emp.groupby("Empresa")["Total"].sum().sort_values(ascending=True)
 
-# ── TABELA DE PENDÊNCIAS (inclui Competência) ─────────────────────────────────
-col_marcas = "Marcas e representações" if "Marcas e representações" in df_pend.columns else "Marcas e representacoes"
+# ── TABELA DE PENDÊNCIAS (inclui Competência e StatusReal) ───────────────────
+col_marcas   = "Marcas e representações" if "Marcas e representações" in df_pend.columns else "Marcas e representacoes"
 col_pend_txt = "Pendência" if "Pendência" in df_pend.columns else "Pendencia"
+col_cnpj_pend = next((c for c in df_pend.columns if re.search(r'cpf|cnpj', c, re.I)), None)
 
-tabela = df_pend[["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas, col_pend_txt]].copy()
-tabela.columns = ["Fornecedor", "Status", "Area", "Documento", "Competencia", "Detalhe"]
-tabela["Competencia"] = tabela["Competencia"].fillna("").astype(str).str.strip().replace("nan", "")
+# Regras de competência (espelho do React dataProcessing.ts)
+_DOCS_COM_COMP_PEND = {
+    'GFD - GUIA DO FGTS DIGITAL MENSAL', 'DCTFWEB',
+    'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
+    'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
+    'KIT RESCISÃO', 'RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO',
+    'GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS',
+}
+_DOCS_SEM_COMP_PEND = {'ASO', 'ORDENS DE SERVIÇO', 'CAPACITAÇÃO DE ACORDO COM A ORDEM DE SERVIÇO'}
+
+_cols_sel  = ["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas, col_pend_txt]
+_cols_nome = ["Fornecedor", "Status", "Area", "Documento", "Competencia_raw", "Detalhe"]
+if col_cnpj_pend:
+    _cols_sel.append(col_cnpj_pend)
+    _cols_nome.append("CNPJ_Forn")
+
+tabela = df_pend[_cols_sel].copy()
+tabela.columns = _cols_nome
+tabela["Competencia_raw"] = tabela["Competencia_raw"].fillna("").astype(str).str.strip().replace("nan", "")
 tabela["Detalhe"] = tabela["Detalhe"].astype(str).str[:250]
-tabela_json = tabela.to_dict("records")
-competencias_lista = sorted([c for c in tabela["Competencia"].unique() if c and c != "nan"])
-competencias_json  = json.dumps(competencias_lista)
+
+def _apply_comp_pend(row):
+    doc_up  = str(row["Documento"]).strip().upper()
+    area    = str(row["Area"]).strip()
+    raw     = str(row["Competencia_raw"]).strip()
+    sem_comp = any(doc_up == b or doc_up.startswith(b) for b in _DOCS_SEM_COMP_PEND)
+    if sem_comp:
+        return "Não possui competência"
+    if area == "DOCUMENTOS" and doc_up not in _DOCS_COM_COMP_PEND:
+        return "Não possui competência"
+    return raw if raw else "A classificar"
+
+tabela["Competencia"] = tabela.apply(_apply_comp_pend, axis=1)
+# tabela_json será finalizado após o bloco R4 (StatusReal depende dos lookups)
 
 # ── TABELA DE SITUAÇÃO DOCUMENTAL (3 camadas) ─────────────────────────────────
 col_trab_rs = "Terceiro Razão Social" if "Terceiro Razão Social" in df_sit_calc.columns else "Terceiro Razao Social"
@@ -217,6 +245,90 @@ else:
     r4_total = r4_conf = r4_venc = r4_pend = r4_fornecedores = 0
     r4_pct_nc = r4_pct_c = 0.0
     df_sit_forn_calc = pd.DataFrame()
+
+# ── STATUSREAL — lookups R3/R4 + cálculo por pendência ───────────────────────
+def norm_cnpj(v):
+    s = str(v or '').strip()
+    if not s or s in ('nan', 'None', '0'):
+        return ''
+    if s.endswith('.0'):
+        s = s[:-2]
+    digits = re.sub(r'[\.\-/]', '', s)
+    if digits.isdigit():
+        return digits.zfill(14) if len(digits) > 11 else digits
+    return s
+
+# R4 lookup: "cnpj|||DOC" → 'Aprovado' | 'NaoAprovado'
+# Usa df_sit_forn completo (igual ao React que itera todas as rows de rawFornSit).
+# "Aprovado" = Status contém "vencer" OU "Situação Análise Documento" = APROVADO.
+# Todos os demais (Vencido, Não anexado, Em análise, etc.) = NaoAprovado.
+r4_lookup: dict = {}
+if _sit_forn_ok:
+    _col_cnpj_r4   = next((c for c in df_sit_forn.columns if re.search(r'cpf|cnpj', c, re.I)), None)
+    _col_analise_r4 = next((c for c in df_sit_forn.columns
+                             if 'lise' in c.lower() and 'doc' in c.lower()), None)
+    for _, _r in df_sit_forn.iterrows():
+        _cnpj = norm_cnpj(_r[_col_cnpj_r4]) if _col_cnpj_r4 else ''
+        _doc  = str(_r.get('Documento', '')).strip().upper()
+        if not _cnpj or not _doc:
+            continue
+        _key  = f'{_cnpj}|||{_doc}'
+        _st   = str(_r.get('Status', '') or '').strip().lower()
+        _anal = str(_r[_col_analise_r4] if _col_analise_r4 else '').strip().upper()
+        if _anal == 'APROVADO' or 'vencer' in _st:
+            _val = 'Aprovado'
+        else:
+            _val = 'NaoAprovado'
+        if r4_lookup.get(_key) != 'NaoAprovado':
+            r4_lookup[_key] = _val
+
+# R3 lookup: "cnpj_forn|||DOC" → 'Aprovado' | 'NaoAprovado'
+r3_lookup: dict = {}
+_col_analise_r3  = next((c for c in df_sit.columns if 'lise' in c.lower() and 'doc' in c.lower()), None)
+_col_cnpj_forn_r3 = next((c for c in df_sit.columns
+                           if 'fornecedor' in c.lower() and re.search(r'cpf|cnpj', c, re.I)), None)
+for _, _r in df_sit.iterrows():
+    _cnpj = norm_cnpj(_r[_col_cnpj_forn_r3]) if _col_cnpj_forn_r3 else ''
+    _doc  = str(_r.get('Documento', '')).strip().upper()
+    if not _cnpj or not _doc:
+        continue
+    _key = f'{_cnpj}|||{_doc}'
+    if _col_analise_r3:
+        _val = 'Aprovado' if str(_r[_col_analise_r3]).strip().upper() == 'APROVADO' else 'NaoAprovado'
+    else:
+        _val = 'Aprovado' if 'vencer' in str(_r.get('Status', '')).lower() else 'NaoAprovado'
+    if r3_lookup.get(_key) != 'NaoAprovado':
+        r3_lookup[_key] = _val
+
+# Normaliza CNPJs da tabela de pendências
+if 'CNPJ_Forn' in tabela.columns:
+    tabela['CNPJ_norm'] = tabela['CNPJ_Forn'].apply(norm_cnpj)
+else:
+    tabela['CNPJ_norm'] = ''
+
+def _status_real(row):
+    if str(row['Status']).strip() == 'EM_ELABORACAO':
+        return 'Ativa'
+    cnpj = str(row['CNPJ_norm']).strip()
+    doc  = str(row['Documento']).strip().upper()
+    area = str(row['Area']).strip()
+    key  = f'{cnpj}|||{doc}'
+    if area == 'DOCUMENTOS':
+        r4_st = r4_lookup.get(key)
+        return 'Resolvida' if (not r4_st or r4_st == 'Aprovado') else 'Não resolvida'
+    else:
+        r3_st = r3_lookup.get(key)
+        return 'Resolvida' if (not r3_st or r3_st == 'Aprovado') else 'Não resolvida'
+
+tabela['StatusReal'] = tabela.apply(_status_real, axis=1)
+total_nao_resolvidas = int((tabela['StatusReal'] != 'Resolvida').sum())
+
+# Finaliza tabela_json (sem colunas auxiliares)
+_EXPORT_COLS = ['Fornecedor', 'Status', 'Area', 'Documento', 'Competencia', 'Detalhe', 'StatusReal']
+tabela_json = tabela[_EXPORT_COLS].to_dict('records')
+competencias_lista = sorted([c for c in tabela['Competencia'].unique()
+                              if c and c not in ('nan', 'A classificar', 'Não possui competência')])
+competencias_json  = json.dumps(competencias_lista)
 
 # ── SIMULAÇÃO COM DADOS DO BD (dados simulados para demo) ─────────────────────
 np.random.seed(42)
@@ -1006,17 +1118,23 @@ html = f"""<!DOCTYPE html>
   <div id="pend-section" class="section-collapsible collapsed">
 
   <div class="filtro-bar">
+    <!-- Pills Não resolvidas / Todas -->
+    <div style="align-self:flex-end">
+      <div style="font-size:11px;font-weight:700;color:{COR_TEAL};text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Visualizacao</div>
+      <div style="display:flex;gap:6px">
+        <button id="pill-nao-res" onclick="setPillFilter('nao_resolvidas')"
+          style="border:none;border-radius:20px;padding:6px 16px;font-size:13px;font-weight:700;cursor:pointer;background:{COR_VERMELHO};color:white;transition:all .15s">
+          Nao resolvidas (<span id="pill-count-nr">{total_nao_resolvidas}</span>)
+        </button>
+        <button id="pill-todas" onclick="setPillFilter('todas')"
+          style="border:none;border-radius:20px;padding:6px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#d0d0d0;color:#444;transition:all .15s">
+          Todas (<span id="pill-count-todas">{total_pendencias}</span>)
+        </button>
+      </div>
+    </div>
     <div>
       <label>Fornecedor</label><br>
       <select id="filtro-empresa" onchange="filtrarTabela()"><option value="">Todos</option></select>
-    </div>
-    <div>
-      <label>Status</label><br>
-      <select id="filtro-status" onchange="filtrarTabela()">
-        <option value="">Todos</option>
-        <option value="EM_ELABORACAO">Pendente (nao enviado)</option>
-        <option value="APROVADO">Em Analise</option>
-      </select>
     </div>
     <div>
       <label>Area</label><br>
@@ -1057,7 +1175,7 @@ html = f"""<!DOCTYPE html>
         <thead>
           <tr>
             <th>Fornecedor</th>
-            <th>Status</th>
+            <th>Situacao Real</th>
             <th>Area</th>
             <th>Documento</th>
             <th>Competencia</th>
@@ -1181,19 +1299,40 @@ function limparSit() {{
   filtrarSit();
 }}
 
+// ── PILL FILTER (Não resolvidas / Todas) ─────────────────────────────────────
+let activePill = "nao_resolvidas";
+function setPillFilter(pill) {{
+  activePill = pill;
+  const btnNR   = document.getElementById("pill-nao-res");
+  const btnTodas = document.getElementById("pill-todas");
+  if (btnNR) {{
+    btnNR.style.background   = pill === "nao_resolvidas" ? "{COR_VERMELHO}" : "#d0d0d0";
+    btnNR.style.color        = pill === "nao_resolvidas" ? "white" : "#444";
+  }}
+  if (btnTodas) {{
+    btnTodas.style.background = pill === "todas" ? "{COR_TEAL}" : "#d0d0d0";
+    btnTodas.style.color      = pill === "todas" ? "white" : "#444";
+  }}
+  filtrarTabela();
+}}
+function badgeStatusReal(s) {{
+  if (s === "Ativa")          return '<span class="badge badge-pendente_env">Ativa</span>';
+  if (s === "Não resolvida")  return '<span class="badge badge-vencido">Nao resolvida</span>';
+  return '<span class="badge badge-conforme">Resolvida</span>';
+}}
+
 // ── TABELA PENDENCIAS ─────────────────────────────────────────────────────────
 let pendFiltrado = [];
 function filtrarTabela() {{
-  const emp    = document.getElementById("filtro-empresa").value;
-  const status = document.getElementById("filtro-status").value;
-  const area   = document.getElementById("filtro-area").value;
-  const comp   = document.getElementById("filtro-competencia").value;
-  const busca  = document.getElementById("filtro-busca").value.toLowerCase();
+  const emp  = document.getElementById("filtro-empresa").value;
+  const area = document.getElementById("filtro-area").value;
+  const comp = document.getElementById("filtro-competencia").value;
+  const busca = document.getElementById("filtro-busca").value.toLowerCase();
   pendFiltrado = DADOS.filter(r => {{
-    if (emp    && r["Fornecedor"]  !== emp)    return false;
-    if (status && r["Status"]      !== status) return false;
-    if (area   && r["Area"]        !== area)   return false;
-    if (comp   && r["Competencia"] !== comp)   return false;
+    if (activePill === "nao_resolvidas" && r["StatusReal"] === "Resolvida") return false;
+    if (emp  && r["Fornecedor"]  !== emp)  return false;
+    if (area && r["Area"]        !== area) return false;
+    if (comp && r["Competencia"] !== comp) return false;
     if (busca) {{
       const txt = (r["Documento"] + " " + r["Detalhe"]).toLowerCase();
       if (!txt.includes(busca)) return false;
@@ -1204,7 +1343,7 @@ function filtrarTabela() {{
   tbody.innerHTML = pendFiltrado.map(r => `
     <tr>
       <td>${{r["Fornecedor"]}}</td>
-      <td>${{badgeStatus(r["Status"])}}</td>
+      <td>${{badgeStatusReal(r["StatusReal"])}}</td>
       <td>${{badgeArea(r["Area"])}}</td>
       <td><strong>${{r["Documento"]}}</strong></td>
       <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
@@ -1212,10 +1351,10 @@ function filtrarTabela() {{
     </tr>
   `).join("");
   document.getElementById("tabela-count").textContent =
-    `${{pendFiltrado.length}} pendencia(s) exibida(s) de ${{DADOS.length}} no total`;
+    `${{pendFiltrado.length}} pendencia(s) exibida(s)`;
 }}
 function limparFiltros() {{
-  ["filtro-empresa","filtro-status","filtro-area","filtro-competencia","filtro-busca"].forEach(id => {{
+  ["filtro-empresa","filtro-area","filtro-competencia","filtro-busca"].forEach(id => {{
     const el = document.getElementById(id);
     if (el) el.value = "";
   }});
@@ -1566,7 +1705,7 @@ function limparGlobalFiltro() {{
 }})();
 
 filtrarSit();
-filtrarTabela();
+setPillFilter("nao_resolvidas");  // inicializa tabela pendencias com Nao resolvidas ativo
 filtrarFornSit();
 </script>
 </body>
@@ -1578,6 +1717,7 @@ with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
 print(f"Dashboard gerado: {OUTPUT_HTML}")
 print(f"  Fornecedores com pendencias : {total_fornecedores}")
 print(f"  Total pendencias            : {total_pendencias}")
+print(f"  Nao resolvidas (StatusReal) : {total_nao_resolvidas}")
 print(f"  % Conformidade geral        : {pct_conformidade}%")
 print(f"  % Nao conformidade          : {pct_nao_conform}%")
 print(f"  Docs vencidos               : {total_vencidos_docs}")
