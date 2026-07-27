@@ -246,20 +246,25 @@ tabela = df_pend[["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas
 tabela.columns = ["Fornecedor", "Status", "Area", "Documento", "Competencia", "Detalhe"]
 tabela["Competencia"] = tabela["Competencia"].fillna("").astype(str).str.strip()
 tabela["Competencia"] = tabela["Competencia"].replace("nan", "")
-# Regra: apenas 4 docs exibem Competência nas pendências de Fornecedor (Area=DOCUMENTOS)
+# Regra: apenas estes docs exibem Competência nas pendências de Fornecedor (Area=DOCUMENTOS)
 _DOCS_COM_COMP_PEND = {
     "GFD - GUIA DO FGTS DIGITAL MENSAL",
     "DCTFWEB",
     "FOPAG - (FOLHA DE PAGAMENTO + RESUMO)",
     "COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS",
+    "KIT RESCISÃO",
+    "RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO",
+    "GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS",
 }
 _eh_forn_pend  = tabela["Area"] == "DOCUMENTOS"
 _doc_upper_pen = tabela["Documento"].str.strip().str.upper()
 _sem_comp_pen  = _eh_forn_pend & ~_doc_upper_pen.isin({d.upper() for d in _DOCS_COM_COMP_PEND})
 tabela.loc[_sem_comp_pen, "Competencia"] = "Não possui competência"
-# ASO e Ordens de Serviço nunca possuem Competência (qualquer área)
-_DOCS_SEM_COMP_TERC = {"aso", "ordens de serviço"}
-_mask_sc_terc = tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_TERC)
+# ASO, Ordens de Serviço e Capacitação nunca possuem Competência (qualquer área)
+# startsWith: captura variantes como "ASO SEM CNPJ...", "ORDENS DE SERVIÇO:"
+_DOCS_SEM_COMP_TERC = {"aso", "ordens de serviço", "capacitação de acordo com a ordem de serviço"}
+_doc_lower_pen = tabela["Documento"].str.strip().str.lower()
+_mask_sc_terc = _doc_lower_pen.apply(lambda d: any(d == b or d.startswith(b) for b in _DOCS_SEM_COMP_TERC))
 tabela.loc[_mask_sc_terc, "Competencia"] = "Não possui competência"
 
 def _calc_comp_pend(row):
@@ -282,9 +287,7 @@ tabela["Competencia"] = tabela.apply(_calc_comp_pend, axis=1)
 tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(
     lambda v: re.sub(r'\D', '', str(v).split('.')[0])
 ).values if col_cnpj_pend else ""
-tabela_json = tabela.to_dict("records")
-competencias_lista = sorted([c for c in tabela["Competencia"].unique() if c and c != "nan"])
-competencias_json  = json.dumps(competencias_lista)
+# tabela_json será finalizado após bloco R4 (StatusReal depende dos lookups)
 
 # ── TABELA DE SITUAÇÃO DOCUMENTAL (3 camadas) ─────────────────────────────────
 col_trab_rs = "Terceiro Razão Social" if "Terceiro Razão Social" in df_sit_calc.columns else "Terceiro Razao Social"
@@ -321,7 +324,7 @@ _DOCS_SEM_VENCIMENTO = {"ficha de epi", "cartão ponto com total de horas extras
 _mask_sem_venc = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_VENCIMENTO)
 sit_tabela.loc[_mask_sem_venc, "Vencimento"] = ""
 # Documentos sem Competência no R3 — exibem só Vencimento (se houver)
-_DOCS_SEM_COMP_R3 = {"aso", "ordens de serviço"}
+_DOCS_SEM_COMP_R3 = {"aso", "ordens de serviço", "capacitação de acordo com a ordem de serviço"}
 _mask_sem_comp_r3 = sit_tabela["Documento"].str.strip().str.lower().isin(_DOCS_SEM_COMP_R3)
 sit_tabela.loc[_mask_sem_comp_r3, "Competencia"] = ""
 
@@ -499,6 +502,9 @@ if _sit_forn_ok:
         "DCTFWEB",
         "FOPAG - (FOLHA DE PAGAMENTO + RESUMO)",
         "COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS",
+        "KIT RESCISÃO",
+        "RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO",
+        "GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS",
     }
     _doc_upper_r4 = forn_sit_tabela["Documento"].str.strip().str.upper()
     _sem_comp_r4  = ~_doc_upper_r4.isin({d.upper() for d in _DOCS_COM_COMP_R4})
@@ -529,6 +535,61 @@ else:
     r4_pct_nc = r4_pct_c = 0.0
     r4_nao_conf = 0
     df_sit_forn_calc = pd.DataFrame()
+
+# ── STATUSREAL — apenas pendências Não resolvidas ─────────────────────────────
+# R3 lookup: "cnpj_forn_digits|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
+_pend_r3_lookup: dict = {}
+_col_cnpj_forn_r3_pend = next(
+    (c for c in df_sit_calc.columns if "fornecedor" in c.lower() and re.search(r'cpf|cnpj', c, re.I)), None
+)
+if _col_cnpj_forn_r3_pend:
+    for _, _r in df_sit_calc.iterrows():
+        _ck = re.sub(r'\D', '', str(_r[_col_cnpj_forn_r3_pend]).split('.')[0])
+        _dk = str(_r.get('Documento', '')).strip().upper()
+        if not _ck or not _dk or _dk == 'NAN':
+            continue
+        _key = f'{_ck}|||{_dk}'
+        _val = 'Aprovado' if str(_r.get('Status_Cat', '')).strip() == 'Aprovado' else 'NaoAprovado'
+        if _pend_r3_lookup.get(_key) != 'NaoAprovado':
+            _pend_r3_lookup[_key] = _val
+
+# R4 lookup: "cnpj_digits|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
+_pend_r4_lookup: dict = {}
+_col_cnpj_r4_pend = next((c for c in df_sit_forn_calc.columns if "cpf" in c.lower() or "cnpj" in c.lower()), None) if not df_sit_forn_calc.empty else None
+if not df_sit_forn_calc.empty and _col_cnpj_r4_pend:
+    for _, _r in df_sit_forn_calc.iterrows():
+        _ck = re.sub(r'\D', '', str(_r.get(_col_cnpj_r4_pend, '')).split('.')[0])
+        _dk = str(_r.get('Documento', '')).strip().upper()
+        if not _ck or not _dk or _dk == 'NAN':
+            continue
+        _key = f'{_ck}|||{_dk}'
+        _val = 'Aprovado' if str(_r.get('Status_Cat', '')).strip() == 'Aprovado' else 'NaoAprovado'
+        if _pend_r4_lookup.get(_key) != 'NaoAprovado':
+            _pend_r4_lookup[_key] = _val
+
+def _pend_status_real(row):
+    status_pend = str(row.get('Status', '')).strip()
+    if status_pend == 'EM_ELABORACAO':
+        return 'Ativa'
+    cnpj = str(row.get('CNPJ', '')).strip()
+    doc  = str(row.get('Documento', '')).strip().upper()
+    area = str(row.get('Area', '')).strip()
+    key  = f'{cnpj}|||{doc}'
+    if area == 'DOCUMENTOS':
+        r4_st = _pend_r4_lookup.get(key)
+        return 'Resolvida' if (not r4_st or r4_st == 'Aprovado') else 'Não resolvida'
+    else:
+        r3_st = _pend_r3_lookup.get(key)
+        return 'Resolvida' if (not r3_st or r3_st == 'Aprovado') else 'Não resolvida'
+
+tabela['StatusReal'] = tabela.apply(_pend_status_real, axis=1)
+
+# Apenas Não resolvidas: Ativa (EM_ELABORACAO) + Não resolvida (APROVADO mas doc ainda irregular)
+_tabela_filtrada = tabela[tabela['StatusReal'] != 'Resolvida'].copy()
+total_nao_resolvidas = len(_tabela_filtrada)
+tabela_json = _tabela_filtrada.to_dict("records")
+competencias_lista = sorted([c for c in _tabela_filtrada['Competencia'].unique() if c and c != 'nan'])
+competencias_json  = json.dumps(competencias_lista)
 
 # Total de fornecedores = união de CNPJs do R3 + R4 (evita subcontagem quando
 # um fornecedor tem docs de empresa mas nenhum terceiro cadastrado)
@@ -1733,9 +1794,11 @@ html = f"""<!DOCTYPE html>
 
   </div><!-- /forn-sit-section -->
 
-  <!-- DETALHAMENTO DAS PENDENCIAS -->
+  <!-- DETALHAMENTO DAS PENDENCIAS — apenas Nao Resolvidas -->
   <div class="section-title">
-    Detalhamento das Pendencias (com Competencia)
+    Pendencias Nao Resolvidas
+    <span style="background:{COR_VERMELHO};color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:700">{total_nao_resolvidas}</span>
+    <span style="background:#6C757D;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px">de {total_pendencias} no historico</span>
     <span class="section-toggle" onclick="toggleSection('pend-section', this)">▼ Expandir</span>
   </div>
   <div id="pend-section" class="section-collapsible collapsed">
@@ -3365,7 +3428,8 @@ with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
 
 print(f"Dashboard gerado: {OUTPUT_HTML}")
 print(f"  Fornecedores com pendencias : {total_fornecedores}")
-print(f"  Total pendencias            : {total_pendencias}")
+print(f"  Total pendencias (historico): {total_pendencias}")
+print(f"  Nao resolvidas (StatusReal) : {total_nao_resolvidas}")
 print(f"  % Conformidade geral        : {pct_conformidade}%")
 print(f"  % Nao conformidade          : {pct_nao_conform}%")
 print(f"  Docs reprovados             : {total_reprovados_docs}")
