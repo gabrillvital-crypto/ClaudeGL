@@ -458,6 +458,21 @@ export function processAllData(
 
   const total_forn_com_execucao = total_forn_geral - total_sem_execucao
 
+  // ── Lookups para StatusReal das pendências ────────────────────────────────
+  // R4: cnpj|||doc → status atual
+  const r4StatusLookup = new Map<string, StatusR4>()
+  forn_sit.forEach(r => {
+    r4StatusLookup.set(`${r.CNPJ_Forn}|||${r.Documento.toUpperCase()}`, r.Status)
+  })
+
+  // R3: cnpj_forn|||doc → 'Aprovado' se TODOS aprovados, 'NaoAprovado' se algum não
+  const r3StatusLookup = new Map<string, 'Aprovado' | 'NaoAprovado'>()
+  sitCalc.forEach(r => {
+    const key = `${r.CNPJ_Forn}|||${r.Documento.toUpperCase()}`
+    if (r3StatusLookup.get(key) === 'NaoAprovado') return
+    r3StatusLookup.set(key, r.Status === 'Aprovado' ? 'Aprovado' : 'NaoAprovado')
+  })
+
   // Regras de Competência para pendências
   const DOCS_COM_COMP_PEND = new Set([
     'GFD - GUIA DO FGTS DIGITAL MENSAL',
@@ -492,14 +507,32 @@ export function processAllData(
         || extractCompetenciaFromText(docUpper)
         || 'A classificar'
     }
+    const cnpjPend = colCNPJPend ? normCNPJ(row[colCNPJPend]) : ''
+    const statusPend = String(row[colSitPend] || '').trim()
+
+    let statusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
+    if (statusPend === 'EM_ELABORACAO') {
+      statusReal = 'Ativa'
+    } else {
+      const key = `${cnpjPend}|||${docUpper}`
+      if (area === 'DOCUMENTOS') {
+        const r4St = r4StatusLookup.get(key)
+        statusReal = (!r4St || r4St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
+      } else {
+        const r3St = r3StatusLookup.get(key)
+        statusReal = (!r3St || r3St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
+      }
+    }
+
     return {
       Fornecedor: abbrev(String(row[colRsPend] || '')),
-      CNPJ_Forn: colCNPJPend ? normCNPJ(row[colCNPJPend]) : '',
-      Status: String(row[colSitPend] || '').trim(),
+      CNPJ_Forn: cnpjPend,
+      Status: statusPend,
       Area: area,
       Documento: docUpper,
       Competencia: competencia,
       Detalhe: String(row[colPendTxt] ?? '').trim(),
+      StatusReal: statusReal,
     }
   })
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()

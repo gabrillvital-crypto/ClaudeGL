@@ -12,6 +12,7 @@ export interface PendRow {
   Documento: string
   Competencia: string
   Detalhe: string
+  StatusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
 }
 
 export interface SitTerceiroRow {

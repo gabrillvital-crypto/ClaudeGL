@@ -85,7 +85,7 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
           <table className="w-full text-[13px] border-collapse">
             <thead>
               <tr className="bg-[#0E8FA3] text-white">
-                {['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe'].map(h => (
+                {['Situação Real', 'Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe'].map(h => (
                   <th key={h} className="px-3 py-2.5 text-left font-bold">{h}</th>
                 ))}
               </tr>
@@ -93,6 +93,11 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
             <tbody>
               {data.map((r, i) => (
                 <tr key={i} className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {r.StatusReal === 'Ativa' && <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fff3cd] text-[#856404]">Ativa</span>}
+                    {r.StatusReal === 'Não resolvida' && <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fde8e8] text-[#b91c1c]">Não resolvida</span>}
+                    {r.StatusReal === 'Resolvida' && <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#d4edda] text-[#155724]">Resolvida</span>}
+                  </td>
                   <td className="px-3 py-2">
                     <div className="font-medium">{r.Fornecedor}</div>
                     {r.CNPJ_Forn && <div className="text-[11px] text-[#999] font-mono mt-0.5">{fmtCNPJ(r.CNPJ_Forn)}</div>}
@@ -110,7 +115,7 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
                 </tr>
               ))}
               {data.length === 0 && (
-                <tr><td colSpan={5} className="px-3 py-6 text-center text-[#999]">Nenhuma pendência encontrada</td></tr>
+                <tr><td colSpan={6} className="px-3 py-6 text-center text-[#999]">Nenhuma pendência encontrada</td></tr>
               )}
             </tbody>
           </table>

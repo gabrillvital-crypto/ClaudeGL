@@ -206,8 +206,8 @@ export function App() {
         return true // pendências de documentos do fornecedor não filtradas por status de terceiro
       })
     }
-    if (filtroSit === 'ativas')
-      rows = rows.filter(r => r.Status === 'EM_ELABORACAO')
+    if (filtroSit === 'ativas') rows = rows.filter(r => r.StatusReal === 'Ativa')
+    else if (filtroSit === 'nao_resolvidas') rows = rows.filter(r => r.StatusReal !== 'Resolvida')
     return rows
   }, [data, hasFilter, matchesForn, selectedCompSet, aeroportoFilter, statusTercFilter, filtroSit])
 
@@ -367,8 +367,9 @@ export function App() {
         onStatusTercChange={setSelectedStatusTerc}
         filtroSit={filtroSit}
         onFiltroSitChange={setFiltroSit}
-        totalAtivas={data ? data.tabela.filter(r => r.Status === 'EM_ELABORACAO').length : 0}
-        totalGerais={data ? data.tabela.length : 0}
+        totalNaoResolvidas={data ? data.tabela.filter(r => r.StatusReal !== 'Resolvida').length : 0}
+        totalAtivas={data ? data.tabela.filter(r => r.StatusReal === 'Ativa').length : 0}
+        totalTodas={data ? data.tabela.length : 0}
         onClear={clearAll}
         onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
         onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}
