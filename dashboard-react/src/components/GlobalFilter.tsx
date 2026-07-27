@@ -29,10 +29,9 @@ interface Props {
   onAeroportoToggle: (key: string) => void
   selectedStatusTerc: 'all' | 'Ativo' | 'Inativo'
   onStatusTercChange: (v: 'all' | 'Ativo' | 'Inativo') => void
-  filtroSit: 'nao_resolvidas' | 'ativas' | 'todas'
-  onFiltroSitChange: (v: 'nao_resolvidas' | 'ativas' | 'todas') => void
+  filtroSit: 'nao_resolvidas' | 'todas'
+  onFiltroSitChange: (v: 'nao_resolvidas' | 'todas') => void
   totalNaoResolvidas: number
-  totalAtivas: number
   totalTodas: number
   onClear: () => void
   onExportXLSX?: () => void
@@ -46,7 +45,7 @@ export function GlobalFilter({
   statusOptions, selectedStatusSet, onStatusToggle, onStatusClear,
   selectedAeroportoSet, onAeroportoToggle,
   selectedStatusTerc, onStatusTercChange,
-  filtroSit, onFiltroSitChange, totalNaoResolvidas, totalAtivas, totalTodas,
+  filtroSit, onFiltroSitChange, totalNaoResolvidas, totalTodas,
   onClear, onExportXLSX, onExportPDF, onExportCSV,
 }: Props) {
   const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all' || filtroSit !== 'nao_resolvidas'
@@ -57,7 +56,7 @@ export function GlobalFilter({
     selectedStatusSet.size > 0 ? `${selectedStatusSet.size} status` : '',
     selectedAeroportoSet.size > 0 ? `aeroporto: ${[...selectedAeroportoSet].join('+')}` : '',
     selectedStatusTerc !== 'all' ? `terceiros: ${selectedStatusTerc === 'Ativo' ? 'Ativos' : 'Inativos'}` : '',
-    filtroSit === 'ativas' ? 'pendências: só ativas' : filtroSit === 'todas' ? 'pendências: todas' : '',
+    filtroSit === 'todas' ? 'pendências: todas' : '',
   ].filter(Boolean).join(' · ') + ' selecionado(s) — KPIs atualizados'
 
   return (
@@ -135,7 +134,6 @@ export function GlobalFilter({
         <div className="flex gap-1.5 h-[34px] items-center">
           {([
           ['nao_resolvidas', `Não resolvidas (${totalNaoResolvidas})`],
-          ['ativas', `Só ativas (${totalAtivas})`],
           ['todas', `Todas (${totalTodas})`],
         ] as const).map(([val, lbl]) => (
             <button key={val} onClick={() => onFiltroSitChange(val)}
