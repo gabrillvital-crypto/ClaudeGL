@@ -260,7 +260,7 @@ export function processAllData(
   ])
 
   // Documentos R3 sem Competência — exibem só Vencimento (se houver)
-  const DOCS_SEM_COMP_R3 = new Set(['aso', 'ordens de serviço'])
+  const DOCS_SEM_COMP_R3 = new Set(['aso', 'ordens de serviço', 'capacitação de acordo com a ordem de serviço'])
 
   // ── R3 — Situação por Terceiro ────────────────────────────────────────────
   const sitCalc: SitTerceiroRow[] = rawSit
@@ -318,6 +318,9 @@ export function processAllData(
     'DCTFWEB',
     'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
     'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
+    'KIT RESCISÃO',
+    'RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO',
+    'GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS',
   ])
 
   const forn_sit: FornSitRow[] = rawFornSit
@@ -479,8 +482,11 @@ export function processAllData(
     'DCTFWEB',
     'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
     'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
+    'KIT RESCISÃO',
+    'RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO',
+    'GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS',
   ])
-  const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO'])
+  const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO', 'CAPACITAÇÃO DE ACORDO COM A ORDEM DE SERVIÇO'])
 
   // Extrai e normaliza competência de qualquer texto que contenha padrão MM/AA ou MM/AAAA
   function extractCompetenciaFromText(text: string): string | null {
@@ -495,8 +501,10 @@ export function processAllData(
     const area = String(row[colAreaPend] || '').trim()
     const docUpper = extractDoc(row, area)
     const pendText = String(row[colPendTxt] ?? '').trim()
+    const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
+      || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
     let competencia: string
-    if (DOCS_SEM_COMP_PEND.has(docUpper)) {
+    if (isSemCompPend) {
       competencia = 'Não possui competência'
     } else if (area === 'DOCUMENTOS' && !DOCS_COM_COMP_PEND.has(docUpper)) {
       competencia = 'Não possui competência'
