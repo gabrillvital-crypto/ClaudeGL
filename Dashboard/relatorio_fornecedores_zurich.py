@@ -3416,6 +3416,7 @@ buildStatMultiSelect();
 filtrarSit();
 filtrarTabela();
 filtrarFornSit();
+updateKPICards();
 renderPizza(SIT);
 renderPizzaForn(FORN_SIT);
 renderPizzaGeral(SIT, FORN_SIT);
