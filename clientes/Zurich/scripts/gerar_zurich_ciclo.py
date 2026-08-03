@@ -170,8 +170,8 @@ x_start = Inches(0.35)
 kpis = [
     ("44,9%",  "Conformidade\nFornecedores (R4)",  TEAL,    CINZA_CLARO, "+3,1 p.p."),
     ("24,6%",  "Conformidade\nTerceiros (R3)",      TEAL,    CINZA_CLARO, "+7,3 p.p."),
-    ("816",    "Pendências\nResolvidas",             VERDE,   VERDE_BG,   "97% do total ativo"),
-    ("-83%",   "Redução de\nPendências Ativas",      VERDE,   VERDE_BG,   "842 → 138"),
+    ("2.696",  "Não Resolvidas\nem 27/07",          LARANJA, AMARELO_BG,  "3.013 no início"),
+    ("-10,5%", "Redução de\nNão Resolvidas",        VERDE,   VERDE_BG,    "3.013 → 2.696"),
     ("+16",    "Novos Terceiros\nCadastrados",       TEAL,    CINZA_CLARO, "1.251 → 1.267"),
 ]
 
@@ -181,8 +181,8 @@ for idx, (val, lbl, vc, bg, delta) in enumerate(kpis):
 
 # frase de destaque
 add_rect(sl, Inches(0.35), Inches(3.35), Inches(12.63), Inches(0.95), TEAL_CLARO)
-add_text(sl, "Das 842 pendências ativas no início do ciclo, 816 foram resolvidas até o fechamento em 27/07 — "
-             "uma taxa de resolução de 97%. As 138 restantes estão concentradas em 6 fornecedores.",
+add_text(sl, "Das 3.013 pendências não resolvidas em 10/07, 317 foram regularizadas até o fechamento em 27/07 — "
+             "encerrando o ciclo com 2.696 não resolvidas, uma redução de 10,5% no período.",
          Inches(0.55), Inches(3.42), Inches(12.2), Inches(0.8),
          font_size=13, color=TEAL_ESCURO)
 
@@ -401,23 +401,34 @@ sl = prs.slides.add_slide(BLANK)
 add_header_band(sl, "Pendências — Visão do Ciclo",
                 "Movimentação de 10/07 a 27/07/2026")
 
-# Big number destaque
-add_rect(sl, Inches(0.35), Inches(1.55), Inches(4.5), Inches(3.2), VERDE_BG)
-add_text(sl, "−83%", Inches(0.35), Inches(1.7), Inches(4.5), Inches(1.6),
-         font_size=72, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
-add_text(sl, "de redução nas pendências ativas",
-         Inches(0.35), Inches(3.3), Inches(4.5), Inches(0.45),
-         font_size=14, color=PRETO_SUAVE, align=PP_ALIGN.CENTER)
-add_text(sl, "842 → 138",
-         Inches(0.35), Inches(3.78), Inches(4.5), Inches(0.55),
-         font_size=22, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
+# Card superior: pendências ativas (fila BPO)
+add_rect(sl, Inches(0.35), Inches(1.55), Inches(4.5), Inches(1.45), VERDE_BG)
+add_text(sl, "−83%", Inches(0.35), Inches(1.6), Inches(4.5), Inches(0.85),
+         font_size=54, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
+add_text(sl, "Fila BPO (Em Elaboração)  |  842 → 138",
+         Inches(0.35), Inches(2.45), Inches(4.5), Inches(0.4),
+         font_size=11, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
+
+# Separador
+add_rect(sl, Inches(0.35), Inches(3.07), Inches(4.5), Inches(0.05), CINZA_MEDIO)
+
+# Card inferior: total não resolvidas (visão completa dashboard)
+add_rect(sl, Inches(0.35), Inches(3.12), Inches(4.5), Inches(1.55), AMARELO_BG)
+add_text(sl, "−10,5%", Inches(0.35), Inches(3.17), Inches(4.5), Inches(0.85),
+         font_size=46, bold=True, color=LARANJA, align=PP_ALIGN.CENTER)
+add_text(sl, "Não Resolvidas (dashboard)  |  3.013 → 2.696",
+         Inches(0.35), Inches(4.0), Inches(4.5), Inches(0.4),
+         font_size=11, bold=True, color=LARANJA, align=PP_ALIGN.CENTER)
+add_text(sl, "Inclui pendências formalmente fechadas cujo\ndocumento ainda está irregular",
+         Inches(0.35), Inches(4.42), Inches(4.5), Inches(0.35),
+         font_size=9, italic=True, color=CINZA_MEDIO, align=PP_ALIGN.CENTER)
 
 # tabela de pendências
 cols_p = ["Indicador", "10/07", "27/07", "Variação"]
 rows_p = [
     ("Total geral",               "5.812", "6.417", "+605"),
-    ("Ativas (Em elaboração)",    "842",   "138",   "−704 (−83%) ✅"),
-    ("Aprovadas c/ pendência",    "4.970", "6.279", "+1.309"),
+    ("Fila BPO (Em elaboração)",   "842",   "138",   "−704 (−83%) ✅"),
+    ("Não Resolvidas (dashboard)", "3.013", "2.696", "−317 (−10,5%)"),
     ("Área Fornecedores",         "705",   "847",   "+142"),
     ("Área Terceiros",            "5.087", "5.550", "+463"),
 ]
@@ -428,166 +439,142 @@ for i, w in enumerate(col_w_p):
     tbl_p.columns[i].width = w
 table_header_row(tbl_p, cols_p)
 for ri, rd in enumerate(rows_p):
-    highlight = VERDE_BG if ri == 1 else None
+    highlight = VERDE_BG if ri == 1 else (AMARELO_BG if ri == 2 else None)
     table_data_row(tbl_p, ri + 1, list(rd), alt=(ri % 2 == 1), highlight_color=highlight)
-    if ri == 1:
+    if ri in (1, 2):
         for ci in range(4):
             p = tbl_p.rows[ri + 1].cells[ci].text_frame.paragraphs[0]
             run = p.runs[0] if p.runs else p.add_run()
             run.font.bold = True
-            run.font.color.rgb = RGBColor(0x15, 0x57, 0x24)
+            run.font.color.rgb = RGBColor(0x15, 0x57, 0x24) if ri == 1 else RGBColor(0x92, 0x60, 0x00)
 
-add_rect(sl, Inches(0.35), Inches(4.9), Inches(12.63), Inches(0.85), TEAL_CLARO)
-add_text(sl, "💡  O total de pendências cresceu (+605) porque novas solicitações foram abertas ao longo do ciclo. "
-             "O indicador relevante é o de ativas (EM_ELABORACAO), que despencou de 842 para apenas 138.",
-         Inches(0.55), Inches(4.97), Inches(12.2), Inches(0.75),
-         font_size=11, color=TEAL_ESCURO)
 
 # ═════════════════════════════════════════════════════════════════════════════
-# SLIDE 7 — PENDÊNCIAS RESOLVIDAS NO CICLO
+# SLIDE 7 — PANORAMA DE REJEIÇÕES
 # ═════════════════════════════════════════════════════════════════════════════
 sl = prs.slides.add_slide(BLANK)
-add_header_band(sl, "Pendências Resolvidas no Ciclo",
-                "Das 842 ativas em 10/07, quantas foram encerradas até 27/07")
+add_header_band(sl, "Panorama de Rejeições", "Ciclo 10/07 a 27/07/2026")
 
-# Grande % de resolução
-add_rect(sl, Inches(0.35), Inches(1.55), Inches(3.8), Inches(2.5), VERDE_BG)
-add_text(sl, "97%", Inches(0.35), Inches(1.7), Inches(3.8), Inches(1.3),
-         font_size=66, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
-add_text(sl, "taxa de resolução", Inches(0.35), Inches(3.0), Inches(3.8), Inches(0.4),
-         font_size=13, color=PRETO_SUAVE, align=PP_ALIGN.CENTER)
-add_text(sl, "816 de 842 pendências ativas",
-         Inches(0.35), Inches(3.45), Inches(3.8), Inches(0.45),
-         font_size=12, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
+col_h  = Inches(5.5)
+col_y  = Inches(1.45)
+col_w  = Inches(4.0)
+gap    = Inches(0.315)
+cols_x = [Inches(0.35), Inches(0.35) + col_w + gap, Inches(0.35) + 2 * (col_w + gap)]
 
-# Divisão por área
-add_rect(sl, Inches(4.4), Inches(1.55), Inches(3.8), Inches(2.5), CINZA_CLARO)
-add_text(sl, "Resolvidas por área",
-         Inches(4.5), Inches(1.65), Inches(3.6), Inches(0.35),
+for cx in cols_x:
+    add_rect(sl, cx, col_y, col_w, col_h, CINZA_CLARO)
+
+# ── Coluna 1: Documentos Mais Críticos ────────────────────────────────────
+cx = cols_x[0]
+add_text(sl, "Documentos Mais Críticos",
+         cx + Inches(0.12), col_y + Inches(0.1), col_w - Inches(0.24), Inches(0.38),
          font_size=12, bold=True, color=TEAL)
-add_text(sl, "70", Inches(4.5), Inches(2.05), Inches(3.6), Inches(0.75),
-         font_size=40, bold=True, color=TEAL, align=PP_ALIGN.CENTER)
-add_text(sl, "Documentos de Fornecedor",
-         Inches(4.5), Inches(2.8), Inches(3.6), Inches(0.35),
-         font_size=11, color=CINZA_MEDIO, align=PP_ALIGN.CENTER)
-add_text(sl, "745", Inches(4.5), Inches(3.25), Inches(3.6), Inches(0.55),
-         font_size=32, bold=True, color=VERDE, align=PP_ALIGN.CENTER)
-add_text(sl, "Documentos de Terceiros",
-         Inches(4.5), Inches(3.8), Inches(3.6), Inches(0.3),
-         font_size=11, color=CINZA_MEDIO, align=PP_ALIGN.CENTER)
+docs_crit = [
+    ("Cartão Ponto (HE/Noturno)",
+     "Maior frequência de reprovação ao longo de várias competências."),
+    ("Ordens de Serviço",
+     "Volume expressivo de rejeições em múltiplos prestadores."),
+    ("Ficha de EPI",
+     "Alto índice de não conformidade mensal e geral."),
+    ("ASO e Capacitações",
+     "Volume considerável de pendências e recusas."),
+]
+y_d = col_y + Inches(0.58)
+for titulo, desc in docs_crit:
+    add_text(sl, f"• {titulo}", cx + Inches(0.15), y_d, col_w - Inches(0.28), Inches(0.26),
+             font_size=11, bold=True, color=PRETO_SUAVE)
+    y_d += Inches(0.28)
+    add_text(sl, desc, cx + Inches(0.25), y_d, col_w - Inches(0.38), Inches(0.48),
+             font_size=10, color=CINZA_MEDIO, wrap=True)
+    y_d += Inches(0.57)
 
-# Tabela top fornecedores
-add_text(sl, "Quem mais resolveu:",
-         Inches(8.45), Inches(1.55), Inches(4.5), Inches(0.35),
+# ── Coluna 2: Competências Críticas ───────────────────────────────────────
+cx = cols_x[1]
+add_text(sl, "Competências Críticas",
+         cx + Inches(0.12), col_y + Inches(0.1), col_w - Inches(0.24), Inches(0.38),
          font_size=12, bold=True, color=TEAL)
-top_forn = [
-    ("KARUANA SERV. AUX. TRANSPORTE AEREO", "729"),
-    ("TELETEX COMPUTADORES E SISTEMAS",     "43"),
-    ("JR SERVIÇOS AEROPORTUÁRIOS",          "23"),
-    ("CONTROLLER BMS",                      "13"),
-    ("ONET ENGENHARIA E MANUTENÇÃO",         "8"),
+comps = [
+    ("🔴  12/25 e 05/26", VERMELHO, RGBColor(0xFF, 0xE5, 0xE5),
+     "Maior taxa de reprovação direta — foco em Cartão Ponto, EPI e Capacitação."),
+    ("⚠️  02/26 e 03/26", LARANJA, AMARELO_BG,
+     "Acúmulo de documentos com Aguardando Submissão e reprovações pontuais."),
 ]
-col_w_tf = [Inches(3.5), Inches(0.9)]
-tbl_tf = sl.shapes.add_table(6, 2, Inches(8.45), Inches(1.95),
-                              sum(col_w_tf), Inches(2.15)).table
-tbl_tf.columns[0].width = col_w_tf[0]
-tbl_tf.columns[1].width = col_w_tf[1]
-table_header_row(tbl_tf, ["Fornecedor", "Qtd."], font_size=10)
-for ri, (nome, qtd) in enumerate(top_forn):
-    table_data_row(tbl_tf, ri + 1, [nome, qtd], alt=(ri % 2 == 1))
-    row = tbl_tf.rows[ri + 1]
-    p = row.cells[1].text_frame.paragraphs[0]
-    run = p.runs[0] if p.runs else p.add_run()
-    run.font.bold = True
-    run.font.color.rgb = VERDE if ri == 0 else PRETO_SUAVE
+y_c = col_y + Inches(0.58)
+for label, cor, bg, desc in comps:
+    add_rect(sl, cx + Inches(0.12), y_c, col_w - Inches(0.24), Inches(0.38), bg)
+    add_text(sl, label, cx + Inches(0.18), y_c + Inches(0.04), col_w - Inches(0.36), Inches(0.3),
+             font_size=12, bold=True, color=cor)
+    y_c += Inches(0.45)
+    add_text(sl, desc, cx + Inches(0.18), y_c, col_w - Inches(0.36), Inches(0.65),
+             font_size=10, color=CINZA_MEDIO, wrap=True)
+    y_c += Inches(1.1)
 
-add_rect(sl, Inches(0.35), Inches(4.2), Inches(12.63), Inches(1.1), TEAL_CLARO)
-add_text(sl, "💡  KARUANA resolveu 729 das 745 pendências de terceiros — 98% dos casos desse segmento. "
-             "Vale investigar o que foi feito: se houve abordagem personalizada, pode ser um modelo a replicar "
-             "com outros fornecedores de grande volume no próximo ciclo.",
-         Inches(0.55), Inches(4.3), Inches(12.2), Inches(0.9),
-         font_size=11, color=TEAL_ESCURO)
+# ── Coluna 3: Fornecedores com Maior Impacto ──────────────────────────────
+cx = cols_x[2]
+add_text(sl, "Fornecedores com Maior Impacto",
+         cx + Inches(0.12), col_y + Inches(0.1), col_w - Inches(0.24), Inches(0.38),
+         font_size=12, bold=True, color=TEAL)
+forn_imp = [
+    ("Fokus Consultoria",
+     "Maior volume acumulado — ASO, OS, EPI e Capacitação reprovados em quase todos os terceiros."),
+    ("Centro",
+     "Índice próximo a 100% de reprovação na grade de colaboradores."),
+    ("Ecotech",
+     "Reprovações sequenciais em cartões ponto de 12/25 a 05/26."),
+    ("Calhas Reis",
+     "100% de reprovação em todos os colaboradores e documentos."),
+]
+y_f = col_y + Inches(0.58)
+for forn, desc in forn_imp:
+    add_text(sl, f"• {forn}", cx + Inches(0.15), y_f, col_w - Inches(0.28), Inches(0.26),
+             font_size=11, bold=True, color=PRETO_SUAVE)
+    y_f += Inches(0.28)
+    add_text(sl, desc, cx + Inches(0.25), y_f, col_w - Inches(0.38), Inches(0.5),
+             font_size=10, color=CINZA_MEDIO, wrap=True)
+    y_f += Inches(0.62)
 
 # ═════════════════════════════════════════════════════════════════════════════
-# SLIDE 8 — PENDÊNCIAS AINDA ATIVAS (138)
+# SLIDE 8 — CASOS ESPECÍFICOS
 # ═════════════════════════════════════════════════════════════════════════════
 sl = prs.slides.add_slide(BLANK)
-add_header_band(sl, "Pendências Ainda Ativas — 138 ao Fechamento",
-                "Fornecedores com solicitações Em Elaboração em 27/07/2026")
+add_header_band(sl, "Pauta — Casos Específicos", "Acompanhamento por fornecedor  |  27/07/2026")
 
-add_rect(sl, Inches(0.35), Inches(1.55), Inches(2.8), Inches(2.8), AMARELO_BG)
-add_text(sl, "138", Inches(0.35), Inches(1.7), Inches(2.8), Inches(1.2),
-         font_size=66, bold=True, color=LARANJA, align=PP_ALIGN.CENTER)
-add_text(sl, "pendências ativas\nao fechamento",
-         Inches(0.35), Inches(2.9), Inches(2.8), Inches(0.55),
-         font_size=13, color=PRETO_SUAVE, align=PP_ALIGN.CENTER)
-add_text(sl, "Distribuídas em 6 fornecedores",
-         Inches(0.35), Inches(3.5), Inches(2.8), Inches(0.4),
-         font_size=11, italic=True, color=CINZA_MEDIO, align=PP_ALIGN.CENTER)
-
-# Tabela
-ativas = [
-    ("KARUANA SERVICOS AUXILIARES DE TRANSPORTE AEREO LTDA", "78", "57%"),
-    ("AMBIENS CONSULTORIA E PROJETOS AMBIENTAIS LTDA.",       "25", "18%"),
-    ("TOP SERVICE SERVIÇOS E SISTEMAS S/A",                   "16", "12%"),
-    ("GRABER SEGURANÇA LTDA",                                 "10",  "7%"),
-    ("MED MAIS SOLUÇÕES EM SERVIÇOS ESPECIAIS LTDA",           "8",  "6%"),
-    ("TELETEX COMPUTADORES E SISTEMAS LTDA",                   "1",  "1%"),
-]
-col_w_at = [Inches(6.0), Inches(1.2), Inches(1.2)]
-tbl_at = sl.shapes.add_table(7, 3, Inches(3.45), Inches(1.55),
-                              sum(col_w_at), Inches(2.8)).table
-tbl_at.columns[0].width = col_w_at[0]
-tbl_at.columns[1].width = col_w_at[1]
-tbl_at.columns[2].width = col_w_at[2]
-table_header_row(tbl_at, ["Fornecedor", "Pendências", "% do total"])
-for ri, (nome, qtd, pct) in enumerate(ativas):
-    table_data_row(tbl_at, ri + 1, [nome, qtd, pct], alt=(ri % 2 == 1))
-
-add_rect(sl, Inches(0.35), Inches(4.5), Inches(12.63), Inches(0.85), TEAL_CLARO)
-add_text(sl, "💡  KARUANA concentra 57% das pendências ativas restantes (78). "
-             "Apesar de ser o fornecedor que mais resolveu no ciclo (729), ainda tem volume significativo em aberto — "
-             "prioridade para contato no próximo ciclo.",
-         Inches(0.55), Inches(4.57), Inches(12.2), Inches(0.75),
-         font_size=11, color=TEAL_ESCURO)
-
-# ═════════════════════════════════════════════════════════════════════════════
-# SLIDE 9 — PRÓXIMOS PASSOS
-# ═════════════════════════════════════════════════════════════════════════════
-sl = prs.slides.add_slide(BLANK)
-add_header_band(sl, "Próximos Passos — Ciclo Agosto/2026",
-                "Recomendações com base nos dados do ciclo encerrado")
-
-passos = [
-    ("1", "Ativar os 138 em aberto", VERMELHO,
-     "KARUANA (78), AMBIENS (25) e TOP SERVICE (16) concentram 87% das pendências ativas. "
-     "Priorizar contato personalizado antes da abertura do próximo ciclo."),
-    ("2", "Comunicação preventiva sobre docs trabalhistas", LARANJA,
-     "FOPAG, DCTFWEB, GFD e Comprovante Bancário somam 501 não conformidades em R4 — todos mensais. "
-     "Disparar alerta no início do ciclo para antecipar entregas."),
-    ("3", "Replicar a abordagem KARUANA (R3)", TEAL,
-     "97% de resolução em terceiros vieram de 1 fornecedor. Entender o que foi feito e replicar "
-     "com AMBIENS, GRABER e MED MAIS no próximo ciclo."),
-    ("4", "Atenção ao Cartão Ponto (R3 — 3.121 não conformes)", CINZA_MEDIO,
-     "Documento mais crítico em volume. Considerar ação específica de orientação aos terceiros "
-     "sobre preenchimento e envio."),
+casos = [
+    ("Leve Estacionamento", VERMELHO,
+     "Documento ilegível. Manter reprovado até que seja enviado o documento original "
+     "em alta resolução e legível."),
+    ("Teletex", LARANJA,
+     "Verificação de CCT pela Atividade Preponderante do Colaborador vs. CNAE Principal da Empresa. "
+     "Pela CLT Art. 511 §2º, o enquadramento sindical é determinado pela atividade econômica "
+     "preponderante do empregador (salvo categorias diferenciadas)."),
+    ("Karuana", VERMELHO,
+     "Ponto manual com intervalo de almoço reduzido a 30 min sem respaldo de Acordo Coletivo/CCT. "
+     "Recusa no envio de documentos sob alegação de contrato com a Zurich."),
+    ("Orbenk", LARANJA,
+     "Reunião marcada sem envio prévio do escopo ou solicitação. "
+     "Possibilidade de datas enviada sem retorno até o momento."),
+    ("Vanderlande", CINZA_MEDIO,
+     "Reunião em definição de data, entre quinta-feira e sexta-feira."),
 ]
 
-y_p = Inches(1.55)
-for num, titulo, cor, desc in passos:
-    add_rect(sl, Inches(0.35), y_p, Inches(0.7), Inches(0.7), cor)
-    add_text(sl, num, Inches(0.35), y_p, Inches(0.7), Inches(0.7),
-             font_size=22, bold=True, color=BRANCO, align=PP_ALIGN.CENTER)
-    add_text(sl, titulo, Inches(1.15), y_p + Inches(0.05), Inches(11.5), Inches(0.35),
+y_caso = Inches(1.52)
+for i, (forn, cor, desc) in enumerate(casos):
+    if i > 0:
+        add_rect(sl, Inches(0.35), y_caso - Inches(0.06),
+                 Inches(12.63), Inches(0.01), RGBColor(0xDD, 0xDD, 0xDD))
+    add_rect(sl, Inches(0.35), y_caso, Inches(0.15), Inches(0.9), cor)
+    add_text(sl, forn,
+             Inches(0.62), y_caso, Inches(12.36), Inches(0.32),
              font_size=13, bold=True, color=PRETO_SUAVE)
-    add_text(sl, desc, Inches(1.15), y_p + Inches(0.38), Inches(11.5), Inches(0.4),
-             font_size=11, color=CINZA_MEDIO, wrap=True)
-    y_p += Inches(1.12)
+    add_text(sl, desc,
+             Inches(0.62), y_caso + Inches(0.33), Inches(12.36), Inches(0.58),
+             font_size=10, color=CINZA_MEDIO, wrap=True)
+    y_caso += Inches(1.05)
 
 # ═════════════════════════════════════════════════════════════════════════════
 # SALVAR
 # ═════════════════════════════════════════════════════════════════════════════
-output = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Zurich_Ciclo_10_27jul2026_27-07-2026_v2.pptx"
+output = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\clientes\Zurich\apresentacoes\Zurich_Ciclo_10_27jul2026_27-07-2026_v6.pptx"
 prs.save(output)
 print(f"✓ Arquivo salvo em: {output}")
 print(f"  Slides gerados: {len(prs.slides)}")

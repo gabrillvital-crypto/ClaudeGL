@@ -119,6 +119,17 @@ Dashboard mostra painel "Meus Terceiros" separado de "Meus Fornecedores"
 - Endpoints: buscar fornecedores, fornecedor com documento vencido, solicitações, pedido de homologação, avaliações
 - Autenticação via token fornecido pela Efcaz
 
+### Fluxo de Pendências (KB90020)
+
+**Artigo local:** [`fluxo_pendencias.md`](fluxo_pendencias.md)
+
+- **O que é pendência:** solicitação não aprovada totalmente pelo BPO/cliente — apenas pontos específicos precisam de correção, não o cadastro inteiro
+- **Ciclo:** Envio → BPO analisa → Pendência gerada → Fornecedor recebe notificação → Acessa "Histórico de Solicitações" → Clica "Resolver" → Corrige → "Enviar para Aprovação" → status "Aguardando Nova Análise" → BPO reanálise → Aprovado ou nova Pendência
+- **Status no dashboard Zurich:** Reprovado = Pendência aguardando ação do fornecedor | Aguardando submissão = notificado mas não resolveu ainda | Em análise = resubmeteu, BPO revisando
+- **Leitura de comparativos:** queda em Reprovados = ciclo andando (fornecedores resolveram e resubmeteram). Não é dado suspeito.
+
+---
+
 ### Módulo de Contratos e Reprovação Definitiva (jul/2026)
 
 **Artigo local:** [`modulo_contratos_e_reprovacao_definitiva.md`](modulo_contratos_e_reprovacao_definitiva.md)
