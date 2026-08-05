@@ -58,6 +58,17 @@ def abbrev(name, n=40):
     short = re.sub(r'\s+(LTDA|LTDA\.|S/A|SA|EIRELI|ME|EPP).*', '', s, flags=re.I)
     return short[:n] + "..." if len(short) > n else short
 
+def norm_cnpj(v):
+    s = str(v or '').strip()
+    if not s or s in ('nan', 'None', '0'):
+        return ''
+    if s.endswith('.0'):
+        s = s[:-2]
+    digits = re.sub(r'[\.\-/]', '', s)
+    if digits.isdigit():
+        return digits.zfill(14) if len(digits) > 11 else digits
+    return s
+
 df_pend    = read_csv_safe(PENDENCIAS_CSV)
 df_terc    = read_csv_safe(TERCEIROS_CSV)
 df_sit     = read_csv_safe(SITUACAO_CSV)
@@ -70,6 +81,43 @@ df_sit["Empresa"]  = df_sit["Fornecedor Razão Social"].apply(abbrev) if "Fornec
 # normalizar nome da coluna Razão Social para pendências
 col_rs_pend = "Razão Social" if "Razão Social" in df_pend.columns else "Razao Social"
 col_rs_terc = "Razão Social" if "Razão Social" in df_terc.columns else "Razao Social"
+
+# ── AEROPORTO LOOKUPS (a partir de df_terc) ──────────────────────────────────
+_col_cpf_terc_aero  = next((c for c in df_terc.columns
+                             if 'terceiro' in c.lower() and re.search(r'cpf|cnpj', c, re.I)), None)
+_col_aero_terc      = next((c for c in df_terc.columns if 'aeroporto' in c.lower()), None)
+_col_cnpj_forn_aero = next((c for c in df_terc.columns
+                             if re.search(r'cpf|cnpj', c, re.I) and 'terceiro' not in c.lower()), None)
+_col_nome_terc_aero = next((c for c in df_terc.columns
+                             if 'terceiro' in c.lower() and 'raz' in c.lower()), None)
+
+def _norm_aero(a):
+    s = str(a or '').strip().upper()
+    return '' if (not s or s == 'NAN') else ('CAIF' if s == 'FLN' else s)
+
+# cpf_terceiro → aeroporto
+terc_aero_map  = {}
+# cnpj_forn → set(aeroportos)
+forn_aero_map  = {}
+# aeroporto → set(nomes terceiros upper) — filtra pendências TERCEIROS por detalhe
+aero_terc_nomes = {}
+# aeroporto → set(cnpj forn) — filtra R4 e pendências DOCUMENTOS
+aero_forn_cnpjs  = {}
+
+for _, _rt in df_terc.iterrows():
+    _cpf_t  = norm_cnpj(_rt[_col_cpf_terc_aero])   if _col_cpf_terc_aero  else ''
+    _cnpj_f = norm_cnpj(_rt[_col_cnpj_forn_aero])  if _col_cnpj_forn_aero else ''
+    _aero   = _norm_aero(_rt[_col_aero_terc])       if _col_aero_terc      else ''
+    _nome_t = str(_rt[_col_nome_terc_aero] or '').strip().upper() if _col_nome_terc_aero else ''
+    if _aero:
+        if _cpf_t:  terc_aero_map[_cpf_t] = _aero
+        if _cnpj_f: forn_aero_map.setdefault(_cnpj_f, set()).add(_aero)
+        if _nome_t: aero_terc_nomes.setdefault(_aero, set()).add(_nome_t)
+        if _cnpj_f: aero_forn_cnpjs.setdefault(_aero,  set()).add(_cnpj_f)
+
+AEROPORTOS_LIST = ['CAIF', 'VIX', 'MEA', 'CAIN']
+aero_terc_nomes_json = {a: sorted(aero_terc_nomes.get(a, set())) for a in AEROPORTOS_LIST}
+aero_forn_cnpjs_json  = {a: sorted(aero_forn_cnpjs.get(a,  set())) for a in AEROPORTOS_LIST}
 
 df_pend["Empresa"] = df_pend[col_rs_pend].apply(abbrev)
 df_terc["Empresa"] = df_terc[col_rs_terc].apply(abbrev)
@@ -198,10 +246,12 @@ col_trab_rs = "Terceiro Razão Social" if "Terceiro Razão Social" in df_sit_cal
 col_trab_cpf = "Terceiro CPF/CNPJ"
 col_dat_venc = "Data de Vencimento"
 
-sit_tabela = df_sit_calc[["Empresa", col_trab_rs, "Documento", "Status_Cat", col_dat_venc]].copy()
-sit_tabela.columns = ["Fornecedor", "Terceiro", "Documento", "Status", "Vencimento"]
+sit_tabela = df_sit_calc[["Empresa", col_trab_rs, col_trab_cpf, "Documento", "Status_Cat", col_dat_venc]].copy()
+sit_tabela.columns = ["Fornecedor", "Terceiro", "CNPJ_Terceiro", "Documento", "Status", "Vencimento"]
+sit_tabela["CNPJ_Terceiro"] = sit_tabela["CNPJ_Terceiro"].apply(norm_cnpj)
+sit_tabela["Aeroporto"] = sit_tabela["CNPJ_Terceiro"].map(lambda c: terc_aero_map.get(c, ''))
 sit_tabela["Vencimento"] = pd.to_datetime(sit_tabela["Vencimento"], errors="coerce").dt.strftime("%d/%m/%Y").fillna("")
-sit_tabela_json = sit_tabela.to_dict("records")
+sit_tabela_json = sit_tabela.drop(columns=["CNPJ_Terceiro"]).to_dict("records")
 
 terc_kpi = df_terc[["Empresa", col_status_terc]].rename(columns={"Empresa": "Fornecedor", col_status_terc: "Status"})
 terc_kpi_json = terc_kpi.to_dict("records")
@@ -228,6 +278,13 @@ if _sit_forn_ok:
 
     forn_sit_tabela = df_sit_forn_calc[["Empresa", "Documento", "Status_Cat", "Data de Vencimento"]].copy()
     forn_sit_tabela.columns = ["Fornecedor", "Documento", "Status", "Vencimento"]
+    _col_cnpj_r4_local = next((c for c in df_sit_forn.columns if re.search(r'cpf|cnpj', c, re.I)), None)
+    if _col_cnpj_r4_local:
+        _cnpj_r4_ser = df_sit_forn_calc[_col_cnpj_r4_local].apply(norm_cnpj)
+        forn_sit_tabela["Aeroporto"] = _cnpj_r4_ser.map(
+            lambda c: ','.join(sorted(forn_aero_map.get(c, set()))))
+    else:
+        forn_sit_tabela["Aeroporto"] = ''
     forn_sit_tabela["Vencimento"] = pd.to_datetime(
         forn_sit_tabela["Vencimento"], errors="coerce"
     ).dt.strftime("%d/%m/%Y").fillna("")
@@ -247,16 +304,6 @@ else:
     df_sit_forn_calc = pd.DataFrame()
 
 # ── STATUSREAL — lookups R3/R4 + cálculo por pendência ───────────────────────
-def norm_cnpj(v):
-    s = str(v or '').strip()
-    if not s or s in ('nan', 'None', '0'):
-        return ''
-    if s.endswith('.0'):
-        s = s[:-2]
-    digits = re.sub(r'[\.\-/]', '', s)
-    if digits.isdigit():
-        return digits.zfill(14) if len(digits) > 11 else digits
-    return s
 
 # R4 lookup: "cnpj|||DOC" → 'Aprovado' | 'NaoAprovado'
 # Usa df_sit_forn completo (igual ao React que itera todas as rows de rawFornSit).
@@ -323,9 +370,14 @@ def _status_real(row):
 tabela['StatusReal'] = tabela.apply(_status_real, axis=1)
 total_nao_resolvidas = int((tabela['StatusReal'] != 'Resolvida').sum())
 
+# Aeroporto do fornecedor (para pendências de DOCUMENTOS e como fallback)
+tabela['Aeroporto_Forn'] = tabela['CNPJ_norm'].map(
+    lambda c: ','.join(sorted(forn_aero_map.get(c, set()))))
+
 # Finaliza tabela_json (sem colunas auxiliares)
-_EXPORT_COLS = ['Fornecedor', 'Status', 'Area', 'Documento', 'Competencia', 'Detalhe', 'StatusReal']
-tabela_json = tabela[_EXPORT_COLS].to_dict('records')
+_EXPORT_COLS = ['Fornecedor', 'Status', 'Area', 'Documento', 'Competencia', 'Detalhe', 'StatusReal', 'CNPJ_norm', 'Aeroporto_Forn']
+_tabela_export = tabela[_EXPORT_COLS].rename(columns={'CNPJ_norm': 'CNPJ_Forn', 'Aeroporto_Forn': 'Aeroporto'})
+tabela_json = _tabela_export.to_dict('records')
 competencias_lista = sorted([c for c in tabela['Competencia'].unique()
                               if c and c not in ('nan', 'A classificar', 'Não possui competência')])
 competencias_json  = json.dumps(competencias_lista)
@@ -723,6 +775,14 @@ html = f"""<!DOCTYPE html>
   }}
   #global-filtro-bar .btn-gf-limpar:hover {{ background: rgba(255,255,255,.35); }}
   #gf-hint {{ font-size: 12px; color: rgba(255,255,255,.75); align-self: center; margin-left: auto; font-style: italic; }}
+  .btn-aero {{
+    font-size: 12px; font-weight: 700; padding: 5px 13px; border-radius: 20px;
+    cursor: pointer; transition: all .15s; border: 1px solid rgba(255,255,255,.5);
+    background: rgba(255,255,255,.15); color: white;
+    font-family: Calibri, Arial, sans-serif; line-height: 1;
+  }}
+  .btn-aero:hover {{ background: rgba(255,255,255,.3); }}
+  .btn-aero.active {{ background: white; color: {COR_TEAL_ESCURO}; border-color: white; font-weight: 900; }}
 </style>
 </head>
 <body>
@@ -751,6 +811,15 @@ html = f"""<!DOCTYPE html>
     <select id="gf-competencia" onchange="applyGlobalFilter()">
       <option value="">Todas as competencias</option>
     </select>
+  </div>
+  <div>
+    <label>Aeroporto</label>
+    <div style="display:flex;gap:6px;height:34px;align-items:center">
+      <button id="aero-btn-CAIF" class="btn-aero" onclick="toggleAero('CAIF')">CAIF</button>
+      <button id="aero-btn-VIX"  class="btn-aero" onclick="toggleAero('VIX')">VIX</button>
+      <button id="aero-btn-MEA"  class="btn-aero" onclick="toggleAero('MEA')">MEA</button>
+      <button id="aero-btn-CAIN" class="btn-aero" onclick="toggleAero('CAIN')">CAIN</button>
+    </div>
   </div>
   <div style="align-self:flex-end">
     <button class="btn-gf-limpar" onclick="limparGlobalFiltro()">&#10005; Limpar filtros</button>
@@ -1198,12 +1267,54 @@ const DADOS    = {json.dumps(tabela_json, ensure_ascii=False)};
 const SIT      = {json.dumps(sit_tabela_json, ensure_ascii=False)};
 const TERC_KPI = {json.dumps(terc_kpi_json, ensure_ascii=False)};
 const FORN_SIT = {json.dumps(forn_sit_json, ensure_ascii=False)};
+const AERO_TERC_NOMES = {json.dumps(aero_terc_nomes_json, ensure_ascii=False)};
+const AERO_FORN_CNPJS  = {json.dumps(aero_forn_cnpjs_json,  ensure_ascii=False)};
+
+// ── AEROPORTO ────────────────────────────────────────────────────────────────
+let selectedAero = new Set();
+
+function toggleAero(a) {{
+  if (selectedAero.has(a)) selectedAero.delete(a);
+  else selectedAero.add(a);
+  const btn = document.getElementById('aero-btn-' + a);
+  if (btn) btn.classList.toggle('active', selectedAero.has(a));
+  applyGlobalFilter();
+}}
+
+// Verifica se um registro de SIT ou FORN_SIT passa pelo filtro de aeroporto
+function matchAero(r) {{
+  if (!selectedAero.size) return true;
+  const aeros = (r.Aeroporto || '').split(',').map(a => a.trim()).filter(Boolean);
+  return aeros.some(a => selectedAero.has(a));
+}}
+
+// Verifica se uma pendência passa pelo filtro de aeroporto
+// TERCEIROS: verifica se o nome do terceiro aparece no Detalhe
+// DOCUMENTOS: verifica se o CNPJ do fornecedor tem terceiros no aeroporto
+function matchAeroPend(r) {{
+  if (!selectedAero.size) return true;
+  if (r.Area === 'TERCEIROS') {{
+    const det = (r.Detalhe || '').toUpperCase();
+    for (const a of selectedAero) {{
+      const nomes = AERO_TERC_NOMES[a] || [];
+      if (nomes.some(n => det.includes(n))) return true;
+    }}
+    return false;
+  }}
+  // DOCUMENTOS: verifica aeroporto pelo CNPJ do fornecedor
+  const aeros = (r.Aeroporto || '').split(',').map(a => a.trim()).filter(Boolean);
+  return aeros.some(a => selectedAero.has(a));
+}}
 
 // ── KPI DINAMICO ──────────────────────────────────────────────────────────────
 function updateKPICards(forn) {{
-  const d = forn ? DADOS.filter(r => r.Fornecedor === forn) : DADOS;
-  const s = forn ? SIT.filter(r => r.Fornecedor === forn) : SIT;
+  let d = forn ? DADOS.filter(r => r.Fornecedor === forn) : [...DADOS];
+  let s = forn ? SIT.filter(r => r.Fornecedor === forn) : [...SIT];
   const t = forn ? TERC_KPI.filter(r => r.Fornecedor === forn) : TERC_KPI;
+  if (selectedAero.size) {{
+    s = s.filter(r => matchAero(r));
+    d = d.filter(r => matchAeroPend(r));
+  }}
 
   const fornCount = forn ? 1 : new Set(d.map(r => r.Fornecedor)).size;
   const totPend   = d.length;
@@ -1275,6 +1386,7 @@ function filtrarSit() {{
     if (emp  && r["Fornecedor"] !== emp)  return false;
     if (stat && r["Status"]     !== stat) return false;
     if (busca && !r["Documento"].toLowerCase().includes(busca)) return false;
+    if (!matchAero(r)) return false;
     return true;
   }});
   const tbody = document.getElementById("sit-body");
@@ -1337,6 +1449,7 @@ function filtrarTabela() {{
       const txt = (r["Documento"] + " " + r["Detalhe"]).toLowerCase();
       if (!txt.includes(busca)) return false;
     }}
+    if (!matchAeroPend(r)) return false;
     return true;
   }});
   const tbody = document.getElementById("tabela-body");
@@ -1372,6 +1485,7 @@ function filtrarFornSit() {{
     if (emp  && r["Fornecedor"] !== emp)  return false;
     if (stat && r["Status"]     !== stat) return false;
     if (busca && !cleanDoc(r["Documento"]).toLowerCase().includes(busca)) return false;
+    if (!matchAero(r)) return false;
     return true;
   }});
   const tbody = document.getElementById("forn-sit-body");
@@ -1682,11 +1796,17 @@ function applyGlobalFilter() {{
   const parts = [];
   if (forn) parts.push(forn);
   if (comp) parts.push("Competencia: " + comp);
+  if (selectedAero.size) parts.push("Aeroporto: " + [...selectedAero].join('+'));
   document.getElementById("gf-hint").textContent = parts.length ? "Filtro ativo: " + parts.join(" | ") : "";
 }}
 
 function limparGlobalFiltro() {{
   ["gf-fornecedor","gf-competencia"].forEach(id => {{ document.getElementById(id).value = ""; }});
+  selectedAero.clear();
+  ['CAIF','VIX','MEA','CAIN'].forEach(a => {{
+    const btn = document.getElementById('aero-btn-' + a);
+    if (btn) btn.classList.remove('active');
+  }});
   applyGlobalFilter();
 }}
 
