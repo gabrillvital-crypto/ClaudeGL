@@ -90,6 +90,27 @@ function normCNPJ(v: unknown): string {
   return withoutFloat
 }
 
+// Normaliza qualquer variante de código de aeroporto para CAIF/VIX/MEA/CAIN (ou '')
+// Espelha _norm_aero() do relatorio_fornecedores_zurich.py
+export function normAeroporto(raw: string): string {
+  const s = (raw ?? '').toUpperCase().trim().replace(/^nan$/i, '').replace(/^none$/i, '')
+  if (!s || s === '000') return ''
+  const ALIASES: Record<string, string> = { FLN: 'CAIF', NAT: 'CAIN' }
+  const CODES = ['CAIF', 'VIX', 'MEA', 'CAIN']
+  if (ALIASES[s]) return ALIASES[s]
+  for (const code of CODES)
+    if (s === code || s.startsWith(code + ' ') || s.startsWith(code + '-') || s.startsWith(code + '_')) return code
+  for (const code of CODES)
+    if (s.includes(code)) return code
+  if (s.includes('FLORIAN')) return 'CAIF'
+  if (/VIT.?RIA/.test(s)) return 'VIX'
+  if (s.includes('EURICO') || s.includes('AGUIAR')) return 'VIX'
+  if (s.includes('MACA')) return 'MEA'
+  if (s.includes('BENEDITO') && s.includes('LACERDA')) return 'MEA'
+  if (s.includes('NATAL')) return 'CAIN'
+  return ''
+}
+
 // ── R3: Lógica do relatorio_fornecedores_zurich.py ───────────────────────────
 // Prioridade 1: "Situação Análise Documento" (APROVADO / REPROVADO)
 // Prioridade 2: Status do documento
@@ -234,7 +255,7 @@ export function processAllData(
   const tercAeroportoMap = new Map<string, Set<string>>()
   rawTerc.forEach(row => {
     const cpf = normCNPJ(row[_colCPFTerc0])
-    const aero = String(row[_colAero0] ?? '').trim().replace(/^nan$/, '')
+    const aero = normAeroporto(String(row[_colAero0] ?? ''))
     if (!cpf || !aero) return
     if (!tercAeroportoMap.has(cpf)) tercAeroportoMap.set(cpf, new Set())
     tercAeroportoMap.get(cpf)!.add(aero)
@@ -680,7 +701,7 @@ export function processAllData(
     const codContratosRaw = String(row[colCodContrato] ?? '').trim()
     const cargo = String(row[colCargo] ?? '').trim()
     const status = String(row[colStatusTerc2] ?? '').trim()
-    const aeroporto = String(row[colAeroporto] ?? '').trim()
+    const aeroporto = normAeroporto(String(row[colAeroporto] ?? ''))
 
     if (!cnpj || !nomeTerceiro || !codContratosRaw) return
 

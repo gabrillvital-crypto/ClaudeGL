@@ -1,6 +1,7 @@
 import { useMemo, useState, useCallback } from 'react'
 import { useDashboardData } from './hooks/useDashboardData'
 import { useGlobalFilter } from './hooks/useGlobalFilter'
+import { normAeroporto } from './utils/dataProcessing'
 import { Header } from './components/Header'
 import { GlobalFilter } from './components/GlobalFilter'
 import { KPIGrid } from './components/KPIGrid'
@@ -40,11 +41,7 @@ const STATUS_OPTIONS = [
   { key: 'vencidos',     label: 'Vencidos' },
 ]
 
-// FLN é o código IATA de Florianópolis — na base Zurich equivale ao aeroporto CAIF
-function normalizeAeroporto(code: string): string {
-  const c = (code ?? '').toUpperCase().trim()
-  return c === 'FLN' ? 'CAIF' : c
-}
+// normAeroporto importado de dataProcessing — lida com FLN/NAT, nomes longos, híbridos
 
 function fmtCNPJ(digits: string): string {
   const d = digits.replace(/\D/g, '')
@@ -70,7 +67,7 @@ export function App() {
     data.contratosData.forEach(f => {
       f.contratos.forEach(c => {
         c.terceiros.forEach(t => {
-          if (selectedAeroportoSet.has(normalizeAeroporto(t.aeroporto ?? ''))) {
+          if (selectedAeroportoSet.has(normAeroporto(t.aeroporto ?? ''))) {
             terceirosCPFs.add(t.cpf.replace(/\D/g, ''))
             fornCNPJs.add(f.cnpj.replace(/\D/g, ''))
             if (t.nome) terceirosNomes.add(t.nome.toUpperCase().trim())
@@ -155,8 +152,12 @@ export function App() {
         STATUS_GROUPS[key]?.sit.forEach(s => sitStatuses.add(s))
       rows = rows.filter(r => sitStatuses.has(r.Status))
     }
-    if (aeroportoFilter)
-      rows = rows.filter(r => aeroportoFilter.terceirosCPFs.has(r.CNPJ_Terceiro.replace(/\D/g, '')))
+    if (selectedAeroportoSet.size > 0)
+      // Usa campo Aeroporto normalizado direto (ex: "CAIF", "CAIF / VIX") — mais robusto que CNPJ-matching
+      rows = rows.filter(r => {
+        const aeros = (r.Aeroporto || '').split('/').map(a => a.trim()).filter(Boolean)
+        return aeros.some(a => selectedAeroportoSet.has(a))
+      })
     if (statusTercFilter)
       rows = rows.filter(r => statusTercFilter.cpfs.has(r.CNPJ_Terceiro.replace(/\D/g, '')))
     return rows
@@ -189,13 +190,8 @@ export function App() {
     if (selectedCompSet.size > 0)
       rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
     if (aeroportoFilter) {
-      rows = rows.filter(r => {
-        if (r.Area === 'TERCEIROS') {
-          const det = r.Detalhe.toUpperCase()
-          return [...aeroportoFilter.terceirosNomes].some(nome => det.includes(nome))
-        }
-        return aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, ''))
-      })
+      // Ambas as áreas filtram por CNPJ do fornecedor (fornCNPJs = fornecedores com terceiros no aeroporto)
+      rows = rows.filter(r => aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, '')))
     }
     if (statusTercFilter) {
       rows = rows.filter(r => {
@@ -216,7 +212,7 @@ export function App() {
     if (selectedAeroportoSet.size > 0)
       res = res.filter(f =>
         f.contratos.some(c =>
-          c.terceiros.some(t => selectedAeroportoSet.has(normalizeAeroporto(t.aeroporto ?? '')))
+          c.terceiros.some(t => selectedAeroportoSet.has(normAeroporto(t.aeroporto ?? '')))
         )
       )
     if (selectedStatusTerc !== 'all')
