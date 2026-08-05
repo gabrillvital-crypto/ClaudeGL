@@ -59,6 +59,37 @@ def abbrev(name, n=40):
     short = re.sub(r'\s+(LTDA|LTDA\.|S/A|SA|EIRELI|ME|EPP).*', '', s, flags=re.I)
     return short[:n] + "..." if len(short) > n else short
 
+# ── NORMALIZAÇÃO DE AEROPORTO ─────────────────────────────────────────────────
+# Converte qualquer forma encontrada no CSV para o código curto CAIF/VIX/MEA/CAIN.
+# O CSV tem valores como "CAIF - Aeroporto Internacional de Florianópolis",
+# "Aeroporto de Vitória – Eurico de Aguiar Salles", "SESMT.0979/VIX", "FLN", "NAT"...
+_AERO_ALIASES = {'FLN': 'CAIF', 'NAT': 'CAIN'}
+_AERO_CODES   = ['CAIF', 'VIX', 'MEA', 'CAIN']
+
+def _norm_aero(raw):
+    """Converte qualquer forma de aeroporto encontrada no CSV para o código curto."""
+    s = str(raw or '').strip().upper()
+    if not s or s in ('NAN', '000', 'NONE', ''):
+        return ''
+    if s in _AERO_ALIASES:
+        return _AERO_ALIASES[s]
+    # Código exato ou início do valor ("CAIF - Aeroporto...", "MEA - Aeroporto...")
+    for code in _AERO_CODES:
+        if s == code or s.startswith(code + ' ') or s.startswith(code + '-') or s.startswith(code + '_'):
+            return code
+    # Contém o código em qualquer posição ("SESMT.0979/VIX")
+    for code in _AERO_CODES:
+        if code in s:
+            return code
+    # Palavras-chave — regex aceita char acentuado ou replacement char no lugar das vogais
+    if 'FLORIAN' in s:                       return 'CAIF'  # Florianópolis
+    if re.search(r'VIT.?RIA', s):            return 'VIX'   # Vitória (Ó pode ser char especial)
+    if 'EURICO' in s or 'AGUIAR' in s:      return 'VIX'   # Eurico de Aguiar Salles
+    if 'MACA' in s:                          return 'MEA'   # Macaé
+    if 'BENEDITO' in s and 'LACERDA' in s:  return 'MEA'   # Benedito Lacerda
+    if 'NATAL' in s:                         return 'CAIN'  # Natal
+    return ''
+
 MONTHS_PT = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
              "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
 
@@ -337,10 +368,8 @@ if _col_aero_sit and _col_cpf_terc_sit:
     _aero_lookup: dict = {}
     for _, _tr in df_terc.iterrows():
         _k = _cpf_digits_sit(_tr.get(_col_cpf_terc_sit, ""))
-        _av = str(_tr.get(_col_aero_sit, "")).strip().upper()
-        if _av == "FLN":
-            _av = "CAIF"
-        if _k and _av and _av != "NAN":
+        _av = _norm_aero(_tr.get(_col_aero_sit, ""))
+        if _k and _av:
             _aero_lookup.setdefault(_k, set()).add(_av)
     sit_tabela["Aeroporto"] = sit_tabela["CNPJ_Terceiro"].apply(
         lambda v: " / ".join(sorted(_aero_lookup.get(_cpf_digits_sit(v), set())))
@@ -708,12 +737,12 @@ for _, _r in df_terc.iterrows():
     _contratos_terc = [c.strip() for c in _cod_raw.split("/") if c.strip() and c.strip() != "nan"]
     if not _contratos_terc:
         continue
-    _aero_raw = str(_r.get(_col_terc_aeroporto, "") if _col_terc_aeroporto else "").strip().upper()
+    _aero_raw = _norm_aero(_r.get(_col_terc_aeroporto, "") if _col_terc_aeroporto else "")
     _terc_info = {
         "nome":       str(_r.get(_col_terc_nome_terc, "") if _col_terc_nome_terc else "").strip(),
         "cnpj":       _cnpj_digits(_r.get(_col_terc_cnpj_terc, "") if _col_terc_cnpj_terc else ""),
         "cargo":      str(_r.get(_col_terc_cargo, "") if _col_terc_cargo else "").strip(),
-        "aeroporto":  "CAIF" if _aero_raw == "FLN" else _aero_raw,
+        "aeroporto":  _aero_raw,
         "status":     str(_r.get(col_status_terc, "")).strip(),
     }
     for _ct in _contratos_terc:
