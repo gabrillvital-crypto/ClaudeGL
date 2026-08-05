@@ -2587,9 +2587,10 @@ function filtrarSit() {{
       const cpfTerc = (r["CNPJ_Terceiro"] || '').replace(/\D/g,'');
       if (!stSet.has(cpfTerc)) return false;
     }}
-    if (aeroFlt) {{
-      const cpfTerc = (r["CNPJ_Terceiro"] || '').replace(/\D/g,'');
-      if (!aeroFlt.terceirosCPFs.has(cpfTerc)) return false;
+    if (gfAeroportoSet.size > 0) {{
+      // Usa campo Aeroporto direto do SIT (ex: "CAIF", "CAIF / CAIN") — mais robusto que CNPJ-matching
+      const aeros = (r["Aeroporto"] || "").toUpperCase().split("/").map(a => a.trim()).filter(Boolean);
+      if (!aeros.some(a => gfAeroportoSet.has(a))) return false;
     }}
     if (!matchesGlobalStat(r["Status"], "r3")) return false;
     if (activeKpiKey) {{
@@ -2631,13 +2632,10 @@ function filtrarTabela() {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
     if (!matchesCompGlobal(r["Competencia"])) return false;
     if (aeroFltPend) {{
-      if (r["Area"] === "TERCEIROS") {{
-        const det = (r["Detalhe"] || "").toUpperCase();
-        if (![...aeroFltPend.terceirosNomes].some(nome => det.includes(nome))) return false;
-      }} else {{
-        const cnpjForn = (r["CNPJ"] || "").replace(/\D/g,"");
-        if (!aeroFltPend.fornCNPJs.has(cnpjForn)) return false;
-      }}
+      // Ambas as áreas (TERCEIROS e DOCUMENTOS) filtram pelo CNPJ do fornecedor
+      // fornCNPJs contém CNPJs de fornecedores que possuem terceiros no aeroporto selecionado
+      const cnpjForn = (r["CNPJ"] || "").replace(/\D/g,"");
+      if (!aeroFltPend.fornCNPJs.has(cnpjForn)) return false;
     }}
     return true;
   }});
