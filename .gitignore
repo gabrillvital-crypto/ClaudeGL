@@ -27,3 +27,6 @@ gerar_planilha_gastos_pai*
 *scratchpad*
 *transcript*
 *.txt
+# Python cache
+__pycache__/
+*.pyc

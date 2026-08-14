@@ -26,7 +26,9 @@ A Efcaz (https://www.efcaz.com.br/) é uma plataforma SRM (Supplier Relationship
 - Relatórios gerenciais e análise financeira de fornecedores
 - Integração via API
 
-**Base de conhecimento Efcaz:** consulte sempre a pasta base de conehcimentos em caso de duvidas, ela se encontra dentro da pasta CLAUDEGL
+**Base de conhecimento Efcaz:** sempre que o assunto envolver funcionalidades da plataforma, usabilidade, módulos, fluxos ou dúvidas sobre o produto, consulte a pasta antes de responder:
+`C:\Users\gabriel.evangelista\Documents\ClaudeGL\base_conhecimento_efcaz\`
+Comece pelo índice: `INDICE.md`
 
 ## Módulos da plataforma
 
@@ -123,76 +125,29 @@ Em situações abaixo, **alerte Gabriel para envolver o gestor ou time de produt
 
 ---
 
-# Critérios de transição entre playbooks
-
-> ⚠️ O Health Score formal ainda não está configurado na Efcaz. As transições abaixo combinam critérios objetivos (onde existem) com sinais de alerta provisórios para apoiar a decisão do CSM.
-
-## Onboarding → Ongoing
-
-**Critérios de onboarding bem-sucedido (todos devem ser atingidos):**
-
-| Critério | Meta |
-|---------|------|
-| Fornecedores cadastrados | ≥ 75% |
-| Terceiros cadastrados (se módulo contratado) | ≥ 80% |
-| Configuração do sistema (linhas, documentos, parametrização) | ≥ 90% |
-| Buscas automáticas configuradas + primeira execução realizada | ≥ 90% |
-| Usuários com acesso ativo | 100% |
-
-**Se todos os critérios forem atingidos** → cliente migra para Ongoing + certificado de onboarding emitido (se aplicável).
-
-**Se critérios não forem atingidos no prazo (semana 8)** → consultar análise estratégica para decidir: prorrogar onboarding, escalar ou aceitar migração parcial com plano de ação.
-
-## Ongoing → Risco
-
-**Hoje a transição é baseada em feeling do CSM** — o Health Score formal ainda está sendo definido.
-
-**Sinais de alerta provisórios — se 2 ou mais aparecerem, sinalizar risco:**
-
-- Último login >30 dias
-- Ticket aberto sem resolução >5 dias úteis
-- Sem resposta do cliente >15 dias
-- NPS ≤6
-- Renovação em <60 dias sem engajamento
-- Documentos vencidos >20%
-- Redução de logins mês a mês por 2 meses consecutivos
-
-Quando sinalizar risco → iniciar protocolo do Playbook de Risco.
-
-## Risco → Ongoing
-
-**Ainda não há critério formal definido** — decisão subjetiva do CSM.
-
-**Referência provisória para considerar retorno ao Ongoing:**
-
-- Cliente voltou a responder ativamente
-- Problema que gerou o risco foi resolvido
-- Login retomado por pelo menos 2 semanas consecutivas
-- Sem tickets abertos críticos
-
-Registrar a decisão de retorno no CustomerX com justificativa.
-
 ---
 
 # Referências de classificação
 
-## Health Score (provisório)
-
-| Indicador | 🟢 Verde | 🟡 Amarelo | 🔴 Vermelho |
-|---|---|---|---|
-| Usuários ativos / contratados | >80% | 50–80% | <50% |
-| Fornecedores cadastrados / contratados | >70% | 40–70% | <40% |
-| Último login | <15 dias | 15–45 dias | >45 dias |
-| Documentos vencidos | <10% | 10–30% | >30% |
-| NPS | ≥8 | 6–7 | ≤5 |
-
 ## Tiers de cliente
 
-| Tier | Critério base |
-|---|---|
-| **A** | FI mensal acima de R$ 4.000 ou alto potencial de expansão |
-| **B** | FI entre R$ 2.000–4.000 ou grupo econômico com potencial de crescimento |
-| **C** | FI abaixo de R$ 2.000, baixo potencial mapeado |
+| Tier | Faixa MRR | Exceções estratégicas |
+|---|---|---|
+| **A** | ≥ R$ 5.000/mês | Grupos econômicos consolidados próximos ao limiar |
+| **B+** | R$ 3.500–R$ 4.999/mês | Conglomerados/grupos estratégicos elevados por porte ou potencial |
+| **B** | R$ 2.000–R$ 3.499/mês | — |
+| **C** | < R$ 2.000/mês | — |
+
+*Contratos anuais convertidos em MRR (valor total ÷ meses contratados)*
+
+## Cadência de contato por Tier
+
+| Tier | Check-in | QBR | Canal principal | SLA Resposta |
+|---|---|---|---|---|
+| **A** | Mensal (call / presencial) | Bimensal | WhatsApp direto + E-mail | Mesmo dia |
+| **B+** | Mensal (call) | Trimestral | E-mail + WhatsApp | 24 horas |
+| **B** | Bimensal (call e e-mail) | Trimestral | E-mail | 48 horas |
+| **C** | Trimestral (call e e-mail) | Semestral | E-mail | 72 horas |
 
 ## Sinais de churn
 
