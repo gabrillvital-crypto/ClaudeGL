@@ -565,6 +565,13 @@ else:
     r4_nao_conf = 0
     df_sit_forn_calc = pd.DataFrame()
 
+# ── Conformidade Geral = R3 + R4 (alinhado com lógica React) ─────────────────
+_total_geral   = total_docs_sit + r4_total
+_aprov_geral   = int(total_conformes) + r4_aprovado
+_nc_geral      = int(total_reprovados_docs + total_pendentes_docs) + r4_nao_conf
+pct_conformidade = round(_aprov_geral / _total_geral * 100, 1) if _total_geral > 0 else 0
+pct_nao_conform  = round(_nc_geral    / _total_geral * 100, 1) if _total_geral > 0 else 0
+
 # ── STATUSREAL — apenas pendências Não resolvidas ─────────────────────────────
 # R3 lookup: "cnpj_forn_digits|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
 _pend_r3_lookup: dict = {}
@@ -1672,11 +1679,11 @@ html = f"""<!DOCTYPE html>
   <div class="kpi-grid" style="margin-bottom:16px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="kpi-card red">
       <div class="kpi-val" id="sit-kpi-nc">{pct_nao_conform}%</div>
-      <div class="kpi-label">% Nao Conf.<br>Terceiros</div>
+      <div class="kpi-label">% Nao Conf.<br>Geral</div>
     </div>
     <div class="kpi-card green">
       <div class="kpi-val" id="sit-kpi-c">{pct_conformidade}%</div>
-      <div class="kpi-label">% Conf.<br>Terceiros</div>
+      <div class="kpi-label">% Conf.<br>Geral</div>
     </div>
     <div class="kpi-card green">
       <div class="kpi-val" id="sit-kpi-aprov">{total_conformes}</div>
