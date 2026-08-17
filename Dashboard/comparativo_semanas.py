@@ -208,12 +208,12 @@ DOC = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Documentos"
 DST = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
 sem_ant = calcular_kpis(
-    pendencias_csv       = DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-07-31T12_22_28.849089-04_00.csv",
-    terceiros_csv        = DOC + r"\relatorio_de_terceiros_cadastrados_2026-07-31T12_30_56.915544-04_00.csv",
-    situacao_terceiro_csv= DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-07-31T12_30_36.28231-04_00.csv",
-    situacao_forn_csv    = DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-07-31T12_30_24.28171-04_00.csv",
-    busca_auto_csv       = DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-07-31T12_30_02.036231-04_00.csv",
-    fornecedores_csv     = DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-07-31T12_31_08.815842-04_00.csv",
+    pendencias_csv       = DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-08-14T13_13_23.123008-04_00.csv",
+    terceiros_csv        = DOC + r"\relatorio_de_terceiros_cadastrados_2026-08-14T13_12_28.371437-04_00.csv",
+    situacao_terceiro_csv= DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-08-14T13_12_41.895377-04_00.csv",
+    situacao_forn_csv    = DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-08-14T13_12_54.682709-04_00.csv",
+    busca_auto_csv       = DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-08-14T13_13_09.615155-04_00.csv",
+    fornecedores_csv     = DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-08-14T13_11_27.030514-04_00.csv",
 )
 
 sem_atual = calcular_kpis(
@@ -243,7 +243,7 @@ def deltapct(a, b, inverso=False):
     return f"  {sinal} {abs(d):.1f}pp {cor}"
 
 linhas = [
-    ("", "MÉTRICA", "31/07/2026", "03/08/2026", "VARIAÇÃO"),
+    ("", "MÉTRICA", "14/08/2026", "17/08/2026", "VARIAÇÃO"),
     ("─", "", "", "", ""),
     ("📋", "VISÃO GERAL", "", "", ""),
     ("", "Fornecedores cadastrados",  sem_ant["forn_cadastro"],    sem_atual["forn_cadastro"],    delta(sem_ant["forn_cadastro"],    sem_atual["forn_cadastro"],    inverso=True)),
@@ -280,7 +280,7 @@ linhas = [
 
 print("\n" + "═"*85)
 print(f"  COMPARATIVO SEMANAL — ZURICH AIRPORT")
-print(f"  Semana anterior: 31/07/2026  →  Semana atual: 03/08/2026")
+print(f"  Semana anterior: 14/08/2026  →  Semana atual: 17/08/2026")
 print("═"*85)
 
 for row in linhas:
