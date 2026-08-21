@@ -93,7 +93,9 @@
       "Bash(dir \"C:\\\\Users\\\\gabriel.evangelista\\\\Downloads\" /OD /A:-D)",
       "Bash(findstr /i \"zurich\\\\|2026-06\\\\|pendencias\\\\|terceiros\\\\|situacao\")",
       "Bash(start \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\Dashboard\\\\relatorio_fornecedores_zurich.html\")",
-      "Bash(dir \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\Documentos\" /B /O:D)"
+      "Bash(dir \"C:\\\\Users\\\\gabriel.evangelista\\\\Documents\\\\ClaudeGL\\\\Documentos\" /B /O:D)",
+      "PowerShell(git push *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\gabriel.evangelista\\Documents\\ClaudeGL\\.claude",
