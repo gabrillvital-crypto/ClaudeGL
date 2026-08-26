@@ -12783,10 +12783,10 @@ ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCE
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,DEBORA MELO DE JESUS - 02/26 - Fevereiro 2026 - Corrigir a indenização de 1h de 150% para o adicional correto de 50%.  Horas Extras/Dobra: Ajustar a dobra no dia 09/02/26 e reavaliar justificativas de HE.  Adicional Noturno: Lançar os adicionais referentes ao período noturno trabalhado.
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"DEBORA MELO DE JESUS - 03/26 - Março 2026 - a jornada 12x36 exige 1h de intervalo (concedido ou indenizado a 50%). O espelho aplica 150%, exigindo correção do adicional.  Folgas e Dobras: Dias em folga sem trabalho não geram horas. Nos dias 11 e 15/03, o trabalho em folga deve ser pago como hora extra . O DSR já está incluso no salário base."
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"DEBORA MELO DE JESUS - 05/26 - Maio 2026 - Conforme a CCT, nas escalas 12x36 a hora intrajornada não concedida é indenizatória com 50% de acréscimo. O espelho aplica 150% indevidamente.  Dobra e Horas Extras: O trabalho na folha (04/05) gerou 11h extras a 50%. Segundo a CCT, dobras ocasionais devem ser pagas como hora extra e não descaracterizam a escala 12x36. "
-ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,EM_ELABORACAO,DOCUMENTOS,,,Seguro garantia: Documento é obrigatório.
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,Seguro garantia: Documento é obrigatório.
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"DEBORA MELO DE JESUS - 06/26 - Junho 2026 - Ajustar os lançamentos de 1h não concedida como verba de natureza indenizatória.  Trabalho em Folgas: Ajustar o cálculo do dia 24/05/2026 (folga trabalhada); dadas as regras do regime 12x36 e do banco de horas, o pagamento ou compensação deve observar o Parágrafo 7º da Cláusula 40ª. "
-ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,EM_ELABORACAO,DOCUMENTOS,,,Seguro de Responsabilidade Civil: Documento obrigatório.
-ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,EM_ELABORACAO,DOCUMENTOS,,,SESMT - composição de acordo com NR 04: Documento obrigatório conforme exigências.
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,Seguro de Responsabilidade Civil: Documento obrigatório.
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,SESMT - composição de acordo com NR 04: Documento obrigatório conforme exigências.
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"DEBORA MELO DE JESUS - 07/26 - Julho 2026 - As 18h lançadas com adicional de 150% devem ter o percentual ajustado para 50%, com pagamento em caráter estritamente indenizatório, sem reflexo do adicional de periculosidade .  Folga e dobra: O trabalho efetuado nas folgas (dias 07/07, 09/07 e 11/07) deve ser apurado como hora extra conforme o limite de dobras."
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"CLAUDIO DOS REIS - 07/26 - Julho 2026 - Conforme a CCT, em escala 12x36 a 1 hora de intervalo não concedida deve ser paga com adicional de 50% em caráter indenizatório. O cartão do colaborador Cláudio dos Reis registra corretamente 1h de intrajornada a 150%, totalizando 7 horas indenizadas no período."
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"CLAUDIO DOS REIS - 06/26 - Junho 2026 - Ajustar o pagamento para 1h cheia a 50% (caráter indenizatório) por dia trabalhado em escala 12x36 , em vez do lançamento fracionado como 00:23 (HE) em dias isolados.  Período de Férias: Registrar os dias de férias a partir de 02/06 para abonar a ausência integral do período, zerando os apontamentos zerados/incompletos no espelho. "
@@ -12839,3 +12839,691 @@ ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCE
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ALICE SANTOS OLIVEIRA - 04/26 - Abril 2026 - Cartão ponto com total de horas extras ou noturnas, sem comprovante de assinatura digital."
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ALICE SANTOS OLIVEIRA - 05/26 - Maio 2026 - Cartão ponto com total de horas extras ou noturnas, sem comprovante de assinatura digital."
 ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ALICE SANTOS OLIVEIRA - 03/26 - Março 2026 - Cartão ponto com total de horas extras ou noturnas, sem comprovante de assinatura digital."
+ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ADEMILSON LIRA DE ARAUJO JUNIOR - 07/26 - Julho 2026 - Cartão ponto com total de horas extras ou noturnas, Intervalo de 1h não gozado (15h) deve ser pago com adicional de 50% (indenizatório) sem reflexo de periculosidade Autorizar os 55min de 'HE Ineficiência' (50%)
+Ajustar minutos residuais superiores a 10min diários que não geraram horas extras no espelho."
+ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ADEMILSON LIRA DE ARAUJO JUNIOR - 06/26 - Junho 2026 - ajuste a hora intrajornada. O espelho do cartão ponto registra o evento com adicional de 150%
+, mas a  CCT prevê acréscimo de 50% sobre a hora normal para o intervalo não concedido na escala 12x36
+. Corrija a rubrica de ""Hora intra jornada 150%"" para ""Hora intra jornada 50%."
+ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ADEMILSON LIRA DE ARAUJO JUNIOR - 05/26 - Maio 2026 - Horas Extras: validar 02:10h
+ de 'HE Ineficiência pois a CCT exclui o tempo de atividades particulares Ajuste em 08/05: a saída manual exige a entrega do comprovante. Feriado de 01/05  (compensado) e as 15h de intrajornada (150%) estão corretos."
+ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105,EM_ELABORACAO,TERCEIROS,,,"ADEMILSON LIRA DE ARAUJO JUNIOR - 03/26 - Março 2026 - os ajustes de março são: 1) Desconto de 1 dia de contribuição sindical se autorizado 
+. 2) Validar intrajornada a 150% 
+. 3) Pagar prêmio assiduidade de 7%, sem faltas 
+. 4) Vale-alimentação de R$ 47,50 por dia "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"JOSE ANTONIO MORAES - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,PGR - GERAL,,"PGR - GERAL:
+
+Anexar junto ao documento, os certificados de validação das assinaturas digitais presentes no documento. Dos responsáveis técnicos, e representante legal da empresa. Em caso de engenheiros, obrigatório apresentar a ART com comprovação de quitação."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,PCMSO,,"PCMSO: Anexar junto ao documento, os certificados de validação das assinaturas digitais presentes no documento. Dos responsáveis técnicos, e representante legal da empresa. Em caso de engenheiros, obrigatório apresentar a ART com comprovação de quitação."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,"PGR - CAIF: 
+
+Anexar o PDF da certificação de rastreio da validação das assinaturas digitais dos responsáveis técnicos, e representante legal pela empresa. Será necessário anexar junto ao documento de cada filial."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,"PGR - CAIF - ""Não conforme: Documento sem assinatura digital válida, sem manifesto de assinaturas ou com certificado digital expirado/revogado (Desconformidade com a MP nº 2.200-2/01, Lei nº 14.063/20 e Decreto nº 10.543/20).  Orientação: Enviar o documento com assinatura digital válida (ICP-Brasil ou eletrônica avançada) acompanhado do manifesto/relatório completo de verificação."""
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,"PGR - CAIN:
+Anexar o PDF da certificação de rastreio da validação das assinaturas digitais dos responsáveis técnicos, e representante legal pela empresa. Será necessário anexar junto ao documento de cada filial."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,PGR - CAIN,,"PGR - CAIN - ""Não conforme: Documento sem assinatura digital válida, sem manifesto de assinaturas ou com certificado digital expirado/revogado (Desconformidade com a MP nº 2.200-2/01, Lei nº 14.063/20 e Decreto nº 10.543/20).  Orientação: Enviar o documento com assinatura digital válida (ICP-Brasil ou eletrônica avançada) acompanhado do manifesto/relatório completo de verificação."""
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,"PGR - MEA - ""Não conforme: Documento sem assinatura digital válida, sem manifesto de assinaturas ou com certificado digital expirado/revogado (Desconformidade com a MP nº 2.200-2/01, Lei nº 14.063/20 e Decreto nº 10.543/20).  Orientação: Enviar o documento com assinatura digital válida (ICP-Brasil ou eletrônica avançada) acompanhado do manifesto/relatório completo de verificação."""
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,PGR - MEA,,"PGR - MEA:
+
+Anexar o PDF da certificação de rastreio da validação das assinaturas digitais dos responsáveis técnicos, e representante legal pela empresa. Será necessário anexar junto ao documento de cada filial."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,,,"PGR - VIX:
+
+Anexar o PDF da certificação de rastreio da validação das assinaturas digitais dos responsáveis técnicos, e representante legal pela empresa. Será necessário anexar junto ao documento de cada filial."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,PGR - VIX,,"PGR - VIX - ""Não conforme: Documento sem assinatura digital válida, sem manifesto de assinaturas ou com certificado digital expirado/revogado (Desconformidade com a MP nº 2.200-2/01, Lei nº 14.063/20 e Decreto nº 10.543/20).  Orientação: Enviar o documento com assinatura digital válida (ICP-Brasil ou eletrônica avançada) acompanhado do manifesto/relatório completo de verificação."""
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,Laudo de Periculosidade,,"Laudo de Periculosidade: Anexar o PDF da certificação de rastreio da validação das assinaturas digitais dos responsáveis técnicos, e representante legal pela empresa. Será necessário anexar junto ao documento de cada filial."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,DOCUMENTOS,Laudo de insalubridade,,"Laudo de insalubridade:
+
+Anexar o PDF da certificação de rastreio da validação das assinaturas digitais dos responsáveis técnicos, e representante legal pela empresa. Será necessário anexar junto ao documento de cada filial."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO MAGNO DE QUEIROZ - 05/26: Violação Crítica do Intervalo de Descanso da Escala 12x36: A CLÁUSULA TRIGÉSIMA SEGUNDA (Item A) da CCT estabelece que o regime de 12x36 exige rigorosamente 12 horas de trabalho seguidas por 36 horas de descanso:
+O funcionário trabalhou no dia 10/04 (Sexta-feira) das 17:51 às 05:58
+ e, devido a uma ""Inversão de escala"", trabalhou novamente no dia 11/04 (Sábado) das 17:50 às 06:01.
+"
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GILVAN DE ASSIS LIMA FILHO - 05/26 : Irregularidade Crítica (Impede a Aprovação):
+Trabalho em Dias Consecutivos e Descanso Insuficiente (Dobra de Escala): O colaborador trabalhou por três noites seguidas (sexta, sábado e domingo), violando gravemente o descanso mínimo de 36 horas estabelecido para o regime 12x36. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ANDRE LUIZ EVANGELISTA - 05/26 : O colaborador foi escalado para trabalhar por três noites seguidas em duas semanas diferentes do mês, reduzindo o descanso interjornada (que deveria ser de 36 horas) para cerca de 12 horas. Isso descaracteriza completamente o regime 12x36 acordado na CCT."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,MARCIANO PEDRO DA ROCHA - 05/26: Identificada quebra do intervalo mínimo de 36h da escala 12x36 entre 17 e 18/04 (apenas 11h59 de descanso). 
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"EDUARDO PARANHOS COSTA - 12/25 -   Constatou-se fracionamento irregular de férias de apenas 3 dias (16 a 18/11); violando o Art. 134, §1º da CLT, que exige período mínimo de 5 dias corridos."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO MAGNO DE QUEIROZ - 04/26 : Reanalisado folha ponto, mas fere tempo de intervalo para escala 12x36 em dia de inversão de escala manual."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GERSON LUIZ DE MOURA - 04/26 - Marcações com status 'B' (Horário Inválido) em 31/03, impossibilitando a validação automática. Também ocorreu quebra crítica do descanso de 36h da escala 12x36 devido ao trabalho em dia de folga (31/03), resultando em três jornadas consecutivas (30/03, 31/03 e 01/04), o que descumpre a CCT de SC e a legislação trabalhista, gerando passivo de horas extras."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GERSON LUIZ DE MOURA - 04/26 : Reprovado por descumprimento do Art. 59-A da CLT e falhas no registro de ponto. Identificou-se quebra da escala 12x36 no dia 23/03 devido a marcações duplicadas/incoerentes sem o devido descanso, gerando passivo trabalhista.  
+O documento deve ser retificado pelo setor responsável antes de nova submissão."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"JOSE ANTONIO MORAES - 12/25 - Dezembro 2025 -  :
+
+Dobra / Quebra de Interponto: Ocorrência de trabalho em dias consecutivos que deveriam ser de descanso compensatório, como nos dias 18/11 e 19/11, 20/11 e 21/11, e 26/11 e 27/11."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"RAFAEL PEREIRA MARTINS - 05/26: Reprovado por desrespeito às normas da CLT e inconsistências operacionais. Identificou-se descumprimento do intervalo mínimo interjornada (Art. 66 da CLT) no retorno do plantão noturno entre 07/05 e 08/05. Há também registro de horas extras em dia de folga (02/05) sem justificativa formal e uso excessivo de marcações manuais/editadas no sistema Nexti (indicador ""B"")."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"VALTER JESUS DO NASCIMENTO - 12/25 :
+
+Ocorrência de plantões em dias seguidos alterando o ciclo regular de 2 dias trabalhados por 2 de descanso (ex.: trabalho em dias isolados ou sequências com quebra da alternância padrão, como nos dias 07/12 e 08/12, e 11/12 e 12/12)."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"WILLIAM DE SOUZA MOREIRA - 04/26 : Registro de plantões presenciais em dias seguidos (dias 28/04 e 29/04; e dias 12/05 e 13/05), desrespeitando o descanso regulamentar de 36 horas da escala.
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ANDERSON ANDRE DA SILVA LUCIAN - 12/25  :
+
+Trabalho em plantões seguidos sem o descanso de 36 horas da escala nos dias 25/11 e 26/11; 28/11 e 29/11; 05/12 e 06/12; e 13/12 e 14/12."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ANTONIO ESTENIO MOTA SEGUNDO - 05/26 - Maio 2026 -  
+
+Documento apresentado deve conter assinatura do gestor responsável e representante da empresa, de modo que documento tenha validade jurídica e fiscal."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADIEL LOYOLA LISBOA - 05/26 - Maio 2026 - Ficha de EPI:
+
+
+Após alinhamento das assinaturas do PCMSO/PGR, será reanalisado o documento da Ficha de EPI, ASO, Ordem de serviço e Capacitação. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADIEL LOYOLA LISBOA - Ordens de Serviço:
+
+
+Após alinhamento das assinaturas do PCMSO/PGR, será reanalisado o documento da Ficha de EPI, ASO, Ordem de serviço e Capacitação. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO PEREIRA DE SOUZA - 04/26 - Abril 2026 :
+
+Jornada Dupla no Mesmo Dia e Violação do Interjornada (Art. 66 da CLT): No dia 11/05, houve registro de um turno diurno extra (09:00 às 17:00, 7h00) inserido por justificativa e a entrada no plantão noturno regular às 19:00, resultando em 18h00 trabalhadas no mesmo dia e desrespeito ao descanso mínimo de 11 horas entre jornadas."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO PEREIRA DE SOUZA - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI, CAPACITAÇÃO E ORDEM DE SERVIÇO serão re-analizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO PEREIRA DE SOUZA - Ordens de Serviço:
+
+ASO, FICHA DE EPI, CAPACITAÇÃO E ORDEM DE SERVIÇO serão re-analizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO PEREIRA DE SOUZA - ASO:
+
+ASO, FICHA DE EPI, CAPACITAÇÃO E ORDEM DE SERVIÇO serão re-analizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"RAMON TALLIS PEREIRA - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"RAMON TALLIS PEREIRA - ASO:
+
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GIDEONI SOARES LOBATO BUERI - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GIDEONI SOARES LOBATO BUERI - ASO:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"VALCIMAR BOREL DA COSTA - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"VALCIMAR BOREL DA COSTA - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GRACYELLY GUIMARAES HENRIQUES - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GRACYELLY GUIMARAES HENRIQUES - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"MAYKON FERREIRA QUARESMA - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"MAYKON FERREIRA QUARESMA - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"MAYKON FERREIRA QUARESMA - ASO:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"KENNETH DOUGLAS SARMENTO DA CO - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"KENNETH DOUGLAS SARMENTO DA CO - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"IRASSU LEMOS - 05/26 - Maio 2026 - Ficha de EPI:
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"IRASSU LEMOS - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"SAMUEL DOMINGOS DA CRUZ - 05/26 - Maio 2026 - Ficha de EPI:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"MAGNO DOS SANTOS DE JESUS - 05/26 - Maio 2026 - Ficha de EPI:
+
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"MAGNO DOS SANTOS DE JESUS - Ordens de Serviço:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ROGERIO FERRAZ SAMPAIO - 04/26 - Abril 2026 :
+
+Dobra / Quebra de Interjornada: Ocorrência de trabalho em dias consecutivos nos dias 20/04, 21/04 e 22/04, desrespeitando o descanso mínimo de 36 horas entre plantões previsto no regime 12x36."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ROGERIO FERRAZ SAMPAIO - ASO
+
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"LEANDRO CORREA TEIXEIRA - ASO:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"JOSE ADRIANO DE ALMEIDA - 05/26 - Maio 2026 - Ficha de EPI:
+
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"JOSE ADRIANO DE ALMEIDA - Ordens de Serviço:
+
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"JOSE ADRIANO DE ALMEIDA - ASO:
+
+ASO, FICHA DE EPI,CAPACITAÇÃO E ORDEM DE SERVIÇO serão reanalizados após complementação das assinaturas no PGR/PCMSO. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GILVAN DE ASSIS LIMA FILHO - 03/26 - Março 2026  :
+
+Reanalisada folha ponto de Maio: Descanso para escala 12x36, não seguida conforme exigência da CCT"
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ANDRE LUIZ EVANGELISTA - 03/26 - Março 2026  :
+
+Descanso para escala 12x36, não seguida conforme exigência da CCT"
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"MARCIANO PEDRO DA ROCHA - 04/26 - Abril 2026  :
+ 
+Descanso para escala 12x36, não seguida conforme exigência da CCT vigente. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"ADRIANO MAGNO DE QUEIROZ - 03/26 - Março 2026 : 
+
+ 
+Descanso para escala 12x36, não seguida conforme exigência da CCT vigente. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"GERSON LUIZ DE MOURA - 03/26 - Março 2026 :
+
+ Descanso para escala 12x36, não seguida conforme exigência da CCT vigente. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"RAFAEL PEREIRA MARTINS - 04/26 - Abril 2026 -:
+
+Descanso para escala 12x36, não seguida conforme exigência da CCT vigente. "
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,"Período de descanso:  ATENÇÃO com período de descanso exigido na CCT, MTE, E CLT. Ao contratado não cumprir devidamente, a empresa está exposta a multas trabalhistas."
+ONET ENGENHARIA E MANUTENCAO LTDA,45654990000110,APROVADO,TERCEIROS,,,Documentos de COMPETÊNCIA Dez a Junho de 2026 - devem ser anexados para TODOS CONTRATADOS ATIVOS.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,PCMSO,,"PCMSO: Detectada inconsistência técnica com a NR-7: o programa exige exames de Audiometria para o cargo de Auxiliar de Serviços Gerais sem que haja exposição a risco físico (Ruído) mapeado no PGR de Florianópolis. Adicionalmente, o documento carece de assinatura (física ou digital padrão ICP-Brasil) por parte do representante legal da empresa para comprovar a ciência  de responsabilidade pela implementação do programa (NR-7, item 7.4.1), contendo apenas o e-CPF da médica."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,PGR - GERAL,,"PGR - GERAL:
+
+ Identificada incompatibilidade com o PCMSO (unidade Floripa Airport)
+: o PGR omite o risco de Ruído para Auxiliar de Serviços Gerais, mapeando apenas riscos de queda e ergonômico
+, tornando a audiometria indevida. Embora o técnico de segurança (Rodrigo Moia) tenha assinado no padrão ICP-Brasil
+, o documento não possui assinatura digital de nenhum representante da empresa, descumprindo a obrigação de implementação e assunção legal da organização sob a NR-1"
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,PGR - CAIF,,"PGR - CAIF:
+
+ Identificada incompatibilidade com o PCMSO (unidade Floripa Airport)
+: o PGR omite o risco de Ruído para Auxiliar de Serviços Gerais, mapeando apenas riscos de queda e ergonômico
+, tornando a audiometria indevida. Embora o técnico de segurança (Rodrigo Moia) tenha assinado no padrão ICP-Brasil
+, o documento não possui assinatura digital de nenhum representante da empresa, descumprindo a obrigação de implementação e assunção legal da organização sob a NR-1"
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,,,SESMT - composição de acordo com NR 04:  Documento deve ser anexado.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,,,Seguro de Responsabilidade Civil: Documento deve ser anexado.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,,,Seguro garantia: Documento deve ser anexado.
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"PCMSO/PGR:
+
+Obrigatório anexar PDF do rastreio da certificação e validação das assinaturas digitais do técnico responsável pela emissão dos documentos, assim como do representante legal da empresa. 
+De modo que os documentos tenham validade jurídica, e fiscal."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,TERCEIROS,,,"É obrigatório anexar documentações dos terceiros ATIVOS, referente as competências de Dez a Junho de 2026."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,Laudo de insalubridade,,"Laudo de insalubridade:
+
+Apesar de o laudo estar assinado digitalmente no padrão ICP-Brasil (e-CPF) por profissional legalmente habilitada (CAU A131361-4)
+ e com RRT ativo
+, o documento foi classificado formalmente pela própria emitente como ""laudo técnico preliminar"" de caráter exclusivamente qualitativo
+. A ausência de caráter definitivo e a falta de assinatura/ciência dos representantes legais das empresas impedem sua homologação e aprovação para fins de conformidade jurídica permanente."
+CENTRO SANEAMENTO E SERVICOS AVANCADOS LTDA,61603387000165,APROVADO,DOCUMENTOS,Laudo de Periculosidade,,"Laudo de Periculosidade:
+
+Apesar de o laudo estar assinado digitalmente no padrão ICP-Brasil (e-CPF) por profissional legalmente habilitada (CAU A131361-4)
+ e com RRT ativo
+, o documento foi classificado formalmente pela própria emitente como ""laudo técnico preliminar"" de caráter exclusivamente qualitativo
+. A ausência de caráter definitivo e a falta de assinatura/ciência dos representantes legais das empresas impedem sua homologação e aprovação para fins de conformidade jurídica permanente."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WARLEY GABRIEL SANTANA SANTIAGO LIMA - 06/26  : 
+A ausência do  registro efetivo do intervalo intrajornada (apenas registrado em bloco de 12h com dedução automática de 1h) descumpre o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Além disso, a inconsistência nos registros de entrada/saída (marcações britânicas sem variabilidade real) expõe a empresa a passivos trabalhistas referentes ao pagamento do intervalo indenizado (Art. 71, § 4º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WARLEY GABRIEL SANTANA SANTIAGO LIMA - 05/26:
+
+Trabalho realizado em dia destinado ao descanso (18/04 - Sab, apurado como HE 100%) sem o devido respeito ao descanso semanal remunerado e com quebra de interjornada (Arts. 66 e 359-A da CLT). Além disso, a ausência de registros  dos intervalos intrajornada (apenas batimento único de entrada e saída) desacata o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021, gerando passivo por supressão de intervalo (Art. 71, § 4º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WARLEY GABRIEL SANTANA SANTIAGO LIMA - 03/26 :
+
+Ausência de registro do intervalo intrajornada (apenas batimento direto de entrada e saída em dias de 12h), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021 e gerando passivo por supressão de intervalo (Art. 71, § 4º da CLT). Há também quebra de descanso no revezamento 12x36 ao trabalhar em dias consecutivos devido a alteração de escala (07/03 e 08/03), violando o descanso de 36 horas do Art. 59-A da CLT."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SAMILE COSTA DOS SANTOS DINIZ - 06/26 - Junho 2026  :
+
+Ausência de registro  do intervalo intrajornada (apenas dois batimentos diários de entrada e saída), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Isso expõe a empresa ao pagamento de horas extras com adicional pelo intervalo não gozado (Art. 71, § 4º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SAMILE COSTA DOS SANTOS DINIZ - 07/26 - Julho 2026 :
+
+Ausência de registro do intervalo intrajornada (apenas dois batimentos diários de entrada e saída), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Isso expõe a empresa ao pagamento de horas extras com adicional pelo intervalo não gozado (Art. 71, § 4º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SAMILE COSTA DOS SANTOS DINIZ - 05/26 - Maio 2026 :
+
+Ausência de registro do intervalo intrajornada (apenas dois batimentos diários de entrada e saída), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Além disso, houve quebra no regime 12x36 ao trabalhar em dias consecutivos (18/04 e 19/04; 06/05 e 07/05; 12/05 e 13/05), violando o descanso obrigatório de 36 horas (Art. 59-A da CLT) e gerando passivos por horas extras e supressão de intervalo (Art. 71, § 4º da"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RAFAEL DA COSTA ROSA - 06/26 - Junho 2026 -  :
+
+usência de registro do intervalo intrajornada (apenas dois batimentos diários de entrada e saída), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Além disso, houve descaracterização recorrente da escala 12x36 devido ao trabalho em dias consecutivos de folga e DSR (como em 16/05 a 18/05, 21/05 a 24/05 e 28/05 a 30/05), violando o descanso de 36 horas previsto no Art. 59-A da CLT e gerando passivo por horas extras"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RAFAEL DA COSTA ROSA - 07/26 - Julho 2026 -:
+Ausência de registro  do intervalo intrajornada (apenas dois batimentos diários de entrada e saída), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Além disso, houve descaracterização recorrente da escala 12x36 devido ao trabalho em dias consecutivos de folga e DSR (como em 16/05 a 18/05, 21/05 a 24/05 e 28/05 a 30/05), violando o descanso de 36 horas previsto no Art. 59-A da CLT e gerando passivo por horas extras e"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RAFAEL DA COSTA ROSA - 05/26 - Maio 2026  : 
+Ausência de registro do intervalo intrajornada (apenas dois batimentos de entrada e saída nos dias 12/05 e 14/05), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Isso expõe a empresa a passivos trabalhistas quanto à indenização pela supressão do intervalo (Art. 71, § 4º da CLT). A ausência de registros entre 16/04 e 11/05 é regular devido à data de admissão (12/05/2026).
+
+"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LUCAS DE CARVALHO WERNER - 06/26 - Junho 2026 : Descaracterização da escala 12x36 por trabalho em dias consecutivos: nos dias 04/06 (feriado), 05/06 e 08/06 a 09/06 o colaborador trabalhou sem respeitar o descanso mínimo obrigatório de 36 horas interjornadas (Art. 59-A e Art. 66 da CLT). Isso gera passivos por horas extras excedentes e descaracterização do regime. Além disso, o ponto possui apenas 2 marcações diárias (entrada/saída) sem o registro pré-assinalado do intervalo intrajornada (Art. 7"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JHEINIFFER ELAINE MASCARANHA - 05/26 :
+Ausência de registro  do intervalo intrajornada (há apenas dois batimentos diários de entrada e saída, ex: 07:04 19:07), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Além disso, embora haja licença médica lançada para dias de trabalho na escala 12x36 (20/04 e 22/04), a falta de comprovação técnica da marcação de intervalo gera passivo trabalhista por supressão de pausa alimentícia (Art. 71, § 4º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JHEINIFFER ELAINE MASCARANHA - 06/26  :
+
+Ausência de registro do intervalo intrajornada (constam apenas dois batimentos diários de entrada e saída, ex.: 07:05 e 19:07), descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Essa omissão gera passivo trabalhista referente à indenização por supressão da pausa alimentar (Art. 71, § 4º da CLT), ainda que o saldo de horas e as ausências por licença médica tenham sido apurados na escala 12x36."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JHEINIFFER ELAINE M : 07/26 :
+Quebra de escala interjornada/DSR: A colaboradora trabalhou em dias consecutivos sem respeitar a folga de 36 horas (Art. 59-A da CLT), trabalhando no domingo (12/07 - DSR) e logo na segunda-feira (13/07).  Marcação de Intervalo Intrajornada: O espelho de ponto conta com apenas 2 marcações diárias registradas de entrada e saída,   ), não há registro dos batimentos nem do pré-assinalamento do intervalo, descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº  671/20"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR - 03/26 - Março 2026 : O colaborador trabalhou em dias consecutivos de folga nos períodos de 09/03 a 11/03 e de 13/03 a 15/03, violando o descanso mínimo de 36 horas interjornadas (Art. 59-A e Art. 66 da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR: O espelho aponta o cômputo de apenas 30 minutos na coluna INTRA na maioria dos dias trabalhados, resultando em supressão do intervalo mínimo de 1 hora (Art. 71, caput e § 4º da CLT). Além disso, há apenas duas marcações diárias registradas (entrada e saída), sem o batimento físico ou pré-assinalamento dos intervalos, descumprindo o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR - 05/26 - Maio 2026  :
+
+Não há o registro dos batimentos nem a pré-assinalação do período de descanso na folha, em desacordo com o Art. 74, § 2º da CLT e a Portaria MTE nº 671/2021. Essa omissão pode ensejar passivo trabalhista por indenização do intervalo intrajornada suprimido (Art. 71, § 4º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR - 06/26 - Junho 2026  :
+Descaracterização grave da escala 12x36 por trabalho habitual em dias consecutivos de folga e DSR (como no período de 20/05 a 25/05), violando o descanso obrigatório de 36h (Art. 59-A e 66 da CLT). Além disso, apresenta ausência de registro/pré-assinalamento do intervalo intrajornada (Art. 74 da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR - 07/26 - Julho 2026 :
+Descaracterização da escala 12x36 devido ao trabalho habitual em dias consecutivos de folga e compensados (ex.: 16-17/06, 20-21/06 e 28-29/06), descumprindo o descanso interjornada obrigatório de 36 horas (Art. 59-A e 66 da CLT). Além disso, há falta de registro ou pré-assinalamento do intervalo intrajornada (Art. 74 da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR - 02/26 - Fevereiro 2026 -:
+
+O espelho aponta o cômputo de apenas 30 minutos na coluna INTRA na maioria dos dias trabalhados (ex.: 00:30), violando a concessão do intervalo mínimo de 1 hora para jornadas superiores a 6 horas (Art. 71 da CLT). Além disso, há apenas duas marcações diárias (entrada e saída) sem o batimento nem o pré-assinalamento do intervalo (Art. 74, § 2º da CLT e Portaria MTE nº 671/2021)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR - 01/26 - Janeiro 2026  :
+O colaborador trabalhou repetidamente em dias de folga e DSR. Foram registrados plantões em dias consecutivos nos períodos de 21/12 a 23/12, 25/12 a 27/12, 04/01 a 06/01 e 12/01 a 14/01. Essa prática desrespeita o descanso interjornada obrigatório de 36 horas e descaracteriza o regime especial (Art. 59-A e Art. 66 da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEAN WIDALD ELISCAR: Há o cômputo de apenas 30 minutos na coluna INTRA na maioria dos dias de trabalho, violando a concessão da pausa mínima de 1 hora para jornadas superiores a 6 horas (Art. 71 da CLT). Além disso, constam apenas duas marcações diárias de batimento (entrada e saída) sem o devido registro ou pré-assinalamento do intervalo (Art. 74, § 2º da CLT e Portaria MTE nº 671/2021)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOEL BITTENCOURT JUNIOR - 03/26 - Março 2026  :
+Infracão ao Intervalo Interjornada: Entre 12/03 (término às 00:10) e 13/03 (início às 07:32), o colaborador teve apenas 7h22min de descanso, descumprindo o intervalo mínimo e obrigatório de 11 horas seguidas (Art. 66 da CLT).  Inconsistência na Escala: Alteração drástica para jornada noturna pontual em escala diurna."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEOMAR JOSE GERALDO JUNIOR - 03/26 - Março 2026 :
+Violacao de Repouso: Trabalho indevido em domingos de DSR (22/02 e 15/03).  Interjornada Suprimida: Descanso inferior às 11h obrigatorias entre jornadas (ex.: 04 e 05/03, com apenas 8h44min) (Art. 66 da CLT).  Batimentos Irregulares: Marcações picadas e alto volume de ausências (28h57min), descaracterizando a escala contratual. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEOMAR JOSE GERALDO JUNIOR - 05/26 - Maio 2026  :
+Trabalho Indevido: Atividade em DSR (26/04) e feriado do Dia do Trabalho (01/05).
+
+Interjornada Suprimida: Descanso inferior às 11h entre jornadas (ex.: 11 e 12/05 com 9h19min) (Art. 66 da CLT).
+
+Escala Descaracterizada: Horários noturnos e picados em escala administrativa diurna.
+
+Intrajornada Nulo: Faltam registros de pausa em jornadas longas (Art. 74, §2º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEOMAR JOSE GERALDO JUNIOR - 06/26 - Junho 2026 :
+Interjornada Suprimida: Múltiplas violações do descanso mínimo de 11h entre jornadas (ex.: 16min entre 27 e 28/05; 5h40min em 29/05) (Art. 66 da CLT).  Escala Descaracterizada: Horários noturnos e fracionados desordenados em escala diurna.  Intrajornada Ausente: Falta de registro de pausa em dias de trabalho (Art. 74, §2º da CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"GUILHERME ALBINO CARDOSO - 03/26 - Março 2026 :
+Trabalho em Repouso: Atividade indevida em domingos de DSR (22/02 e 15/03).  Interjornada Suprimida: Inobservância do descanso mínimo de 11h seguidas entre jornadas (Art. 66 da CLT).  Descaracterização de Escala: Turnos noturnos e batimentos fracionados em horário administrativo, gerando 20h55min de ausências.  Intrajornada Ausente: Falta de registro de pausa para refeição (Art. 74, §2º da CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"GUILHERME ALBINO CARDOSO - 05/26 - Maio 2026  :
+Interjornada Suprimida: Descanso inferior às 11h entre jornadas (ex.: 9h18min entre 11 e 12/05) (Art. 66 da CLT).  Trabalho Indevido: Atividade registrada em DSR (26/04) e no feriado do Dia do Trabalho (01/05).  Descaracterização de Escala: Turnos noturnos/madrugadas alternados e jornada excessiva de 17h28min (17/04).  Intrajornada Ausente: Falta de registro de pausa em dias de trabalho (Art. 71 da CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"GUILHERME ALBINO CARDOSO - 07/26 - Julho 2026 :
+
+Trabalho em Repouso: Atividade em domingos de DSR (21/06 e 05/07).  Interjornada Suprimida: Descanso menor que 11h (9h53min em 25-26/06) (Art. 66/CLT).  Irregularidades: Escala alterada para horários noturnos e falta de intervalo intrajornada."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"GUILHERME ALBINO CARDOSO - 06/26 : 
+A escala fixada para o colaborador é estritamente administrativa diurna (08:00 às 17:00, SEG-SEX). Contudo, constam turnos noturnos, madrugadas, dobras extenuantes e batimentos totalmente desconexos (ex.: 20:57 às 23:02 em 25/05; 00:08 às 05:17 em 28/05; jornada estendida de 16h43min no dia 08/06).   
+Em diversos dias não consta marcações dos intervalos de descanso. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WILLIANS YURI PINTO - 05/26 - Maio 2026 : Descaracterização Extrema da Escala de Trabalho: O colaborador foi contratado para jornada administrativa (08:00 às 17:00, SEG-SEX), mas cumpriu plantões noturnos e madrugadas aleatórias (ex.: 18:37 às 01:08 em 16/04; 17:44 às 03:50 em 30/04; 21:08 às 04:31 em 01/05; 22:18 às 23:47 em 15/05).
+AUSENCIA DE REGISTROS INTERVALOS DE DESCANSO EM vários dias consecutivos. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WILLIANS YURI PINTO - 06/26 - Junho 2026  :
+Interjornada Suprimida: Descansos de apenas 24min (entre 27 e 28/05), 5h30min (29/05) e 8h52min (26/05) (Art. 66/CLT).  Descaracterização de Escala: Turnos noturnos e madrugadas aleatórias em contrato administrativo diurno.  Intrajornada Nulo: Ausência de registro de pausa para refeição em múltiplos dias (Art. 74, §2º da CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WILLIANS YURI PINTO - 07/26 - Julho 2026  :
+Trabalho Indevido: Atividade em domingos de DSR (21/06 e 05/07) sem previsão em escala.  Interjornada Suprimida: Descanso inferior às 11h (ex.: 9h56min entre 25 e 26/06) (Art. 66/CLT).  Descaracterização de Escala: Plantões noturnos e madrugadas em jornada administrativa diurna.  Intrajornada Irregular: Ausência de pausa para refeição e descanso incompleto (Art. 74, §2º da CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WILLIANS YURI PINTO - 02/26 - Fevereiro 2026 :
+Interjornada Suprimida: Violação do descanso obrigatório de 11h, destacando apenas 1min entre os dias 19 e 20/01 e 9h45min entre 22 e 23/01 (Art. 66/CLT).  Trabalho Indevido: Atividade sem previsão nos domingos de DSR (25/01 e 08/02) e no sábado compensado (07/02).  Descaracterização de Escala: Turnos noturnos e madrugadas na jornada administrativa.  Intrajornada Ausente: Falta de pausa alimentar em vários dias. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 03/26 - Março 2026  :
+Trabalho Indevido: Atividade registrada em domingos destinados ao DSR (01/03 e 15/03) sem escala de revezamento.  Interjornada Suprimida: Inobservância do intervalo mínimo de 11h de descanso entre jornadas (Art. 66/CLT).  Descaracterização de Escala: Turnos noturnos em contrato administrativo, gerando 26h30min de ausências.  Intrajornada Ausente: Falta de marcação de pausa alimentar (Art. 74, §2º/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MARISA LIMA FERREIRA DE OLIVEIRA - 02/26 - Fevereiro 2026 :
+Trabalho em DSR Sem Compensação/HE 100%: Expediente de 8h05min realizado no DSR do dia 08/02 assinalado como compensado, porém sem a concessão de folga no período e sem apuração das horas em HE 100%"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 05/26 - Maio 2026  :
+
+Interjornada Suprimida: Descanso inferior às 11h entre jornadas (ex.: 7h45min em 16-17/04 e 9h24min em 11-12/05) (Art. 66/CLT).
+
+Trabalho Indevido: Atividade sem previsão no DSR (26/04) e no feriado do Dia do Trabalho (01/05).
+
+Descaracterização de Escala: Turnos noturnos/madrugadas em contrato administrativo.
+
+Intrajornada Ausente: Falta de pausa alimentar em vários dias."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 06/26 - Junho 2026:
+Interjornada Suprimida: Descansos de 5h33min (28-29/05), 6h05min (08-09/06) e 8h49min (25-26/05) (Art. 66/CLT).  Descaracterização de Escala: Turnos noturnos e madrugadas em contrato administrativo diurno.  Intrajornada Ausente: Falta de registro da pausa alimentar em múltiplos dias (ex.: 25/05 e 28/05) (Art. 74, §2º da CLT).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 07/26 - Julho 2026 :
+Trabalho Indevido: Serviço registrado em domingos destinados ao DSR (21/06 e 05/07).  Interjornada Suprimida: Descanso inferior às 11h entre jornadas (ex.: 10h02min em 25-26/06) (Art. 66/CLT).  Descaracterização de Escala: Plantões noturnos, madrugadas e jornada estendida de 12h47min em escala diurna.  Intrajornada Ausente: Falta de pausa alimentar em vários dias. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 02/26 - Fevereiro 2026  : 
+Interjornada Suprimida: Repouso de apenas 9h51min entre 22 e 23/01 (Art. 66/CLT).  Batimentos Ímpares: Marcações isoladas sem encerramento de turno (19/01, 20/01 e 25/01).  Intrajornada Ausente: Falta de registro da pausa para refeição em múltiplos dias (Art. 74, §2º/CLT).  Descaracterização de Escala: Plantões noturnos e madrugadas em contrato administrativo."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 01/26 - Janeiro 2026 - :
+Interjornada Suprimida: Descansos inferiores a 11h, como 9h32min (05-06/01) e 9h57min (07-08/01) (Art. 66/CLT).  Trabalho em Feriado: Atividade no feriado de Natal (25/12) sem previsão em escala.  Intrajornada Ausente: Falta de registro de pausa para refeição em múltiplos dias (Art. 74, §2º/CLT).  Descaracterização de Escala: Turnos noturnos em contrato diurno. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"IAGO DA SILVA ANDRADE - 12/25 - Dezembro 2025 :Principais Motivos:Interjornada Suprimida: Repouso de apenas 8h54min entre os dias 24 e 25/11 (Art. 66/CLT).  Batimentos Ímpares/Incompletos: Registros irregulares em 03/12, 05/12, 12/12, 14/12 (DSR) e 15/12.  Intrajornada Ausente: Falta de registro de pausa alimentar em múltiplos dias (Art. 74, §2º/CLT).  Descaracterização de Escala: Plantões noturnos e madrugadas na jornada diurna.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINARA SILVA DA SILVA - 03/26 - Março 2026  :
+Intrajornada Ausente: Em todos os dias trabalhados na escala 12x36 (ex.: 17/02, 19/02 e 25/02) constam apenas 2 batimentos, sem o registro do intervalo alimentar obrigatório de 1h (Art. 71 e Art. 74, §2º da CLT).
+"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINARA SILVA DA SILVA - 05/26 - Maio 2026  :
+Intrajornada Ausente: Apenas 2 batimentos diários sem registro da pausa de 1h em todos os turnos (Art. 71/CLT).  Interjornada Suprimida: Descanso de 35h03min entre 04/05 e 06/05 (inferior às 36h obrigatórias da escala 12x36).  Conformidade em Escala: Cumprimento regular dos dias de folga e DSR. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINARA SILVA DA SILVA - 06/26 - Junho 2026  :
+Intrajornada Ausente: Apenas 2 batimentos por turno, sem o registro de pausa alimentar de 1h em toda a jornada (Art. 71/CLT).  Interjornada Suprimida: Trabalho consecutivo nos dias 06/06 e 07/06 gerando apenas 11h09min de descanso (descumprindo as 36h obrigatórias da escala 12x36).  Inversão de Escala: Alteração de turno no final de semana sem o devido descanso legal. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINARA SILVA DA SILVA - 07/26 - Julho 2026 :
+Interjornada Suprimida: Trabalho em dias consecutivos (10, 11, 12 e 13/07) gerando descansos de apenas 12h a 13h, descumprindo as 36h da escala 12x36.  Intrajornada Ausente: Apenas 2 batimentos diários sem registro da pausa de 1h em vários turnos (ex.: 26/06, 04/07 e 12/07) (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINARA SILVA DA SILVA - 02/26 - Fevereiro 2026  :
+Intrajornada Ausente: Apenas 2 batimentos por turno, sem o registro da pausa alimentar de 1h em toda a jornada (Art. 71/CLT).  Interjornada Suprimida: Descanso de apenas 34h03min entre 13/02 e 15/02 devido a encerramento tardio às 22h (abaixo das 36h da escala 12x36).  Jornada Extensa: Cumprimento de horas extras estendendo a jornada até 14h no dia 13/02. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINARA SILVA DA SILVA - 01/26 - Janeiro 2026 :
+Intrajornada Ausente: Apenas 2 batimentos por turno em todos os dias trabalhados, sem registro da pausa de 1h (Art. 71/CLT).  Interjornada Suprimida: Trabalho em dias consecutivos (01-02/01 e 14-15/01) gerando repouso de apenas ~11h45min (inferior às 36h da escala 12x36).  Feriados: Registro de serviço no Natal (25/12) e Ano Novo (01/01). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"NILSON MOREIRA - 03/26 - Março 2026 - Cartão  :
+Intrajornada Ausente: Apenas 2 batimentos por turno em toda a jornada 12x36, omitindo a pausa alimentar obrigatória de 1h (Art. 71 e Art. 74, §2º/CLT).  Trabalho em DSR: Prestação de serviço no domingo de DSR (15/03).  Conformidade de Escala: Respeitou, nos demais dias, o descanso interjornada de 36h entre os turnos diurnos (07:00 às 19:00).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"NILSON MOREIRA - 05/26 - Maio 2026:
+Intrajornada Ausente: Constam apenas 2 batimentos por turno em toda a escala 12x36, omitindo o registro do intervalo alimentar obrigatório de 1h (Art. 71/CLT).  Trabalho em Feriados: Atividade registrada nos feriados de Tiradentes (21/04) e Dia do Trabalho (01/05).  Conformidade de Escala: Manteve o descanso interjornada regular de 36h entre os turnos diurnos. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"NILSON MOREIRA - 06/26 - Junho 2026  :
+REPROVADO  Justificativa:
+Ausência de registro do intervalo intrajornada obrigatório e descumprimento sistemático do descanso interjornada no regime 12x36:  Inexistência de Registro do Intervalo Intrajornada (Art. 71 e Art. 74, § 2º da CLT): Em todos os dias de efetivo trabalho no cartão ponto (ex.: 17/05 a 19/05, 21/05, 24/05, 25/05, 27/05, 29/05, 01/06, 02/06, 04/06, 06/06 a 08/06, 11/06 a 14/06), constam apenas dois batimentos diários (entrada e saída). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"NILSON MOREIRA - 07/26 - Julho 2026 :
+Interjornada Suprimida: Trabalho consecutivo nos dias 05/07 e 06/07 resultando em apenas 12h de descanso, descumprindo as 36h da escala 12x36 (Art. 59-A/CLT).  Trabalho em DSR: Prestação de serviço no domingo de DSR do dia 05/07.  Intrajornada: Registro regular da pausa de 1h computado no cartão ponto."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"NILSON MOREIRA - 02/26 - Fevereiro 2026 :
+Intrajornada Ausente: Apenas 2 batimentos por turno em toda a escala 12x36, sem registro da pausa de 1h (Art. 71/CLT).  Interjornada Suprimida: Trabalho consecutivo recorrente (ex.: 17 a 21/01 e 30-31/01) gerando apenas 12h de descanso, descumprindo as 36h legais.  Trabalho em DSR: Expediente registrado nos domingos de DSR em 18/01 e 08/02.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"NILSON MOREIRA - 01/26 - Janeiro 2026 :
+Intrajornada Ausente: Apenas 2 batimentos por turno em toda a escala, omitindo a pausa de 1h (Art. 71/CLT).  Interjornada Suprimida: Trabalho em dias consecutivos de 09/01 a 11/01 com apenas ~12h de intervalo (inferior às 36h da escala 12x36).  Feriados e DSR: Expediente realizado no Natal (26/12), Ano Novo (01/01) e em DSR (11/01)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MAXSUEL DE SOUZA GOMES - 03/26 - Março 2026  :
+Intrajornada Ausente: Apresenta apenas 2 registros por turno em todos os dias trabalhados, omitindo a anotação do intervalo alimentar obrigatório de 1h (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MAXSUEL DE SOUZA GOMES - 07/26 - Julho 2026  :
+nterjornada Suprimida: Trabalho consecutivo nos dias 21/06 e 22/06 gerando apenas ~12h de descanso, violando o repouso de 36h da escala 12x36 (Art. 59-A/CLT).  Trabalho em DSR: Prestação de serviço no domingo de DSR em 21/06.  Intrajornada: Registro regular da pausa alimentar de 1h cômputada na coluna INTRA"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MAXSUEL DE SOUZA GOMES - 05/26 - Maio 2026 :
+Intrajornada Ausente: Apenas 2 batimentos por turno em todo o cartão ponto, omitindo o registro do intervalo alimentar obrigatório de 1h (Art. 71/CLT).  Interjornada Suprimida: Trabalho em dias consecutivos nos dias 27/04 e 28/04, gerando apenas ~12h de descanso (inferior às 36h da escala 12x36).  Trabalho em Feriados: Expediente realizado nos feriados de Tiradentes (21/04) e Dia do Trabalho (01/05)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MAXSUEL DE SOUZA GOMES - 06/26 - Junho 2026 :
+Intrajornada Ausente: Apresenta apenas 2 batimentos por turno em todos os dias trabalhados, omitindo o registro do intervalo alimentar obrigatório de 1h (Art. 71/CLT).  Trabalho em Feriado: Expediente registrado no feriado de Corpus Christi (04/06).  Conformidade de Escala: Manteve a alternância regular de trabalho e descanso (12x36), respeitando a interjornada de 36h. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MAXSUEL DE SOUZA GOMES - 02/26 - Fevereiro 2026  :
+Intrajornada Ausente: Apresenta apenas 2 batimentos por turno em todos os dias trabalhados, omitindo a anotação da pausa alimentar de 1h (Art. 71/CLT).  Conformidade de Escala: Manteve a alternância regular de trabalho e folga (12x36), respeitando as 36h de descanso interjornada."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"AJAX QUEIROZ DE SOUZA - 03/26 - Março 2026  :
+
+Intrajornada Ausente: Apresenta apenas 2 batimentos por turno em toda a escala, omitindo o intervalo de 1h (Art. 71/CLT).  Interjornada Suprimida: Quebra do repouso de 36h nas transições de 12-14/03 (24h de pausa) e 14-15/03 (12h de pausa). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MAXSUEL DE SOUZA GOMES - 01/26 - Janeiro 2026  :
+
+Intrajornada Ausente: Apresenta apenas 2 batimentos por turno em todos os dias trabalhados, omitindo a anotação do intervalo alimentar obrigatório de 1h (Art. 71/CLT).  Trabalho em Feriados: Expedientes registrados nos feriados de Natal (26/12) e Ano Novo (01/01).  Conformidade de Escala: Respeito integral às 36h de descanso interjornada."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"AJAX QUEIROZ DE SOUZA - 05/26 - Maio 2026  :
+Interjornada Suprimida: Múltiplas dobras em dias consecutivos (25-27/04, 01-03/05 e 08-11/05) com descansos de apenas ~12h, violando o repouso legal de 36h da escala 12x36.  Trabalho em Feriados: Expedientes realizados nos feriados de Tiradentes (21/04) e Dia do Trabalho (01/05). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"AJAX QUEIROZ DE SOUZA - 06/26 - Junho 2026 :
+Interjornada Suprimida: Trabalho consecutivo nas noites de 07/06 e 08/06 com apenas 12h de intervalo, violando as 36h de repouso da escala 12x36 (Art. 59-A/CLT).  Trabalho em Feriado: Expediente noturno registrado no feriado de Corpus Christi (04/06)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ISRAEL BORGES RODRIGUES BITTENCOURT - 06/26 :
+Intrajornada Ausente: Falta de registro do intervalo de 1h para refeição/descanso (Art. 71/CLT).
+
+Interjornada Suprimida: Inobservância do descanso mínimo obrigatório entre turnos (36h na escala 12x36 ou 11h na escala regular) (Arts. 66 e 59-A/CLT).
+
+Trabalho em Feriado/DSR: Registro de expediente em dias de feriado ou Descanso Semanal Remunerado sem a devida compensação legal.
+
+Registros Incompletos: Marcações inconsistentes."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINAN ZEFERINO DE MOURA - 03/26 - Março 2026 -:
+Interjornada Suprimida: Descumprimento do repouso mínimo de 11h entre turnos em múltiplos dias (ex.: 23-24/02, 26-27/02 e 09-10/03) (Art. 66/CLT).  Intrajornada Irregular: Ausência ou gozo parcial do intervalo alimentar de 1h (Art. 71/CLT).  Trabalho em DSR: Expediente registrado no domingo de DSR do dia 01/03.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINAN ZEFERINO DE MOURA - 05/26 - Maio 2026 :
+Interjornada Suprimida: Múltiplas violações ao repouso mínimo de 11h entre turnos (ex.: 04-05/05, 06-07/05 e 07-08/05) (Art. 66/CLT).  Intrajornada Irregular: Não concessão integral do intervalo de 1h em jornadas superiores a 6h (Art. 71/CLT).  Trabalho em DSR e Feriado: Registros de expediente no domingo (19/04) e no feriado de Tiradentes (21/04). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINAN ZEFERINO DE MOURA - 06/26 - Junho 2026  :
+Interjornada Suprimida: Violações ao repouso mínimo de 11h entre turnos (ex.: 18-19/05, 01-02/06 e 05-06/06) (Art. 66/CLT).  Intrajornada Irregular: Ausência ou gozo parcial do intervalo alimentar de 1h (Art. 71/CLT).  Trabalho em DSR e Folgas: Expediente registrado nos domingos de DSR (17/05 e 14/06) e no sábado compensado (06/06)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINAN ZEFERINO DE MOURA - 07/26 - Julho 2026 :
+Interjornada Suprimida: Violações severas ao descanso mínimo de 11h entre turnos (ex.: 18-19/06, 02-03/07 e 13-14/07) (Art. 66/CLT).  Intrajornada Irregular: Pausa alimentar de 1h não concedida integralmente em jornadas > 6h (Art. 71/CLT).  Trabalho em DSR e Folga: Expediente em domingos de DSR (28/06 e 12/07) e sábado compensado (20/06)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINAN ZEFERINO DE MOURA - 02/26 - Fevereiro 2026 :
+Interjornada Suprimida: Violações ao repouso mínimo de 11h entre turnos (ex.: 09-10/02 e 12-13/02) (Art. 66/CLT).  Intrajornada Irregular: Não concessão da pausa de 1h para refeição e descanso (Art. 71/CLT).  Trabalho em DSR e Folgas: Expediente registrado nos domingos de DSR (18/01 e 15/02) e sábado compensado (31/01).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"TAINAN ZEFERINO DE MOURA - 01/26 - Janeiro 2026  :
+Interjornada Suprimida: Desrespeito ao intervalo mínimo de 11h entre turnos (ex.: 29-30/12 e 12-13/01) (Art. 66/CLT).  Trabalho em DSR: Expediente registrado nos domingos de folga oficial (21/12 e 04/01).  Trabalho em Feriado: Registro de expediente no feriado de Ano Novo (01/01)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALAN GABRIEL DA SILVA - 03/26 - Março 2026  :
+Intrajornada Irregular: Ausência de registros de pausa alimentar de 1h em jornadas superiores a 6h (ex.: 27/02 e 02/03 a 05/03) (Art. 71/CLT).  Trabalho em DSR: Expediente registrado no domingo de DSR do dia 15/03.  Marcações Incompletas: Batidas ímpares nos dias 16/02 e 06/03. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALAN GABRIEL DA SILVA - 05/26 - Maio 2026  :
+
+Intrajornada Irregular: Ausência de registros de pausa alimentar de 1h em jornadas superiores a 6h (ex.: 27/02 e 02/03 a 05/03) (Art. 71/CLT).  Trabalho em DSR: Expediente registrado no domingo de DSR do dia 15/03.  Marcações Incompletas: Batidas ímpares nos dias 16/02 e 06/03. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALAN GABRIEL DA SILVA - 06/26 - Junho 2026 :
+Interjornada Suprimida: Múltiplas violações ao repouso mínimo de 11h entre turnos (ex.: 18-19/05, 21-22/05 e 05-06/06) (Art. 66/CLT).  Intrajornada Irregular: Ausência de concessão integral do intervalo de 1h em jornadas > 6h (Art. 71/CLT).  Trabalho em DSR e Folgas: Expediente em domingos de DSR (17/05 e 31/05) e sábados de folga (23/05 e 06/06)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALAN GABRIEL DA SILVA - 07/26 - Julho 2026  :
+Registros Irregulares: Apuração de inconsistências de ponto que afetam o cumprimento do intervalo intrajornada (Art. 71/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALAN GABRIEL DA SILVA - 02/26 - Fevereiro 2026  :
+Intrajornada Irregular: Ausência de registros do intervalo de 1h em jornadas > 6h (22/01, 09/02, 10/02 e 13/02) e intervalo concedido de apenas 12 min no dia 12/02 (Art. 71/CLT).  Marcações Ímpares/Incompletas: Múltiplos dias com batidas incompletas sem registro do turno integral (29/01, 30/01, 02/02 e 04/02) (Art. 74/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VILMAR ACACIO SOARES - 03/26 - Março 2026 - Ficha de EPI:
+
+Após alinhamento de assinaturas do PCMSO/PGR será realizada nova análise. : ASO, FICHA DE EPI, O.S e CAPACITAÇÃO."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,ALEX CUSTODIO LOPES - 03/26 - Março 2026 : Interjornada Suprimida: Descanso inferior a 11h entre turnos (ex.: 26-27/02 com 8h36m de repouso) (Art. 66/CLT).  Intrajornada Irregular: Ausência de registro/concessão do intervalo de 1h em jornadas > 6h (Art. 71/CLT).  Batidas Ímpares: Registro incompleto em 23/02 (apenas 1 marcação) (Art. 74/CLT).  Trabalho em DSR: Expediente registrado no domingo de DSR (01/03). 
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA TAIS DOS SANTOS CRAVO - 02/26 - Fevereiro 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas diárias nos plantões de 12h, sem a marcação real de saída/retorno do intervalo de refeição e sem apuração do descanso obrigatório de no mínimo 1h (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALEX CUSTODIO LOPES - 05/26 - Maio 2026 - : 
+Interjornada Suprimida: Múltiplas violações ao descanso mínimo de 11h entre jornadas (04-05/05, 06-07/05 e 07-08/05) (Art. 66/CLT).  Intrajornada Irregular: Não concessão/registro da pausa de 1h em jornadas > 6h (21/04, 07/05 e 08/05) (Art. 71/CLT).  Trabalho em DSR: Expediente realizado no domingo de descanso (19/04).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALEX CUSTODIO LOPES - 06/26 - Junho 2026 : Interjornada Suprimida: Violações sucessivas ao descanso mínimo de 11h entre turnos (18-19/05, 21-22/05, 01-02/06 e 05-06/06) (Art. 66/CLT).  Intrajornada Irregular: Supressão/não registro da pausa de 1h em jornadas > 6h (Art. 71/CLT).  Trabalho em DSR e Folga: Expediente nos domingos de DSR (17/05, 31/05, 14/06) e sábado compensado (06/06).  Batida Ímpar: Marcação incompleta registrada em 15/06."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ALEX CUSTODIO LOPES - 07/26 - Julho 2026 -:
+Interjornada Suprimida: Desrespeito ao descanso mínimo de 11h entre turnos (18-19/06 com 5h30m e 13-14/07 com 8h54m de repouso) (Art. 66/CLT).  Intrajornada Irregular: Ausência de pausa de 1h em jornada > 6h no dia 13/07 (Art. 71/CLT).  Trabalho em DSR e Folga: Expediente nos domingos de DSR (28/06 e 12/07) e no sábado de folga compensada (20/06).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JEFERSON CARDOSO - 05/26 - Maio 2026  :
+Intrajornada Suprimida: Intervalo para refeição de apenas 41 minutos no dia 17/04 (Art. 71/CLT).  Batidas Ímpares/Incompletas: Falta do registro da saída final no dia 28/04 (apenas 3 marcações apuradas)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEONARDO CARLOS FELIX - 03/26 - Março 2026  :
+Interjornada Suprimida: Descanso entre turnos inferior a 11h (26-27/02 e 09-10/03) (Art. 66/CLT).  Intrajornada Irregular: Supressão da pausa de 1h em jornadas > 6h nos dias 24/02, 26/02, 02/03 e 12/03 (Art. 71/CLT).  Batidas Ímpares/Incompletas: Jornadas registradas com apenas duas marcações sem intervalo (ex.: 23/02, 24/02, 25/02, 09/03).  Trabalho em DSR: Expediente no domingo de DSR em 01/03.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEONARDO CARLOS FELIX - 06/26 - Junho 2026  :
+Interjornada Suprimida: Repouso entre jornadas inferior a 11h (21-22/05, 01-02/06 e 14-15/06) (Art. 66/CLT).  Intrajornada Irregular: Supressão/não concessão do intervalo de 1h em jornadas > 6h (21/05, 22/05, 29/05) (Art. 71/CLT).  Batidas Incompletas: Registros de ponto com apenas 2 batidas sem fracionamento (20/05, 21/05, 01/06).  Trabalho em DSR: Expediente nos domingos de DSR (17/05, 31/05 e 14/06)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEONARDO CARLOS FELIX - 07/26 - Julho 2026 :
+Interjornada Suprimida: Repouso entre turnos inferior a 11h (18-19/06, 02-03/07, 13-14/07) (Art. 66/CLT).  Intrajornada Irregular: Supressão da pausa de 1h em jornadas > 6h (19/06, 02/07 e 13/07) (Art. 71/CLT).  Batidas Incompletas: Múltiplas jornadas registradas com apenas duas marcações sem intervalo.  Trabalho em DSR/Folga: Expediente nos domingos de DSR (28/06, 12/07) e sábado compensado (20/06)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEONARDO CARLOS FELIX - 02/26 - Fevereiro 2026  : Interjornada Suprimida: Repouso entre turnos inferior a 11h nos dias 27/01, 09-10/02 e 12-13/02 (Art. 66/CLT).  Intrajornada Irregular: Pausa de apenas 9 min no dia 05/02 (Art. 71/CLT).  Batidas Incompletas: Diversos dias com apenas 2 marcações sem intervalo (ex.: 18/01, 26/01, 09/02).  Trabalho em DSR e Folga: Expediente nos domingos de DSR (18/01 e 15/02) e sábado (31/01)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SOELI DO AMARAL - 03/26 - Março 2026 :
+Intrajornada Suprimida: Fruição de apenas 30 min de intervalo em todas as jornadas de 12h (Art. 71/CLT).  Batidas Incompletas: Apenas 2 registros diários sem fracionamento da pausa de refeição.  Quebra de Escala 12x36: Trabalho em dias consecutivos (21/02 e 22/02) violando o repouso de 36h e interjornada de 11h (Art. 66/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SOELI DO AMARAL - 05/26 - Maio 2026 :
+Batidas Incompletas: Registro diário com apenas 2 marcações nos dias trabalhados, sem o devido fracionamento de entrada e saída do intervalo intrajornada."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SOELI DO AMARAL - 06/26 - Junho 2026 :
+
+Batidas Incompletas: Apenas 2 marcações diárias registradas, sem o fracionamento do intervalo intrajornada.  Quebra de Escala 12x36 / Interjornada: Trabalho em dias consecutivos (07/06 e 08/06) sem o repouso de 36h e com descanso interjornada inferior a 11h (Art. 66/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SOELI DO AMARAL - 07/26 - Julho 2026 :
+Batidas Incompletas: Múltiplas jornadas registradas com apenas 2 marcações diárias, sem fracionamento do intervalo intrajornada.  Interjornada Suprimida: Descanso de apenas 7h32min entre os turnos dos dias 09-10/07 e 11/07, descumprindo o mínimo legal de 11h (Art. 66/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SOELI DO AMARAL - 02/26 - Fevereiro 2026 :
+Intrajornada Suprimida: Fruição de apenas 30 min de intervalo em todas as jornadas do mês (Art. 71/CLT).  Batidas Incompletas: Apenas 2 registros diários sem fracionamento da pausa intrajornada.  Interjornada Suprimida: Repouso entre turnos de apenas 7h25min entre os dias 10/02 e 11/02, violando o descanso mínimo de 11h (Art. 66/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"SOELI DO AMARAL - 01/26 - Janeiro 2026 :
+Intrajornada Suprimida: Fruição de apenas 30 min de intervalo em todas as jornadas de 12h do mês (Art. 71/CLT).  Batidas Incompletas: Apenas 2 registros diários efetuados, sem a marcação dos horários de pausa para refeição/descanso.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MARISA LIMA FERREIRA DE OLIVEIRA - 05/26 - Maio 2026 :
+O cartão ponto da colaboradora Marisa Lima Ferreira de Oliveira (período de 16/04/2026 a 15/05/2026) apresenta descumprimentos legais relativos à ausência de intervalo intrajornada, batidas incompletas e trabalho em dia destinado ao DSR sem a devida compensação ou pagamento diferenciado."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MARISA LIMA FERREIRA DE OLIVEIRA - 06/26 - Junho 2026 :O cartão ponto da colaboradora Marisa Lima Ferreira de Oliveira (período de 16/05/2026 a 15/06/2026) apresenta descumprimentos graves da legislação trabalhista (CLT), com destaque para a ausência de intervalo intrajornada, batidas incompletas e trabalho em dia de descanso semanal sem a devida compensação ou pagamento especial. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MARISA LIMA FERREIRA DE OLIVEIRA - 07/26 - Julho 2026 : O cartão ponto da colaboradora Marisa Lima Ferreira de Oliveira (período de 16/06/2026 a 15/07/2026) apresenta irregularidades relacionadas ao registro de marcações e ao descumprimento da escala de trabalho (12x36). Marcações Ímpares e Incompletas, e Desrespeito à escala 12x36 / Quebra de Interjornada. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"CHRISTOPHER DA CONCEICAO - 03/26 - Março 2026 :
+O cartão ponto do colaborador Christopher da Conceicao (período de 16/02/2026 a 15/03/2026) apresenta severas irregularidades relativas ao descumprimento do intervalo mínimo interjornada, supressão de intervalo intrajornada e inconsistências no trabalho praticado no DSR. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"CHRISTOPHER DA CONCEICAO - 05/26 - Maio 2026  :
+Interjornada Suprimida: Descanso mínimo de 11h entre jornadas violado em diversos dias.  Intrajornada Incompleta: Marcações com apenas 2 batidas diárias, omitindo o intervalo obrigatório para refeição.  Trabalho em DSR: Expediente em DSR (19/04) sem o cômputo adequado em HE 100%.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"CHRISTOPHER DA CONCEICAO - 06/26 - Junho 2026  :
+
+Interjornada Suprimida: Descanso mínimo de 11h entre turnos violado (ex.: transição 01/06 a 02/06).  Intrajornada Incompleta: Registro de apenas 2 marcações em jornadas ativas, sem pausa de refeição.  Trabalho em DSR Sem HE 100%: Expedientes em DSR (31/05 e 14/06) sem cômputo no adicional de 100%."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"CHRISTOPHER DA CONCEICAO - 07/26 - Julho 2026 :
+Interjornada Suprimida: Múltiplas violações do repouso de 11h entre turnos (13h05min totais em INTER).  Intrajornada Incompleta: Registro de apenas 2 marcações em turnos longos, sem pausa para refeição.  Trabalho em DSR Sem HE 100%: Horas trabalhadas nos domingos 28/06 e 12/07 sem o cômputo no adicional de 100%. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"CHRISTOPHER DA CONCEICAO - 02/26 - Fevereiro 2026 :
+
+Interjornada Suprimida: Violação do repouso de 11h entre turnos (ex.: 09/02 a 10/02).  Intrajornada Incompleta: Registro de apenas 2 marcações em turnos longos, sem pausa para refeição.  Trabalho em DSR Sem HE 100%: Expediente em DSR no dia 18/01 sem cômputo no adicional de 100%."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FILIPE FERREIRA DA CRUZ - 05/26 - Maio 2026:
+O cartão ponto do colaborador Filipe Ferreira da Cruz (período de 16/04/2026 a 15/05/2026) apresenta inconsistências legais relacionadas ao descumprimento do intervalo intrajornada e à ausência de registros de pausa para refeição em turnos estendidos. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FILIPE FERREIRA DA CRUZ - 06/26 - Junho 2026  :
+O cartão ponto do colaborador Filipe Ferreira da Cruz (período de 16/05/2026 a 15/06/2026) apresenta irregularidades legais decorrentes da supressão do intervalo intrajornada e da omissão dos registros de refeição e descanso em escala 12x36. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FILIPE FERREIRA DA CRUZ - 07/26 - Julho 2026:
+
+Intrajornada Apenas Deduzida: Somente 2 batidas por turno, omitindo o registro real de saída/retorno do intervalo."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FERNANDA DOS SANTOS SILVA MARTINS - 03/26 :
+
+Intrajornada Irregular/Suprimida: Presença de apenas 2 marcações por turno na escala 12x36, omitindo as batidas de intervalo e apurando apenas 30 minutos na coluna INTRA. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FERNANDA DOS SANTOS SILVA MARTINS - 05/26 - Maio 2026  :
+Em todos os plantões de 12 horas realizados no período (ex.: 16/04, 18/04, 20/04, 22/04, 24/04, 26/04, 28/04, 30/04, 02/05, 04/05, 06/05, 08/05, 10/05, 12/05 e 14/05), constam apenas 2 marcações presenciais no relógio ponto (horários de entrada e saída). Houve apenas a dedução automática/sistema de 1 hora na coluna INTRA, omitindo a marcação real de saída e retorno do intervalo."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FERNANDA DOS SANTOS SILVA MARTINS - 06/26  :
+Intrajornada Omitida: Registro de apenas 2 batidas diárias nos plantões 12x36, constando apenas a dedução de 1h pelo sistema sem o registro real do intervalo.  Feriado Sem HE 100%: Trabalho efetuado no feriado de Corpus Christi (04/06) sem o lançamento do pagamento com adicional de 100%."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FERNANDA DOS SANTOS SILVA MARTINS - 07/26 - Julho 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, contando apenas com o abatimento automático de 1h sem a marcação real do intervalo."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FERNANDA DOS SANTOS SILVA MARTINS - 02/26 - Fevereiro 2026  :
+
+Registro de apenas 2 batidas diárias nos plantões de 12h, sem a marcação presencial do intervalo e com a apuração de apenas 30 minutos na coluna INTRA na maioria dos dias, contrariando o mínimo legal de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FERNANDA DOS SANTOS SILVA MARTINS - 01/26 - Janeiro 2026 :
+Em todos os plantões de 12 horas realizados na escala 12x36 (ex.: 17/12, 19/12, 21/12, 23/12, 25/12, 27/12, 29/12, 31/12, 03/01, 04/01, 06/01, 08/01, 10/01, 12/01 e 14/01), constam apenas 2 marcações presenciais (entrada e saída). O espelho aponta a apuração de apenas 30 minutos na coluna INTRA, o que descumpre o limite legal mínimo de 1 hora para jornadas superiores a 6 horas, além da ausência de marcação do intervalo."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA CRISTIANE ALVES BRASIL - 05/26 - Maio 2026 -:
+Omissão das Marcações de Intervalo Intrajornada (Art. 71 da CLT): Em todas as jornadas ativas do plantão 12x36 (ex.: 16/04, 18/04, 20/04, 22/04, 24/04, 26/04, 28/04, 30/04, 02/05, 04/05, 06/05, 08/05, 12/05 e 14/05), constam apenas 2 marcações presenciais no relógio ponto (entrada e saída). Consta unicamente o abatimento do sistema de 1 hora no campo INTRA, omitindo os batimentos reais do intervalo de refeição/descanso exigidos pela legislação."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA CRISTIANE ALVES BRASIL - 06/26 - Junho 2026 :
+Intrajornada Omitida: Presença de apenas 2 batidas por plantão, utilizando dedução automática sem marcação real do intervalo.  Descumprimento do Regime 12x36: Plantões realizados em dias consecutivos (ex.: 18 a 20/05, 26 a 28/05 e 14 a 15/06) sem o repouso de 36 horas.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA CRISTIANE ALVES BRASIL - 07/26 - Julho 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão, mantendo somente o abatimento automático de 1h pelo sistema.  Jornada Excessiva: Extrapolação de jornada no dia 09/07 com 15h08m trabalhadas.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA TAIS DOS SANTOS CRAVO - 03/26 - Março 2026 -:
+Intrajornada Omitida: Ausência total do registro e cômputo de intervalo de refeição/descanso em plantões de 12h (Art. 71/CLT).  Desrespeito ao Regime 12x36: Realização de turnos consecutivos nos dias 13/03 e 14/03 sem o repouso de 36 horas, com violação de interjornada (INTER: 0:36).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA TAIS DOS SANTOS CRAVO - 05/26 - Maio 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas diárias nos plantões de 12h, omitindo o intervalo de refeição/descanso (Art. 71/CLT).  Inobservância do Regime 12x36: Realização de turnos consecutivos nos dias 25/04 e 26/04 sem o repouso interjornada obrigatório de 36 horas."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA TAIS DOS SANTOS CRAVO - 06/26 - Junho 2026 :
+Intrajornada Omitida: Falta total de registro e apuração da pausa alimentar/descanso em turnos de 12h (Art. 71/CLT).  Inobservância do Regime 12x36: Trabalho em dias consecutivos (26 a 28/05 e 10 a 11/06) sem a interjornada de 36 horas.  Trabalho em Folga: Cumprimento de plantão de 12h em dia programado como folga (27/05)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA TAIS DOS SANTOS CRAVO - 07/26 - Julho 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, utilizando abono automático de 1h no sistema sem marcação real do intervalo (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos (03 a 04/07 e 13 a 15/07) sem o repouso interjornada obrigatório de 36 horas."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,DIEGO DE SOUZA - 01/26 - Janeiro 2026 -: Desrespeito à Interjornada: Inobservância do descanso de 11h entre jornadas (Art. 66/CLT). 
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"PAULA TAIS DOS SANTOS CRAVO - 01/26 - Janeiro 2026:
+ntrajornada Omitida: Ausência total de marcação e apuração da pausa alimentar em plantões de 12h (Art. 71/CLT).  Inobservância do Regime 12x36: Realização de turnos consecutivos de 30/12 a 02/01 sem o repouso de 36 horas.  Trabalho na Folga: Plantão de 12h cumprido em dia programado como folga (30/12). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DENISE CARVALHO ROSA - 03/26 - Março 2026 :
+Intrajornada Omitida: Ausência total de marcação e apuração da pausa para refeição/descanso em plantões de 12h (Art. 71/CLT).  Desrespeito ao Regime 12x36: Realização de turnos consecutivos (08 a 09/03 e 12 a 13/03) sem o repouso interjornada de 36 horas. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DENISE CARVALHO ROSA - 05/26 - Maio 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão noturno de 12h, utilizando abono/dedução automática de 1h no sistema sem a marcação presencial efetiva do intervalo de refeição (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DENISE CARVALHO ROSA - 06/26 - Junho 2026  :
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão noturno de 12h, utilizando abate automático de 1h sem o registro presencial do intervalo (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos nos dias 13/06 e 14/06 sem a observância do repouso interjornada de 36 horas. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DENISE CARVALHO ROSA - 07/26 - Julho 2026 -:
+Intrajornada Omitida: Apuração de apenas 2 batidas presenciais por plantão noturno de 12h, utilizando abate automático de 1h sem marcação presencial da pausa (Art. 71/CLT).  Desrespeito ao Regime 12x36: Realização de turnos consecutivos nos dias 17/06 e 18/06 sem o repouso interjornada obrigatório de 36 horas. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DENISE CARVALHO ROSA - 02/26 - Fevereiro 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas diárias nos plantões de 12h, omitindo o intervalo alimentar/descanso (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos (06 e 07/02) sem o repouso de 36 horas.  Trabalho em DSR: Cumprimento de plantão integral de 12h em dia de DSR (07/02).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DENISE CARVALHO ROSA - 01/26 - Janeiro 2026  :
+Intrajornada Omitida: Apuração de apenas 2 batidas presenciais por plantão de 12h, omitindo o registro e a concessão do descanso alimentar/pausa obrigatória de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RICHAR SAMUEL CASTILLO CORDERO - 03/26 - Março 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas diárias em todos os plantões de 12h, omitindo o registro e a concessão do descanso alimentar/pausa obrigatória de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RICHAR SAMUEL CASTILLO CORDERO - 05/26 - Maio 2026  :
+Intrajornada Omitida: Apuração de apenas 2 batidas presenciais por plantão de 12h, omitindo o registro e a concessão da pausa obrigatória de 1 hora (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos (10/05 e 11/05) descumprindo o repouso mínimo de 36 horas ininterruptas. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RICHAR SAMUEL CASTILLO CORDERO - 06/26 - Junho 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas diárias em todos os plantões de 12h, omitindo o registro e a concessão do descanso alimentar/pausa obrigatória de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RICHAR SAMUEL CASTILLO CORDERO - 07/26 - Julho 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais diárias em todos os plantões de 12h, omitindo as marcações de saída e retorno do intervalo de refeição/descanso de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RICHAR SAMUEL CASTILLO CORDERO - 02/26 - Fevereiro 2026 -:
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais diárias em todos os plantões de 12h, omitindo as marcações de saída e retorno do intervalo de refeição/descanso de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"RICHAR SAMUEL CASTILLO CORDERO - 01/26 - Janeiro 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais diárias em todos os plantões de 12h, omitindo o registro e a concessão da pausa alimentar/descanso obrigatória de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FELIPE SILVA DE ARAUJO - 03/26 - Março 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h nos dias trabalhados, omitindo o registro e a concessão do descanso alimentar/pausa obrigatória de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FELIPE SILVA DE ARAUJO - 05/26 - Maio 2026:
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, omitindo as marcações de saída e retorno do intervalo alimentar obrigatório de 1h (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos (29/04, 30/04 e 01/05), descumprindo o repouso mínimo de 36 horas ininterruptas (Art. 59-A/CLT).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FELIPE SILVA DE ARAUJO - 06/26 - Junho 2026 - Cartão ponto com total de horas extras ou noturnas:
+
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão, sem registro ou concessão da pausa de 1h (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em sequência de dias consecutivos (ex.: 16/05 a 18/05 e 28/05 a 31/05), violando o repouso interjornada de 36h (Art. 59-A/CLT).  Interjornada Comprometida: Intervalo entre 20/05 e 21/05 inferior ao mínimo de 11h (Art. 66/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FELIPE SILVA DE ARAUJO - 07/26 - Julho 2026 :
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão de 12h, omitindo o registro do intervalo alimentar de 1h (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos (19 a 21/06 e 23 a 25/06), violando o repouso de 36h (Art. 59-A/CLT).  Interjornada Comprometida: Intervalo entre 20 e 21/06 inferior a 11h (Art. 66/CLT).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FELIPE SILVA DE ARAUJO - 02/26 - Fevereiro 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais diárias em todos os plantões de 12h efetivamente trabalhados, omitindo as marcações de saída e retorno do intervalo de refeição/descanso de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"FELIPE SILVA DE ARAUJO - 01/26 - Janeiro 2026  :
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão de 12h, omitindo as marcações e a concessão do intervalo alimentar/descanso de 1h (Art. 71/CLT).  Desrespeito ao Regime 12x36: Trabalho em dias consecutivos (03/01 e 04/01), descumprindo o descanso mínimo de 36 horas ininterruptas (Art. 59-A/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VANIA MARA RODRIGUES - 03/26 - Março 2026 :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, omitindo o registro e a concessão do intervalo alimentar de 1h (Art. 71/CLT).  Horários Britânicos: Batidas repetitivas e invariáveis de entrada (06:55) e saída (18:55), contrariando a Súmula 338 do TST. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VANIA MARA RODRIGUES - 05/26 - Maio 2026 :
+
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão de 12h, omitindo as marcações e a concessão do intervalo de refeição/descanso de 1h (Art. 71/CLT).  Horários Britânicos: Lançamentos idênticos e invariáveis de entrada e saída em múltiplos dias (Súmula 338 do TST)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VANIA MARA RODRIGUES - 06/26 - Junho 2026 - :
+
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão de 12h, omitindo o registro e a concessão da pausa alimentar de 1h (Art. 71/CLT).  Horários Britânicos: Batidas repetitivas e invariáveis (06:55 às 18:55) na quase totalidade dos dias trabalhados (Súmula 338 do TST)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VANIA MARA RODRIGUES - 07/26 - Julho 2026 :
+
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, sem marcação presencial ou concessão efetiva da pausa alimentar de 1h (Art. 71/CLT).  Horários Britânicos: Batidas idênticas e invariáveis (06:55 às 18:55) nos dias trabalhados (Súmula 338 do TST).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VANIA MARA RODRIGUES - 02/26 - Fevereiro 2026 :Intrajornada Omitida: Apenas 2 batidas presenciais por plantão de 12h, omitindo o registro e a concessão efetiva da pausa intrajornada de 1h (Art. 71/CLT).  Horários Britânicos: Batidas idênticas e invariáveis em diversos plantões (06:55 às 18:55), contrariando a Súmula 338 do TST. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"VANIA MARA RODRIGUES - 01/26 - Janeiro 2026 :
+Intrajornada Omitida: Presença de apenas 2 batidas por plantão de 12h, omitindo as marcações e a concessão da pausa intrajornada de 1h (Art. 71/CLT).  Horários Britânicos: Entradas e saídas repetitivas (com destaque para a entrada fixa às 06:55 em múltiplos plantões), violando a Súmula 338 do TST."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"YANDRY SALINA MORENO - 03/26 - Março 2026  :
+Intrajornada Omitida: Registro de apenas 2 batidas por plantão de 12h, omitindo as marcações presenciais e a concessão da pausa alimentar de 1h (Art. 71/CLT).  Horários Britânicos: Marcações repetitivas e invariáveis em múltiplos plantões, contrariando a Súmula 338 do TST. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"YANDRY SALINA MORENO - 05/26 - Maio 2026  : Intrajornada Omitida: Presença de apenas 2 batidas por plantão de 12h, omitindo o registro e a concessão da pausa alimentar de 1h (Art. 71/CLT).  Horários Britânicos: Marcações de entrada e saída repetitivas e sem variação em múltiplos plantões, contrariando a Súmula 338 do TST. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"YANDRY SALINA MORENO - 06/26 - Junho 2026:
+Intrajornada Omitida: Presença de apenas 2 batidas por plantão de 12h, omitindo o registro e a concessão do intervalo de descanso/refeição de 1h (Art. 71/CLT).  Horários Britânicos: Marcações idênticas e sem variação real de minutos em diversos plantões (06:56 às 18:56), contrariando a Súmula 338 do TST. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"YANDRY SALINA MORENO - 07/26 - Julho 2026:
+Intrajornada Omitida: Presença de apenas 2 batidas presenciais por plantão de 12h, sem registro físico de saída/retorno da pausa alimentar (INTRA apenas lançado pelo sistema).  Horários Britânicos: Marcações idênticas e repetitivas em diversos dias (entradas às 06:56 e saídas às 18:55), contrariando a Súmula 338 do TST."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"YANDRY SALINA MORENO - 02/26 - Fevereiro 2026 :
+Intrajornada Omitida: Apenas 2 batidas presenciais por plantão de 12h, sem registro de saída/retorno do intervalo e sem comprovação da pausa de 1h (Art. 71/CLT).  Horários Britânicos: Ocorrência de marcações inflexíveis e repetitivas em dias trabalhados, desrespeitando a Súmula 338 do TST. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"YANDRY SALINA MORENO - 01/26 - Janeiro 2026:
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, omitindo o registro e a concessão do intervalo alimentar de 1h (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho realizado em dia previsto de folga (14/01) totalizando 12h05min sem o devido gozo do descanso da escala."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WASHINGTON NAZARENO ALVES SANTOS - 03/26 - Março 2026 :
+Intrajornada Omitida no Ponto: Registro de apenas 2 batidas presenciais por plantão noturno de 12h, omitindo os registros de entrada/saída do intervalo.  Descumprimento do Art. 71 da CLT: Concessão/apropriação registrada de apenas 30 minutos de intervalo, descumprindo o mínimo legal de 1 hora para jornadas superiores a 6 horas."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WASHINGTON NAZARENO ALVES SANTOS - 05/26 - Maio 2026 :
+
+Documento Ilegível/Em Branco: Não contém o cartão ponto, nome do colaborador, período de referência ou batidas de entrada e saída para verificação."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WASHINGTON NAZARENO ALVES SANTOS - 06/26 :
+Intrajornada Omitida: Registro de apenas 2 batidas presenciais por plantão de 12h, sem os registros físicos de saída/retorno do intervalo (Art. 71/CLT).  Quebra da Escala 12x36: Plantões realizados em dias consecutivos (18 e 19/05; 12 e 13/06), descumprindo o descanso mínimo de 36 horas."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"WASHINGTON NAZARENO ALVES SANTOS - 07/26 - Julho 2026 -:
+Ausência de Batidas de Intervalo: Registro de apenas 2 marcações por plantão noturno de 12h, omitindo o registro do intervalo intrajornada (Art. 71/CLT).  Inobservância do Descanso 12x36: Trabalho realizado em dias consecutivos (21 e 22/06), desrespeitando as 36 horas de descanso obrigatórias da escala."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"KARLIANA COROMOTO PEREZ LOPEZ - 03/26 - Março 2026:
+Intrajornada Omitida: Apenas 2 marcações presenciais por plantão de 12h, omitindo as batidas de intervalo (Art. 71/CLT).  Quebra de Escala 12x36: Registro de trabalho em dias consecutivos (ex.: 21 e 22/02; 01 e 02/03), violando o descanso de 36 horas."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"KARLIANA COROMOTO PEREZ LOPEZ - 05/26 - Maio 2026 :
+
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 batidas presenciais, sem os registros físicos do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"KARLIANA COROMOTO PEREZ LOPEZ - 06/26 - Junho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 batidas presenciais, sem os registros físicos das saídas e retornos do intervalo de descanso (Art. 71/CLT).  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"KARLIANA COROMOTO PEREZ LOPEZ - 07/26 - Julho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h apresentam apenas 2 batidas presenciais, sem os registros físicos das saídas e retornos do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"KARLIANA COROMOTO PEREZ LOPEZ - 02/26 - Fevereiro 2026:
+Intrajornada Omitida no Ponto: Todos os plantões de 12h apresentam apenas 2 batidas presenciais, sem o registro físico de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"KARLIANA COROMOTO PEREZ LOPEZ - 01/26 - Janeiro 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h apresentam apenas 2 batidas presenciais, omitindo os registros físicos de saída e retorno do intervalo de descanso (Art. 71/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSEMEIRE PINHEIRO DA MATTA - 03/26 - Março 2026 :
+Intrajornada Insuficiente: Concessão de apenas 30 minutos de intervalo para plantões de 12 horas, descumprindo o mínimo legal de 1 hora (Art. 71/CLT).  Batidas de Intervalo Omitidas: Registro de apenas 2 marcações presenciais nos dias trabalhados, sem os registros do intervalo no relógio ponto.  "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSEMEIRE PINHEIRO DA MATTA - 05/26 - Maio 2026:
+Todos os plantões de 12h contam com apenas 2 registros presenciais (entrada e saída), sem a marcação física no relógio das batidas de saída e retorno do intervalo de descanso."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LAURA ALFONSO GARCIA - 03/26 - Março 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LAURA ALFONSO GARCIA - 06/26 - Junho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LAURA ALFONSO GARCIA - 02/26 - Fevereiro 2026 :
+
+Ilegível para análise. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JULIA SILVA DO ROSARIO - 05/26 - Maio 2026 :
+Intrajornada Omitida no Ponto: Nos plantões de 12h efetivamente trabalhados (13/05 e 15/05), constam apenas 2 marcações presenciais, omitindo o registro do intervalo obrigatório de descanso/refeição (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSEMEIRE PINHEIRO DA MATTA - 06/26 - Junho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais (entrada e saída), sem as batidas físicas no relógio ponto referente às saídas e retornos do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,ROSEMEIRE PINHEIRO DA MATTA - 02/26 - Fevereiro 2026 - Cartão ponto com total de horas extras ou noturnas :     ILEGÍVEL PARA ANÁLISE. 
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JULIA SILVA DO ROSARIO - 06/26 - Junho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo obrigatório de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JULIA SILVA DO ROSARIO - 02/26 - Fevereiro 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 marcações presenciais, omitindo o registro do intervalo obrigatório de descanso/refeição (Art. 71/CLT).  Faltas Descontadas: Ocorrência de falta do mês anterior registrada no cartão ponto sem justificativa formal. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSELI GOMES DO AMARAL - 03/26 - Março 2026 - :
+Omissão das Marcações de Intervalo Intrajornada: Todos os plantões trabalhados possuem apenas 2 registos presenciais no relógio (entrada e saída, ex.: 17/02, 19/02, 21/02). Não há a marcação do intervalo intrajornada para refeição/descanso (Art. 71 da CLT), constando apenas o abatimento de 00:30 min no sistema sem o devido registro do relógio."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSELI GOMES DO AMARAL - 01/26 - Janeiro 2026 -  
+
+Ausência de registros de pausas descansos obrigatório pela CLT/MTE. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSELI GOMES DO AMARAL - 06/26 - Junho 2026 - :
+Todos os plantões trabalhados apresentam apenas 2 marcações presenciais no relógio eletrônico (entrada e saída, como 18:55 e 06:59). O intervalo intrajornada obrigatório de 1 hora (Art. 71 da CLT) não foi registrado no ponto pelo funcionário, constando apenas o cômputo/abatimento do tempo diretamente no sistema."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ELIANE IZABEL DIAS - 05/26 - Maio 2026 -  :
+
+Ausência de registros de pausas descansos obrigatórios pela CLT/MTE. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MICHELE ALVES DOS SANTOS - 03/26 - Março 2026 -:
+Omissão do Registro de Intervalo: Apuração de apenas 2 batidas diárias no relógio (entrada e saída) sem marcação presencial do intervalo intrajornada (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho em dias consecutivos (21-22/02 e 05-06/03) desrespeitando o descanso interjornada de 36 horas (Art. 59-A/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MICHELE ALVES DOS SANTOS - 06/26 - Junho 2026 - :
+
+Omissão das Batidas de Intervalo: Apuração de apenas 2 marcações presenciais diárias (entrada/saída) em plantões de 12h, omitindo o registro do intervalo intrajornada (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho em dias consecutivos (25-26/05) desrespeitando o intervalo mínimo interjornada de 36 horas (Art. 59-A/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MICHELE ALVES DOS SANTOS - 02/26 - Fevereiro 2026 - :
+
+Omissão da Batida de Intervalo: Apuração de apenas 2 registros diários presenciais (entrada/saída) em jornada de 12 horas, omitindo o registro do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSEMEIRE PINHEIRO DA MATTA - 07/26 - Julho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSELI GOMES DO AMARAL - 05/26 - Maio 2026 - Ausencia de registros de pausa descanso durante o expediente, obrigatório pela CLT/MTE. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSELI GOMES DO AMARAL - 07/26 - Julho 2026 -:
+Falta de Batida do Intervalo: Apenas 2 marcações diárias no relógio (entrada/saída), omitindo o registro do intervalo intrajornada (Art. 71/CLT).  Quebra da Escala 12x36: Trabalho em dias consecutivos (28-29/06 e 12-13/07) sem o descanso de 36h."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MICHELE ALVES DOS SANTOS - 07/26 - Julho 2026 - :
+
+Omissão da Batida de Intervalo: Apuração de apenas 2 registros diários presenciais (entrada/saída) em jornada de 12 horas, omitindo o registro do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSEMEIRE PINHEIRO DA MATTA - 01/26 - Janeiro 2026 :
+Intrajornada Insuficiente: Concessão de apenas 30 minutos de intervalo em plantões de 12h, violando o mínimo legal de 1 hora (Art. 71/CLT).  Batidas de Intervalo Omitidas: Registro de apenas 2 marcações presenciais nos dias trabalhados, sem o registro do intervalo no relógio ponto."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LAURA ALFONSO GARCIA - 05/26 - Maio 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LAURA ALFONSO GARCIA - 07/26 - Julho 2026 -:
+
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LAURA ALFONSO GARCIA - 01/26 - Janeiro 2026 :
+
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 registros presenciais no relógio ponto, omitindo as marcações físicas de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JULIA SILVA DO ROSARIO - 07/26 - Julho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões trabalhados contam com apenas 2 batidas físicas no relógio ponto, omitindo o registro presencial do intervalo obrigatório de refeição/descanso (Art. 71/CLT).  Falta Indevida/Não Abonada: Ausência do dia 08/07 apontada como falta integral de 12h sem documento comprobatório. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JULIA SILVA DO ROSARIO - 01/26 - Janeiro 2026 -:
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 marcações presenciais, omitindo o registro do intervalo obrigatório de descanso e refeição (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"AMOSIANE COSTA GOMES - 03/26 - Março 2026:
+Intrajornada Omitida no Ponto: Todos os plantões de 12h contam com apenas 2 marcações presenciais, omitindo o registro do intervalo obrigatório de descanso e refeição (Art. 71/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"AMOSIANE COSTA GOMES - 05/26 - Maio 2026 :
+Ausência de registros de pausa descanso, exigido pela CLT. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"AMOSIANE COSTA GOMES - 06/26 - Junho 2026 :
+Intrajornada Omitida no Ponto: Todos os plantões contam com apenas 2 marcações, omitindo o registro do intervalo obrigatório de refeição/descanso (Art. 71/CLT).  Quebra da Escala 12x36: Trabalho em dias consecutivos (01/06 a 03/06) sem a folga de 36 horas."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ROSELI GOMES DO AMARAL - 02/26 - Fevereiro 2026 - :
+Omissão das Marcações de Intervalo Intrajornada: Todos os plantões registrados apresentam apenas 2 marcações no relógio eletrônico (entrada e saída, ex.: 16/01, 18/01, 20/01). Não há o registro efetivo da batida do intervalo para refeição e descanso (Art. 71 da CLT), constando apenas o cômputo/abatimento de 00:30 min diretamente no sistema."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JULIA SILVA DO ROSARIO - 03/26 - Março 2026 :
+Intrajornada Omitida: Todos os plantões de 12h possuem apenas 2 marcações presenciais no ponto, omitindo o registro de saída e retorno do intervalo de descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"ELIANE IZABEL DIAS - 06/26 - Junho 2026 -:
+
+Ausência de registros de pausas descansos obrigatório pela CLT/MTE. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JONAS ANDRE DIAS - 03/26 - Março 2026 :
+escumprimento do Intervalo Intrajornada: Ausência das marcações ou justificativas de intervalo de 1 hora nos plantões de 12 horas (apenas 2 batidas por dia), contrariando o Art. 71 e Art. 59-A da CLT."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JONAS ANDRE DIAS - 05/26 - Maio 2026 - :
+Descumprimento do Intervalo Intrajornada: Ausência das marcações ou justificativas de intervalo de 1 hora nos plantões de 12 horas (apenas 2 batidas por dia), contrariando o Art. 71 e Art. 59-A da CLT."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JONAS ANDRE DIAS - 06/26 - Junho 2026 -:
+Descumprimento do Intervalo Intrajornada: Ausência das marcações ou justificativas de intervalo de 1 hora nos plantões de 12 horas (apenas 2 batidas por dia), contrariando o Art. 71 e Art. 59-A da CLT."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JONAS ANDRE DIAS - 07/26 - Julho 2026 - :
+Descumprimento do Intervalo Intrajornada: Ausência das marcações ou justificativas de intervalo de 1 hora nos plantões de 12 horas (apenas 2 batidas por dia), contrariando o Art. 71 e Art. 59-A da CLT."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MICHELE ALVES DOS SANTOS - 05/26 - Maio 2026 :
+Omissão da Batida de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada/saída) em jornada de 12 horas, sem a batida presencial do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEANDRO CORREA TEIXEIRA - 03/26 - Março 2026 :
+Omissão da Batida de Intervalo: Apuração de apenas 2 registros presenciais diários em plantões de 12h, omitindo o intervalo intrajornada (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho em dias consecutivos (26-27/02 e 06-08/03) sem o descanso interjornada de 36 horas (Art. 59-A/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEANDRO CORREA TEIXEIRA - 05/26 - Maio 2026 - :
+Omissão das Batidas de Intervalo: Apuração de apenas 2 marcações presenciais diárias (entrada/saída) na escala 12x36, omitindo a marcação do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEANDRO CORREA TEIXEIRA - 06/26 - Junho 2026 :
+Omissão da Batida de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada e saída) em jornada de 12 horas, sem a marcação do intervalo intrajornada obrigatório de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEANDRO CORREA TEIXEIRA - 07/26 - Julho 2026 :
+Omissão das Batidas de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada e saída) nos plantões de 12h, omitindo o intervalo intrajornada (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho em dias consecutivos (03-04/07) descumprindo o descanso interjornada mínimo de 36 horas (Art. 59-A/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"LEANDRO CORREA TEIXEIRA - 02/26 - Fevereiro 2026 :
+Omissão das Batidas de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada e saída) nos plantões de 12h, omitindo o intervalo intrajornada (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho em dias consecutivos (03-04/07) descumprindo o descanso interjornada mínimo de 36 horas (Art. 59-A/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOAO HILDEBRANDO COSTA DA MATTA - 03/26 -:
+Omissão das Batidas de Intervalo: Apuração de apenas 2 marcações presenciais diárias (entrada/saída) em jornada de 12 horas, sem o registro do intervalo intrajornada (Art. 71/CLT).  Quebra de Escala 12x36: Trabalho em dias consecutivos (04-05/03 e 08-09/03) descumprindo o descanso interjornada mínimo de 36 horas (Art. 59-A/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOAO HILDEBRANDO COSTA DA MATTA - 05/26 - Maio 2026 :
+Omissão da Batida de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada/saída) nos dias trabalhados (12/05 e 14/05), sem o registro presencial do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOAO HILDEBRANDO COSTA DA MATTA - 06/26 - Junho 2026 - :
+Omissão da Batida de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada e saída) na jornada de 12 horas, omitindo o registro do intervalo intrajornada (Art. 71/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOAO HILDEBRANDO COSTA DA MATTA - 07/26 - Julho 2026 :
+Omissão da Batida de Intervalo: Registro de apenas 2 marcações presenciais diárias (entrada e saída) em plantões de 12 horas, omitindo a batida presencial do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOAO HILDEBRANDO COSTA DA MATTA - 02/26 - Fevereiro 2026 -:
+Omissão das Batidas de Intervalo: Apuração de apenas 2 marcações presenciais diárias (entrada/saída) em jornada de 12 horas, sem o registro do intervalo intrajornada (Art. 71/CLT).  Inversão de Turno sem Justificativa: Alteração do turno noturno para o diurno a partir do dia 28/01 na escala 12x36 sem regularização documental registrada. "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"JOAO HILDEBRANDO COSTA DA MATTA - 01/26 - Janeiro 2026: 
+Omissão da Batida de Intervalo: Apuração de apenas 2 marcações presenciais diárias (entrada/saída) em jornada noturna de 12 horas, omitindo o registro presencial do intervalo intrajornada (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DIEGO DE SOUZA - 05/26 - Maio 2026 - :
+Descaracterização de Escala: Descumprimento total do horário contratual (09h às 18h), com registros de jornadas noturnas e fracionadas sem autorização formal.  Violação de Descansos Legais: Trabalho em DSR/Feriado, desrespeito ao intervalo interjornada de 11h (Art. 66/CLT) e falta de intervalo intrajornada (Art. 71/CLT)"
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DIEGO DE SOUZA - 06/26 - Junho 2026 :
+Trabalho em DSR: Registro de trabalho em dia de descanso semanal remunerado (14/06) sem folga compensatória no período.  Jornada Atípica e Fracionada: Trabalho em horários extras e alterados em relação à escala contratual no dia 15/06."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"DIEGO DE SOUZA - 07/26 - Julho 2026 :
+Descaracterização de Escala: Descumprimento sistemático da escala contratual (09h às 18h), com jornadas noturnas, madrugadas e fracionadas sem respaldo contratual.  Violação de Descansos Legais: Trabalho em dias de DSR, desrespeito frequente ao intervalo interjornada de 11h (Art. 66/CLT) e falta do intervalo intrajornada (Art. 71/CLT). "
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,DIEGO DE SOUZA - 02/26 - Fevereiro 2026 - :Trabalho em DSR: Registro de trabalho nos dias de descanso semanal (18/01 e 15/02) sem folga compensatória.  Jornadas Excessivas e Atípicas: Jornada de mais de 16 horas no dia 16/01 e descumprimento de horário contratual em múltiplos dias.
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MIREYDIS ELENA CANA - 03/26 - Março 2026 Todas as jornadas executadas apresentam apenas duas marcações (entrada e saída), sem o registro da pausa obrigatória de 1 hora para refeição e descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MIREYDIS ELENA CANA - 05/26 - Maio 2026 - :Ausência de Intervalo Intrajornada: Todas as jornadas trabalhadas contam com apenas duas marcações (entrada e saída), omitindo o registro da pausa obrigatória de 1 hora para descanso/refeição (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MIREYDIS ELENA CANA - 06/26 - Junho 2026 -:
+Ausência de Intervalo Intrajornada: Em todos os dias de trabalho constam apenas duas marcações (entrada e saída), sem o registro da pausa intrajornada obrigatória de 1 hora para refeição e descanso (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MIREYDIS ELENA CANA - 06/26 - Junho 2026  : Ausência de Registro/Dedução do Intervalo Intrajornada: Todos os dias de trabalho registram apenas entrada e saída, sem as marcações de intervalo e sem o cômputo/dedução pré-assinalada na coluna INTRA, violando a obrigatoriedade do descanso de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MIREYDIS ELENA CANA - 02/26 - Fevereiro 2026 :
+Ausência de Registro/Dedução do Intervalo Intrajornada: Todas as jornadas registram apenas entrada e saída, sem marcações intermediárias e sem a indicação/cômputo de intervalo pré-assinalado (INTRA), violando a pausa obrigatória de 1 hora (Art. 71/CLT)."
+ORBENK ADMINISTRACAO E SERVICOS LTDA.,79283065000141,EM_ELABORACAO,TERCEIROS,,,"MIREYDIS ELENA CANA - 01/26 - Janeiro 2026 - :
+
+Ausência de Registro/Dedução do Intervalo Intrajornada: Todas as jornadas possuem apenas duas marcações (entrada e saída) e não contam com cômputo/dedução pré-assinalada na coluna INTRA, descumprindo o descanso obrigatório de 1 hora (Art. 71/CLT)."
