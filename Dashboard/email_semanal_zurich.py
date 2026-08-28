@@ -18,16 +18,16 @@ from zurich_core import (
 DOC = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Documentos"
 DST = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
-DATA_ANT = "14/08/2026"
-DATA_ATU = "17/08/2026"
+DATA_ANT = "21/08/2026"
+DATA_ATU = "26/08/2026"
 
 ANT_FILES = {
-    "pendencias":     DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-08-14T13_13_23.123008-04_00.csv",
-    "terceiros":      DOC + r"\relatorio_de_terceiros_cadastrados_2026-08-14T13_12_28.371437-04_00.csv",
-    "sit_terceiro":   DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-08-14T13_12_41.895377-04_00.csv",
-    "sit_fornecedor": DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-08-14T13_12_54.682709-04_00.csv",
-    "busca_auto":     DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-08-14T13_13_09.615155-04_00.csv",
-    "contratos":      DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-08-14T13_11_27.030514-04_00.csv",
+    "pendencias":     DOC + r"\zurich_airport___pendencias_por_solicitacao_com_documento___dados_2026-08-21T15_29_30.807333-04_00.csv",
+    "terceiros":      DOC + r"\relatorio_de_terceiros_cadastrados_2026-08-21T15_30_58.627279-04_00.csv",
+    "sit_terceiro":   DOC + r"\situacao_de_preenchimento_documental_do_terceiro_na_ultima_solicitacao_do_fornecedor___dados_2026-08-21T15_30_33.19961-04_00.csv",
+    "sit_fornecedor": DOC + r"\situacao_de_preenchimento_documental_na_ultima_solicitacao_do_fornecedor___dados_2026-08-21T15_30_21.760229-04_00.csv",
+    "busca_auto":     DOC + r"\situacao_dos_documentos_de_busca_automatica___dados_2026-08-21T15_30_10.870054-04_00.csv",
+    "contratos":      DOC + r"\relatorio_de_codigos_de_contrato_dos_fornecedores___dados_2026-08-21T15_34_12.862752-04_00.csv",
 }
 
 ATU_FILES = {
