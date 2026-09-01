@@ -130,16 +130,32 @@ Dashboard mostra painel "Meus Terceiros" separado de "Meus Fornecedores"
 
 ---
 
-### Módulo de Contratos e Reprovação Definitiva (jul/2026)
+### Módulo de Contratos, Reprovação Definitiva e Fase 2 (jul–ago/2026)
 
 **Artigo local:** [`modulo_contratos_e_reprovacao_definitiva.md`](modulo_contratos_e_reprovacao_definitiva.md)
 
 - **Módulo Contratos:** centraliza contratos de fornecedores/terceiros — vigências, aditivos, medições, documentos
 - **Fase 1 (jul/2026):** disponível somente dentro do fornecedor; sem análise na solicitação; sem notificações de vencimento
-- **Fase 2 (ago/2026):** integração com histórico de solicitações prevista para 2ª quinzena de agosto
-- **Configuração:** Configurações > Documentos (criar docs internos e do fornecedor) → vincular linhas → menu Fornecedor > aba Contratos
+- **Fase 2 (ago/2026):** contratos gerados dentro da solicitação; notificações de vencimento ativas (admin para internos, fornecedor para docs do fornecedor); análise de documentos de contrato ainda indisponível
+- **Configuração:** Configurações > Documentos (criar docs internos e do fornecedor) → vincular linhas → aba Contratos na solicitação
 - **Reprovação Definitiva:** novo status de análise que bloqueia permanentemente novo fornecedor; apenas em solicitações de novo fornecedor; workaround para reverter: cancelar encaminhamento
 - **Filtro Responsável análise:** novo filtro na tela de Solicitações para filtrar por analista
+
+### Competências no Módulo de Terceiros (ago/2026) ← NOVO
+
+**Artigo local:** [`competencias_terceiros.md`](competencias_terceiros.md)
+
+- **O que é:** controle periódico (ex: mensal) de documentação de terceiros por competência (mês/período)
+- **Ativação:** Configurações > Competências → criar competências + habilitar em Configurações Gerais
+- **Documentos de competência:** Configurações > Documentos > terceiro → campo "Solicitar dentro da competência do terceiro: Sim"
+- **Interface:** aba Gestão de Terceiros se subdivide em "Dados Gerais" + "Documentos por Competência"
+- **Funcionalidades:** aprovação por terceiro/competência, declaração de não atividade pelo fornecedor
+- **⚠️ Impacto:** ao ativar, a interface muda imediatamente para o fornecedor — comunicar previamente
+- **Relevância CS:** clientes BPO (Zurich Airport, Lactalis) são os principais candidatos
+
+### Score do Fornecedor no Dossiê (ago/2026)
+
+- Se existe Score ativo para o cadastro, agora aparece no dossiê gerado com "Score Geral" e classificação de risco (ex: "9.33 - Risco Baixo")
 
 ---
 

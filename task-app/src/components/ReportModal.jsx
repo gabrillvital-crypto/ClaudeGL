@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { fetchDoneRange } from '../lib/supabase'
+﻿import { useState } from 'react'
+import { fetchDoneRange } from '../lib/firebase'
 import { generateReportHTML, isoToday } from '../lib/utils'
 
 function addDays(iso, n) {
@@ -47,12 +47,12 @@ export default function ReportModal({ onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
         <div className="px-5 pt-5 pb-2">
-          <p className="font-bold text-gray-800 text-base mb-4">📊 Gerar Relatório</p>
+          <p className="font-bold text-gray-800 text-base mb-4">ðŸ“Š Gerar RelatÃ³rio</p>
 
           {/* Atalhos */}
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Atalhos rápidos</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Atalhos rÃ¡pidos</p>
           <div className="flex gap-2 mb-4 flex-wrap">
-            {[['Esta semana', setWeek], ['Últimos 15 dias', set15], ['Este mês', setMonth]].map(([lbl, fn]) => (
+            {[['Esta semana', setWeek], ['Ãšltimos 15 dias', set15], ['Este mÃªs', setMonth]].map(([lbl, fn]) => (
               <button key={lbl} onClick={fn} className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{ background: '#e0f7fa', color: '#14B3CC' }}>
                 {lbl}
               </button>
@@ -60,14 +60,14 @@ export default function ReportModal({ onClose }) {
           </div>
 
           {/* Datas */}
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Período</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">PerÃ­odo</p>
           <div className="flex gap-3 items-center mb-4">
             <div className="flex-1">
               <label className="text-xs text-gray-400 block mb-1">De</label>
               <input type="date" className="w-full text-sm border border-gray-200 rounded-lg px-2 py-1.5" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
             </div>
             <div className="flex-1">
-              <label className="text-xs text-gray-400 block mb-1">Até</label>
+              <label className="text-xs text-gray-400 block mb-1">AtÃ©</label>
               <input type="date" className="w-full text-sm border border-gray-200 rounded-lg px-2 py-1.5" value={dateTo} onChange={e => setDateTo(e.target.value)} />
             </div>
           </div>
@@ -91,10 +91,11 @@ export default function ReportModal({ onClose }) {
             Cancelar
           </button>
           <button onClick={generate} disabled={loading} className="flex-1 text-sm font-bold py-2 rounded-xl text-white disabled:opacity-40" style={{ background: '#14B3CC' }}>
-            {loading ? 'Gerando…' : 'Abrir no navegador'}
+            {loading ? 'Gerandoâ€¦' : 'Abrir no navegador'}
           </button>
         </div>
       </div>
     </div>
   )
 }
+

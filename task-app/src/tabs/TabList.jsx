@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchTasks, addTask, setTaskStatus, fetchChecklist } from '../lib/supabase'
-import supabase from '../lib/supabase'
+import { fetchTasks, addTask, setTaskStatus, fetchChecklist, fetchChecklistBulk } from '../lib/firebase'
 import TaskCard from '../components/TaskCard'
 import DatePicker from '../components/DatePicker'
 
@@ -22,7 +21,7 @@ export default function TabList({ tab, onOpenTask }) {
     // Bulk-load checklists
     const ids = data.map(t => t.id)
     if (ids.length) {
-      const { data: ck } = await supabase.from('checklist_items').select('*').in('task_id', ids)
+      const ck = await fetchChecklistBulk(ids)
       const byId = {}
       for (const item of ck || []) {
         if (!byId[item.task_id]) byId[item.task_id] = []

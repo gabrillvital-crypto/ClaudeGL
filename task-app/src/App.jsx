@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { seedClientsIfEmpty } from './lib/firebase'
 import TabList from './tabs/TabList'
 import TabHoje from './tabs/TabHoje'
 import TabAtividades from './tabs/TabAtividades'
@@ -27,6 +28,8 @@ export default function App() {
   const [openTaskId, setOpenTaskId] = useState(null)
   const [showReport, setShowReport] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
+
+  useEffect(() => { seedClientsIfEmpty() }, [])
 
   function refresh() { setRefreshKey(k => k + 1) }
 

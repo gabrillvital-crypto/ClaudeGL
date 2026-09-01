@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import {
   getTask, updateTask, deleteTask, setTaskStatus,
   fetchChecklist, addChecklistItem, toggleChecklistItem, deleteChecklistItem,
   fetchClients,
-} from '../lib/supabase'
+} from '../lib/firebase'
 import { PRIORITY, IN_PROGRESS_COLOR, fmtDate } from '../lib/utils'
 import DatePicker from './DatePicker'
 
@@ -42,7 +42,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
       client_id: task.client_id || null,
     })
     setSaving(false)
-    showToast('✓ Salvo')
+    showToast('âœ“ Salvo')
     onSaved?.()
   }
 
@@ -91,7 +91,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
 
   function startVoice() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SR) { alert('Voz não suportada neste navegador. Use Chrome ou Edge.'); return }
+    if (!SR) { alert('Voz nÃ£o suportada neste navegador. Use Chrome ou Edge.'); return }
     const rec = new SR()
     rec.lang = 'pt-BR'
     rec.continuous = true
@@ -116,7 +116,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
 
   if (!task) return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30">
-      <div className="bg-white rounded-2xl p-8 text-gray-400">Carregando…</div>
+      <div className="bg-white rounded-2xl p-8 text-gray-400">Carregandoâ€¦</div>
     </div>
   )
 
@@ -131,32 +131,32 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
           <button
             onClick={handleDelete}
             className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded-lg"
-          >🗑 Excluir</button>
+          >ðŸ—‘ Excluir</button>
           <div className="flex-1" />
           <button onClick={onClose} className="text-white/80 hover:text-white text-xs px-3 py-2 rounded-lg border border-white/30">
             Cancelar
           </button>
           <button onClick={save} disabled={saving} className="bg-white text-sm font-bold px-4 py-2 rounded-lg" style={{ color: '#14B3CC' }}>
-            {saving ? '…' : 'Salvar'}
+            {saving ? 'â€¦' : 'Salvar'}
           </button>
           <button
             onClick={handleToggleAndamento}
             className="text-xs font-bold px-3 py-2 rounded-lg text-white"
             style={{ background: isIP ? 'rgba(255,255,255,0.2)' : IN_PROGRESS_COLOR }}
           >
-            {isIP ? '↩ Voltar' : '▶ Andamento'}
+            {isIP ? 'â†© Voltar' : 'â–¶ Andamento'}
           </button>
           <button onClick={handleComplete} className="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-2 rounded-lg">
-            Concluir ✓
+            Concluir âœ“
           </button>
         </div>
 
         {/* Scrollable body */}
         <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
 
-          {/* Título */}
+          {/* TÃ­tulo */}
           <div>
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Título</label>
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">TÃ­tulo</label>
             <input
               className="w-full mt-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
               style={{ '--tw-ring-color': '#14B3CC' }}
@@ -199,7 +199,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
                   : { background: '#f3f4f6', color: '#6b7280', borderColor: '#e5e7eb' }
                 }
               >
-                📅 {task.deadline ? fmtDate(task.deadline) : 'Selecionar data'}
+                ðŸ“… {task.deadline ? fmtDate(task.deadline) : 'Selecionar data'}
               </button>
             </div>
 
@@ -210,7 +210,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
                 value={task.client_id || ''}
                 onChange={e => setField('client_id', e.target.value ? Number(e.target.value) : null)}
               >
-                <option value="">— Sem cliente —</option>
+                <option value="">â€” Sem cliente â€”</option>
                 {clients.map(c => (
                   <option key={c.id} value={c.id}>{c.name} ({c.tier})</option>
                 ))}
@@ -218,15 +218,15 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
             </div>
           </div>
 
-          {/* Descrição / Notas */}
+          {/* DescriÃ§Ã£o / Notas */}
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Descrição / Notas</label>
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">DescriÃ§Ã£o / Notas</label>
               <button
                 onClick={recording ? stopVoice : startVoice}
                 className={`text-xs px-2 py-1 rounded-lg font-bold transition-colors ${recording ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
               >
-                {recording ? '⏹ Parar' : '🎤 Voz'}
+                {recording ? 'â¹ Parar' : 'ðŸŽ¤ Voz'}
               </button>
               {toast && <span className="text-xs text-green-600 font-medium">{toast}</span>}
             </div>
@@ -234,23 +234,23 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
               className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 min-h-[80px]"
               value={task.description || ''}
               onChange={e => setField('description', e.target.value)}
-              placeholder="Contexto, links, referências…"
+              placeholder="Contexto, links, referÃªnciasâ€¦"
             />
             <button
               onClick={save}
               className="mt-1 text-xs font-bold px-3 py-1 rounded-lg"
               style={{ background: '#e0f7fa', color: '#14B3CC' }}
-            >✓ Salvar nota</button>
+            >âœ“ Salvar nota</button>
           </div>
 
           {/* Notas curtas */}
           <div>
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Notas rápidas</label>
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Notas rÃ¡pidas</label>
             <input
               className="w-full mt-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none"
               value={task.notes || ''}
               onChange={e => setField('notes', e.target.value)}
-              placeholder="Cliente, horário, contexto…"
+              placeholder="Cliente, horÃ¡rio, contextoâ€¦"
             />
           </div>
 
@@ -272,14 +272,14 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
                   <button
                     onClick={() => removeItem(item.id)}
                     className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-400 text-xs transition-opacity"
-                  >✕</button>
+                  >âœ•</button>
                 </div>
               ))}
             </div>
             <div className="flex gap-2 mt-2">
               <input
                 className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none"
-                placeholder="Novo item…"
+                placeholder="Novo itemâ€¦"
                 value={newItem}
                 onChange={e => setNewItem(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && addItem()}
@@ -306,3 +306,4 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
     </div>
   )
 }
+

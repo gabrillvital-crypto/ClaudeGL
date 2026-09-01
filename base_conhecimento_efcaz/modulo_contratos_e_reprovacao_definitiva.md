@@ -1,6 +1,6 @@
-# Novo Módulo de Contratos e Reprovação Definitiva
+# Módulo de Contratos, Reprovação Definitiva e Fase 2
 
-**Fonte:** News interna Efcaz — Ricardo Pedroso (PO), 21/07/2026
+**Fontes:** News interna Efcaz — Ricardo Pedroso (PO), 21/07/2026 (Fase 1) | 27/08/2026 (Fase 2)
 **Seção:** Configurações / Homologação
 **Público:** Usuários contratantes (clientes)
 
@@ -20,9 +20,11 @@ O módulo **Contratos** centraliza contratos vinculados a fornecedores e terceir
 
 O módulo está disponível **somente dentro do fornecedor** — ainda não faz parte de uma solicitação. O fornecedor pode visualizar e inserir documentos de contrato, mas a análise dentro da solicitação ainda não está disponível.
 
-### Fase 2 (prevista para 2ª quinzena de agosto/2026)
+### Fase 2 (liberada em ago/2026)
 
-O módulo passará a integrar o histórico de análise e solicitações — contratos poderão ser incluídos dentro de uma solicitação.
+Contratos agora são **gerados e alterados dentro da solicitação**, como é o fluxo padrão da plataforma. Notificações de vencimento também passaram a funcionar:
+- **Contratos internos:** notificação enviada aos administradores
+- **Contratos - fornecedor:** notificação enviada ao fornecedor quando o documento vencer
 
 ---
 
@@ -52,16 +54,17 @@ O módulo passará a integrar o histórico de análise e solicitações — cont
 
 ---
 
-### Limitações da Fase 1
+### Status atual (ago/2026)
 
 | Item | Situação |
 |---|---|
-| Análise de documentos de contrato dentro da solicitação | ❌ Indisponível — vem na Fase 2 |
-| Notificações de vencimento de documentos | ❌ Indisponível — vem na Fase 2 |
+| Contratos dentro da solicitação (Fase 2) | ✅ Disponível |
+| Notificações de vencimento (admin/fornecedor) | ✅ Disponível |
 | Fornecedor originar dados do contrato | ❌ Nunca — quem insere é o cliente |
+| Análise de documentos de contrato dentro da solicitação | ❌ Ainda indisponível |
 | Exibição ao fornecedor | ✅ Disponível (opcional por contrato) |
 
-> **Workaround para sinalizar o fornecedor:** enquanto a Fase 2 não está disponível, use o módulo de **Ocorrências** (gerar uma ocorrência ao fornecedor) ou crie uma solicitação e **indira**, orientando o passo a passo.
+> **Workaround enquanto análise de docs de contrato não está disponível:** use o módulo de **Ocorrências** (gerar uma ocorrência ao fornecedor) ou crie uma solicitação e **indira**, orientando o passo a passo.
 
 > **Ativação:** o módulo está disponível mediante contratação. Agendar com o CS da conta para cotação e ativação.
 
