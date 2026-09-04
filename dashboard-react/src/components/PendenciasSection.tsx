@@ -1,6 +1,10 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import type { PendRow } from '../types'
 import { exportCSV, exportPendPDF, exportPendXLSXGrouped } from '../utils/exportUtils'
+
+// ── Constantes ─────────────────────────────────────────────────────────────
+
+const PAGE_SIZE = 150
 
 interface Props {
   data: PendRow[]
@@ -48,7 +52,7 @@ function CompBadge({ c }: { c: string }) {
   return <span className="text-[#ccc]">—</span>
 }
 
-// ── Lógica de agrupamento ──────────────────────────────────────────────────
+// ── Lógica de agrupamento e ordenação ─────────────────────────────────────
 
 function parseCompDate(comp: string): Date | null {
   const m = comp.match(/^(\d{2})\/(20\d{2}|\d{2})/)
@@ -63,20 +67,23 @@ function hasDateComp(comp: string): boolean {
   return comp !== 'A classificar' && comp !== 'Não possui competência' && !!parseCompDate(comp)
 }
 
+/**
+ * Ordem: A classificar primeiro → competências com data ASC (Jan → Fev → ...) → Sem competência
+ */
 function sortCompKeys(keys: string[]): string[] {
   const withDate: [string, Date][] = []
   const aClass: string[] = []
   const semComp: string[] = []
   const outros: string[] = []
   for (const k of keys) {
-    if (k === 'A classificar')         { aClass.push(k); continue }
+    if (k === 'A classificar')          { aClass.push(k); continue }
     if (k === 'Não possui competência') { semComp.push(k); continue }
     const d = parseCompDate(k)
     if (d) withDate.push([k, d])
     else   outros.push(k)
   }
-  withDate.sort(([, a], [, b]) => b.getTime() - a.getTime()) // mais recente primeiro
-  return [...withDate.map(([k]) => k), ...outros, ...aClass, ...semComp]
+  withDate.sort(([, a], [, b]) => a.getTime() - b.getTime()) // crescente: Jan → Fev → ...
+  return [...aClass, ...withDate.map(([k]) => k), ...outros, ...semComp]
 }
 
 function groupByComp(rows: PendRow[]): Map<string, PendRow[]> {
@@ -89,7 +96,69 @@ function groupByComp(rows: PendRow[]): Map<string, PendRow[]> {
   return map
 }
 
-// ── Componentes internos ───────────────────────────────────────────────────
+/** Achata os dados na ordem dos grupos (para paginação correta) */
+function flattenInOrder(rows: PendRow[]): PendRow[] {
+  const grouped = groupByComp(rows)
+  const keys = sortCompKeys([...grouped.keys()])
+  const result: PendRow[] = []
+  for (const key of keys) result.push(...(grouped.get(key) ?? []))
+  return result
+}
+
+// ── Componente de navegação ────────────────────────────────────────────────
+
+function NavBtn({ label, disabled, onClick }: { label: string; disabled: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`px-2.5 py-1.5 text-[12px] font-semibold rounded border transition-colors select-none
+        ${disabled
+          ? 'border-[#ddd] text-[#bbb] cursor-not-allowed'
+          : 'border-[#0E8FA3] text-[#0E8FA3] hover:bg-[#0E8FA3] hover:text-white'
+        }`}
+    >
+      {label}
+    </button>
+  )
+}
+
+interface PaginationBarProps {
+  currentPage: number
+  totalPages: number
+  pageStart: number   // 1-indexed, exibição
+  pageEnd: number     // 1-indexed, exibição
+  totalItems: number
+  onFirst: () => void
+  onPrev: () => void
+  onNext: () => void
+  onLast: () => void
+}
+
+function PaginationBar({ currentPage, totalPages, pageStart, pageEnd, totalItems, onFirst, onPrev, onNext, onLast }: PaginationBarProps) {
+  if (totalPages <= 1) return null
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 py-3 px-1">
+      <p className="text-[12px] text-[#6C757D]">
+        Exibindo{' '}
+        <strong className="text-[#333]">{pageStart.toLocaleString('pt-BR')}–{pageEnd.toLocaleString('pt-BR')}</strong>
+        {' '}de{' '}
+        <strong className="text-[#333]">{totalItems.toLocaleString('pt-BR')}</strong> registros
+      </p>
+      <div className="flex items-center gap-1.5">
+        <NavBtn label="« Primeira"  disabled={currentPage === 1}          onClick={onFirst} />
+        <NavBtn label="‹ Anterior"  disabled={currentPage === 1}          onClick={onPrev}  />
+        <span className="px-3 py-1.5 text-[12px] font-bold text-[#0E8FA3] bg-[#e8f7fa] rounded border border-[#b2dce6] min-w-[120px] text-center">
+          Página {currentPage} de {totalPages}
+        </span>
+        <NavBtn label="Próxima ›"   disabled={currentPage === totalPages} onClick={onNext}  />
+        <NavBtn label="Última »"    disabled={currentPage === totalPages} onClick={onLast}  />
+      </div>
+    </div>
+  )
+}
+
+// ── Linha da tabela ────────────────────────────────────────────────────────
 
 const TABLE_HEADERS = ['Situação Real', 'Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe']
 
@@ -109,17 +178,21 @@ function PendRowItem({ r, i }: { r: PendRow; i: number }) {
   )
 }
 
+// ── Bloco de grupo de competência ──────────────────────────────────────────
+
 interface GroupBlockProps {
   compKey: string
   rows: PendRow[]
+  /** Nota de contexto de página — exibida no header quando grupo está parcial */
+  pageNote?: string
   initExpanded?: boolean
 }
 
-function GroupBlock({ compKey, rows, initExpanded = true }: GroupBlockProps) {
+function GroupBlock({ compKey, rows, pageNote, initExpanded = true }: GroupBlockProps) {
   const [expanded, setExpanded] = useState(initExpanded)
-  const isAClass   = compKey === 'A classificar'
-  const isSemComp  = compKey === 'Não possui competência'
-  const hasDate    = hasDateComp(compKey)
+  const isAClass  = compKey === 'A classificar'
+  const isSemComp = compKey === 'Não possui competência'
+  const hasDate   = hasDateComp(compKey)
 
   const borderColor = isAClass ? '#f59e0b' : isSemComp ? '#ccc' : '#0E8FA3'
   const headerBg    = isAClass ? 'bg-[#fff3cd]' : isSemComp ? 'bg-[#f5f5f5]' : 'bg-[#e8f7fa]'
@@ -129,7 +202,6 @@ function GroupBlock({ compKey, rows, initExpanded = true }: GroupBlockProps) {
 
   return (
     <div className="mb-3 rounded-lg overflow-hidden" style={{ border: `1.5px solid ${borderColor}` }}>
-      {/* Header do grupo */}
       <div
         className={`flex items-center justify-between px-4 py-2.5 cursor-pointer select-none ${headerBg} border-b`}
         style={{ borderBottomColor: borderColor }}
@@ -144,13 +216,12 @@ function GroupBlock({ compKey, rows, initExpanded = true }: GroupBlockProps) {
             </span>
           )}
           <span className={`font-normal text-[12px] ${countText}`}>
-            ({rows.length} pendência{rows.length !== 1 ? 's' : ''})
+            ({rows.length} pendência{rows.length !== 1 ? 's' : ''}{pageNote ? ` ${pageNote}` : ''})
           </span>
         </div>
         <span className={`text-[12px] ${headerText}`}>{expanded ? '▲' : '▼'}</span>
       </div>
 
-      {/* Tabela de linhas */}
       {expanded && (
         <div className="overflow-x-auto">
           <table className="w-full text-[13px] border-collapse">
@@ -171,7 +242,8 @@ function GroupBlock({ compKey, rows, initExpanded = true }: GroupBlockProps) {
   )
 }
 
-// Divisor de seção para modo híbrido
+// ── Divisor de seção (modo híbrido) ───────────────────────────────────────
+
 function SectionDivider({ label, color }: { label: string; color: string }) {
   return (
     <div className="flex items-center gap-3 mb-3 mt-1">
@@ -187,11 +259,52 @@ function SectionDivider({ label, color }: { label: string; color: string }) {
 // ── Componente principal ───────────────────────────────────────────────────
 
 export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFornFiltered = false }: Props) {
-  const [pdfLoading, setPdfLoading] = useState(false)
-  const [viewMode, setViewMode] = useState<'grouped' | 'flat'>('grouped')
+  const [pdfLoading, setPdfLoading]   = useState(false)
+  const [viewMode, setViewMode]       = useState<'grouped' | 'flat'>('grouped')
+  const [currentPage, setCurrentPage] = useState(1)
 
-  // Flat rows para CSV/PDF
-  const flatRows = useMemo(() => data.map(r => ({
+  // Reset de página sempre que os dados mudarem (filtro aplicado)
+  useEffect(() => { setCurrentPage(1) }, [data])
+  // Reset de página ao mudar de view
+  useEffect(() => { setCurrentPage(1) }, [viewMode])
+
+  // ── Paginação ──────────────────────────────────────────────────────────
+
+  /** Lista completa achata na ordem dos grupos (base para slice de página) */
+  const flatOrdered = useMemo(() => flattenInOrder(data), [data])
+
+  const totalItems  = flatOrdered.length
+  const totalPages  = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
+
+  // Clamp currentPage ao range válido
+  const safePage    = Math.min(Math.max(1, currentPage), totalPages)
+  const pageStartIdx = (safePage - 1) * PAGE_SIZE           // 0-indexed
+  const pageEndIdx   = Math.min(safePage * PAGE_SIZE, totalItems)
+  const pageStart    = totalItems === 0 ? 0 : pageStartIdx + 1 // 1-indexed para exibição
+  const pageEnd      = pageEndIdx                               // 1-indexed para exibição
+
+  const pagedData = useMemo(
+    () => flatOrdered.slice(pageStartIdx, pageEndIdx),
+    [flatOrdered, pageStartIdx, pageEndIdx],
+  )
+
+  // Agrupamentos do slice atual (para modo agrupado)
+  const pagedGrouped    = useMemo(() => groupByComp(pagedData), [pagedData])
+  const pagedKeys       = useMemo(() => sortCompKeys([...pagedGrouped.keys()]), [pagedGrouped])
+  const pagedKeysComData = useMemo(() => pagedKeys.filter(k => hasDateComp(k)), [pagedKeys])
+  const pagedKeysSemData = useMemo(() => pagedKeys.filter(k => !hasDateComp(k)), [pagedKeys])
+
+  // Auto-expand: expande todos quando há poucos grupos na página
+  const autoExpand = pagedKeys.length <= 4
+
+  // Navegação
+  const goFirst = useCallback(() => setCurrentPage(1),             [])
+  const goPrev  = useCallback(() => setCurrentPage(p => p - 1),   [])
+  const goNext  = useCallback(() => setCurrentPage(p => p + 1),   [])
+  const goLast  = useCallback(() => setCurrentPage(totalPages),    [totalPages])
+
+  // Flat rows para exportação (todos os dados, não só a página atual)
+  const flatRows = useMemo(() => flatOrdered.map(r => ({
     Fornecedor: r.Fornecedor,
     CNPJ: fmtCNPJ(r.CNPJ_Forn),
     Area: r.Area,
@@ -199,7 +312,7 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
     Competencia: r.Competencia,
     Detalhe: r.Detalhe,
     StatusReal: r.StatusReal,
-  })), [data])
+  })), [flatOrdered])
 
   function handlePDF() {
     setPdfLoading(true)
@@ -209,14 +322,19 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
     }, 50)
   }
 
-  // Agrupamento
-  const grouped     = useMemo(() => groupByComp(data), [data])
-  const sortedKeys  = useMemo(() => sortCompKeys([...grouped.keys()]), [grouped])
-  const keysComData = useMemo(() => sortedKeys.filter(k => hasDateComp(k)), [sortedKeys])
-  const keysSemData = useMemo(() => sortedKeys.filter(k => !hasDateComp(k)), [sortedKeys])
+  const paginationProps: PaginationBarProps = {
+    currentPage: safePage,
+    totalPages,
+    pageStart,
+    pageEnd,
+    totalItems,
+    onFirst: goFirst,
+    onPrev:  goPrev,
+    onNext:  goNext,
+    onLast:  goLast,
+  }
 
-  // Grupos inicialmente expandidos só se houver poucos
-  const autoExpand = sortedKeys.length <= 4
+  // ── Render ────────────────────────────────────────────────────────────
 
   return (
     <div id="section-pendencias">
@@ -282,7 +400,7 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
           </button>
         </div>
 
-        {/* Exportações */}
+        {/* Exportações — sempre sobre todos os dados (não só a página) */}
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-[#999] font-semibold uppercase mr-1">Exportar:</span>
           <button
@@ -307,17 +425,25 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
         </div>
       </div>
 
-      <p className="text-[13px] text-[#6C757D] mb-3">
-        {data.length} pendência(s)
-        {viewMode === 'grouped' && sortedKeys.length > 0 && (
-          <span className="ml-2 text-[#0E8FA3]">· {sortedKeys.length} competência{sortedKeys.length !== 1 ? 's' : ''}</span>
-        )}
-      </p>
+      {/* ── Indicador geral ─────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between mb-2 px-1">
+        <p className="text-[13px] text-[#6C757D]">
+          {totalItems.toLocaleString('pt-BR')} pendência{totalItems !== 1 ? 's' : ''}
+          {viewMode === 'grouped' && pagedKeys.length > 0 && (
+            <span className="ml-2 text-[#0E8FA3]">
+              · {pagedKeys.length} competência{pagedKeys.length !== 1 ? 's' : ''} nesta página
+            </span>
+          )}
+        </p>
+      </div>
+
+      {/* ── Paginação TOPO ──────────────────────────────────────────────── */}
+      <PaginationBar {...paginationProps} />
 
       {/* ── VIEW: Agrupado por Competência ────────────────────────────── */}
       {viewMode === 'grouped' && (
         <>
-          {data.length === 0 && (
+          {totalItems === 0 && (
             <div className="bg-white rounded-xl p-8 text-center text-[#999]">
               Nenhuma pendência encontrada
             </div>
@@ -326,31 +452,30 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
           {isFornFiltered ? (
             /* Modo híbrido: fornecedor filtrado → duas seções */
             <>
-              {keysComData.length > 0 && (
+              {pagedKeysComData.length > 0 && (
                 <div className="mb-2">
                   <SectionDivider label="Documentos com Competência" color="#0E8FA3" />
-                  {keysComData.map(key => (
-                    <GroupBlock key={key} compKey={key} rows={grouped.get(key)!} initExpanded={true} />
+                  {pagedKeysComData.map(key => (
+                    <GroupBlock key={key} compKey={key} rows={pagedGrouped.get(key)!} initExpanded={true} />
                   ))}
                 </div>
               )}
-
-              {keysSemData.length > 0 && (
+              {pagedKeysSemData.length > 0 && (
                 <div className="mb-2">
                   <SectionDivider label="Sem Competência / Eventuais" color="#6C757D" />
-                  {keysSemData.map(key => (
-                    <GroupBlock key={key} compKey={key} rows={grouped.get(key)!} initExpanded={true} />
+                  {pagedKeysSemData.map(key => (
+                    <GroupBlock key={key} compKey={key} rows={pagedGrouped.get(key)!} initExpanded={true} />
                   ))}
                 </div>
               )}
             </>
           ) : (
             /* Modo geral: todos os grupos em sequência */
-            sortedKeys.map(key => (
+            pagedKeys.map(key => (
               <GroupBlock
                 key={key}
                 compKey={key}
-                rows={grouped.get(key)!}
+                rows={pagedGrouped.get(key)!}
                 initExpanded={autoExpand}
               />
             ))
@@ -358,7 +483,7 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
         </>
       )}
 
-      {/* ── VIEW: Lista simples (tabela original) ────────────────────── */}
+      {/* ── VIEW: Lista simples ────────────────────────────────────────── */}
       {viewMode === 'flat' && (
         <div className="bg-white rounded-xl shadow-sm p-4">
           <div className="overflow-x-auto">
@@ -371,8 +496,8 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
                 </tr>
               </thead>
               <tbody>
-                {data.map((r, i) => <PendRowItem key={i} r={r} i={i} />)}
-                {data.length === 0 && (
+                {pagedData.map((r, i) => <PendRowItem key={i} r={r} i={i} />)}
+                {totalItems === 0 && (
                   <tr>
                     <td colSpan={6} className="px-3 py-6 text-center text-[#999]">Nenhuma pendência encontrada</td>
                   </tr>
@@ -382,6 +507,10 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
           </div>
         </div>
       )}
+
+      {/* ── Paginação FUNDO ─────────────────────────────────────────────── */}
+      <PaginationBar {...paginationProps} />
+
     </div>
   )
 }
