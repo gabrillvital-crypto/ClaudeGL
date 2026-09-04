@@ -1920,22 +1920,29 @@ html = f"""<!DOCTYPE html>
   </div>
 
   <div class="chart-card">
-    <div id="tabela-count"></div>
-    <div class="tabela-wrap">
-      <table id="tabela-pend">
-        <thead>
-          <tr>
-            <th>Fornecedor</th>
-            <th>Area</th>
-            <th>Documento</th>
-            <th>Competencia</th>
-            <th>Detalhe da Pendencia</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-body"></tbody>
-      </table>
+    <!-- Barra superior: contador + toggle de view -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div id="tabela-count" style="font-size:13px;color:{COR_CINZA}"></div>
+      <div style="display:flex;gap:3px;background:#f0f8fa;border-radius:8px;padding:4px">
+        <button id="btn-view-grouped" onclick="setPendView('grouped')"
+          style="padding:5px 12px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:{COR_TEAL};color:#fff;transition:all .15s">
+          &#128197; Por Competência
+        </button>
+        <button id="btn-view-flat" onclick="setPendView('flat')"
+          style="padding:5px 12px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:{COR_TEAL};transition:all .15s">
+          &#9776; Lista Simples
+        </button>
+      </div>
     </div>
-    <div id="pend-pagination" style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:{COR_CINZA}"></div>
+
+    <!-- Paginação topo -->
+    <div id="pend-pagination-top"></div>
+
+    <!-- Container dinâmico: grupos (agrupado) ou tabela plana (simples) -->
+    <div id="pend-container"></div>
+
+    <!-- Paginação fundo -->
+    <div id="pend-pagination" style="margin-top:10px"></div>
   </div><!-- /pend-section -->
 
 </div>
@@ -2141,43 +2148,219 @@ function renderSitPage() {{
   `;
 }}
 
-// Paginação Pendências
+// ── Agrupamento e Paginação de Pendências ────────────────────────────────
+
 const PEND_PAGE_SIZE = 150;
-let pendPage = 0;
-function renderPendPage() {{
-  const start = pendPage * PEND_PAGE_SIZE;
-  const rows  = pendFiltrado.slice(start, start + PEND_PAGE_SIZE);
-  const tbody = document.getElementById("tabela-body");
-  tbody.innerHTML = rows.map(r => `
-    <tr>
-      <td>
-        <div>${{r["Fornecedor"]}}</div>
-        ${{r["CNPJ"] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r["CNPJ"]) + '</div>' : ''}}
-      </td>
-      <td>${{badgeArea(r["Area"])}}</td>
-      <td><strong>${{r["Documento"]}}</strong></td>
-      <td>${{r["Competencia"] === "Não possui competência"
-        ? '<span style="color:#aaa;font-size:11px">Não possui</span>'
-        : r["Competencia"] === "A classificar"
-          ? '<span class="badge-a-classificar" title="Campo estruturado vazio ou data anterior ao contrato (nov/2025)">A classificar</span>'
-          : r["Competencia"]
-            ? '<span class="badge-competencia">' + r["Competencia"] + '</span>'
-            : '<span style="color:#aaa">—</span>'}}</td>
-      <td style="max-width:380px;white-space:pre-wrap;font-size:12px">${{r["Detalhe"] || "—"}}</td>
-    </tr>
-  `).join("");
-  const total = pendFiltrado.length;
-  const pages = Math.ceil(total / PEND_PAGE_SIZE);
-  const el = document.getElementById("pend-pagination");
+let pendPage    = 0;
+let pendView    = 'grouped';   // 'grouped' | 'flat'
+
+// Parseia "MM/YY - Mês AAAA" → timestamp para ordenação
+function _parseCompTs(comp) {{
+  const m = (comp || '').match(/^(\d{{2}})\/(20\d{{2}}|\d{{2}})/);
+  if (!m) return null;
+  const mm  = parseInt(m[1], 10);
+  const raw = m[2];
+  const yy  = raw.length === 4 ? parseInt(raw) : 2000 + parseInt(raw);
+  return new Date(yy, mm - 1, 1).getTime();
+}}
+
+// Ordena chaves: A classificar → datas ASC (Nov/25→Dez/25→Jan/26→...) → Sem competência
+function sortCompKeys(keys) {{
+  const withDate = [], aClass = [], semComp = [], outros = [];
+  keys.forEach(k => {{
+    if (k === 'A classificar')          {{ aClass.push(k);  return; }}
+    if (k === 'Não possui competência') {{ semComp.push(k); return; }}
+    const ts = _parseCompTs(k);
+    if (ts !== null) withDate.push([k, ts]);
+    else             outros.push(k);
+  }});
+  withDate.sort((a, b) => a[1] - b[1]);   // crescente: Nov/25 → Jan/26 → ...
+  return [...aClass, ...withDate.map(([k]) => k), ...outros, ...semComp];
+}}
+
+// Agrupa rows por competência
+function groupByComp(rows) {{
+  const map = {{}};
+  rows.forEach(r => {{
+    const k = r['Competencia'] || 'A classificar';
+    if (!map[k]) map[k] = [];
+    map[k].push(r);
+  }});
+  return map;
+}}
+
+// Achata os dados na ordem dos grupos (base para o slice de página)
+function flattenInOrder(rows) {{
+  const g    = groupByComp(rows);
+  const keys = sortCompKeys(Object.keys(g));
+  const out  = [];
+  keys.forEach(k => out.push(...g[k]));
+  return out;
+}}
+
+// Badge de situação real
+function badgeSitReal(s) {{
+  if (s === 'Ativa')
+    return '<span style="background:#fff3cd;color:#856404;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700">Ativa</span>';
+  if (s === 'Não resolvida')
+    return '<span style="background:#fde8e8;color:#b91c1c;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700">Não resolvida</span>';
+  return '<span style="background:#d4edda;color:#155724;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700">Resolvida</span>';
+}}
+
+// Badge de competência (inline)
+function badgeComp(c) {{
+  if (!c || c === '—') return '<span style="color:#ccc">—</span>';
+  if (c === 'Não possui competência')
+    return '<span style="background:#f0f0f0;color:#999;font-size:11px;padding:2px 6px;border-radius:4px;font-style:italic">Não possui</span>';
+  if (c === 'A classificar')
+    return '<span class="badge-a-classificar" title="Campo estruturado vazio ou data anterior ao contrato (nov/2025)">A classificar</span>';
+  return '<span class="badge-competencia">' + c + '</span>';
+}}
+
+// Linha da tabela
+function renderPendRow(r, i) {{
+  const bg = i % 2 === 1 ? 'background:#f0f8fa' : '';
+  return `<tr style="border-bottom:1px solid #e5eef1;${{bg}}">
+    <td style="padding:7px 10px;white-space:nowrap">${{badgeSitReal(r['StatusReal'] || '')}}</td>
+    <td style="padding:7px 10px">
+      <div style="font-weight:500">${{r['Fornecedor']}}</div>
+      ${{r['CNPJ'] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r['CNPJ']) + '</div>' : ''}}
+    </td>
+    <td style="padding:7px 10px">${{badgeArea(r['Area'])}}</td>
+    <td style="padding:7px 10px;font-weight:600">${{r['Documento']}}</td>
+    <td style="padding:7px 10px">${{badgeComp(r['Competencia'])}}</td>
+    <td style="padding:7px 10px;font-size:12px;color:#555;max-width:380px;white-space:pre-wrap">${{r['Detalhe'] || '—'}}</td>
+  </tr>`;
+}}
+
+// Cabeçalho da tabela interna de cada grupo
+const PEND_TH = `<thead><tr style="background:{COR_TEAL};color:#fff">
+  <th style="padding:7px 10px;text-align:left">Situação Real</th>
+  <th style="padding:7px 10px;text-align:left">Fornecedor</th>
+  <th style="padding:7px 10px;text-align:left">Área</th>
+  <th style="padding:7px 10px;text-align:left">Documento</th>
+  <th style="padding:7px 10px;text-align:left">Competência</th>
+  <th style="padding:7px 10px;text-align:left">Detalhe</th>
+</tr></thead>`;
+
+// Renderiza um bloco de grupo (accordion)
+function renderGroupBlock(key, rows) {{
+  const isAClass  = key === 'A classificar';
+  const isSemComp = key === 'Não possui competência';
+  const hasDate   = !isAClass && !isSemComp;
+
+  const borderColor = isAClass ? '#f59e0b' : isSemComp ? '#ccc' : '{COR_TEAL}';
+  const headerBg    = isAClass ? '#fff3cd' : isSemComp ? '#f5f5f5' : '#e8f7fa';
+  const headerText  = isAClass ? '#92400e' : isSemComp ? '#555'    : '#0c7a8c';
+  const icon        = isAClass ? '⚠️'      : isSemComp ? '—'       : '📅';
+  const label       = isAClass ? 'A classificar'
+                    : isSemComp ? 'Sem competência / Eventualidades'
+                    : key;
+  const tag         = hasDate ? ' <span style="font-size:10px;background:rgba(255,255,255,.6);border:1px solid #b2dce6;color:{COR_TEAL};padding:1px 5px;border-radius:4px;font-weight:400">mensal</span>' : '';
+  const cnt         = rows.length;
+  const uid         = 'pg-' + key.replace(/\W/g,'_');
+
+  return `
+  <div style="margin-bottom:10px;border:1.5px solid ${{borderColor}};border-radius:8px;overflow:hidden">
+    <div onclick="var b=document.getElementById('${{uid}}');b.style.display=b.style.display==='none'?'':'none';this.querySelector('.pg-chevron').textContent=b.style.display===''?'▲':'▼'"
+      style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;background:${{headerBg}};border-bottom:1px solid ${{borderColor}};user-select:none">
+      <div style="display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px;color:${{headerText}}">
+        <span>${{icon}}</span>
+        <span>${{label}}</span>
+        ${{tag}}
+        <span style="font-weight:400;font-size:12px;color:${{isAClass?'#a16207':isSemComp?'#777':'#0c7a8c'}}">(${{cnt}} pendência${{cnt!==1?'s':''}})</span>
+      </div>
+      <span class="pg-chevron" style="font-size:12px;color:${{headerText}}">▲</span>
+    </div>
+    <div id="${{uid}}" style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        ${{PEND_TH}}
+        <tbody>${{rows.map((r,i)=>renderPendRow(r,i)).join('')}}</tbody>
+      </table>
+    </div>
+  </div>`;
+}}
+
+// Toggle de view
+function setPendView(mode) {{
+  pendView = mode;
+  pendPage = 0;
+  const g = document.getElementById('btn-view-grouped');
+  const f = document.getElementById('btn-view-flat');
+  if (g && f) {{
+    g.style.background = mode === 'grouped' ? '{COR_TEAL}' : 'transparent';
+    g.style.color      = mode === 'grouped' ? '#fff'       : '{COR_TEAL}';
+    f.style.background = mode === 'flat'    ? '{COR_TEAL}' : 'transparent';
+    f.style.color      = mode === 'flat'    ? '#fff'       : '{COR_TEAL}';
+  }}
+  renderPendPage();
+}}
+
+// Renderiza barra de paginação em um elemento
+function renderPendPaginationBar(elId, total, pages) {{
+  const el = document.getElementById(elId);
   if (!el) return;
-  if (pages <= 1) {{ el.innerHTML = ""; return; }}
+  if (pages <= 1) {{ el.innerHTML = ''; return; }}
+  const start = pendPage * PEND_PAGE_SIZE + 1;
+  const end   = Math.min((pendPage + 1) * PEND_PAGE_SIZE, total);
+  const navBtn = (label, disabled, action) =>
+    `<button onclick="${{action}}" ${{disabled?'disabled':''}}
+      style="padding:5px 10px;border:1px solid ${{disabled?'#ddd':'{COR_TEAL}'}};border-radius:4px;
+             cursor:${{disabled?'not-allowed':'pointer'}};background:white;color:${{disabled?'#bbb':'{COR_TEAL}'}};
+             font-size:12px;font-weight:600">${{label}}</button>`;
   el.innerHTML = `
-    <button onclick="pendPage=Math.max(0,pendPage-1);renderPendPage()"
-      style="padding:4px 12px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:white" ${{pendPage===0?'disabled':''}}>‹ Anterior</button>
-    <span>Página ${{pendPage+1}} de ${{pages}} &nbsp;(${{total}} registros)</span>
-    <button onclick="pendPage=Math.min(${{pages-1}},pendPage+1);renderPendPage()"
-      style="padding:4px 12px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:white" ${{pendPage===pages-1?'disabled':''}}>Próximo ›</button>
-  `;
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:{COR_CINZA}">
+      <span>Exibindo <strong style="color:#333">${{start.toLocaleString('pt-BR')}}–${{end.toLocaleString('pt-BR')}}</strong>
+            de <strong style="color:#333">${{total.toLocaleString('pt-BR')}}</strong> registros</span>
+      <div style="display:flex;gap:5px;align-items:center">
+        ${{navBtn('« Primeira', pendPage===0, 'pendPage=0;renderPendPage()')}}
+        ${{navBtn('‹ Anterior', pendPage===0, 'pendPage=Math.max(0,pendPage-1);renderPendPage()')}}
+        <span style="padding:5px 12px;background:#e8f7fa;color:{COR_TEAL};border:1px solid #b2dce6;border-radius:4px;font-weight:700;min-width:110px;text-align:center">
+          Página ${{pendPage+1}} de ${{pages}}
+        </span>
+        ${{navBtn('Próxima ›', pendPage===pages-1, 'pendPage=Math.min(' + (pages-1) + ',pendPage+1);renderPendPage()')}}
+        ${{navBtn('Última »',  pendPage===pages-1, 'pendPage=' + (pages-1) + ';renderPendPage()')}}
+      </div>
+    </div>`;
+}}
+
+// Render principal da página de pendências
+function renderPendPage() {{
+  const container = document.getElementById('pend-container');
+  if (!container) return;
+
+  const total = pendFiltrado.length;
+  const flat  = flattenInOrder(pendFiltrado);        // achata na ordem dos grupos
+  const pages = Math.max(1, Math.ceil(total / PEND_PAGE_SIZE));
+  if (pendPage >= pages) pendPage = 0;
+
+  const slice = flat.slice(pendPage * PEND_PAGE_SIZE, (pendPage + 1) * PEND_PAGE_SIZE);
+
+  if (total === 0) {{
+    container.innerHTML = '<div style="padding:32px;text-align:center;color:#999">Nenhuma pendência encontrada</div>';
+    document.getElementById('pend-pagination-top').innerHTML = '';
+    document.getElementById('pend-pagination').innerHTML = '';
+    return;
+  }}
+
+  if (pendView === 'grouped') {{
+    // Reagrupa o slice e renderiza acordeons
+    const pg   = groupByComp(slice);
+    const keys = sortCompKeys(Object.keys(pg));
+    container.innerHTML = keys.map(k => renderGroupBlock(k, pg[k])).join('');
+  }} else {{
+    // Lista simples (tabela plana)
+    container.innerHTML = `
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          ${{PEND_TH}}
+          <tbody>${{slice.map((r,i)=>renderPendRow(r,i)).join('')}}</tbody>
+        </table>
+      </div>`;
+  }}
+
+  renderPendPaginationBar('pend-pagination-top', total, pages);
+  renderPendPaginationBar('pend-pagination', total, pages);
 }}
 
 // Aliases debounced para inputs de busca (300ms)
@@ -2721,8 +2904,13 @@ function filtrarTabela() {{
   }});
   pendPage = 0;
   renderPendPage();
-  document.getElementById("tabela-count").textContent =
-    `${{pendFiltrado.length}} pendencia(s) exibida(s) de ${{DADOS.length}} no total`;
+  const el = document.getElementById("tabela-count");
+  if (el) {{
+    const grps = Object.keys(groupByComp(pendFiltrado)).length;
+    el.innerHTML = `<strong style="color:#333">${{pendFiltrado.length.toLocaleString('pt-BR')}}</strong> pendência(s)`
+      + (grps > 0 ? ` &nbsp;·&nbsp; <span style="color:{COR_TEAL}">${{grps}} competência${{grps!==1?'s':''}}</span>` : '')
+      + ` &nbsp;<span style="color:#aaa;font-size:11px">de ${{DADOS.length.toLocaleString('pt-BR')}} no histórico</span>`;
+  }}
 }}
 function limparFiltros() {{ filtrarTabela(); }}
 
