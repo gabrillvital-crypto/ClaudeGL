@@ -4,7 +4,7 @@ import { exportCSV, exportXLSX, exportPendPDF } from '../utils/exportUtils'
 
 interface Props {
   data: PendRow[]
-  semCompetencia?: PendRow[]
+  aClassificar?: PendRow[]
   geradoEm?: string
 }
 
@@ -44,7 +44,7 @@ function fmtCNPJ(d: string): string {
   return d
 }
 
-export function PendenciasSection({ data, semCompetencia = [], geradoEm = '' }: Props) {
+export function PendenciasSection({ data, aClassificar = [], geradoEm = '' }: Props) {
   const [pdfLoading, setPdfLoading] = useState(false)
 
   const rows = useMemo(() => data.map(r => ({
@@ -70,34 +70,40 @@ export function PendenciasSection({ data, semCompetencia = [], geradoEm = '' }: 
   return (
     <div id="section-pendencias">
 
-      {/* Alerta: registros sem competência preenchida no campo estruturado */}
-      {semCompetencia.length > 0 && (
+      {/* Alerta: registros classificados como "A classificar" */}
+      {aClassificar.length > 0 && (
         <div className="bg-[#fff8e1] border border-[#f59e0b] rounded-xl p-4 mb-4 flex items-start gap-3">
           <span className="text-[#f59e0b] text-xl mt-0.5">⚠️</span>
-          <div>
+          <div className="w-full">
             <p className="text-[13px] font-bold text-[#92400e] mb-1">
-              {semCompetencia.length} pendência(s) sem competência preenchida no campo estruturado
+              {aClassificar.length} pendência(s) classificadas como "A classificar"
             </p>
-            <p className="text-[12px] text-[#78350f]">
-              Os registros abaixo exigem competência (folha de pagamento, FGTS etc.) mas o campo
-              <strong> "Marcas e representações"</strong> está vazio na base. Preencha o campo
-              estruturado na plataforma para que a competência seja registrada corretamente.
+            <p className="text-[12px] text-[#78350f] mb-2">
+              Estes registros exigem competência mas não possuem data válida no campo estruturado
+              <strong> "Marcas e representações"</strong>. Motivo: campo vazio <em>ou</em> data
+              anterior ao início do contrato Zurich (novembro/2025). Verifique e preencha
+              o campo na plataforma para que a competência seja registrada corretamente.
             </p>
-            <div className="mt-2 overflow-x-auto">
+            <div className="overflow-x-auto">
               <table className="text-[12px] border-collapse w-full">
                 <thead>
                   <tr className="bg-[#fef3c7]">
-                    {['Fornecedor', 'Documento', 'Área'].map(h => (
+                    {['Fornecedor', 'Documento', 'Área', 'Status Real'].map(h => (
                       <th key={h} className="px-3 py-1.5 text-left font-semibold text-[#92400e] border border-[#fde68a]">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {semCompetencia.map((r, i) => (
+                  {aClassificar.map((r, i) => (
                     <tr key={i} className="border-b border-[#fde68a]">
                       <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
                       <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
                       <td className="px-3 py-1.5">{r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor'}</td>
+                      <td className="px-3 py-1.5">
+                        {r.StatusReal === 'Ativa' && <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#fff3cd] text-[#856404]">Ativa</span>}
+                        {r.StatusReal === 'Não resolvida' && <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#fde8e8] text-[#b91c1c]">Não resolvida</span>}
+                        {r.StatusReal === 'Resolvida' && <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#d4edda] text-[#155724]">Resolvida</span>}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -146,8 +152,8 @@ export function PendenciasSection({ data, semCompetencia = [], geradoEm = '' }: 
                   <td className="px-3 py-2">
                     {r.Competencia === 'Não possui competência'
                       ? <span className="bg-[#f0f0f0] text-[#999] text-[11px] px-2 py-0.5 rounded italic">{r.Competencia}</span>
-                      : r.Competencia === 'Sem competência preenchida'
-                        ? <span className="bg-[#fff3cd] text-[#856404] text-[11px] px-2 py-0.5 rounded italic" title="Campo 'Marcas e representações' vazio na plataforma">⚠ Não preenchido</span>
+                      : r.Competencia === 'A classificar'
+                        ? <span className="bg-[#fff3cd] text-[#856404] text-[11px] px-2 py-0.5 rounded italic" title="Campo estruturado vazio ou data anterior ao contrato (nov/2025)">A classificar</span>
                         : r.Competencia
                           ? <span className="bg-[#e8f7fa] text-[#0E8FA3] text-[11px] px-2 py-0.5 rounded">{r.Competencia}</span>
                           : <span className="text-[#ccc]">—</span>}

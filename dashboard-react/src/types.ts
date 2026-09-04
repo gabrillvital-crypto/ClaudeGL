@@ -166,8 +166,9 @@ export interface DashboardData {
 
   // Meta
   competencias: string[]
-  /** Pendências que exigem competência mas têm o campo estruturado "Marcas e representações" vazio */
-  pend_sem_competencia: PendRow[]
+  /** Pendências que exigem competência e caíram em 'A classificar':
+   *  campo estruturado vazio OU data anterior ao início do contrato Zurich (nov/2025) */
+  pend_a_classificar: PendRow[]
   fornecedores_list: string[]
   geradoEm: string
 }

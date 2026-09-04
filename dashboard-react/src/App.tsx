@@ -167,7 +167,7 @@ export function App() {
     if (!data) return []
     let rows = hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.forn_sit
     if (selectedCompSet.size > 0)
-      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'Sem competência preenchida'))
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
     if (activeKpi) {
       const fornStatuses = KPI_STATUS_MAP[activeKpi]?.forn ?? []
       if (fornStatuses.length > 0)
@@ -188,7 +188,7 @@ export function App() {
     if (!data) return []
     let rows = hasFilter ? data.tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.tabela
     if (selectedCompSet.size > 0)
-      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'Sem competência preenchida'))
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
     if (aeroportoFilter) {
       // Ambas as áreas filtram por CNPJ do fornecedor (fornCNPJs = fornecedores com terceiros no aeroporto)
       rows = rows.filter(r => aeroportoFilter.fornCNPJs.has(r.CNPJ_Forn.replace(/\D/g, '')))
@@ -392,7 +392,7 @@ export function App() {
         <Section title="Detalhamento das Pendências (com Competência)">
           <PendenciasSection
             data={tabelaFiltered}
-            semCompetencia={tabelaFiltered.filter(r => r.Competencia === 'Sem competência preenchida')}
+            aClassificar={tabelaFiltered.filter(r => r.Competencia === 'A classificar')}
             geradoEm={data.geradoEm}
           />
         </Section>

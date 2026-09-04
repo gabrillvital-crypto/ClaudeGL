@@ -509,10 +509,23 @@ export function processAllData(
   ])
   const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO', 'CAPACITAÇÃO DE ACORDO COM A ORDEM DE SERVIÇO'])
 
-  // REGRA VIGENTE: competência é lida EXCLUSIVAMENTE do campo estruturado
-  // "Marcas e representações". Qualquer extração via texto livre (campo Pendência
-  // ou nome do documento) é estritamente proibida.
-  // Campo estruturado vazio → 'Sem competência preenchida' (sem fallback algum).
+  // REGRAS VIGENTES DE COMPETÊNCIA (pendências Zurich):
+  // 1. Leitura EXCLUSIVA do campo estruturado "Marcas e representações" — texto livre proibido.
+  // 2. Campo estruturado vazio → 'A classificar'
+  // 3. Campo estruturado preenchido mas data anterior ao início do contrato (nov/2025) → 'A classificar'
+  // 4. Campo preenchido e data >= nov/2025 → valor normalizado
+
+  // Verifica se a competência normalizada é anterior a novembro/2025 (início do contrato Zurich)
+  function competenciaAnteriorContrato(comp: string): boolean {
+    // Formato esperado após normalização: "MM/YY - Mês AAAA" ou ainda "MM/AAAA" / "MM/AA"
+    const m = comp.match(/^(0[1-9]|1[0-2])\/(20\d{2}|\d{2})/)
+    if (!m) return false
+    const mm = parseInt(m[1], 10)
+    const rawY = m[2]
+    const yyyy = rawY.length === 4 ? parseInt(rawY, 10) : 2000 + parseInt(rawY, 10)
+    // Anterior = antes de novembro/2025
+    return yyyy < 2025 || (yyyy === 2025 && mm < 11)
+  }
 
   // ── Tabela de pendências ───────────────────────────────────────────────────
   const tabela: PendRow[] = rawPend.map(row => {
@@ -527,9 +540,13 @@ export function processAllData(
     } else if (area === 'DOCUMENTOS' && !DOCS_COM_COMP_PEND.has(docUpper)) {
       competencia = 'Não possui competência'
     } else {
-      // Leitura exclusiva do campo estruturado "Marcas e representações".
-      // Campo vazio = sem competência preenchida (sem extração de texto livre).
-      competencia = normalizeCompetencia(comp) || 'Sem competência preenchida'
+      // Leitura exclusiva do campo estruturado. Campo vazio ou data pré-contrato → 'A classificar'.
+      const compNorm = normalizeCompetencia(comp)
+      if (!compNorm || competenciaAnteriorContrato(compNorm)) {
+        competencia = 'A classificar'
+      } else {
+        competencia = compNorm
+      }
     }
     const cnpjPend = colCNPJPend ? normCNPJ(row[colCNPJPend]) : ''
     const statusPend = String(row[colSitPend] || '').trim()
@@ -561,8 +578,9 @@ export function processAllData(
   })
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()
 
-  // Registros que exigem competência mas têm o campo estruturado vazio
-  const pend_sem_competencia = tabela.filter(r => r.Competencia === 'Sem competência preenchida')
+  // Registros que exigem competência mas caíram em 'A classificar':
+  // campo estruturado vazio OU data anterior ao início do contrato (nov/2025)
+  const pend_a_classificar = tabela.filter(r => r.Competencia === 'A classificar')
 
   // ── Chart data ────────────────────────────────────────────────────────────
 
@@ -798,7 +816,7 @@ export function processAllData(
     contratosData,
     fornCNPJMap,
     competencias,
-    pend_sem_competencia,
+    pend_a_classificar,
     fornecedores_list,
     geradoEm,
   }
