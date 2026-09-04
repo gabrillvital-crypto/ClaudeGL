@@ -404,6 +404,147 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
   XLSX.writeFile(wb, `${filename}.xlsx`)
 }
 
+// ── PDF de Pendências agrupado por Competência (replica layout da tela) ──
+
+export function exportPendPDFGrouped(rows: PendRow[], geradoEm: string, filename = 'pendencias_zurich') {
+  const doc    = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+  const pageW  = doc.internal.pageSize.getWidth()
+  const pageH  = doc.internal.pageSize.getHeight()
+  const mL     = 10   // margin left
+  const mR     = 10   // margin right
+  const usable = pageW - mL - mR
+
+  // ── Agrupar e ordenar ──────────────────────────────────────────────────
+  const grouped = new Map<string, PendRow[]>()
+  for (const r of rows) {
+    const key = r.Competencia || 'A classificar'
+    if (!grouped.has(key)) grouped.set(key, [])
+    grouped.get(key)!.push(r)
+  }
+  const sortedKeys = _sortCompKeysLocal([...grouped.keys()])
+
+  // ── Header do relatório ────────────────────────────────────────────────
+  doc.setFillColor(...TEAL_DARK)
+  doc.rect(0, 0, pageW, 16, 'F')
+  doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(...WHITE)
+  doc.text('EFCAZ', mL, 10)
+  doc.setFontSize(10); doc.setFont('helvetica', 'normal')
+  doc.text('Relatório de Pendências — Zurich Airport', pageW / 2, 10, { align: 'center' })
+  doc.setFontSize(8)
+  doc.text(`Emitido em: ${geradoEm}`, pageW - mR, 10, { align: 'right' })
+
+  // Sub-header: totalizadores
+  const naoResolvidas = rows.filter(r => r.StatusReal === 'Não resolvida').length
+  doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(100, 100, 100)
+  doc.text(
+    `Total: ${rows.length} pendências  ·  Não resolvidas: ${naoResolvidas}  ·  Grupos: ${sortedKeys.length}  ·  Emitido em: ${geradoEm}`,
+    mL, 22,
+  )
+  doc.setTextColor(...TEXT_DARK)
+
+  let y = 26
+
+  // ── Iterar grupos ─────────────────────────────────────────────────────
+  for (const key of sortedKeys) {
+    const rws      = grouped.get(key)!
+    const isAClass  = key === 'A classificar'
+    const isSemComp = key === 'Não possui competência'
+    const hasDate   = !isAClass && !isSemComp
+
+    // Cores do header de grupo — replica as cores da tela
+    const groupHeaderRGB: [number, number, number] = isAClass
+      ? [245, 158, 11]    // âmbar
+      : isSemComp
+        ? [108, 117, 125] // cinza
+        : [14, 143, 163]  // teal
+
+    // Background sutil do cabeçalho da tabela (replica headerBg da tela)
+    const tableHeadFill: [number, number, number] = isAClass
+      ? [254, 243, 199]   // fef3c7
+      : isSemComp
+        ? [245, 245, 245]
+        : [212, 238, 243] // TEAL_LIGHT
+
+    const tableHeadText: [number, number, number] = isAClass
+      ? [146, 64, 14]     // amber dark
+      : isSemComp
+        ? [80, 80, 80]
+        : TEAL
+
+    // Verificar espaço para header + pelo menos 2 linhas antes de virar página
+    if (y > pageH - 40) { doc.addPage(); y = 10 }
+
+    // Desenhar header do grupo (retângulo colorido, 8mm altura)
+    const hH = 8
+    doc.setFillColor(...groupHeaderRGB)
+    doc.rect(mL, y, usable, hH, 'F')
+
+    doc.setFontSize(9); doc.setFont('helvetica', 'bold'); doc.setTextColor(...WHITE)
+    const label  = isAClass ? 'A CLASSIFICAR' : isSemComp ? 'SEM COMPETÊNCIA / EVENTUALIDADES' : key
+    const tag    = hasDate ? '  [mensal]' : ''
+    const count  = `(${rws.length} pendência${rws.length !== 1 ? 's' : ''})`
+    doc.text(`${label}${tag}   ${count}`, mL + 3, y + 5.5)
+    doc.setTextColor(...TEXT_DARK)
+
+    y += hH
+
+    // Cor da situação real na célula
+    const sitColor = (s: string): [number, number, number] => {
+      if (s === 'Ativa')         return [133, 100, 4]   // amarelo escuro
+      if (s === 'Não resolvida') return [185, 28,  28]  // vermelho
+      if (s === 'Resolvida')     return [21,  87,  36]  // verde
+      return [100, 100, 100]
+    }
+
+    autoTable(doc, {
+      startY: y,
+      head: [['Situação Real', 'Fornecedor', 'CNPJ', 'Área', 'Documento', 'Competência', 'Detalhe']],
+      body: rws.map(r => [
+        r.StatusReal,
+        r.Fornecedor,
+        r.CNPJ_Forn,
+        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Documento,
+        r.Competencia || '—',
+        r.Detalhe || '—',
+      ]),
+      styles: {
+        fontSize: 7, cellPadding: 2,
+        textColor: TEXT_DARK, font: 'helvetica',
+        overflow: 'linebreak',
+      },
+      headStyles: {
+        fillColor: tableHeadFill,
+        textColor: tableHeadText,
+        fontStyle: 'bold', fontSize: 7.5,
+      },
+      alternateRowStyles: { fillColor: GRAY_LIGHT },
+      columnStyles: {
+        0: { cellWidth: 22, fontStyle: 'bold' },
+        1: { cellWidth: 42 },
+        2: { cellWidth: 28, fontSize: 6.5, textColor: [150, 150, 150] },
+        3: { cellWidth: 18 },
+        4: { cellWidth: 42 },
+        5: { cellWidth: 26 },
+        6: { cellWidth: 'auto' },
+      },
+      didParseCell(data) {
+        if (data.section === 'body' && data.column.index === 0) {
+          data.cell.styles.textColor = sitColor(String(data.cell.raw))
+          data.cell.styles.fontStyle = 'bold'
+        }
+      },
+      margin: { left: mL, right: mR },
+      showHead: 'everyPage',
+    })
+
+    y = (doc as any).lastAutoTable.finalY + 5
+  }
+
+  addFooters(doc)
+  doc.save(`${filename}.pdf`)
+}
+
 // ── Relatório de Pendências ────────────────────────────────────────────────
 
 interface PendPDFOptions {

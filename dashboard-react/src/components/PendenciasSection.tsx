@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import type { PendRow } from '../types'
-import { exportCSV, exportPendPDF, exportPendXLSXGrouped } from '../utils/exportUtils'
+import { exportCSV, exportPendPDFGrouped, exportPendXLSXGrouped } from '../utils/exportUtils'
 
 // ── Constantes ─────────────────────────────────────────────────────────────
 
@@ -317,7 +317,7 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
   function handlePDF() {
     setPdfLoading(true)
     setTimeout(() => {
-      exportPendPDF({ rows: flatRows, geradoEm })
+      exportPendPDFGrouped(data, geradoEm, 'pendencias_zurich')
       setPdfLoading(false)
     }, 50)
   }
