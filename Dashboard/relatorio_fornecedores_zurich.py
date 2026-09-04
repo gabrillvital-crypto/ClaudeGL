@@ -128,16 +128,44 @@ df_pend = read_csv_safe(PENDENCIAS_CSV)
 df_terc = read_csv_safe(TERCEIROS_CSV)
 df_sit  = read_csv_safe(SITUACAO_CSV)
 
-df_pend["Empresa"] = df_pend["Razao Social"].apply(abbrev) if "Razao Social" in df_pend.columns else df_pend["Razão Social"].apply(abbrev)
 df_terc["Empresa"] = df_terc["Razao Social"].apply(abbrev) if "Razao Social" in df_terc.columns else df_terc["Razão Social"].apply(abbrev)
 df_sit["Empresa"]  = df_sit["Fornecedor Razão Social"].apply(abbrev) if "Fornecedor Razão Social" in df_sit.columns else df_sit["Fornecedor Razao Social"].apply(abbrev)
 
-# normalizar nome da coluna Razão Social para pendências
-col_rs_pend = "Razão Social" if "Razão Social" in df_pend.columns else "Razao Social"
+# Detectar coluna Razão Social do Fornecedor — novo schema usa "Fornecedor Razão Social"
+col_rs_pend = next(
+    (c for c in df_pend.columns if ("fornecedor" in c.lower() or not any("terceiro" in cc.lower() for cc in df_pend.columns))
+     and ("raz" in c.lower() or "social" in c.lower()) and "terceiro" not in c.lower()),
+    None
+)
+if col_rs_pend is None:
+    col_rs_pend = "Razão Social" if "Razão Social" in df_pend.columns else "Razao Social"
 col_rs_terc = "Razão Social" if "Razão Social" in df_terc.columns else "Razao Social"
 
 df_pend["Empresa"] = df_pend[col_rs_pend].apply(abbrev)
 df_terc["Empresa"] = df_terc[col_rs_terc].apply(abbrev)
+
+# Adaptar novo schema: criar colunas virtuais quando não existem no CSV de pendências
+# Área: novo schema (pendencias_de_terceiros) não tem "Área da pendência" — todos são TERCEIROS
+_col_area_real = next((c for c in df_pend.columns if "rea" in c.lower() and "pend" in c.lower()), None)
+if not _col_area_real:
+    df_pend["Área da pendência"] = "TERCEIROS"
+    _col_area_real = "Área da pendência"
+# Competência: novo schema tem campo direto "Competência"; antigo usava "Marcas e representações"
+_col_comp_real = next(
+    (c for c in df_pend.columns if "compet" in c.lower()),
+    next((c for c in df_pend.columns if "marcas" in c.lower()), None)
+)
+if not _col_comp_real:
+    df_pend["Competência"] = ""
+    _col_comp_real = "Competência"
+# Coluna Terceiro: disponível no novo schema
+_col_terc_rs   = next((c for c in df_pend.columns if "terceiro" in c.lower() and ("raz" in c.lower() or "social" in c.lower())), None)
+_col_terc_cnpj = next((c for c in df_pend.columns if "terceiro" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())), None)
+# Status da solicitação: novo schema usa "Status da última solicitação"
+_col_sit_real = next(
+    (c for c in df_pend.columns if "solic" in c.lower()),
+    None
+)
 
 # ── TIPO DE DOCUMENTO ─────────────────────────────────────────────────────────
 def extrair_doc(row, area=""):
@@ -161,9 +189,8 @@ def extrair_doc(row, area=""):
         comma_idx = first_line.find(",")
         return (first_line[:comma_idx] if comma_idx >= 0 else first_line).strip().upper()[:80] or "OUTROS"
 
-_col_area_for_doc = "Área da pendência" if "Área da pendência" in df_pend.columns else "Area da pendencia"
 df_pend["Tipo_Doc"] = df_pend.apply(
-    lambda row: extrair_doc(row, str(row.get(_col_area_for_doc, "")).strip()),
+    lambda row: extrair_doc(row, str(row.get(_col_area_real, "TERCEIROS")).strip()),
     axis=1
 )
 df_pend["Tipo_Doc"] = df_pend["Tipo_Doc"].str[:80]
@@ -248,8 +275,8 @@ def _status_final_r3(row):
 df_sit_calc["Status_Final"] = df_sit_calc.apply(_status_final_r3, axis=1)
 
 # ── KPIs PENDÊNCIAS ───────────────────────────────────────────────────────────
-col_sit_pend = "Situação da solicitação" if "Situação da solicitação" in df_pend.columns else "Situacao da solicitacao"
-col_area_pend = "Área da pendência" if "Área da pendência" in df_pend.columns else "Area da pendencia"
+col_sit_pend  = _col_sit_real or ("Situação da solicitação" if "Situação da solicitação" in df_pend.columns else "Situacao da solicitacao")
+col_area_pend = _col_area_real  # sempre existe (virtual "TERCEIROS" quando não havia no CSV)
 
 total_fornecedores = df_pend[col_rs_pend].nunique()
 total_pendencias   = len(df_pend)
@@ -280,12 +307,26 @@ trab_emp = df_terc.groupby(["Empresa", col_status_terc]).size().reset_index(name
 trab_emp_total = trab_emp.groupby("Empresa")["Total"].sum().sort_values(ascending=True)
 
 # ── TABELA DE PENDÊNCIAS (inclui Competência) ─────────────────────────────────
-col_marcas = "Marcas e representações" if "Marcas e representações" in df_pend.columns else "Marcas e representacoes"
+col_marcas   = _col_comp_real  # "Competência" (novo) ou "Marcas e representações" (antigo)
 col_pend_txt = "Pendência" if "Pendência" in df_pend.columns else "Pendencia"
-col_cnpj_pend = next((c for c in df_pend.columns if "cpf" in c.lower() or "cnpj" in c.lower()), None)
+# Prioriza CNPJ do Fornecedor (não do Terceiro) para lookup de StatusReal
+col_cnpj_pend = next(
+    (c for c in df_pend.columns if "fornecedor" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())),
+    next((c for c in df_pend.columns if "cpf" in c.lower() or "cnpj" in c.lower()), None)
+)
 
-tabela = df_pend[["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas, col_pend_txt]].copy()
+_cols_base = ["Empresa", col_sit_pend, col_area_pend, "Tipo_Doc", col_marcas, col_pend_txt]
+tabela = df_pend[_cols_base].copy()
 tabela.columns = ["Fornecedor", "Status", "Area", "Documento", "Competencia", "Detalhe"]
+# Enriquecer com Terceiro (disponível no novo schema)
+if _col_terc_rs:
+    tabela["Terceiro"] = df_pend[_col_terc_rs].fillna("").astype(str).str.strip().values
+else:
+    tabela["Terceiro"] = ""
+if _col_terc_cnpj:
+    tabela["CNPJ_Terceiro"] = df_pend[_col_terc_cnpj].fillna("").astype(str).str.strip().values
+else:
+    tabela["CNPJ_Terceiro"] = ""
 tabela["Competencia"] = tabela["Competencia"].fillna("").astype(str).str.strip()
 tabela["Competencia"] = tabela["Competencia"].replace("nan", "")
 # Regra: apenas estes docs exibem Competência nas pendências de Fornecedor (Area=DOCUMENTOS)
@@ -652,7 +693,10 @@ competencias_json  = json.dumps(competencias_lista)
 # Registros 'A classificar': campo estruturado vazio OU data anterior ao contrato (nov/2025)
 _pend_a_class_df    = _tabela_filtrada[_tabela_filtrada['Competencia'] == 'A classificar'].copy()
 total_a_classificar = len(_pend_a_class_df)
-pend_a_classificar_json = json.dumps(_pend_a_class_df[['Fornecedor','Documento','Area','StatusReal']].to_dict("records"))
+_fields_a_class = ['Fornecedor','Documento','Area','StatusReal']
+if 'Terceiro' in _pend_a_class_df.columns:
+    _fields_a_class.insert(2, 'Terceiro')
+pend_a_classificar_json = json.dumps(_pend_a_class_df[_fields_a_class].to_dict("records"))
 
 # Total de fornecedores = união de CNPJs do R3 + R4 (evita subcontagem quando
 # um fornecedor tem docs de empresa mas nenhum terceiro cadastrado)
@@ -1904,7 +1948,7 @@ html = f"""<!DOCTYPE html>
       <tr style="border-bottom:1px solid #fde68a">
         <td style="padding:5px 10px;color:#78350f">${{r.Fornecedor}}</td>
         <td style="padding:5px 10px;font-weight:600;color:#78350f">${{r.Documento}}</td>
-        <td style="padding:5px 10px">${{r.Area === "TERCEIROS" ? "Terceiros" : "Fornecedor"}}</td>
+        <td style="padding:5px 10px;font-size:12px">${{r.Terceiro || (r.Area === "TERCEIROS" ? "Terceiros" : r.Area || "—")}}</td>
         <td style="padding:5px 10px">${{badgeSR(r.StatusReal)}}</td>
       </tr>`).join("");
   }})();
@@ -2220,16 +2264,17 @@ function badgeComp(c) {{
 // Linha da tabela
 function renderPendRow(r, i) {{
   const bg = i % 2 === 1 ? 'background:#f0f8fa' : '';
+  const terceiro = r['Terceiro'] || (r['Area'] === 'TERCEIROS' ? '' : badgeArea(r['Area']));
   return `<tr style="border-bottom:1px solid #e5eef1;${{bg}}">
     <td style="padding:7px 10px;white-space:nowrap">${{badgeSitReal(r['StatusReal'] || '')}}</td>
     <td style="padding:7px 10px">
       <div style="font-weight:500">${{r['Fornecedor']}}</div>
       ${{r['CNPJ'] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r['CNPJ']) + '</div>' : ''}}
     </td>
-    <td style="padding:7px 10px">${{badgeArea(r['Area'])}}</td>
+    <td style="padding:7px 10px;font-size:12px">${{terceiro || '—'}}</td>
     <td style="padding:7px 10px;font-weight:600">${{r['Documento']}}</td>
     <td style="padding:7px 10px">${{badgeComp(r['Competencia'])}}</td>
-    <td style="padding:7px 10px;font-size:12px;color:#555;max-width:380px;white-space:pre-wrap">${{r['Detalhe'] || '—'}}</td>
+    <td style="padding:7px 10px;font-size:12px;color:#555;max-width:280px;white-space:pre-wrap">${{r['Detalhe'] || '—'}}</td>
   </tr>`;
 }}
 
@@ -2237,7 +2282,7 @@ function renderPendRow(r, i) {{
 const PEND_TH = `<thead><tr style="background:{COR_TEAL};color:#fff">
   <th style="padding:7px 10px;text-align:left">Situação Real</th>
   <th style="padding:7px 10px;text-align:left">Fornecedor</th>
-  <th style="padding:7px 10px;text-align:left">Área</th>
+  <th style="padding:7px 10px;text-align:left">Terceiro</th>
   <th style="padding:7px 10px;text-align:left">Documento</th>
   <th style="padding:7px 10px;text-align:left">Competência</th>
   <th style="padding:7px 10px;text-align:left">Detalhe</th>
@@ -3072,7 +3117,7 @@ function exportarSit() {{
     "situacao_documental_zurich.csv");
 }}
 function exportarPend() {{
-  downloadCSV(pendFiltrado, ["Fornecedor","CNPJ","Area","Documento","Competencia","Detalhe"],
+  downloadCSV(pendFiltrado, ["Fornecedor","CNPJ","Terceiro","Documento","Competencia","Detalhe"],
     "pendencias_zurich.csv");
 }}
 
@@ -3091,7 +3136,7 @@ function exportarSitXLSX() {{
     "situacao_documental_zurich.xlsx");
 }}
 function exportarPendXLSX() {{
-  downloadXLSX(pendFiltrado, ["Fornecedor","CNPJ","Area","Documento","Competencia","Detalhe"],
+  downloadXLSX(pendFiltrado, ["Fornecedor","CNPJ","Terceiro","Documento","Competencia","Detalhe"],
     "pendencias_zurich.xlsx");
 }}
 
@@ -3192,7 +3237,7 @@ function exportarSitPDF() {{
   doc.save("situacao_documental_zurich.pdf");
 }}
 function exportarPendPDF() {{
-  downloadPDF(pendFiltrado, ["Fornecedor","CNPJ","Area","Documento","Competencia","Detalhe"],
+  downloadPDF(pendFiltrado, ["Fornecedor","CNPJ","Terceiro","Documento","Competencia","Detalhe"],
     "pendencias_zurich.pdf", "Detalhamento de Pendências — Zurich Airport");
 }}
 
@@ -3518,7 +3563,7 @@ function exportarRelatorioXLSX() {{
   wsR4["!cols"] = hdR4.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsR4, "R4 - Empresa");
 
-  const hdPend = ["Fornecedor", "CNPJ", "Area", "Documento", "Competencia", "Detalhe"];
+  const hdPend = ["Fornecedor", "CNPJ", "Terceiro", "Documento", "Competencia", "Detalhe"];
   const wsPendData = [hdPend, ...pendFiltrado.map(r => hdPend.map(h => r[h] ?? ""))];
   const wsPend = XLSX.utils.aoa_to_sheet(wsPendData);
   wsPend["!cols"] = hdPend.map(h => ({{wch: Math.max(h.length, 18)}}));
@@ -3571,7 +3616,7 @@ function exportarRelatorioPDF() {{
 
   if (y > 175) {{ doc.addPage(); y = 14; }}
   _titulo("Pendências");
-  const hdPend = ["Fornecedor", "CNPJ", "Area", "Documento", "Competencia", "Detalhe"];
+  const hdPend = ["Fornecedor", "CNPJ", "Terceiro", "Documento", "Competencia", "Detalhe"];
   doc.autoTable({{
     head: [hdPend],
     body: pendFiltrado.map(r => hdPend.map(h => String(r[h] ?? ""))),
@@ -3590,7 +3635,7 @@ function exportarRelatorioCSV() {{
     hdR3,
     ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Aeroporto"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
     ...fornSitFiltrado.map(r=> ["R4-Empresa",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
-    ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
+    ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
   ];
   const lines = rows.map(r => r.map(v => csvEscape(v)).join(","));
   const blob = new Blob([lines.join("\\n")], {{type: "text/csv;charset=utf-8;"}});
