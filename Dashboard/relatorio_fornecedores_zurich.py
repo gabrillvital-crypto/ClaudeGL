@@ -11,7 +11,8 @@ import os as _os
 # Pasta base onde o N8N salva os arquivos com nomes fixos
 BASE_DIR = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
-PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"
+PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"          # novo schema: TERCEIROS (Fornecedor+Terceiro separados)
+PENDENCIAS_DOC_CSV = BASE_DIR + r"\pendencias_documentos_zurich.csv" # schema antigo: DOCUMENTOS + CREDENCIAMENTO
 TERCEIROS_CSV      = BASE_DIR + r"\terceiros_zurich.csv"
 SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
 SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
@@ -124,48 +125,95 @@ def competencia_anterior_contrato(comp):
     yyyy = int(raw_y) if len(raw_y) == 4 else 2000 + int(raw_y)
     return yyyy < 2025 or (yyyy == 2025 and mm < 11)
 
-df_pend = read_csv_safe(PENDENCIAS_CSV)
+df_pend_raw = read_csv_safe(PENDENCIAS_CSV)
 df_terc = read_csv_safe(TERCEIROS_CSV)
 df_sit  = read_csv_safe(SITUACAO_CSV)
 
 df_terc["Empresa"] = df_terc["Razao Social"].apply(abbrev) if "Razao Social" in df_terc.columns else df_terc["Razão Social"].apply(abbrev)
 df_sit["Empresa"]  = df_sit["Fornecedor Razão Social"].apply(abbrev) if "Fornecedor Razão Social" in df_sit.columns else df_sit["Fornecedor Razao Social"].apply(abbrev)
 
-# Detectar coluna Razão Social do Fornecedor — novo schema usa "Fornecedor Razão Social"
-col_rs_pend = next(
-    (c for c in df_pend.columns if ("fornecedor" in c.lower() or not any("terceiro" in cc.lower() for cc in df_pend.columns))
-     and ("raz" in c.lower() or "social" in c.lower()) and "terceiro" not in c.lower()),
-    None
-)
-if col_rs_pend is None:
-    col_rs_pend = "Razão Social" if "Razão Social" in df_pend.columns else "Razao Social"
-col_rs_terc = "Razão Social" if "Razão Social" in df_terc.columns else "Razao Social"
+# ── COMBINAR pendências: novo CSV (TERCEIROS) + antigo CSV (DOCUMENTOS/CREDENCIAMENTO) ──────────
+# Schema unificado — colunas fixas usadas em todo o processamento posterior:
+_COLS_UNIF = [
+    "Fornecedor Razão Social",   # nome do fornecedor
+    "Fornecedor CPF/CNPJ",       # CNPJ do fornecedor
+    "Status da última solicitação",  # APROVADO | EM_ELABORACAO
+    "Área da pendência",         # TERCEIROS | DOCUMENTOS | CREDENCIAMENTO
+    "Terceiro Razão Social",     # nome do trabalhador (vazio para DOCUMENTOS)
+    "Terceiro CPF/CNPJ",         # CPF/CNPJ do trabalhador (vazio para DOCUMENTOS)
+    "Documento",
+    "Competência",               # competência mensal (direta no novo schema; Marcas no antigo)
+    "Pendência",                 # texto de detalhe
+]
+
+def _normalizar_pend_novo(df):
+    """Normaliza o novo CSV (TERCEIROS) para o schema unificado."""
+    _rs   = next((c for c in df.columns if "fornecedor" in c.lower() and ("raz" in c.lower() or "social" in c.lower())), df.columns[0])
+    _cnpj = next((c for c in df.columns if "fornecedor" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())),
+                 next((c for c in df.columns if "cpf" in c.lower() or "cnpj" in c.lower()), df.columns[1]))
+    _sit  = next((c for c in df.columns if "solic" in c.lower()), None)
+    _area = next((c for c in df.columns if "rea" in c.lower() and "pend" in c.lower()), None)
+    _trs  = next((c for c in df.columns if "terceiro" in c.lower() and ("raz" in c.lower() or "social" in c.lower())), None)
+    _tcnpj= next((c for c in df.columns if "terceiro" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())), None)
+    _doc  = "Documento" if "Documento" in df.columns else df.columns[5]
+    _comp = next((c for c in df.columns if "compet" in c.lower()), None)
+    _pend = next((c for c in df.columns if "pend" in c.lower() and ("cia" in c.lower() or "ncia" in c.lower())), None)
+    out = pd.DataFrame({
+        "Fornecedor Razão Social":     df[_rs].values,
+        "Fornecedor CPF/CNPJ":         df[_cnpj].values if _cnpj else "",
+        "Status da última solicitação":df[_sit].values if _sit else "APROVADO",
+        "Área da pendência":           df[_area].values if _area else "TERCEIROS",
+        "Terceiro Razão Social":       df[_trs].values if _trs else "",
+        "Terceiro CPF/CNPJ":           df[_tcnpj].values if _tcnpj else "",
+        "Documento":                   df[_doc].values,
+        "Competência":                 df[_comp].values if _comp else "",
+        "Pendência":                   df[_pend].values if _pend else "",
+    })
+    return out.fillna("")
+
+def _normalizar_pend_antigo(df):
+    """Normaliza o antigo CSV (schema Razão Social / Área da pendência / Marcas) para o schema unificado.
+    Filtra apenas DOCUMENTOS e CREDENCIAMENTO — TERCEIROS vêm do novo CSV."""
+    _area = next((c for c in df.columns if "rea" in c.lower() and "pend" in c.lower()), None)
+    if _area is None:
+        return pd.DataFrame(columns=_COLS_UNIF)
+    df = df[df[_area].isin(["DOCUMENTOS", "CREDENCIAMENTO"])].copy()
+    if df.empty:
+        return pd.DataFrame(columns=_COLS_UNIF)
+    _rs   = next((c for c in df.columns if ("raz" in c.lower() or "social" in c.lower()) and "terceiro" not in c.lower()), df.columns[0])
+    _cnpj = next((c for c in df.columns if ("cpf" in c.lower() or "cnpj" in c.lower()) and "terceiro" not in c.lower()), None)
+    _sit  = next((c for c in df.columns if "solic" in c.lower()), None)
+    _doc  = "Documento" if "Documento" in df.columns else df.columns[4]
+    _marc = next((c for c in df.columns if "marcas" in c.lower()), None)
+    _pend = next((c for c in df.columns if ("pend" in c.lower() or "ncia" in c.lower()) and c != _area), None)
+    out = pd.DataFrame({
+        "Fornecedor Razão Social":     df[_rs].values,
+        "Fornecedor CPF/CNPJ":         df[_cnpj].values if _cnpj else "",
+        "Status da última solicitação":df[_sit].values if _sit else "APROVADO",
+        "Área da pendência":           df[_area].values,
+        "Terceiro Razão Social":       "",
+        "Terceiro CPF/CNPJ":           "",
+        "Documento":                   df[_doc].values,
+        "Competência":                 df[_marc].values if _marc else "",
+        "Pendência":                   df[_pend].values if _pend else "",
+    })
+    return out.fillna("")
+
+_df_terc_norm = _normalizar_pend_novo(df_pend_raw)
+_df_doc_norm  = _normalizar_pend_antigo(read_csv_safe(PENDENCIAS_DOC_CSV)) if _os.path.exists(PENDENCIAS_DOC_CSV) else pd.DataFrame(columns=_COLS_UNIF)
+df_pend = pd.concat([_df_terc_norm, _df_doc_norm], ignore_index=True)
+
+# Nomes fixos das colunas — usados em todo o processamento abaixo
+col_rs_pend   = "Fornecedor Razão Social"
+col_rs_terc   = "Razão Social" if "Razão Social" in df_terc.columns else "Razao Social"
+_col_area_real = "Área da pendência"
+_col_comp_real = "Competência"
+_col_terc_rs   = "Terceiro Razão Social"
+_col_terc_cnpj = "Terceiro CPF/CNPJ"
+_col_sit_real  = "Status da última solicitação"
 
 df_pend["Empresa"] = df_pend[col_rs_pend].apply(abbrev)
 df_terc["Empresa"] = df_terc[col_rs_terc].apply(abbrev)
-
-# Adaptar novo schema: criar colunas virtuais quando não existem no CSV de pendências
-# Área: novo schema (pendencias_de_terceiros) não tem "Área da pendência" — todos são TERCEIROS
-_col_area_real = next((c for c in df_pend.columns if "rea" in c.lower() and "pend" in c.lower()), None)
-if not _col_area_real:
-    df_pend["Área da pendência"] = "TERCEIROS"
-    _col_area_real = "Área da pendência"
-# Competência: novo schema tem campo direto "Competência"; antigo usava "Marcas e representações"
-_col_comp_real = next(
-    (c for c in df_pend.columns if "compet" in c.lower()),
-    next((c for c in df_pend.columns if "marcas" in c.lower()), None)
-)
-if not _col_comp_real:
-    df_pend["Competência"] = ""
-    _col_comp_real = "Competência"
-# Coluna Terceiro: disponível no novo schema
-_col_terc_rs   = next((c for c in df_pend.columns if "terceiro" in c.lower() and ("raz" in c.lower() or "social" in c.lower())), None)
-_col_terc_cnpj = next((c for c in df_pend.columns if "terceiro" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())), None)
-# Status da solicitação: novo schema usa "Status da última solicitação"
-_col_sit_real = next(
-    (c for c in df_pend.columns if "solic" in c.lower()),
-    None
-)
 
 # ── TIPO DE DOCUMENTO ─────────────────────────────────────────────────────────
 def extrair_doc(row, area=""):
@@ -1948,7 +1996,7 @@ html = f"""<!DOCTYPE html>
       <tr style="border-bottom:1px solid #fde68a">
         <td style="padding:5px 10px;color:#78350f">${{r.Fornecedor}}</td>
         <td style="padding:5px 10px;font-weight:600;color:#78350f">${{r.Documento}}</td>
-        <td style="padding:5px 10px;font-size:12px">${{r.Terceiro || (r.Area === "TERCEIROS" ? "Terceiros" : r.Area || "—")}}</td>
+        <td style="padding:5px 10px">${{r.Area === "TERCEIROS" ? (r.Terceiro ? '<span style="font-size:12px">' + r.Terceiro + '</span>' : "Terceiros") : badgeArea(r.Area || "TERCEIROS")}}</td>
         <td style="padding:5px 10px">${{badgeSR(r.StatusReal)}}</td>
       </tr>`).join("");
   }})();
@@ -2264,14 +2312,25 @@ function badgeComp(c) {{
 // Linha da tabela
 function renderPendRow(r, i) {{
   const bg = i % 2 === 1 ? 'background:#f0f8fa' : '';
-  const terceiro = r['Terceiro'] || (r['Area'] === 'TERCEIROS' ? '' : badgeArea(r['Area']));
+  // Coluna "Área / Terceiro": para TERCEIROS mostra o nome do trabalhador;
+  // para DOCUMENTOS e CREDENCIAMENTO mostra badge colorido da área
+  const area = r['Area'] || '';
+  let areaCell;
+  if (area === 'TERCEIROS') {{
+    const terc = r['Terceiro'] || '';
+    areaCell = terc
+      ? `<span style="font-size:12px">${{terc}}</span>`
+      : `${{badgeArea(area)}}`;
+  }} else {{
+    areaCell = badgeArea(area);
+  }}
   return `<tr style="border-bottom:1px solid #e5eef1;${{bg}}">
     <td style="padding:7px 10px;white-space:nowrap">${{badgeSitReal(r['StatusReal'] || '')}}</td>
     <td style="padding:7px 10px">
       <div style="font-weight:500">${{r['Fornecedor']}}</div>
       ${{r['CNPJ'] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r['CNPJ']) + '</div>' : ''}}
     </td>
-    <td style="padding:7px 10px;font-size:12px">${{terceiro || '—'}}</td>
+    <td style="padding:7px 10px">${{areaCell}}</td>
     <td style="padding:7px 10px;font-weight:600">${{r['Documento']}}</td>
     <td style="padding:7px 10px">${{badgeComp(r['Competencia'])}}</td>
     <td style="padding:7px 10px;font-size:12px;color:#555;max-width:280px;white-space:pre-wrap">${{r['Detalhe'] || '—'}}</td>
@@ -2282,7 +2341,7 @@ function renderPendRow(r, i) {{
 const PEND_TH = `<thead><tr style="background:{COR_TEAL};color:#fff">
   <th style="padding:7px 10px;text-align:left">Situação Real</th>
   <th style="padding:7px 10px;text-align:left">Fornecedor</th>
-  <th style="padding:7px 10px;text-align:left">Terceiro</th>
+  <th style="padding:7px 10px;text-align:left">Área / Terceiro</th>
   <th style="padding:7px 10px;text-align:left">Documento</th>
   <th style="padding:7px 10px;text-align:left">Competência</th>
   <th style="padding:7px 10px;text-align:left">Detalhe</th>
@@ -3117,7 +3176,7 @@ function exportarSit() {{
     "situacao_documental_zurich.csv");
 }}
 function exportarPend() {{
-  downloadCSV(pendFiltrado, ["Fornecedor","CNPJ","Terceiro","Documento","Competencia","Detalhe"],
+  downloadCSV(pendFiltrado, ["Fornecedor","CNPJ","Area","Terceiro","Documento","Competencia","Detalhe"],
     "pendencias_zurich.csv");
 }}
 
@@ -3136,7 +3195,7 @@ function exportarSitXLSX() {{
     "situacao_documental_zurich.xlsx");
 }}
 function exportarPendXLSX() {{
-  downloadXLSX(pendFiltrado, ["Fornecedor","CNPJ","Terceiro","Documento","Competencia","Detalhe"],
+  downloadXLSX(pendFiltrado, ["Fornecedor","CNPJ","Area","Terceiro","Documento","Competencia","Detalhe"],
     "pendencias_zurich.xlsx");
 }}
 
@@ -3237,7 +3296,7 @@ function exportarSitPDF() {{
   doc.save("situacao_documental_zurich.pdf");
 }}
 function exportarPendPDF() {{
-  downloadPDF(pendFiltrado, ["Fornecedor","CNPJ","Terceiro","Documento","Competencia","Detalhe"],
+  downloadPDF(pendFiltrado, ["Fornecedor","CNPJ","Area","Terceiro","Documento","Competencia","Detalhe"],
     "pendencias_zurich.pdf", "Detalhamento de Pendências — Zurich Airport");
 }}
 
@@ -3563,7 +3622,7 @@ function exportarRelatorioXLSX() {{
   wsR4["!cols"] = hdR4.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsR4, "R4 - Empresa");
 
-  const hdPend = ["Fornecedor", "CNPJ", "Terceiro", "Documento", "Competencia", "Detalhe"];
+  const hdPend = ["Fornecedor", "CNPJ", "Area", "Terceiro", "Documento", "Competencia", "Detalhe"];
   const wsPendData = [hdPend, ...pendFiltrado.map(r => hdPend.map(h => r[h] ?? ""))];
   const wsPend = XLSX.utils.aoa_to_sheet(wsPendData);
   wsPend["!cols"] = hdPend.map(h => ({{wch: Math.max(h.length, 18)}}));
@@ -3616,7 +3675,7 @@ function exportarRelatorioPDF() {{
 
   if (y > 175) {{ doc.addPage(); y = 14; }}
   _titulo("Pendências");
-  const hdPend = ["Fornecedor", "CNPJ", "Terceiro", "Documento", "Competencia", "Detalhe"];
+  const hdPend = ["Fornecedor", "CNPJ", "Area", "Terceiro", "Documento", "Competencia", "Detalhe"];
   doc.autoTable({{
     head: [hdPend],
     body: pendFiltrado.map(r => hdPend.map(h => String(r[h] ?? ""))),
@@ -3635,7 +3694,7 @@ function exportarRelatorioCSV() {{
     hdR3,
     ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Aeroporto"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
     ...fornSitFiltrado.map(r=> ["R4-Empresa",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
-    ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
+    ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Area"]||"",      r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
   ];
   const lines = rows.map(r => r.map(v => csvEscape(v)).join(","));
   const blob = new Blob([lines.join("\\n")], {{type: "text/csv;charset=utf-8;"}});
