@@ -290,6 +290,120 @@ export function exportR3PDF({ rows, geradoEm, filename = 'situacao_terceiros' }:
   doc.save(`${filename}.pdf`)
 }
 
+// ── Exportação de Pendências agrupada por Competência (Excel) ────────────
+
+function _parseCompDateLocal(comp: string): Date | null {
+  const m = comp.match(/^(\d{2})\/(20\d{2}|\d{2})/)
+  if (!m) return null
+  const mm = parseInt(m[1], 10)
+  const rawY = m[2]
+  const yyyy = rawY.length === 4 ? parseInt(rawY) : 2000 + parseInt(rawY)
+  return new Date(yyyy, mm - 1, 1)
+}
+
+function _sortCompKeysLocal(keys: string[]): string[] {
+  const withDate: [string, Date][] = []
+  const aClass: string[] = []
+  const semComp: string[] = []
+  const outros: string[] = []
+  for (const k of keys) {
+    if (k === 'A classificar')         { aClass.push(k); continue }
+    if (k === 'Não possui competência') { semComp.push(k); continue }
+    const d = _parseCompDateLocal(k)
+    if (d) withDate.push([k, d])
+    else   outros.push(k)
+  }
+  withDate.sort(([, a], [, b]) => b.getTime() - a.getTime())
+  return [...withDate.map(([k]) => k), ...outros, ...aClass, ...semComp]
+}
+
+export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zurich') {
+  const wb = XLSX.utils.book_new()
+
+  // Agrupar por competência
+  const grouped = new Map<string, PendRow[]>()
+  for (const r of rows) {
+    const key = r.Competencia || 'A classificar'
+    if (!grouped.has(key)) grouped.set(key, [])
+    grouped.get(key)!.push(r)
+  }
+  const sortedKeys = _sortCompKeysLocal([...grouped.keys()])
+
+  const headers = ['Competência', 'Fornecedor', 'CNPJ', 'Área', 'Documento', 'Situação Real', 'Detalhe']
+  const colWidths = [28, 38, 20, 14, 40, 16, 60]
+
+  // ── Aba principal: agrupamento visual ──
+  const mainData: (string | number)[][] = [headers]
+  for (const key of sortedKeys) {
+    const rws = grouped.get(key)!
+    const isAClass  = key === 'A classificar'
+    const isSemComp = key === 'Não possui competência'
+    // Linha de cabeçalho do grupo
+    const groupLabel = isAClass
+      ? `⚠ A CLASSIFICAR (${rws.length} pendências)`
+      : isSemComp
+        ? `— SEM COMPETÊNCIA (${rws.length} pendências)`
+        : `📅 ${key}  —  ${rws.length} pendência${rws.length !== 1 ? 's' : ''}`
+    mainData.push([groupLabel, '', '', '', '', '', ''])
+    for (const r of rws) {
+      mainData.push([
+        r.Competencia || '—',
+        r.Fornecedor,
+        r.CNPJ_Forn,
+        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Documento,
+        r.StatusReal,
+        r.Detalhe || '',
+      ])
+    }
+    mainData.push(['', '', '', '', '', '', '']) // espaço entre grupos
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(mainData)
+  ws['!cols'] = colWidths.map(wch => ({ wch }))
+  XLSX.utils.book_append_sheet(wb, ws, 'Pendências')
+
+  // ── Aba "A Classificar" separada ──
+  const aClassRows = rows.filter(r => r.Competencia === 'A classificar')
+  if (aClassRows.length > 0) {
+    const wsAC = XLSX.utils.aoa_to_sheet([
+      headers,
+      ...aClassRows.map(r => [
+        'A classificar',
+        r.Fornecedor,
+        r.CNPJ_Forn,
+        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Documento,
+        r.StatusReal,
+        r.Detalhe || '',
+      ]),
+    ])
+    wsAC['!cols'] = colWidths.map(wch => ({ wch }))
+    XLSX.utils.book_append_sheet(wb, wsAC, 'A Classificar')
+  }
+
+  // ── Aba "Sem Competência" separada (se houver) ──
+  const semCompRows = rows.filter(r => r.Competencia === 'Não possui competência')
+  if (semCompRows.length > 0) {
+    const wsSC = XLSX.utils.aoa_to_sheet([
+      headers,
+      ...semCompRows.map(r => [
+        'Não possui competência',
+        r.Fornecedor,
+        r.CNPJ_Forn,
+        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Documento,
+        r.StatusReal,
+        r.Detalhe || '',
+      ]),
+    ])
+    wsSC['!cols'] = colWidths.map(wch => ({ wch }))
+    XLSX.utils.book_append_sheet(wb, wsSC, 'Sem Competência')
+  }
+
+  XLSX.writeFile(wb, `${filename}.xlsx`)
+}
+
 // ── Relatório de Pendências ────────────────────────────────────────────────
 
 interface PendPDFOptions {

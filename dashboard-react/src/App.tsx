@@ -394,6 +394,7 @@ export function App() {
             data={tabelaFiltered}
             aClassificar={tabelaFiltered.filter(r => r.Competencia === 'A classificar')}
             geradoEm={data.geradoEm}
+            isFornFiltered={selectedFornSet.size > 0}
           />
         </Section>
 
