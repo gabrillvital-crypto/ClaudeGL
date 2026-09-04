@@ -166,6 +166,8 @@ export interface DashboardData {
 
   // Meta
   competencias: string[]
+  /** Pendências que exigem competência mas têm o campo estruturado "Marcas e representações" vazio */
+  pend_sem_competencia: PendRow[]
   fornecedores_list: string[]
   geradoEm: string
 }

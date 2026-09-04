@@ -4,6 +4,7 @@ import { exportCSV, exportXLSX, exportPendPDF } from '../utils/exportUtils'
 
 interface Props {
   data: PendRow[]
+  semCompetencia?: PendRow[]
   geradoEm?: string
 }
 
@@ -43,7 +44,7 @@ function fmtCNPJ(d: string): string {
   return d
 }
 
-export function PendenciasSection({ data, geradoEm = '' }: Props) {
+export function PendenciasSection({ data, semCompetencia = [], geradoEm = '' }: Props) {
   const [pdfLoading, setPdfLoading] = useState(false)
 
   const rows = useMemo(() => data.map(r => ({
@@ -68,6 +69,44 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
 
   return (
     <div id="section-pendencias">
+
+      {/* Alerta: registros sem competência preenchida no campo estruturado */}
+      {semCompetencia.length > 0 && (
+        <div className="bg-[#fff8e1] border border-[#f59e0b] rounded-xl p-4 mb-4 flex items-start gap-3">
+          <span className="text-[#f59e0b] text-xl mt-0.5">⚠️</span>
+          <div>
+            <p className="text-[13px] font-bold text-[#92400e] mb-1">
+              {semCompetencia.length} pendência(s) sem competência preenchida no campo estruturado
+            </p>
+            <p className="text-[12px] text-[#78350f]">
+              Os registros abaixo exigem competência (folha de pagamento, FGTS etc.) mas o campo
+              <strong> "Marcas e representações"</strong> está vazio na base. Preencha o campo
+              estruturado na plataforma para que a competência seja registrada corretamente.
+            </p>
+            <div className="mt-2 overflow-x-auto">
+              <table className="text-[12px] border-collapse w-full">
+                <thead>
+                  <tr className="bg-[#fef3c7]">
+                    {['Fornecedor', 'Documento', 'Área'].map(h => (
+                      <th key={h} className="px-3 py-1.5 text-left font-semibold text-[#92400e] border border-[#fde68a]">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {semCompetencia.map((r, i) => (
+                    <tr key={i} className="border-b border-[#fde68a]">
+                      <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
+                      <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
+                      <td className="px-3 py-1.5">{r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Export bar */}
       <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-center justify-end">
         <span className="text-[11px] text-[#999] font-semibold uppercase mr-1">Exportar:</span>
@@ -107,9 +146,11 @@ export function PendenciasSection({ data, geradoEm = '' }: Props) {
                   <td className="px-3 py-2">
                     {r.Competencia === 'Não possui competência'
                       ? <span className="bg-[#f0f0f0] text-[#999] text-[11px] px-2 py-0.5 rounded italic">{r.Competencia}</span>
-                      : r.Competencia
-                        ? <span className="bg-[#e8f7fa] text-[#0E8FA3] text-[11px] px-2 py-0.5 rounded">{r.Competencia}</span>
-                        : <span className="text-[#ccc]">—</span>}
+                      : r.Competencia === 'Sem competência preenchida'
+                        ? <span className="bg-[#fff3cd] text-[#856404] text-[11px] px-2 py-0.5 rounded italic" title="Campo 'Marcas e representações' vazio na plataforma">⚠ Não preenchido</span>
+                        : r.Competencia
+                          ? <span className="bg-[#e8f7fa] text-[#0E8FA3] text-[11px] px-2 py-0.5 rounded">{r.Competencia}</span>
+                          : <span className="text-[#ccc]">—</span>}
                   </td>
                   <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '240px', maxWidth: '420px' }}>{r.Detalhe}</td>
                 </tr>

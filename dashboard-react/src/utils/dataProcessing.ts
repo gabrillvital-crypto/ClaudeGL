@@ -509,19 +509,16 @@ export function processAllData(
   ])
   const DOCS_SEM_COMP_PEND = new Set(['ASO', 'ORDENS DE SERVIÇO', 'CAPACITAÇÃO DE ACORDO COM A ORDEM DE SERVIÇO'])
 
-  // Extrai e normaliza competência de qualquer texto que contenha padrão MM/AA ou MM/AAAA
-  function extractCompetenciaFromText(text: string): string | null {
-    const m = text.match(/\b(0[1-9]|1[0-2])\/(20\d{2}|\d{2})\b/)
-    if (!m) return null
-    return normalizeCompetencia(`${m[1]}/${m[2]}`)
-  }
+  // REGRA VIGENTE: competência é lida EXCLUSIVAMENTE do campo estruturado
+  // "Marcas e representações". Qualquer extração via texto livre (campo Pendência
+  // ou nome do documento) é estritamente proibida.
+  // Campo estruturado vazio → 'Sem competência preenchida' (sem fallback algum).
 
   // ── Tabela de pendências ───────────────────────────────────────────────────
   const tabela: PendRow[] = rawPend.map(row => {
     const comp = String(row[colMarcasPend] ?? '').trim().replace(/^nan$/, '')
     const area = String(row[colAreaPend] || '').trim()
     const docUpper = extractDoc(row, area)
-    const pendText = String(row[colPendTxt] ?? '').trim()
     const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
       || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
     let competencia: string
@@ -530,11 +527,9 @@ export function processAllData(
     } else if (area === 'DOCUMENTOS' && !DOCS_COM_COMP_PEND.has(docUpper)) {
       competencia = 'Não possui competência'
     } else {
-      // Prioridade: coluna Marcas → data extraída do texto → fallback
-      competencia = normalizeCompetencia(comp)
-        || extractCompetenciaFromText(pendText)
-        || extractCompetenciaFromText(docUpper)
-        || 'A classificar'
+      // Leitura exclusiva do campo estruturado "Marcas e representações".
+      // Campo vazio = sem competência preenchida (sem extração de texto livre).
+      competencia = normalizeCompetencia(comp) || 'Sem competência preenchida'
     }
     const cnpjPend = colCNPJPend ? normCNPJ(row[colCNPJPend]) : ''
     const statusPend = String(row[colSitPend] || '').trim()
@@ -565,6 +560,9 @@ export function processAllData(
     }
   })
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()
+
+  // Registros que exigem competência mas têm o campo estruturado vazio
+  const pend_sem_competencia = tabela.filter(r => r.Competencia === 'Sem competência preenchida')
 
   // ── Chart data ────────────────────────────────────────────────────────────
 
@@ -800,6 +798,7 @@ export function processAllData(
     contratosData,
     fornCNPJMap,
     competencias,
+    pend_sem_competencia,
     fornecedores_list,
     geradoEm,
   }
