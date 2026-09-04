@@ -108,10 +108,21 @@ def normalize_competencia(comp):
     return s
 
 def extract_competencia_from_text(text):
+    # DEPRECATED: não usar mais para pendências — extração via texto proibida (set/2026)
     m = re.search(r'\b(0[1-9]|1[0-2])/(20\d{2}|\d{2})\b', str(text))
     if not m:
         return None
     return normalize_competencia(f"{m.group(1)}/{m.group(2)}")
+
+def competencia_anterior_contrato(comp):
+    """Retorna True se a competência normalizada for anterior a novembro/2025 (início do contrato Zurich)."""
+    m = re.match(r'^(0[1-9]|1[0-2])/(20\d{2}|\d{2})', str(comp).strip())
+    if not m:
+        return False
+    mm = int(m.group(1))
+    raw_y = m.group(2)
+    yyyy = int(raw_y) if len(raw_y) == 4 else 2000 + int(raw_y)
+    return yyyy < 2025 or (yyyy == 2025 and mm < 11)
 
 df_pend = read_csv_safe(PENDENCIAS_CSV)
 df_terc = read_csv_safe(TERCEIROS_CSV)
@@ -299,18 +310,19 @@ _mask_sc_terc = _doc_lower_pen.apply(lambda d: any(d == b or d.startswith(b) for
 tabela.loc[_mask_sc_terc, "Competencia"] = "Não possui competência"
 
 def _calc_comp_pend(row):
+    """
+    REGRAS VIGENTES (set/2026):
+    1. Leitura EXCLUSIVA do campo estruturado 'Marcas e representações' — texto livre proibido.
+    2. Campo vazio → 'A classificar'
+    3. Campo preenchido mas data anterior ao contrato Zurich (nov/2025) → 'A classificar'
+    """
     comp = str(row["Competencia"]).strip()
     if comp == "Não possui competência":
         return comp
+    # Leitura exclusiva do campo estruturado — sem extração de texto livre
     norm = normalize_competencia(comp) if comp not in ("", "A classificar") else ""
-    if norm and norm not in ("A classificar", ""):
+    if norm and norm not in ("A classificar", "") and not competencia_anterior_contrato(norm):
         return norm
-    from_pend = extract_competencia_from_text(row["Detalhe"])
-    if from_pend:
-        return from_pend
-    from_doc = extract_competencia_from_text(row["Documento"])
-    if from_doc:
-        return from_doc
     return "A classificar"
 
 tabela["Detalhe"] = tabela["Detalhe"].astype(str).str.strip()
@@ -626,6 +638,11 @@ total_nao_resolvidas = len(_tabela_filtrada)
 tabela_json = _tabela_filtrada.to_dict("records")
 competencias_lista = sorted([c for c in _tabela_filtrada['Competencia'].unique() if c and c != 'nan'])
 competencias_json  = json.dumps(competencias_lista)
+
+# Registros 'A classificar': campo estruturado vazio OU data anterior ao contrato (nov/2025)
+_pend_a_class_df    = _tabela_filtrada[_tabela_filtrada['Competencia'] == 'A classificar'].copy()
+total_a_classificar = len(_pend_a_class_df)
+pend_a_classificar_json = json.dumps(_pend_a_class_df[['Fornecedor','Documento','Area','StatusReal']].to_dict("records"))
 
 # Total de fornecedores = união de CNPJs do R3 + R4 (evita subcontagem quando
 # um fornecedor tem docs de empresa mas nenhum terceiro cadastrado)
@@ -1095,6 +1112,7 @@ html = f"""<!DOCTYPE html>
   .badge-reprovado          {{ background: #ffeaea; color: {COR_VERMELHO}; }}
   .badge-competencia     {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 11px; padding: 2px 7px; border-radius: 8px; }}
   .badge-sem-competencia {{ background: #f0f0f0; color: #999; font-size: 11px; padding: 2px 7px; border-radius: 8px; font-style: italic; }}
+  .badge-a-classificar   {{ background: #fff3cd; color: #856404; font-size: 11px; padding: 2px 7px; border-radius: 8px; font-style: italic; }}
   .badge-irregular     {{ background: #fff0e0; color: #b35a00; }}
   .badge-alerta        {{ background: #fef3c7; color: #d97706; }}
   .kpi-card.amber      {{ border-top-color: #d97706; }}
@@ -1839,6 +1857,49 @@ html = f"""<!DOCTYPE html>
   </div>
   <div id="pend-section" class="section-collapsible collapsed">
 
+  <!-- Alerta: registros A classificar -->
+  <div id="alerta-a-classificar" style="display:{{'none' if total_a_classificar == 0 else 'flex'}};background:#fff8e1;border:1px solid #f59e0b;border-radius:10px;padding:16px;margin-bottom:16px;gap:12px;align-items:flex-start">
+    <span style="font-size:20px;margin-top:2px">⚠️</span>
+    <div style="width:100%">
+      <p style="font-weight:700;color:#92400e;font-size:13px;margin:0 0 4px">{total_a_classificar} pendência(s) classificadas como "A classificar"</p>
+      <p style="font-size:12px;color:#78350f;margin:0 0 10px">
+        Estes registros exigem competência mas não possuem data válida no campo estruturado
+        <strong>"Marcas e representações"</strong>. Motivo: campo vazio <em>ou</em> data anterior
+        ao início do contrato Zurich (novembro/2025). Verifique e preencha o campo na plataforma.
+      </p>
+      <table style="font-size:12px;border-collapse:collapse;width:100%" id="tabela-a-classificar">
+        <thead>
+          <tr style="background:#fef3c7">
+            <th style="padding:6px 10px;text-align:left;color:#92400e;border:1px solid #fde68a">Fornecedor</th>
+            <th style="padding:6px 10px;text-align:left;color:#92400e;border:1px solid #fde68a">Documento</th>
+            <th style="padding:6px 10px;text-align:left;color:#92400e;border:1px solid #fde68a">Área</th>
+            <th style="padding:6px 10px;text-align:left;color:#92400e;border:1px solid #fde68a">Status Real</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-a-classificar"></tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+  (function(){{
+    const PEND_AC = {pend_a_classificar_json};
+    const tbody = document.getElementById("tbody-a-classificar");
+    if (!tbody) return;
+    function badgeSR(s) {{
+      if (s === "Ativa")         return '<span style="background:#fff3cd;color:#856404;font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700">Ativa</span>';
+      if (s === "Não resolvida") return '<span style="background:#fde8e8;color:#b91c1c;font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700">Não resolvida</span>';
+      return '<span style="background:#d4edda;color:#155724;font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700">Resolvida</span>';
+    }}
+    tbody.innerHTML = PEND_AC.map(r => `
+      <tr style="border-bottom:1px solid #fde68a">
+        <td style="padding:5px 10px;color:#78350f">${{r.Fornecedor}}</td>
+        <td style="padding:5px 10px;font-weight:600;color:#78350f">${{r.Documento}}</td>
+        <td style="padding:5px 10px">${{r.Area === "TERCEIROS" ? "Terceiros" : "Fornecedor"}}</td>
+        <td style="padding:5px 10px">${{badgeSR(r.StatusReal)}}</td>
+      </tr>`).join("");
+  }})();
+  </script>
+
   <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap">
     <span class="export-label">Exportar:</span>
     <span class="export-group">
@@ -2087,9 +2148,11 @@ function renderPendPage() {{
       <td><strong>${{r["Documento"]}}</strong></td>
       <td>${{r["Competencia"] === "Não possui competência"
         ? '<span style="color:#aaa;font-size:11px">Não possui</span>'
-        : r["Competencia"] && r["Competencia"] !== "A classificar"
-          ? '<span class="badge-competencia">' + r["Competencia"] + '</span>'
-          : '<span style="color:#aaa">—</span>'}}</td>
+        : r["Competencia"] === "A classificar"
+          ? '<span class="badge-a-classificar" title="Campo estruturado vazio ou data anterior ao contrato (nov/2025)">A classificar</span>'
+          : r["Competencia"]
+            ? '<span class="badge-competencia">' + r["Competencia"] + '</span>'
+            : '<span style="color:#aaa">—</span>'}}</td>
       <td style="max-width:380px;white-space:pre-wrap;font-size:12px">${{r["Detalhe"] || "—"}}</td>
     </tr>
   `).join("");
