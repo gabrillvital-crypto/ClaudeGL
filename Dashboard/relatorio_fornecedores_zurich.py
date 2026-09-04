@@ -327,9 +327,16 @@ def _calc_comp_pend(row):
 
 tabela["Detalhe"] = tabela["Detalhe"].astype(str).str.strip()
 tabela["Competencia"] = tabela.apply(_calc_comp_pend, axis=1)
-tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(
-    lambda v: re.sub(r'\D', '', str(v).split('.')[0])
-).values if col_cnpj_pend else ""
+
+def _norm_cnpj_pad(v):
+    """Normaliza CNPJ para 14 dígitos com zeros à esquerda — espelha normCNPJ() do React.
+    CPFs (≤11 dígitos) não são padeiados. Remove sufixo .0 do pandas antes de processar."""
+    s = re.sub(r'\D', '', str(v).split('.')[0])
+    if not s or s == '0':
+        return ''
+    return s if len(s) <= 11 else s.zfill(14)
+
+tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(_norm_cnpj_pad).values if col_cnpj_pend else ""
 # tabela_json será finalizado após bloco R4 (StatusReal depende dos lookups)
 
 # ── TABELA DE SITUAÇÃO DOCUMENTAL (3 camadas) ─────────────────────────────────
@@ -585,35 +592,38 @@ pct_conformidade = round(_aprov_geral / _total_geral * 100, 1) if _total_geral >
 pct_nao_conform  = round(_nc_geral    / _total_geral * 100, 1) if _total_geral > 0 else 0
 
 # ── STATUSREAL — apenas pendências Não resolvidas ─────────────────────────────
-# R3 lookup: "cnpj_forn_digits|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
+# Alinhamento com React:
+#   1. CNPJ padeia para 14 dígitos via _norm_cnpj_pad (evita divergência por zeros perdidos)
+#   2. Última linha do CSV ganha (sobrescreve sempre) — estado mais recente do documento
+
+# R3 lookup: "cnpj_forn_pad|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
 _pend_r3_lookup: dict = {}
 _col_cnpj_forn_r3_pend = next(
     (c for c in df_sit_calc.columns if "fornecedor" in c.lower() and re.search(r'cpf|cnpj', c, re.I)), None
 )
 if _col_cnpj_forn_r3_pend:
     for _, _r in df_sit_calc.iterrows():
-        _ck = re.sub(r'\D', '', str(_r[_col_cnpj_forn_r3_pend]).split('.')[0])
+        _ck = _norm_cnpj_pad(str(_r[_col_cnpj_forn_r3_pend]))
         _dk = str(_r.get('Documento', '')).strip().upper()
         if not _ck or not _dk or _dk == 'NAN':
             continue
         _key = f'{_ck}|||{_dk}'
         _val = 'Aprovado' if str(_r.get('Status_Cat', '')).strip() == 'Aprovado' else 'NaoAprovado'
+        # R3: trava no primeiro NaoAprovado — alinhado com React (if key==NaoAprovado: return)
         if _pend_r3_lookup.get(_key) != 'NaoAprovado':
             _pend_r3_lookup[_key] = _val
 
-# R4 lookup: "cnpj_digits|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
+# R4 lookup: "cnpj_pad|||DOC_UPPER" → 'Aprovado' | 'NaoAprovado'
 _pend_r4_lookup: dict = {}
 _col_cnpj_r4_pend = next((c for c in df_sit_forn_calc.columns if "cpf" in c.lower() or "cnpj" in c.lower()), None) if not df_sit_forn_calc.empty else None
 if not df_sit_forn_calc.empty and _col_cnpj_r4_pend:
     for _, _r in df_sit_forn_calc.iterrows():
-        _ck = re.sub(r'\D', '', str(_r.get(_col_cnpj_r4_pend, '')).split('.')[0])
+        _ck = _norm_cnpj_pad(str(_r.get(_col_cnpj_r4_pend, '')))
         _dk = str(_r.get('Documento', '')).strip().upper()
         if not _ck or not _dk or _dk == 'NAN':
             continue
         _key = f'{_ck}|||{_dk}'
-        _val = 'Aprovado' if str(_r.get('Status_Cat', '')).strip() == 'Aprovado' else 'NaoAprovado'
-        if _pend_r4_lookup.get(_key) != 'NaoAprovado':
-            _pend_r4_lookup[_key] = _val
+        _pend_r4_lookup[_key] = 'Aprovado' if str(_r.get('Status_Cat', '')).strip() == 'Aprovado' else 'NaoAprovado'
 
 def _pend_status_real(row):
     status_pend = str(row.get('Status', '')).strip()
