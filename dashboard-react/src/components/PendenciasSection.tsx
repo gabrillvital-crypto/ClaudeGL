@@ -169,20 +169,26 @@ function PaginationBar({ currentPage, totalPages, pageStart, pageEnd, totalItems
 
 // ── Linha da tabela ────────────────────────────────────────────────────────
 
-const TABLE_HEADERS = ['Situação Real', 'Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe']
+const TABLE_HEADERS = ['Situação Real', 'Área', 'Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Detalhe']
 
 function PendRowItem({ r, i }: { r: PendRow; i: number }) {
   return (
     <tr className={`border-b border-[#e5eef1] hover:bg-[#d4eef3] ${i % 2 === 1 ? 'bg-[#f0f8fa]' : ''}`}>
       <td className="px-3 py-2 whitespace-nowrap"><StatusRealBadge s={r.StatusReal} /></td>
+      <td className="px-3 py-2 whitespace-nowrap">{areaBadge(r.Area)}</td>
       <td className="px-3 py-2">
         <div className="font-medium">{r.Fornecedor}</div>
         {r.CNPJ_Forn && <div className="text-[11px] text-[#999] font-mono mt-0.5">{fmtCNPJ(r.CNPJ_Forn)}</div>}
       </td>
-      <td className="px-3 py-2">{areaBadge(r.Area)}</td>
+      <td className="px-3 py-2 text-[12px] text-[#555]">
+        {r.Terceiro
+          ? <><div>{r.Terceiro}</div>{r.CNPJ_Terceiro && <div className="text-[11px] text-[#bbb] font-mono mt-0.5">{fmtCNPJ(r.CNPJ_Terceiro)}</div>}</>
+          : <span className="text-[#ccc]">—</span>
+        }
+      </td>
       <td className="px-3 py-2 font-semibold">{r.Documento}</td>
       <td className="px-3 py-2"><CompBadge c={r.Competencia} /></td>
-      <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '240px', maxWidth: '420px' }}>{r.Detalhe}</td>
+      <td className="px-3 py-2 text-[12px] text-[#666] break-words" style={{ minWidth: '200px', maxWidth: '380px' }}>{r.Detalhe}</td>
     </tr>
   )
 }
@@ -314,9 +320,11 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
 
   // Flat rows para exportação (todos os dados, não só a página atual)
   const flatRows = useMemo(() => flatOrdered.map(r => ({
-    Fornecedor: r.Fornecedor,
-    CNPJ: fmtCNPJ(r.CNPJ_Forn),
     Area: r.Area,
+    Fornecedor: r.Fornecedor,
+    CNPJ_Fornecedor: fmtCNPJ(r.CNPJ_Forn),
+    Terceiro: r.Terceiro || '',
+    CNPJ_Terceiro: r.CNPJ_Terceiro ? fmtCNPJ(r.CNPJ_Terceiro) : '',
     Documento: r.Documento,
     Competencia: r.Competencia,
     Detalhe: r.Detalhe,
@@ -357,16 +365,16 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
               {aClassificar.length} pendência(s) classificadas como "A classificar"
             </p>
             <p className="text-[12px] text-[#78350f] mb-2">
-              Estes registros exigem competência mas não possuem data válida no campo estruturado
-              <strong> "Marcas e representações"</strong>. Motivo: campo vazio <em>ou</em> data
+              Estes registros exigem competência mas o campo <strong>"Competência"</strong>{' '}
+              (ou <strong>"Marcas e representações"</strong>) está vazio <em>ou</em> com data
               anterior ao início do contrato Zurich (novembro/2025). Verifique e preencha
-              o campo na plataforma para que a competência seja registrada corretamente.
+              na plataforma para que a competência seja registrada corretamente.
             </p>
             <div className="overflow-x-auto">
               <table className="text-[12px] border-collapse w-full">
                 <thead>
                   <tr className="bg-[#fef3c7]">
-                    {['Fornecedor', 'Documento', 'Área', 'Status Real'].map(h => (
+                    {['Área', 'Fornecedor', 'Terceiro', 'Documento', 'Status Real'].map(h => (
                       <th key={h} className="px-3 py-1.5 text-left font-semibold text-[#92400e] border border-[#fde68a]">{h}</th>
                     ))}
                   </tr>
@@ -374,9 +382,10 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
                 <tbody>
                   {aClassificar.map((r, i) => (
                     <tr key={i} className="border-b border-[#fde68a]">
-                      <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
-                      <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
                       <td className="px-3 py-1.5">{areaBadge(r.Area)}</td>
+                      <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
+                      <td className="px-3 py-1.5 text-[#555] italic">{r.Terceiro || '—'}</td>
+                      <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
                       <td className="px-3 py-1.5"><StatusRealBadge s={r.StatusReal} /></td>
                     </tr>
                   ))}

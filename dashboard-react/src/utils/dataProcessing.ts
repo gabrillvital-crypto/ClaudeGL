@@ -222,25 +222,55 @@ export function processAllData(
   rawFornSit   = stripContratos(rawFornSit)
   rawContratos = stripContratos(rawContratos)
 
-  // ── Descoberta de colunas — Pendências Fornecedor (schema antigo: Área da pendência) ──
+  // ── Helper: lê competência de uma linha tentando múltiplos campos ─────────
+  // Prioridade: "Competência" (campo estruturado direto) → "Marcas e representações"
+  function readCompetencia(row: Record<string, string>, cols: string[]): string {
+    const colComp   = findCol(cols, 'compet')
+    const colMarcas = findCol(cols, 'marcas')
+    const vComp   = colComp   ? String(row[colComp]   ?? '').trim().replace(/^nan$/, '') : ''
+    const vMarcas = colMarcas ? String(row[colMarcas] ?? '').trim().replace(/^nan$/, '') : ''
+    // "A classificar" explícito no campo Competência → tratar como vazio e tentar Marcas
+    const cand = (vComp && vComp !== 'A classificar') ? vComp : vMarcas
+    return cand
+  }
+
+  // ── Descoberta de colunas — Pendências Fornecedor ─────────────────────────
+  // Suporta: schema antigo (Razão Social + Área da pendência) e
+  //          schema novo (Fornecedor Razão Social, sem Área — apenas DOCUMENTOS)
   const pendFornCols = rawPendForn[0] ? Object.keys(rawPendForn[0]) : []
-  const colRsPendForn   = findCol(pendFornCols, 'raz') ?? 'Razão Social'
-  const colSitPendForn  = findCol(pendFornCols, 'situa', 'solicit') ?? 'Situação da solicitação'
-  const colMarcasPendForn = findCol(pendFornCols, 'marcas') ?? 'Marcas e representações'
-  const colPendTxtForn  = pendFornCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
+  // Razão Social do fornecedor: tenta prefixado "fornecedor" primeiro, depois genérico
+  const colRsPendForn = findCol(pendFornCols, 'fornecedor', 'raz')
+    ?? findCol(pendFornCols, 'raz')
+    ?? 'Razão Social'
+  // Status da solicitação: tenta "última solicitação" (novo) ou "Situação da solicitação" (antigo)
+  const colSitPendForn = findCol(pendFornCols, 'status', 'ltima')
+    ?? findCol(pendFornCols, 'situa', 'solicit')
+    ?? 'Situação da solicitação'
+  // CNPJ do fornecedor: exclui colunas que contenham "terceiro"
+  const colCNPJPendForn = pendFornCols.find(c => {
+    const lc = c.toLowerCase()
+    return (lc.includes('cpf') || lc.includes('cnpj')) && !lc.includes('terceiro')
+  }) ?? null
+  // Texto da pendência: regex exato primeiro para evitar capturar "Área da pendência"
+  const colPendTxtForn = pendFornCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
     ?? pendFornCols.find(c => c.toLowerCase().includes('pend') && !c.toLowerCase().includes('rea') && !c.toLowerCase().includes('área'))
     ?? 'Pendência'
-  const colCNPJPendForn = pendFornCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
+  // Documento: coluna "Documento" direta (se existir no novo schema do fornecedor)
+  const colDocPendForn = findCol(pendFornCols, 'documento') ?? null
 
-  // ── Descoberta de colunas — Pendências Terceiros (schema novo: Terceiro Razão Social) ──
+  // ── Descoberta de colunas — Pendências Terceiros ──────────────────────────
+  // Schema: Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação |
+  //         Terceiro Razão Social | Terceiro CPF/CNPJ | Documento | Competência |
+  //         Status de aprovação do documento | Pendência
   const pendTercCols = rawPendTerc[0] ? Object.keys(rawPendTerc[0]) : []
-  const colRsPendTercForn  = findCol(pendTercCols, 'fornecedor', 'raz') ?? 'Fornecedor Razão Social'
+  const colRsPendTercForn   = findCol(pendTercCols, 'fornecedor', 'raz') ?? 'Fornecedor Razão Social'
   const colCNPJPendTercForn = findCol(pendTercCols, 'fornecedor', 'cpf') ?? 'Fornecedor CPF/CNPJ'
-  const colSitPendTerc     = findCol(pendTercCols, 'status', 'ltima') ?? 'Status da última solicitação'
-  const colDocPendTerc     = findCol(pendTercCols, 'documento') ?? 'Documento'
-  const colCompPendTerc    = findCol(pendTercCols, 'compet') ?? 'Competência'
-  const colPendTxtTerc     = findCol(pendTercCols, 'pend') ?? 'Pendência'
-  const colTercRsPendTerc  = findCol(pendTercCols, 'terceiro', 'raz') ?? 'Terceiro Razão Social'
+  const colSitPendTerc      = findCol(pendTercCols, 'status', 'ltima') ?? 'Status da última solicitação'
+  const colDocPendTerc      = findCol(pendTercCols, 'documento') ?? 'Documento'
+  const colPendTxtTerc      = pendTercCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
+    ?? findCol(pendTercCols, 'pend')
+    ?? 'Pendência'
+  const colTercRsPendTerc   = findCol(pendTercCols, 'terceiro', 'raz') ?? 'Terceiro Razão Social'
   const colTercCNPJPendTerc = findCol(pendTercCols, 'terceiro', 'cpf') ?? 'Terceiro CPF/CNPJ'
 
   const tercCols = rawTerc[0] ? Object.keys(rawTerc[0]) : []
@@ -537,25 +567,34 @@ export function processAllData(
     return yyyy < 2025 || (yyyy === 2025 && mm < 11)
   }
 
-  // ── Tabela de pendências — FORNECEDOR (schema antigo: Área da pendência = DOCUMENTOS) ──
+  // ── Tabela de pendências — FORNECEDOR ────────────────────────────────────
+  // Aceita dois schemas:
+  //   A) antigo: Razão Social | CPF/CNPJ | Situação da solicitação | Área | Documento | Marcas e rep. | Pendência
+  //   B) novo:   Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação | Documento | Competência | Pendência
+  // Em ambos, todas as linhas do arquivo são de DOCUMENTOS — Area = 'Fornecedor' fixo.
   function buildPendForn(rows: Record<string, string>[]): PendRow[] {
     return rows.map(row => {
-      const comp = String(row[colMarcasPendForn] ?? '').trim().replace(/^nan$/, '')
-      // Apenas DOCUMENTOS chegam aqui — Area é sempre "Fornecedor"
-      const docUpper = extractDoc(row, 'DOCUMENTOS')
+      // Nome do documento: coluna direta (schema B) ou parseado do texto (schema A)
+      const docDireto = colDocPendForn ? String(row[colDocPendForn] ?? '').trim().toUpperCase().slice(0, 80) : ''
+      const docUpper  = (docDireto && docDireto !== 'NAN') ? docDireto : extractDoc(row, 'DOCUMENTOS')
+
       const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
         || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
+
+      // Competência: tenta "Competência" e "Marcas e representações" (readCompetencia)
       let competencia: string
       if (isSemCompPend || !DOCS_COM_COMP_PEND.has(docUpper)) {
         competencia = 'Não possui competência'
       } else {
-        const compNorm = normalizeCompetencia(comp)
+        const compRaw  = readCompetencia(row, pendFornCols)
+        const compNorm = normalizeCompetencia(compRaw)
         if (!compNorm || competenciaAnteriorContrato(compNorm)) {
           competencia = 'A classificar'
         } else {
           competencia = compNorm
         }
       }
+
       const cnpjPend   = colCNPJPendForn ? normCNPJ(row[colCNPJPendForn]) : ''
       const statusPend = String(row[colSitPendForn] || '').trim()
 
@@ -563,77 +602,87 @@ export function processAllData(
       if (statusPend === 'EM_ELABORACAO') {
         statusReal = 'Ativa'
       } else {
-        const key   = `${cnpjPend}|||${docUpper}`
-        const r4St  = r4StatusLookup.get(key)
-        statusReal  = (!r4St || r4St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
+        const key  = `${cnpjPend}|||${docUpper}`
+        const r4St = r4StatusLookup.get(key)
+        statusReal = (!r4St || r4St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
       }
 
       return {
-        Fornecedor: abbrev(String(row[colRsPendForn] || '')),
-        CNPJ_Forn:  cnpjPend,
-        Status:     statusPend,
-        Area:       'Fornecedor',
-        Documento:  docUpper,
+        Fornecedor:  abbrev(String(row[colRsPendForn] || '')),
+        CNPJ_Forn:   cnpjPend,
+        Status:      statusPend,
+        Area:        'Fornecedor',
+        Documento:   docUpper,
         Competencia: competencia,
-        Detalhe:    String(row[colPendTxtForn] ?? '').trim(),
-        StatusReal: statusReal,
+        Detalhe:     String(row[colPendTxtForn] ?? '').trim(),
+        StatusReal:  statusReal,
       }
     })
   }
 
-  // ── Tabela de pendências — TERCEIRO (schema novo: Terceiro Razão Social) ──
+  // ── Tabela de pendências — TERCEIRO ────────────────────────────────────────
+  // Schema: Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação |
+  //         Terceiro Razão Social | Terceiro CPF/CNPJ | Documento | Competência |
+  //         Status de aprovação do documento | Pendência
+  // Todas as linhas são de TERCEIROS — Area = 'Terceiro' fixo.
   function buildPendTerc(rows: Record<string, string>[]): PendRow[] {
     return rows.map(row => {
       const docUpper = String(row[colDocPendTerc] ?? '').trim().toUpperCase().slice(0, 80) || 'OUTROS'
       const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
         || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
 
-      // Competência: novo schema já traz o campo estruturado diretamente (sem "Marcas e representações")
+      // Competência: tenta "Competência" e "Marcas e representações" como fallback (readCompetencia)
+      // Obs: no novo schema a plataforma já preenche "A classificar" quando não tem data — preservamos
       let competencia: string
       if (isSemCompPend) {
         competencia = 'Não possui competência'
       } else {
-        const compRaw  = String(row[colCompPendTerc] ?? '').trim().replace(/^nan$/, '')
-        const compNorm = normalizeCompetencia(compRaw)
-        if (!compNorm || compNorm === 'A classificar' || competenciaAnteriorContrato(compNorm)) {
+        const compRaw  = readCompetencia(row, pendTercCols)
+        if (!compRaw) {
+          // Campo vazio → a classificar
+          competencia = 'A classificar'
+        } else if (compRaw === 'A classificar') {
+          // Plataforma já marcou como A classificar
           competencia = 'A classificar'
         } else {
-          competencia = compNorm
+          const compNorm = normalizeCompetencia(compRaw)
+          if (!compNorm || competenciaAnteriorContrato(compNorm)) {
+            competencia = 'A classificar'
+          } else {
+            competencia = compNorm
+          }
         }
       }
 
       const cnpjForn   = normCNPJ(row[colCNPJPendTercForn])
-      // Status da última solicitação no novo schema: "EM_ELABORACAO" | "APROVADO"
       const statusPend = String(row[colSitPendTerc] || '').trim()
 
       let statusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
       if (statusPend === 'EM_ELABORACAO') {
         statusReal = 'Ativa'
       } else {
-        // Cruza com R3: chave forn + doc (mesma lógica do schema antigo)
         const key  = `${cnpjForn}|||${docUpper}`
         const r3St = r3StatusLookup.get(key)
         statusReal = (!r3St || r3St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
       }
 
-      // Detalhe: preserva o texto original da pendência
-      const detalheRaw = String(row[colPendTxtTerc] ?? '').trim()
-      // Se Terceiro disponível e não constar no detalhe, prefixa para contexto
       const tercNome   = String(row[colTercRsPendTerc] ?? '').trim()
-      const detalhe    = (tercNome && !detalheRaw.toUpperCase().includes(tercNome.toUpperCase().slice(0, 10)))
+      const detalheRaw = String(row[colPendTxtTerc] ?? '').trim()
+      // Se o nome do terceiro não estiver no texto do detalhe, prefixa para contexto
+      const detalhe = (tercNome && !detalheRaw.toUpperCase().includes(tercNome.toUpperCase().slice(0, 10)))
         ? `${tercNome} — ${detalheRaw}`
         : detalheRaw
 
       return {
-        Fornecedor:  abbrev(String(row[colRsPendTercForn] || '')),
-        CNPJ_Forn:   cnpjForn,
-        Status:      statusPend,
-        Area:        'Terceiro',
-        Documento:   docUpper,
-        Competencia: competencia,
-        Detalhe:     detalhe,
-        StatusReal:  statusReal,
-        Terceiro:    tercNome || undefined,
+        Fornecedor:    abbrev(String(row[colRsPendTercForn] || '')),
+        CNPJ_Forn:     cnpjForn,
+        Status:        statusPend,
+        Area:          'Terceiro',
+        Documento:     docUpper,
+        Competencia:   competencia,
+        Detalhe:       detalhe,
+        StatusReal:    statusReal,
+        Terceiro:      tercNome || undefined,
         CNPJ_Terceiro: normCNPJ(row[colTercCNPJPendTerc] ?? '') || undefined,
       }
     })
