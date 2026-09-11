@@ -337,7 +337,7 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
   const toRow = (r: PendRow): (string | number)[] => [
     r.Competencia || '—',
     r.StatusReal,
-    r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
+    r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
     r.Fornecedor,
     r.CNPJ_Forn,
     r.Terceiro || '—',
@@ -483,7 +483,7 @@ export function exportPendPDFGrouped(rows: PendRow[], geradoEm: string, filename
       head: [['Sit. Real', 'Área', 'Fornecedor', 'CNPJ', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
       body: rws.map(r => [
         r.StatusReal,
-        r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
+        r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
         r.Fornecedor,
         r.CNPJ_Forn,
         r.Terceiro || '—',
@@ -545,11 +545,13 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
   const total     = rows.length
   const terceiros = rows.filter(r => r.Area === 'Terceiro' || r.Area === 'TERCEIROS').length
   const docs      = rows.filter(r => r.Area === 'Fornecedor' || r.Area === 'DOCUMENTOS').length
+  const cred      = rows.filter(r => r.Area === 'Credenciamento').length
 
   const yAfterKpis = addKPIRow(doc, [
-    { label: 'Total Pendências', value: String(total) },
-    { label: 'Área Terceiros',   value: String(terceiros) },
-    { label: 'Área Documentos',  value: String(docs) },
+    { label: 'Total Pendências',   value: String(total) },
+    { label: 'Área Terceiros',     value: String(terceiros) },
+    { label: 'Área Documentos',    value: String(docs) },
+    { label: 'Credenciamento',     value: String(cred) },
   ], 26)
 
   autoTable(doc, {
@@ -557,7 +559,7 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
     head: [['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe da Pendência']],
     body: rows.map(r => [
       r.Fornecedor,
-      r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
+      r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
       r.Documento,
       r.Competencia || '—',
       r.Detalhe || '—',
@@ -606,7 +608,7 @@ export function exportRelatorioXLSX(
   const _pendToRow  = (r: PendRow): (string | number)[] => [
     r.Competencia || '—',
     r.StatusReal,
-    r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
+    r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
     r.Fornecedor,
     r.CNPJ_Forn,
     r.Terceiro || '—',
@@ -725,7 +727,7 @@ export function exportRelatorioPDF(
         head: [['Sit. Real', 'Área', 'Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
         body: rws.map(r => [
           r.StatusReal,
-          r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
+          r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
           r.Fornecedor,
           r.Terceiro || '—',
           r.Documento,

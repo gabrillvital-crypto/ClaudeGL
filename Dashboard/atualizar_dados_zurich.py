@@ -16,27 +16,36 @@ DST2 = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\dashboard-react\public\
 #           Use ["DST2"] para arquivos exclusivos do dashboard React.
 VINCULOS = [
     {
-        # Relatório combinado de pendências → Python usa esse arquivo diretamente
-        # React usa como fonte para pendencias_fornecedor_zurich.csv (ver abaixo)
+        # Relatório combinado de pendências → Python usa esse arquivo diretamente (schema legado)
+        # ⚠️ Agora opcional: se os 3 novos relatórios separados existirem, o Python pode ser
+        #    atualizado futuramente para consumi-los também.
         "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documentos___dados_*.csv",
         "destino": "pendencias_zurich.csv",
-        "label":   "Pendências (combinado — Python)",
+        "label":   "Pendências (combinado — Python legado)",
+        "pastas":  ["DST1"],
+        "opcional": True,
     },
     {
-        # Mesma fonte do item anterior → salvo também como pendencias_fornecedor_zurich.csv
-        # O dashboard React lê este arquivo como Area='Fornecedor'
-        "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documentos___dados_*.csv",
+        # Novo relatório: Pendências de documentos de FORNECEDOR
+        # Competência vem da coluna "Tb Marca Representacao - Mr → Mr Nome"
+        "padrao":  "zurich_airport___pendencias_de_documentos_de_fornecedor_*.csv",
         "destino": "pendencias_fornecedor_zurich.csv",
-        "label":   "Pendências Fornecedor (React)",
+        "label":   "Pendências Fornecedor — docs (novo schema)",
         "pastas":  ["DST2"],
     },
     {
-        # Relatório exclusivo de pendências de terceiros — exportar do Efcaz separadamente
-        # Nome esperado: zurich_airport___pendencias_de_documentos_de_terceiros___dados_*.csv
-        # ⚠️  Se este arquivo não existir na pasta Documentos, será pulado (não bloqueia o script)
-        "padrao":  "zurich_airport___pendencias_de_documentos_de_terceiros___dados_*.csv",
+        # Novo relatório: Pendências de documentos de TERCEIROS
+        "padrao":  "zurich_airport___pendencias_de_documentos_de_terceiro_*.csv",
         "destino": "pendencias_terceiros_zurich.csv",
-        "label":   "Pendências Terceiros (React)",
+        "label":   "Pendências Terceiros — docs (novo schema)",
+        "pastas":  ["DST2"],
+    },
+    {
+        # Novo relatório: Pendências de CREDENCIAMENTO (Pe Nivel = CREDENCIAMENTO)
+        # Exigências não documentais que o fornecedor precisa resolver
+        "padrao":  "zurich_airport___pendencias_de_fornecedor_*.csv",
+        "destino": "pendencias_credenciamento_zurich.csv",
+        "label":   "Pendências Credenciamento (novo)",
         "pastas":  ["DST2"],
         "opcional": True,
     },

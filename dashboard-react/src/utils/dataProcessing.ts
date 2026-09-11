@@ -192,7 +192,8 @@ export function processAllData(
   rawSit: Record<string, string>[],
   rawFornSit: Record<string, string>[],
   rawContratos: Record<string, string>[] = [],
-  rawBuscaAuto: Record<string, string>[] = []
+  rawBuscaAuto: Record<string, string>[] = [],
+  rawPendCred: Record<string, string>[] = []
 ): DashboardData {
   // Montar lookup: "cnpj||doc_normalizado" → { situacaoDoc, situacaoAnalise, situacaoStatus }
   const buscaAutoLookup = new Map<string, { situacaoDoc: string; situacaoAnalise: string; situacaoStatus: string }>()
@@ -217,16 +218,18 @@ export function processAllData(
   // Strip colunas de contrato antes de processar (regex cobre "Contrato 1".."Contrato 10")
   rawPendForn  = stripContratos(rawPendForn)
   rawPendTerc  = stripContratos(rawPendTerc)
+  rawPendCred  = stripContratos(rawPendCred)
   rawTerc      = stripContratos(rawTerc)
   rawSit       = stripContratos(rawSit)
   rawFornSit   = stripContratos(rawFornSit)
   rawContratos = stripContratos(rawContratos)
 
   // ── Helper: lê competência de uma linha tentando múltiplos campos ─────────
-  // Prioridade: "Competência" (campo estruturado direto) → "Marcas e representações"
+  // Prioridade: "Competência" (campo estruturado direto) → "Marcas e representações" / "Marca Representacao"
   function readCompetencia(row: Record<string, string>, cols: string[]): string {
     const colComp   = findCol(cols, 'compet')
-    const colMarcas = findCol(cols, 'marcas')
+    // Suporta "Marcas e Representações" (schema antigo) e "Tb Marca Representacao..." (novo schema)
+    const colMarcas = findCol(cols, 'marc')
     const vComp   = colComp   ? String(row[colComp]   ?? '').trim().replace(/^nan$/, '') : ''
     const vMarcas = colMarcas ? String(row[colMarcas] ?? '').trim().replace(/^nan$/, '') : ''
     // "A classificar" explícito no campo Competência → tratar como vazio e tentar Marcas
@@ -259,15 +262,29 @@ export function processAllData(
   const colDocPendForn = findCol(pendFornCols, 'documento') ?? null
 
   // ── Descoberta de colunas — Pendências Terceiros ──────────────────────────
-  // Schema: Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação |
-  //         Terceiro Razão Social | Terceiro CPF/CNPJ | Documento | Competência |
-  //         Status de aprovação do documento | Pendência
+  // Schema antigo : Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação |
+  //                 Terceiro Razão Social | Terceiro CPF/CNPJ | Documento | Competência | Pendência
+  // Schema novo   : Pe Nome Razaosocial | Pe Cpf Cnpj | Tb Solicitacao - So → So Situacao |
+  //                 Tb Terceiro → Te Cpf Cnpj | Tb Terceiro → Te Razao Social |
+  //                 Tb Terceiro Doc Certidao → Tdc Texto Pendencia |
+  //                 Tb Documento Certidao - Dc → Dc Titulo | Tb Competencia - Cpt → Cpt Descricao
   const pendTercCols = rawPendTerc[0] ? Object.keys(rawPendTerc[0]) : []
-  const colRsPendTercForn   = findCol(pendTercCols, 'fornecedor', 'raz') ?? 'Fornecedor Razão Social'
-  const colCNPJPendTercForn = findCol(pendTercCols, 'fornecedor', 'cpf') ?? 'Fornecedor CPF/CNPJ'
-  const colSitPendTerc      = findCol(pendTercCols, 'status', 'ltima') ?? 'Status da última solicitação'
+  // Razão social do fornecedor: prefixado "fornecedor" (antigo) ou qualquer coluna com "raz" não contendo "terceiro" (novo)
+  const colRsPendTercForn = findCol(pendTercCols, 'fornecedor', 'raz')
+    ?? pendTercCols.find(c => c.toLowerCase().includes('raz') && !c.toLowerCase().includes('terceiro'))
+    ?? 'Fornecedor Razão Social'
+  // CNPJ do fornecedor: prefixado "fornecedor" (antigo) ou CPF/CNPJ não contendo "terceiro" (novo)
+  const colCNPJPendTercForn = findCol(pendTercCols, 'fornecedor', 'cpf')
+    ?? pendTercCols.find(c => (c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) && !c.toLowerCase().includes('terceiro'))
+    ?? 'Fornecedor CPF/CNPJ'
+  // Status da solicitação: "última solicitação" (antigo) ou "solicit"+"situa" (novo schema com arrow)
+  const colSitPendTerc = findCol(pendTercCols, 'status', 'ltima')
+    ?? findCol(pendTercCols, 'solicit', 'situa')
+    ?? 'Status da última solicitação'
   const colDocPendTerc      = findCol(pendTercCols, 'documento') ?? 'Documento'
-  const colPendTxtTerc      = pendTercCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
+  // Texto de pendência: match exato (antigo) → qualquer "pend" não referenciando área
+  const colPendTxtTerc = pendTercCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
+    ?? pendTercCols.find(c => c.toLowerCase().includes('pend') && !c.toLowerCase().includes('rea') && !c.toLowerCase().includes('área'))
     ?? findCol(pendTercCols, 'pend')
     ?? 'Pendência'
   const colTercRsPendTerc   = findCol(pendTercCols, 'terceiro', 'raz') ?? 'Terceiro Razão Social'
@@ -688,9 +705,53 @@ export function processAllData(
     })
   }
 
+  // ── Descoberta de colunas — Pendências Credenciamento ────────────────────
+  // Schema: Pe Nivel | Pe Descricao | Tb Solicitacao - So → So Situacao |
+  //         Tb Pessoa → Pe Nome Razaosocial | Tb Pessoa → Pe Cpf Cnpj
+  const pendCredCols = rawPendCred[0] ? Object.keys(rawPendCred[0]) : []
+  const colNivelCred  = findCol(pendCredCols, 'nivel') ?? 'Pe Nivel'
+  const colDescCred   = findCol(pendCredCols, 'descri') ?? 'Pe Descricao'
+  const colSitCred    = findCol(pendCredCols, 'solicit', 'situa') ?? findCol(pendCredCols, 'status') ?? 'Tb Solicitacao - So → So Situacao'
+  // Razão social: coluna com "raz" (pode ser prefixada por "pessoa")
+  const colRsCred = pendCredCols.find(c => c.toLowerCase().includes('raz')) ?? 'Tb Pessoa → Pe Nome Razaosocial'
+  // CNPJ: coluna com "cpf" ou "cnpj"
+  const colCNPJCred = pendCredCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? 'Tb Pessoa → Pe Cpf Cnpj'
+
+  // ── Tabela de pendências — CREDENCIAMENTO ────────────────────────────────
+  // Exigências não documentais (cadastro, preenchimento de campos etc.) que o fornecedor
+  // precisa resolver. Area = 'Credenciamento', sem Terceiro e sem Competência mensal.
+  function buildPendCred(rows: Record<string, string>[]): PendRow[] {
+    return rows.map(row => {
+      const nivel      = String(row[colNivelCred] ?? '').trim().toUpperCase() || 'CREDENCIAMENTO'
+      const descricao  = String(row[colDescCred]  ?? '').trim()
+      const statusPend = String(row[colSitCred]   ?? '').trim()
+      const cnpjForn   = normCNPJ(row[colCNPJCred])
+
+      let statusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
+      if (statusPend === 'EM_ELABORACAO') {
+        statusReal = 'Ativa'
+      } else {
+        // APROVADO mas credenciamento pendente = não resolvida
+        statusReal = 'Não resolvida'
+      }
+
+      return {
+        Fornecedor:  abbrev(String(row[colRsCred] || '')),
+        CNPJ_Forn:   cnpjForn,
+        Status:      statusPend,
+        Area:        'Credenciamento',
+        Documento:   nivel,
+        Competencia: 'Não possui competência',
+        Detalhe:     descricao,
+        StatusReal:  statusReal,
+      }
+    })
+  }
+
   const tabelaForn = buildPendForn(rawPendForn)
   const tabelaTerc = buildPendTerc(rawPendTerc)
-  const tabela: PendRow[] = [...tabelaForn, ...tabelaTerc]
+  const tabelaCred = buildPendCred(rawPendCred)
+  const tabela: PendRow[] = [...tabelaForn, ...tabelaTerc, ...tabelaCred]
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()
 
   // Registros que exigem competência mas caíram em 'A classificar':
@@ -733,22 +794,25 @@ export function processAllData(
     }
   })
 
-  // fig4: área por empresa (Terceiro | Fornecedor)
+  // fig4: área por empresa (Terceiro | Fornecedor | Credenciamento)
   const area_emp_data: AreaEmpEntry[] = empresas_ord.map(emp => {
     const rows = tabela.filter(r => r.Fornecedor === emp)
     return {
       emp,
-      terceiros:  rows.filter(r => r.Area === 'Terceiro').length,
-      documentos: rows.filter(r => r.Area === 'Fornecedor').length,
+      terceiros:      rows.filter(r => r.Area === 'Terceiro').length,
+      documentos:     rows.filter(r => r.Area === 'Fornecedor').length,
+      credenciamento: rows.filter(r => r.Area === 'Credenciamento').length,
     }
   })
 
   // fig5: donut distribuição por área
-  const pend_terceiros  = tabela.filter(r => r.Area === 'Terceiro').length
-  const pend_documentos = tabela.filter(r => r.Area === 'Fornecedor').length
+  const pend_terceiros      = tabela.filter(r => r.Area === 'Terceiro').length
+  const pend_documentos     = tabela.filter(r => r.Area === 'Fornecedor').length
+  const pend_credenciamento = tabela.filter(r => r.Area === 'Credenciamento').length
   const pend_donut: BarEntry[] = [
-    { name: 'Terceiros',  value: pend_terceiros },
-    { name: 'Documentais', value: pend_documentos },
+    { name: 'Terceiros',      value: pend_terceiros },
+    { name: 'Documentais',    value: pend_documentos },
+    { name: 'Credenciamento', value: pend_credenciamento },
   ]
 
   // fig6: terceiros por empresa

@@ -23,17 +23,19 @@ function fmtCNPJ(d: string): string {
 }
 
 function areaBadge(a: string) {
-  // Area agora é 'Terceiro' | 'Fornecedor' (schema novo) — mantém compat com legado
+  // Area: 'Terceiro' | 'Fornecedor' | 'Credenciamento' — mantém compat com legado
   const styles: Record<string, string> = {
-    Terceiro:   'bg-[#e8f0fe] text-[#1a73e8]',
-    Fornecedor: 'bg-[#fce8d5] text-[#c05000]',
+    Terceiro:       'bg-[#e8f0fe] text-[#1a73e8]',
+    Fornecedor:     'bg-[#fce8d5] text-[#c05000]',
+    Credenciamento: 'bg-[#f3e8fe] text-[#6d28d9]',
     // legado (não deveria aparecer com novos arquivos)
     TERCEIROS:  'bg-[#e8f0fe] text-[#1a73e8]',
     DOCUMENTOS: 'bg-[#fce8d5] text-[#c05000]',
   }
   const labels: Record<string, string> = {
-    Terceiro:   'Terceiro',
-    Fornecedor: 'Fornecedor',
+    Terceiro:       'Terceiro',
+    Fornecedor:     'Fornecedor',
+    Credenciamento: 'Credenciamento',
     TERCEIROS:  'Terceiro',
     DOCUMENTOS: 'Fornecedor',
   }

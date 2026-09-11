@@ -8,8 +8,8 @@ export interface PendRow {
   Fornecedor: string
   CNPJ_Forn: string
   Status: string
-  /** 'Terceiro' = pendência de documento de terceiro | 'Fornecedor' = documento corporativo */
-  Area: 'Terceiro' | 'Fornecedor'
+  /** 'Terceiro' = pendência de documento de terceiro | 'Fornecedor' = documento corporativo | 'Credenciamento' = exigência de credenciamento */
+  Area: 'Terceiro' | 'Fornecedor' | 'Credenciamento'
   Documento: string
   Competencia: string
   Detalhe: string
@@ -76,6 +76,7 @@ export interface AreaEmpEntry {
   emp: string
   terceiros: number
   documentos: number
+  credenciamento: number
 }
 
 export interface TrabEmpEntry {
