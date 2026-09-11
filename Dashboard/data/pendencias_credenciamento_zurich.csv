@@ -1,0 +1,23 @@
+Pe Nivel,Pe Descricao,Tb Solicitacao - So → So Situacao,Tb Pessoa → Pe Nome Razaosocial,Tb Pessoa → Pe Cpf Cnpj
+CREDENCIAMENTO,"Ajustar o campo Quais códigos de contrato esse fornecedor possui atualmente"" exatamente como o exemplo: (Se for mais de um, preencher conforme exemplo: MEA.95.ENG.1997 / VIX. 85.ENG.1093). Sendo: FLN.+23....032",APROVADO,ONSEG SERVICOS DE VIGILANCIA E SEGURANCA LTDA,83411025000105
+CREDENCIAMENTO,"Ajustar os contratos conforma o exemplo: (Se for mais de um, preencher conforme exemplo: MEA.95.ENG.1997 / VIX. 85.ENG.1093).",APROVADO,TOP SERVICE SERVICOS E SISTEMAS S/A,00973749000115
+CREDENCIAMENTO,Falta cadastrar em QUAL FILIAL é prestado serviço,APROVADO,RACHADEL SERVICOS E TECNOLOGIA LTDA,48860659000144
+CREDENCIAMENTO,Faltou preencher campo da Inscrição estadual.,APROVADO,LINHA AMBIENTAL CONSULTORIA EM NEGOCIOS E MEIO AMBIENTE LTDA.,11394929000169
+CREDENCIAMENTO,"Ajustar o campo filial, onde ocorre as atividades.",APROVADO,ALPES ENGENHARIA LTDA,04812571000181
+CREDENCIAMENTO,Faltou preencher campo FILIAL :  Qual o aeroporto? Código do Aeroporto.,APROVADO,UP EMERGENCIAS LTDA,02906702000164
+CREDENCIAMENTO,Faltou preencher INSCRIÇÃO ESTADUAL.,APROVADO,UP EMERGENCIAS LTDA,02906702000164
+CREDENCIAMENTO,"Preencher a   identificação da filial , qual aeroporto é gerado o serviço?",APROVADO,PROTOS ENGENHARIA LTDA,24204038000144
+CREDENCIAMENTO,Preencher o campo com os códigos de contrato que o fornecedor possui atualmente.,APROVADO,PROTOS ENGENHARIA LTDA,24204038000144
+CREDENCIAMENTO,Em Dados Complementares: Faltou preencher FILIAL. Qual o aeroporto? Código do Aeroporto:,APROVADO,LINHA AMBIENTAL CONSULTORIA EM NEGOCIOS E MEIO AMBIENTE LTDA.,11394929000169
+CREDENCIAMENTO,"Em Dados Complementares faltou preencher campo "" Filial *. Qual código do aeroporto que prestam serviço?.",APROVADO,SOUZA COSTA MANUTENCAO LTDA,34939789000162
+CREDENCIAMENTO,"Em dados complementares, preencher o código da FILIAL  qual será é prestado serviço. Assim como CONTRATO ADICIONAL caso tenha mais de um contrato.",APROVADO,TERRAPLEIN LTDA,21591994000138
+CREDENCIAMENTO,INSCRIÇÃO ESTADUAL: Preencher o campo com a informação necessária.,APROVADO,TERRAPLEIN LTDA,21591994000138
+CREDENCIAMENTO,"Dados Complementares: Faltou preencher informações do código fa FILIAL da prestação de serviços, e caso seja mais de um contrato, preencher também em Contrato adicional.",APROVADO,JR SERVICOS AEROPORTUARIOS E LOGISTICA LTDA,60088964000165
+CREDENCIAMENTO,Preencher INSCRIÇÃO Municipal.,APROVADO,JR SERVICOS AEROPORTUARIOS E LOGISTICA LTDA,60088964000165
+CREDENCIAMENTO,Preencher INSCRIÇÃO ESTADUAL.,APROVADO,JR SERVICOS AEROPORTUARIOS E LOGISTICA LTDA,60088964000165
+CREDENCIAMENTO,Necessário preencher campos - Inscrição  Municipal e Estadual.,APROVADO,ALPES ENGENHARIA LTDA,04812571000181
+CREDENCIAMENTO,"Em DADOS COMPLEMENTARES: Preencher código da filial qual é prestado serviços, em casa de mais de um, preencher com códigos na opção de CONTRATO ADICIONAL.",APROVADO,ALPES ENGENHARIA LTDA,04812571000181
+CREDENCIAMENTO,Necessário preencher INCRIÇÃO MUNICIPAL e INSCRIÇÃO ESTADUAL.,APROVADO,METAL M.I.B. LTDA,03772367000111
+CREDENCIAMENTO,Preencher o campo em branco  com o código do aeroporto do contrato adicional.,APROVADO,KARUANA SERVICOS AUXILIARES DE TRANSPORTE AEREO LTDA,13389550000358
+CREDENCIAMENTO,"Verificar se as informações de INSCRIÇÃO MUNICIPAL ou ESTADUAL estão preenchidas corretamente no sistema, no campo indicado.",APROVADO,"VANDERLANDE INDUSTRIES DO BRASIL COMERCIALIZACAO, IMPORTACAO E INSTALACAO DE SISTEMAS DE BAGAGEM LTD",15006247000940
+CREDENCIAMENTO,"Verificar preenchimento no item INSCRIÇÃO ESTADUAL ou MUNICIPAL, e manter informações atualizadas.",APROVADO,ECOTECH ASSESSORIA AMBIENTAL LTDA,03872184000178

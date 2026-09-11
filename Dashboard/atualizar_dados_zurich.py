@@ -46,7 +46,7 @@ VINCULOS = [
         "padrao":  "zurich_airport___pendencias_de_fornecedor_*.csv",
         "destino": "pendencias_credenciamento_zurich.csv",
         "label":   "Pendências Credenciamento (novo)",
-        "pastas":  ["DST2"],
+        "pastas":  ["DST1", "DST2"],  # Python + React
         "opcional": True,
     },
     {

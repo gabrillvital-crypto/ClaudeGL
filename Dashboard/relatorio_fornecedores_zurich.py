@@ -11,8 +11,9 @@ import os as _os
 # Pasta base onde o N8N salva os arquivos com nomes fixos
 BASE_DIR = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
-PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"          # novo schema: TERCEIROS (Fornecedor+Terceiro separados)
-PENDENCIAS_DOC_CSV = BASE_DIR + r"\pendencias_documentos_zurich.csv" # schema antigo: DOCUMENTOS + CREDENCIAMENTO
+PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"                # schema combinado TERCEIROS (legado Python)
+PENDENCIAS_DOC_CSV = BASE_DIR + r"\pendencias_documentos_zurich.csv"     # schema antigo DOCUMENTOS (legado Python)
+PENDENCIAS_CRED_CSV = BASE_DIR + r"\pendencias_credenciamento_zurich.csv" # novo: CREDENCIAMENTO (exigências não-documentais)
 TERCEIROS_CSV      = BASE_DIR + r"\terceiros_zurich.csv"
 SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
 SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
@@ -173,11 +174,11 @@ def _normalizar_pend_novo(df):
 
 def _normalizar_pend_antigo(df):
     """Normaliza o antigo CSV (schema Razão Social / Área da pendência / Marcas) para o schema unificado.
-    Filtra apenas DOCUMENTOS e CREDENCIAMENTO — TERCEIROS vêm do novo CSV."""
+    Filtra apenas DOCUMENTOS — TERCEIROS vêm do novo CSV; CREDENCIAMENTO vem do CSV dedicado."""
     _area = next((c for c in df.columns if "rea" in c.lower() and "pend" in c.lower()), None)
     if _area is None:
         return pd.DataFrame(columns=_COLS_UNIF)
-    df = df[df[_area].isin(["DOCUMENTOS", "CREDENCIAMENTO"])].copy()
+    df = df[df[_area] == "DOCUMENTOS"].copy()
     if df.empty:
         return pd.DataFrame(columns=_COLS_UNIF)
     _rs   = next((c for c in df.columns if ("raz" in c.lower() or "social" in c.lower()) and "terceiro" not in c.lower()), df.columns[0])
@@ -190,7 +191,7 @@ def _normalizar_pend_antigo(df):
         "Fornecedor Razão Social":     df[_rs].values,
         "Fornecedor CPF/CNPJ":         df[_cnpj].values if _cnpj else "",
         "Status da última solicitação":df[_sit].values if _sit else "APROVADO",
-        "Área da pendência":           df[_area].values,
+        "Área da pendência":           "DOCUMENTOS",
         "Terceiro Razão Social":       "",
         "Terceiro CPF/CNPJ":           "",
         "Documento":                   df[_doc].values,
@@ -199,9 +200,31 @@ def _normalizar_pend_antigo(df):
     })
     return out.fillna("")
 
+def _normalizar_pend_cred(df):
+    """Normaliza o CSV de credenciamento (Pe Nivel / Pe Descricao / Tb Pessoa...) para o schema unificado.
+    Todas as linhas recebem Area=CREDENCIAMENTO e Competencia='Não possui competência'."""
+    _rs    = next((c for c in df.columns if "raz" in c.lower()), df.columns[0] if len(df.columns) > 0 else "")
+    _cnpj  = next((c for c in df.columns if "cpf" in c.lower() or "cnpj" in c.lower()), None)
+    _sit   = next((c for c in df.columns if "solic" in c.lower() or "situa" in c.lower()), None)
+    _nivel = next((c for c in df.columns if "nivel" in c.lower()), None)
+    _desc  = next((c for c in df.columns if "descri" in c.lower()), None)
+    out = pd.DataFrame({
+        "Fornecedor Razão Social":     df[_rs].values,
+        "Fornecedor CPF/CNPJ":         df[_cnpj].values if _cnpj else "",
+        "Status da última solicitação":df[_sit].values if _sit else "APROVADO",
+        "Área da pendência":           "CREDENCIAMENTO",
+        "Terceiro Razão Social":       "",
+        "Terceiro CPF/CNPJ":           "",
+        "Documento":                   df[_nivel].values if _nivel else "CREDENCIAMENTO",
+        "Competência":                 "Não possui competência",
+        "Pendência":                   df[_desc].values if _desc else "",
+    })
+    return out.fillna("")
+
 _df_terc_norm = _normalizar_pend_novo(df_pend_raw)
 _df_doc_norm  = _normalizar_pend_antigo(read_csv_safe(PENDENCIAS_DOC_CSV)) if _os.path.exists(PENDENCIAS_DOC_CSV) else pd.DataFrame(columns=_COLS_UNIF)
-df_pend = pd.concat([_df_terc_norm, _df_doc_norm], ignore_index=True)
+_df_cred_norm = _normalizar_pend_cred(read_csv_safe(PENDENCIAS_CRED_CSV)) if _os.path.exists(PENDENCIAS_CRED_CSV) else pd.DataFrame(columns=_COLS_UNIF)
+df_pend = pd.concat([_df_terc_norm, _df_doc_norm, _df_cred_norm], ignore_index=True)
 
 # Nomes fixos das colunas — usados em todo o processamento abaixo
 col_rs_pend   = "Fornecedor Razão Social"
@@ -330,8 +353,9 @@ total_fornecedores = df_pend[col_rs_pend].nunique()
 total_pendencias   = len(df_pend)
 em_elaboracao      = (df_pend[col_sit_pend] == "EM_ELABORACAO").sum()
 aprovado_com_pend  = (df_pend[col_sit_pend] == "APROVADO").sum()
-pend_terceiros     = (df_pend[col_area_pend] == "TERCEIROS").sum()
-pend_documentos    = (df_pend[col_area_pend] == "DOCUMENTOS").sum()
+pend_terceiros      = (df_pend[col_area_pend] == "TERCEIROS").sum()
+pend_documentos     = (df_pend[col_area_pend] == "DOCUMENTOS").sum()
+pend_credenciamento = (df_pend[col_area_pend] == "CREDENCIAMENTO").sum()
 
 col_status_terc = "Status" if "Status" in df_terc.columns else "status"
 total_trab_ativo   = (df_terc[col_status_terc] == "Ativo").sum()
@@ -718,9 +742,12 @@ def _pend_status_real(row):
     status_pend = str(row.get('Status', '')).strip()
     if status_pend == 'EM_ELABORACAO':
         return 'Ativa'
+    area = str(row.get('Area', '')).strip()
+    # CREDENCIAMENTO: exigência não-documental — sem lookup R3/R4, sempre Não resolvida
+    if area == 'CREDENCIAMENTO':
+        return 'Não resolvida'
     cnpj = str(row.get('CNPJ', '')).strip()
     doc  = str(row.get('Documento', '')).strip().upper()
-    area = str(row.get('Area', '')).strip()
     key  = f'{cnpj}|||{doc}'
     if area == 'DOCUMENTOS':
         r4_st = _pend_r4_lookup.get(key)
@@ -957,26 +984,37 @@ fig3.update_layout(**PLOT_CONFIG, barmode="stack",
     margin=ML, yaxis=dict(automargin=True),
 )
 
-# Fig 4 — Área por empresa
-df_ter = area_emp[area_emp[col_area_pend] == "TERCEIROS"].set_index("Empresa")["Total"]
-df_doc = area_emp[area_emp[col_area_pend] == "DOCUMENTOS"].set_index("Empresa")["Total"]
+# Fig 4 — Área por empresa (Terceiros / Documentais / Credenciamento)
+df_ter  = area_emp[area_emp[col_area_pend] == "TERCEIROS"].set_index("Empresa")["Total"]
+df_doc  = area_emp[area_emp[col_area_pend] == "DOCUMENTOS"].set_index("Empresa")["Total"]
+df_cred = area_emp[area_emp[col_area_pend] == "CREDENCIAMENTO"].set_index("Empresa")["Total"]
 fig4 = go.Figure()
 fig4.add_trace(go.Bar(name="Terceiros", orientation="h", marker_color=COR_TEAL,
-    x=[df_ter.get(e, 0) for e in empresas_ord], y=empresas_ord))
-fig4.add_trace(go.Bar(name="Documentais (DOCUMENTOS)", orientation="h", marker_color=COR_TEAL_LIGHT,
-    x=[df_doc.get(e, 0) for e in empresas_ord], y=empresas_ord))
+    x=[df_ter.get(e, 0)  for e in empresas_ord], y=empresas_ord))
+fig4.add_trace(go.Bar(name="Documentais", orientation="h", marker_color=COR_TEAL_LIGHT,
+    x=[df_doc.get(e, 0)  for e in empresas_ord], y=empresas_ord))
+fig4.add_trace(go.Bar(name="Credenciamento", orientation="h", marker_color="#8B5CF6",
+    x=[df_cred.get(e, 0) for e in empresas_ord], y=empresas_ord))
 fig4.update_layout(**PLOT_CONFIG, barmode="group",
-    title=dict(text="Pendências por Área — Terceiros vs Documentais", font=dict(size=15, color=COR_TEAL)),
+    title=dict(text="Pendências por Área — Terceiros / Documentais / Credenciamento", font=dict(size=15, color=COR_TEAL)),
     height=max(350, 50 * len(empresas_ord)),
     legend=dict(orientation="h", yanchor="top", y=-0.06, xanchor="center", x=0.5),
     margin=ML, yaxis=dict(automargin=True),
 )
 
-# Fig 5 — Donut
+# Fig 5 — Donut (agora 3 fatias)
+_donut_labels = ["Terceiros", "Documentais", "Credenciamento"]
+_donut_values = [pend_terceiros, pend_documentos, pend_credenciamento]
+_donut_colors = [COR_TEAL, COR_LARANJA, "#8B5CF6"]
+# Remove fatias zeradas para não poluir o gráfico
+_donut_data   = [(l, v, c) for l, v, c in zip(_donut_labels, _donut_values, _donut_colors) if v > 0]
+if _donut_data:
+    _dl, _dv, _dc = zip(*_donut_data)
+else:
+    _dl, _dv, _dc = _donut_labels, _donut_values, _donut_colors
 fig5 = go.Figure(go.Pie(
-    labels=["Terceiros", "Documentais (DOCUMENTOS)"],
-    values=[pend_terceiros, pend_documentos],
-    hole=0.55, marker_colors=[COR_TEAL, COR_LARANJA], textinfo="label+percent",
+    labels=list(_dl), values=list(_dv),
+    hole=0.55, marker_colors=list(_dc), textinfo="label+percent",
 ))
 fig5.update_layout(**PLOT_CONFIG, margin=M,
     title=dict(text="Distribuição por Área", font=dict(size=15, color=COR_TEAL)),
@@ -1200,8 +1238,9 @@ html = f"""<!DOCTYPE html>
   .badge {{ display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }}
   .badge-pendente_env  {{ background: #ffeaea; color: {COR_VERMELHO}; }}
   .badge-em_analise    {{ background: #fff7d6; color: #a07800; }}
-  .badge-terceiros     {{ background: #e0f4f7; color: {COR_TEAL}; }}
-  .badge-documentos    {{ background: #ffe8d6; color: {COR_LARANJA}; }}
+  .badge-terceiros        {{ background: #e0f4f7; color: {COR_TEAL}; }}
+  .badge-documentos       {{ background: #ffe8d6; color: {COR_LARANJA}; }}
+  .badge-credenciamento   {{ background: #f3e8fe; color: #6d28d9; }}
   .badge-conforme           {{ background: #d4edda; color: {COR_VERDE}; }}
   .badge-vencido            {{ background: #ffeaea; color: {COR_VERMELHO}; }}
   .badge-pendente           {{ background: #fff3cd; color: #856404; }}
@@ -2894,7 +2933,8 @@ function badgeStatus(s) {{
 }}
 function badgeArea(a) {{
   if (!a) return "";
-  if (a === "TERCEIROS") return '<span class="badge badge-terceiros">Terceiros</span>';
+  if (a === "TERCEIROS")       return '<span class="badge badge-terceiros">Terceiros</span>';
+  if (a === "CREDENCIAMENTO")  return '<span class="badge badge-credenciamento">Credenciamento</span>';
   return '<span class="badge badge-documentos">Fornecedor</span>';
 }}
 function badgeSit(s) {{
