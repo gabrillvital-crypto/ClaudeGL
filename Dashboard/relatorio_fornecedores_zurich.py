@@ -2267,7 +2267,7 @@ function sortCompKeys(keys) {{
     else             outros.push(k);
   }});
   withDate.sort((a, b) => a[1] - b[1]);   // crescente: Nov/25 → Jan/26 → ...
-  return [...aClass, ...withDate.map(([k]) => k), ...outros, ...semComp];
+  return [...withDate.map(([k]) => k), ...outros, ...semComp, ...aClass]; // A classificar sempre ao final
 }}
 
 // Agrupa rows por competência
@@ -2311,37 +2311,36 @@ function badgeComp(c) {{
 
 // Linha da tabela
 function renderPendRow(r, i) {{
-  const bg = i % 2 === 1 ? 'background:#f0f8fa' : '';
-  // Coluna "Área / Terceiro": para TERCEIROS mostra o nome do trabalhador;
-  // para DOCUMENTOS e CREDENCIAMENTO mostra badge colorido da área
+  const bg   = i % 2 === 1 ? 'background:#f0f8fa' : '';
   const area = r['Area'] || '';
-  let areaCell;
-  if (area === 'TERCEIROS') {{
-    const terc = r['Terceiro'] || '';
-    areaCell = terc
-      ? `<span style="font-size:12px">${{terc}}</span>`
-      : `${{badgeArea(area)}}`;
-  }} else {{
-    areaCell = badgeArea(area);
-  }}
+  // Área: badge de Terceiros ou Fornecedor
+  const areaCell = badgeArea(area);
+  // Terceiro: nome + CNPJ quando disponíveis (só TERCEIROS têm)
+  const terc     = r['Terceiro'] || '';
+  const tercCnpj = r['CNPJ_Terceiro'] || '';
+  const tercCell = terc
+    ? `<div style="font-weight:500;font-size:12px">${{terc}}</div>${{tercCnpj ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(tercCnpj) + '</div>' : ''}}`
+    : '<span style="color:#ccc">—</span>';
   return `<tr style="border-bottom:1px solid #e5eef1;${{bg}}">
     <td style="padding:7px 10px;white-space:nowrap">${{badgeSitReal(r['StatusReal'] || '')}}</td>
+    <td style="padding:7px 10px;white-space:nowrap">${{areaCell}}</td>
     <td style="padding:7px 10px">
       <div style="font-weight:500">${{r['Fornecedor']}}</div>
       ${{r['CNPJ'] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r['CNPJ']) + '</div>' : ''}}
     </td>
-    <td style="padding:7px 10px">${{areaCell}}</td>
+    <td style="padding:7px 10px">${{tercCell}}</td>
     <td style="padding:7px 10px;font-weight:600">${{r['Documento']}}</td>
     <td style="padding:7px 10px">${{badgeComp(r['Competencia'])}}</td>
-    <td style="padding:7px 10px;font-size:12px;color:#555;max-width:280px;white-space:pre-wrap">${{r['Detalhe'] || '—'}}</td>
+    <td style="padding:7px 10px;font-size:12px;color:#555;max-width:260px;white-space:pre-wrap">${{r['Detalhe'] || '—'}}</td>
   </tr>`;
 }}
 
 // Cabeçalho da tabela interna de cada grupo
 const PEND_TH = `<thead><tr style="background:{COR_TEAL};color:#fff">
   <th style="padding:7px 10px;text-align:left">Situação Real</th>
+  <th style="padding:7px 10px;text-align:left">Área</th>
   <th style="padding:7px 10px;text-align:left">Fornecedor</th>
-  <th style="padding:7px 10px;text-align:left">Área / Terceiro</th>
+  <th style="padding:7px 10px;text-align:left">Terceiro</th>
   <th style="padding:7px 10px;text-align:left">Documento</th>
   <th style="padding:7px 10px;text-align:left">Competência</th>
   <th style="padding:7px 10px;text-align:left">Detalhe</th>
