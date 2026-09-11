@@ -12,11 +12,33 @@ DST1 = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 DST2 = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\dashboard-react\public\data"
 
 # Vínculos: padrão de busca no Documentos → nomes fixos nos destinos
+# "pastas": lista de pastas destino. Padrão: [DST1, DST2] (Python + React).
+#           Use ["DST2"] para arquivos exclusivos do dashboard React.
 VINCULOS = [
     {
+        # Relatório combinado de pendências → Python usa esse arquivo diretamente
+        # React usa como fonte para pendencias_fornecedor_zurich.csv (ver abaixo)
         "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documentos___dados_*.csv",
         "destino": "pendencias_zurich.csv",
-        "label":   "Pendências",
+        "label":   "Pendências (combinado — Python)",
+    },
+    {
+        # Mesma fonte do item anterior → salvo também como pendencias_fornecedor_zurich.csv
+        # O dashboard React lê este arquivo como Area='Fornecedor'
+        "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documentos___dados_*.csv",
+        "destino": "pendencias_fornecedor_zurich.csv",
+        "label":   "Pendências Fornecedor (React)",
+        "pastas":  ["DST2"],
+    },
+    {
+        # Relatório exclusivo de pendências de terceiros — exportar do Efcaz separadamente
+        # Nome esperado: zurich_airport___pendencias_de_documentos_de_terceiros___dados_*.csv
+        # ⚠️  Se este arquivo não existir na pasta Documentos, será pulado (não bloqueia o script)
+        "padrao":  "zurich_airport___pendencias_de_documentos_de_terceiros___dados_*.csv",
+        "destino": "pendencias_terceiros_zurich.csv",
+        "label":   "Pendências Terceiros (React)",
+        "pastas":  ["DST2"],
+        "opcional": True,
     },
     {
         "padrao":  "relatorio_de_terceiros_cadastrados_*.csv",
@@ -51,6 +73,8 @@ def arquivo_mais_recente(pasta, padrao):
         return None
     return max(matches, key=os.path.getmtime)
 
+PASTA_MAP = {"DST1": DST1, "DST2": DST2}
+
 print("=" * 65)
 print("  ATUALIZAÇÃO DADOS ZURICH AIRPORT")
 print(f"  Data/hora: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
@@ -62,6 +86,10 @@ erros = []
 for v in VINCULOS:
     src = arquivo_mais_recente(DOC, v["padrao"])
     if not src:
+        if v.get("opcional"):
+            print(f"  ⚠  {v['label']} — não encontrado (opcional, pulando)")
+            print()
+            continue
         erros.append(f"  ARQUIVO NÃO ENCONTRADO: {v['padrao']}")
         print(f"  ✗ {v['label']} — arquivo não encontrado")
         continue
@@ -70,16 +98,20 @@ for v in VINCULOS:
     data_src = datetime.fromtimestamp(os.path.getmtime(src)).strftime("%d/%m/%Y %H:%M")
 
     destinos = v.get("destinos", [v.get("destino")])
+    # "pastas": lista de chaves "DST1"/"DST2"; padrão: ambas
+    pastas_keys = v.get("pastas", ["DST1", "DST2"])
+    pastas_dst  = [PASTA_MAP[k] for k in pastas_keys]
 
     for destino in destinos:
-        for pasta_dst in [DST1, DST2]:
+        for pasta_dst in pastas_dst:
             dst_path = os.path.join(pasta_dst, destino)
             shutil.copy2(src, dst_path)
 
+    pasta_label = " + ".join(pastas_keys).replace("DST1", "Dashboard/data").replace("DST2", "dashboard-react/public/data")
     print(f"  ✓ {v['label']}")
     print(f"    Origem : {nome_src}")
     print(f"    Data   : {data_src}")
-    print(f"    Salvo  : {', '.join(destinos)} → Dashboard/data + dashboard-react/public/data")
+    print(f"    Salvo  : {', '.join(destinos)} → {pasta_label}")
     print()
 
 print("=" * 65)
