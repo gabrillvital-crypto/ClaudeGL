@@ -337,7 +337,7 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
   const toRow = (r: PendRow): (string | number)[] => [
     r.Competencia || '—',
     r.StatusReal,
-    r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+    r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
     r.Fornecedor,
     r.CNPJ_Forn,
     r.Terceiro || '—',
@@ -483,7 +483,7 @@ export function exportPendPDFGrouped(rows: PendRow[], geradoEm: string, filename
       head: [['Sit. Real', 'Área', 'Fornecedor', 'CNPJ', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
       body: rws.map(r => [
         r.StatusReal,
-        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+        r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
         r.Fornecedor,
         r.CNPJ_Forn,
         r.Terceiro || '—',
@@ -557,7 +557,7 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
     head: [['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe da Pendência']],
     body: rows.map(r => [
       r.Fornecedor,
-      r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+      r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
       r.Documento,
       r.Competencia || '—',
       r.Detalhe || '—',
@@ -606,7 +606,7 @@ export function exportRelatorioXLSX(
   const _pendToRow  = (r: PendRow): (string | number)[] => [
     r.Competencia || '—',
     r.StatusReal,
-    r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+    r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
     r.Fornecedor,
     r.CNPJ_Forn,
     r.Terceiro || '—',
@@ -725,7 +725,7 @@ export function exportRelatorioPDF(
         head: [['Sit. Real', 'Área', 'Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
         body: rws.map(r => [
           r.StatusReal,
-          r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+          r.Area === 'Terceiro' ? 'Terceiro' : 'Fornecedor',
           r.Fornecedor,
           r.Terceiro || '—',
           r.Documento,
