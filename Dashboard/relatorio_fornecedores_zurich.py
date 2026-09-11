@@ -3320,7 +3320,7 @@ function exportarPendPDF() {{
   const toRow = r => [
     r["StatusReal"] || "",
     _areaLabel(r["Area"] || ""),
-    (r["Fornecedor"] || "") + (r["CNPJ"] ? "\n" + r["CNPJ"] : ""),
+    (r["Fornecedor"] || "") + (r["CNPJ"] ? "\\n" + r["CNPJ"] : ""),
     r["Terceiro"] || "—",
     r["Documento"] || "",
     r["Competencia"] || "—",
@@ -3754,7 +3754,7 @@ function exportarRelatorioPDF() {{
   const _pendRow  = r => [
     r["StatusReal"] || "",
     _areaLbl(r["Area"] || ""),
-    (r["Fornecedor"] || "") + (r["CNPJ"] ? "\n" + r["CNPJ"] : ""),
+    (r["Fornecedor"] || "") + (r["CNPJ"] ? "\\n" + r["CNPJ"] : ""),
     r["Terceiro"] || "—",
     r["Documento"] || "",
     r["Competencia"] || "—",
