@@ -23,14 +23,23 @@ function fmtCNPJ(d: string): string {
 }
 
 function areaBadge(a: string) {
-  const m: Record<string, string> = {
-    TERCEIROS: 'bg-[#e8f0fe] text-[#1a73e8]',
+  // Area agora é 'Terceiro' | 'Fornecedor' (schema novo) — mantém compat com legado
+  const styles: Record<string, string> = {
+    Terceiro:   'bg-[#e8f0fe] text-[#1a73e8]',
+    Fornecedor: 'bg-[#fce8d5] text-[#c05000]',
+    // legado (não deveria aparecer com novos arquivos)
+    TERCEIROS:  'bg-[#e8f0fe] text-[#1a73e8]',
     DOCUMENTOS: 'bg-[#fce8d5] text-[#c05000]',
   }
-  const label: Record<string, string> = { TERCEIROS: 'Terceiros', DOCUMENTOS: 'Fornecedor' }
+  const labels: Record<string, string> = {
+    Terceiro:   'Terceiro',
+    Fornecedor: 'Fornecedor',
+    TERCEIROS:  'Terceiro',
+    DOCUMENTOS: 'Fornecedor',
+  }
   return (
-    <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-bold ${m[a] ?? 'bg-gray-100 text-gray-600'}`}>
-      {label[a] ?? a}
+    <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-bold ${styles[a] ?? 'bg-gray-100 text-gray-600'}`}>
+      {labels[a] ?? a}
     </span>
   )
 }
@@ -367,7 +376,7 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
                     <tr key={i} className="border-b border-[#fde68a]">
                       <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
                       <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
-                      <td className="px-3 py-1.5">{r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor'}</td>
+                      <td className="px-3 py-1.5">{areaBadge(r.Area)}</td>
                       <td className="px-3 py-1.5"><StatusRealBadge s={r.StatusReal} /></td>
                     </tr>
                   ))}

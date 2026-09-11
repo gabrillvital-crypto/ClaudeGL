@@ -195,7 +195,7 @@ export function App() {
     }
     if (statusTercFilter) {
       rows = rows.filter(r => {
-        if (r.Area === 'TERCEIROS') {
+        if (r.Area === 'Terceiro') {
           const det = r.Detalhe.toUpperCase()
           return [...statusTercFilter.nomes].some(nome => det.includes(nome))
         }

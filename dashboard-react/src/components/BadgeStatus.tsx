@@ -19,6 +19,10 @@ const sitStyles: Record<string, string> = {
 }
 
 const areaStyles: Record<string, string> = {
+  // valores novos
+  'Terceiro':    'bg-cyan-100 text-[#0E8FA3]',
+  'Fornecedor':  'bg-orange-100 text-orange-700',
+  // legado (compat)
   'TERCEIROS':   'bg-cyan-100 text-[#0E8FA3]',
   'DOCUMENTOS':  'bg-orange-100 text-orange-700',
 }
@@ -29,7 +33,11 @@ const pendStyles: Record<string, string> = {
 }
 
 const areaLabels: Record<string, string> = {
-  'TERCEIROS':  'Terceiros',
+  // valores novos
+  'Terceiro':   'Terceiro',
+  'Fornecedor': 'Fornecedor',
+  // legado (compat)
+  'TERCEIROS':  'Terceiro',
   'DOCUMENTOS': 'Fornecedor',
 }
 

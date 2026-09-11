@@ -350,7 +350,7 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
         r.Competencia || '—',
         r.Fornecedor,
         r.CNPJ_Forn,
-        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
         r.Documento,
         r.StatusReal,
         r.Detalhe || '',
@@ -372,7 +372,7 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
         'A classificar',
         r.Fornecedor,
         r.CNPJ_Forn,
-        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
         r.Documento,
         r.StatusReal,
         r.Detalhe || '',
@@ -391,7 +391,7 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
         'Não possui competência',
         r.Fornecedor,
         r.CNPJ_Forn,
-        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
         r.Documento,
         r.StatusReal,
         r.Detalhe || '',
@@ -503,7 +503,7 @@ export function exportPendPDFGrouped(rows: PendRow[], geradoEm: string, filename
         r.StatusReal,
         r.Fornecedor,
         r.CNPJ_Forn,
-        r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
         r.Documento,
         r.Competencia || '—',
         r.Detalhe || '—',
@@ -559,8 +559,8 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
   addPDFHeader(doc, 'Relatório de Pendências', 'Detalhamento das Pendências por Fornecedor', geradoEm)
 
   const total     = rows.length
-  const terceiros = rows.filter(r => r.Area === 'TERCEIROS').length
-  const docs      = rows.filter(r => r.Area === 'DOCUMENTOS').length
+  const terceiros = rows.filter(r => r.Area === 'Terceiro' || r.Area === 'TERCEIROS').length
+  const docs      = rows.filter(r => r.Area === 'Fornecedor' || r.Area === 'DOCUMENTOS').length
 
   const yAfterKpis = addKPIRow(doc, [
     { label: 'Total Pendências', value: String(total) },
@@ -573,7 +573,7 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
     head: [['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe da Pendência']],
     body: rows.map(r => [
       r.Fornecedor,
-      r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor',
+      r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
       r.Documento,
       r.Competencia || '—',
       r.Detalhe || '—',
@@ -678,7 +678,7 @@ export function exportRelatorioPDF(
   autoTable(doc, {
     startY: y,
     head: [['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe']],
-    body: pendRows.map(r => [r.Fornecedor, r.Area === 'TERCEIROS' ? 'Terceiros' : 'Fornecedor', r.Documento, r.Competencia || '—', r.Detalhe || '—']),
+    body: pendRows.map(r => [r.Fornecedor, r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor', r.Documento, r.Competencia || '—', r.Detalhe || '—']),
     styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
     headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
     alternateRowStyles: { fillColor: GRAY_LIGHT },

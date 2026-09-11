@@ -8,11 +8,16 @@ export interface PendRow {
   Fornecedor: string
   CNPJ_Forn: string
   Status: string
-  Area: string
+  /** 'Terceiro' = pendência de documento de terceiro | 'Fornecedor' = documento corporativo */
+  Area: 'Terceiro' | 'Fornecedor'
   Documento: string
   Competencia: string
   Detalhe: string
   StatusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
+  /** Apenas quando Area = 'Terceiro': razão social do terceiro */
+  Terceiro?: string
+  /** Apenas quando Area = 'Terceiro': CPF/CNPJ do terceiro */
+  CNPJ_Terceiro?: string
 }
 
 export interface SitTerceiroRow {

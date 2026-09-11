@@ -186,7 +186,8 @@ function mapStatusBuscaAuto(situacaoDoc: string, _situacaoAnalise: string): Stat
 }
 
 export function processAllData(
-  rawPend: Record<string, string>[],
+  rawPendForn: Record<string, string>[],
+  rawPendTerc: Record<string, string>[],
   rawTerc: Record<string, string>[],
   rawSit: Record<string, string>[],
   rawFornSit: Record<string, string>[],
@@ -214,22 +215,33 @@ export function processAllData(
   const _rawContratosForDrill = rawContratos
 
   // Strip colunas de contrato antes de processar (regex cobre "Contrato 1".."Contrato 10")
-  rawPend      = stripContratos(rawPend)
+  rawPendForn  = stripContratos(rawPendForn)
+  rawPendTerc  = stripContratos(rawPendTerc)
   rawTerc      = stripContratos(rawTerc)
   rawSit       = stripContratos(rawSit)
   rawFornSit   = stripContratos(rawFornSit)
   rawContratos = stripContratos(rawContratos)
 
-  // ── Descoberta de colunas ─────────────────────────────────────────────────
-  const pendCols = rawPend[0] ? Object.keys(rawPend[0]) : []
-  const colRsPend = findCol(pendCols, 'raz') ?? 'Razão Social'
-  const colSitPend = findCol(pendCols, 'situa', 'solicit') ?? 'Situação da solicitação'
-  const colAreaPend = findCol(pendCols, 'rea', 'pend') ?? 'Área da pendência'
-  const colMarcasPend = findCol(pendCols, 'marcas') ?? 'Marcas e representações'
-  // Busca específica para evitar retornar "Área da pendência" em vez de "Pendência"
-  const colPendTxt = pendCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
-    ?? pendCols.find(c => c.toLowerCase().includes('pend') && !c.toLowerCase().includes('rea') && !c.toLowerCase().includes('área'))
+  // ── Descoberta de colunas — Pendências Fornecedor (schema antigo: Área da pendência) ──
+  const pendFornCols = rawPendForn[0] ? Object.keys(rawPendForn[0]) : []
+  const colRsPendForn   = findCol(pendFornCols, 'raz') ?? 'Razão Social'
+  const colSitPendForn  = findCol(pendFornCols, 'situa', 'solicit') ?? 'Situação da solicitação'
+  const colMarcasPendForn = findCol(pendFornCols, 'marcas') ?? 'Marcas e representações'
+  const colPendTxtForn  = pendFornCols.find(c => /^pend[eê]ncia$/i.test(c.trim()))
+    ?? pendFornCols.find(c => c.toLowerCase().includes('pend') && !c.toLowerCase().includes('rea') && !c.toLowerCase().includes('área'))
     ?? 'Pendência'
+  const colCNPJPendForn = pendFornCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
+
+  // ── Descoberta de colunas — Pendências Terceiros (schema novo: Terceiro Razão Social) ──
+  const pendTercCols = rawPendTerc[0] ? Object.keys(rawPendTerc[0]) : []
+  const colRsPendTercForn  = findCol(pendTercCols, 'fornecedor', 'raz') ?? 'Fornecedor Razão Social'
+  const colCNPJPendTercForn = findCol(pendTercCols, 'fornecedor', 'cpf') ?? 'Fornecedor CPF/CNPJ'
+  const colSitPendTerc     = findCol(pendTercCols, 'status', 'ltima') ?? 'Status da última solicitação'
+  const colDocPendTerc     = findCol(pendTercCols, 'documento') ?? 'Documento'
+  const colCompPendTerc    = findCol(pendTercCols, 'compet') ?? 'Competência'
+  const colPendTxtTerc     = findCol(pendTercCols, 'pend') ?? 'Pendência'
+  const colTercRsPendTerc  = findCol(pendTercCols, 'terceiro', 'raz') ?? 'Terceiro Razão Social'
+  const colTercCNPJPendTerc = findCol(pendTercCols, 'terceiro', 'cpf') ?? 'Terceiro CPF/CNPJ'
 
   const tercCols = rawTerc[0] ? Object.keys(rawTerc[0]) : []
   const colRsTerc = findCol(tercCols, 'raz') ?? 'Razão Social'
@@ -260,8 +272,6 @@ export function processAllData(
     if (!tercAeroportoMap.has(cpf)) tercAeroportoMap.set(cpf, new Set())
     tercAeroportoMap.get(cpf)!.add(aero)
   })
-
-  const colCNPJPend = pendCols.find(c => c.toLowerCase().includes('cpf') || c.toLowerCase().includes('cnpj')) ?? null
 
   const fornSitCols = rawFornSit[0] ? Object.keys(rawFornSit[0]) : []
   const colR4RS = fornSitCols[0] ?? 'Razão Social'
@@ -527,68 +537,123 @@ export function processAllData(
     return yyyy < 2025 || (yyyy === 2025 && mm < 11)
   }
 
-  // ── Tabela de pendências ───────────────────────────────────────────────────
-  const tabela: PendRow[] = rawPend.map(row => {
-    const comp = String(row[colMarcasPend] ?? '').trim().replace(/^nan$/, '')
-    const area = String(row[colAreaPend] || '').trim()
-    const docUpper = extractDoc(row, area)
-    const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
-      || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
-    let competencia: string
-    if (isSemCompPend) {
-      competencia = 'Não possui competência'
-    } else if (area === 'DOCUMENTOS' && !DOCS_COM_COMP_PEND.has(docUpper)) {
-      competencia = 'Não possui competência'
-    } else {
-      // Leitura exclusiva do campo estruturado. Campo vazio ou data pré-contrato → 'A classificar'.
-      const compNorm = normalizeCompetencia(comp)
-      if (!compNorm || competenciaAnteriorContrato(compNorm)) {
-        competencia = 'A classificar'
+  // ── Tabela de pendências — FORNECEDOR (schema antigo: Área da pendência = DOCUMENTOS) ──
+  function buildPendForn(rows: Record<string, string>[]): PendRow[] {
+    return rows.map(row => {
+      const comp = String(row[colMarcasPendForn] ?? '').trim().replace(/^nan$/, '')
+      // Apenas DOCUMENTOS chegam aqui — Area é sempre "Fornecedor"
+      const docUpper = extractDoc(row, 'DOCUMENTOS')
+      const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
+        || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
+      let competencia: string
+      if (isSemCompPend || !DOCS_COM_COMP_PEND.has(docUpper)) {
+        competencia = 'Não possui competência'
       } else {
-        competencia = compNorm
+        const compNorm = normalizeCompetencia(comp)
+        if (!compNorm || competenciaAnteriorContrato(compNorm)) {
+          competencia = 'A classificar'
+        } else {
+          competencia = compNorm
+        }
       }
-    }
-    const cnpjPend = colCNPJPend ? normCNPJ(row[colCNPJPend]) : ''
-    const statusPend = String(row[colSitPend] || '').trim()
+      const cnpjPend   = colCNPJPendForn ? normCNPJ(row[colCNPJPendForn]) : ''
+      const statusPend = String(row[colSitPendForn] || '').trim()
 
-    let statusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
-    if (statusPend === 'EM_ELABORACAO') {
-      statusReal = 'Ativa'
-    } else {
-      const key = `${cnpjPend}|||${docUpper}`
-      if (area === 'DOCUMENTOS') {
-        const r4St = r4StatusLookup.get(key)
-        statusReal = (!r4St || r4St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
+      let statusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
+      if (statusPend === 'EM_ELABORACAO') {
+        statusReal = 'Ativa'
       } else {
+        const key   = `${cnpjPend}|||${docUpper}`
+        const r4St  = r4StatusLookup.get(key)
+        statusReal  = (!r4St || r4St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
+      }
+
+      return {
+        Fornecedor: abbrev(String(row[colRsPendForn] || '')),
+        CNPJ_Forn:  cnpjPend,
+        Status:     statusPend,
+        Area:       'Fornecedor',
+        Documento:  docUpper,
+        Competencia: competencia,
+        Detalhe:    String(row[colPendTxtForn] ?? '').trim(),
+        StatusReal: statusReal,
+      }
+    })
+  }
+
+  // ── Tabela de pendências — TERCEIRO (schema novo: Terceiro Razão Social) ──
+  function buildPendTerc(rows: Record<string, string>[]): PendRow[] {
+    return rows.map(row => {
+      const docUpper = String(row[colDocPendTerc] ?? '').trim().toUpperCase().slice(0, 80) || 'OUTROS'
+      const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
+        || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
+
+      // Competência: novo schema já traz o campo estruturado diretamente (sem "Marcas e representações")
+      let competencia: string
+      if (isSemCompPend) {
+        competencia = 'Não possui competência'
+      } else {
+        const compRaw  = String(row[colCompPendTerc] ?? '').trim().replace(/^nan$/, '')
+        const compNorm = normalizeCompetencia(compRaw)
+        if (!compNorm || compNorm === 'A classificar' || competenciaAnteriorContrato(compNorm)) {
+          competencia = 'A classificar'
+        } else {
+          competencia = compNorm
+        }
+      }
+
+      const cnpjForn   = normCNPJ(row[colCNPJPendTercForn])
+      // Status da última solicitação no novo schema: "EM_ELABORACAO" | "APROVADO"
+      const statusPend = String(row[colSitPendTerc] || '').trim()
+
+      let statusReal: 'Ativa' | 'Não resolvida' | 'Resolvida'
+      if (statusPend === 'EM_ELABORACAO') {
+        statusReal = 'Ativa'
+      } else {
+        // Cruza com R3: chave forn + doc (mesma lógica do schema antigo)
+        const key  = `${cnpjForn}|||${docUpper}`
         const r3St = r3StatusLookup.get(key)
         statusReal = (!r3St || r3St === 'Aprovado') ? 'Resolvida' : 'Não resolvida'
       }
-    }
 
-    return {
-      Fornecedor: abbrev(String(row[colRsPend] || '')),
-      CNPJ_Forn: cnpjPend,
-      Status: statusPend,
-      Area: area,
-      Documento: docUpper,
-      Competencia: competencia,
-      Detalhe: String(row[colPendTxt] ?? '').trim(),
-      StatusReal: statusReal,
-    }
-  })
+      // Detalhe: preserva o texto original da pendência
+      const detalheRaw = String(row[colPendTxtTerc] ?? '').trim()
+      // Se Terceiro disponível e não constar no detalhe, prefixa para contexto
+      const tercNome   = String(row[colTercRsPendTerc] ?? '').trim()
+      const detalhe    = (tercNome && !detalheRaw.toUpperCase().includes(tercNome.toUpperCase().slice(0, 10)))
+        ? `${tercNome} — ${detalheRaw}`
+        : detalheRaw
+
+      return {
+        Fornecedor:  abbrev(String(row[colRsPendTercForn] || '')),
+        CNPJ_Forn:   cnpjForn,
+        Status:      statusPend,
+        Area:        'Terceiro',
+        Documento:   docUpper,
+        Competencia: competencia,
+        Detalhe:     detalhe,
+        StatusReal:  statusReal,
+        Terceiro:    tercNome || undefined,
+        CNPJ_Terceiro: normCNPJ(row[colTercCNPJPendTerc] ?? '') || undefined,
+      }
+    })
+  }
+
+  const tabelaForn = buildPendForn(rawPendForn)
+  const tabelaTerc = buildPendTerc(rawPendTerc)
+  const tabela: PendRow[] = [...tabelaForn, ...tabelaTerc]
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()
 
   // Registros que exigem competência mas caíram em 'A classificar':
   // campo estruturado vazio OU data anterior ao início do contrato (nov/2025)
   const pend_a_classificar = tabela.filter(r => r.Competencia === 'A classificar')
 
-  // ── Chart data ────────────────────────────────────────────────────────────
+  // ── Chart data — a partir da tabela processada (Area = "Terceiro" | "Fornecedor") ─────
 
   // fig1: pendências por fornecedor
   const pend_emp_map: Record<string, number> = {}
-  rawPend.forEach(row => {
-    const emp = abbrev(String(row[colRsPend] || ''))
-    pend_emp_map[emp] = (pend_emp_map[emp] || 0) + 1
+  tabela.forEach(r => {
+    pend_emp_map[r.Fornecedor] = (pend_emp_map[r.Fornecedor] || 0) + 1
   })
   const pend_emp: BarEntry[] = Object.entries(pend_emp_map)
     .map(([name, value]) => ({ name, value }))
@@ -596,45 +661,44 @@ export function processAllData(
 
   // fig2: top 15 tipo doc
   const tipo_doc_map: Record<string, number> = {}
-  rawPend.forEach(row => {
-    const doc = extractDoc(row, String(row[colAreaPend] || '').trim())
-    tipo_doc_map[doc] = (tipo_doc_map[doc] || 0) + 1
+  tabela.forEach(r => {
+    tipo_doc_map[r.Documento] = (tipo_doc_map[r.Documento] || 0) + 1
   })
   const tipo_doc: BarEntry[] = Object.entries(tipo_doc_map)
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 15)
 
-  // fig3: status por empresa
-  const empresas_ord = [...new Set(rawPend.map(r => abbrev(String(r[colRsPend] || ''))))]
-    .map(emp => ({ emp, total: rawPend.filter(r => abbrev(String(r[colRsPend] || '')) === emp).length }))
+  // fig3: status por empresa (base tabela já processada)
+  const empresas_ord = [...new Set(tabela.map(r => r.Fornecedor))]
+    .map(emp => ({ emp, total: tabela.filter(r => r.Fornecedor === emp).length }))
     .sort((a, b) => b.total - a.total)
     .map(r => r.emp)
 
   const status_emp_data: StatusEmpEntry[] = empresas_ord.map(emp => {
-    const rows = rawPend.filter(r => abbrev(String(r[colRsPend] || '')) === emp)
+    const rows = tabela.filter(r => r.Fornecedor === emp)
     return {
       emp,
-      elab: rows.filter(r => String(r[colSitPend] || '').trim() === 'EM_ELABORACAO').length,
-      apro: rows.filter(r => String(r[colSitPend] || '').trim() === 'APROVADO').length,
+      elab: rows.filter(r => r.Status === 'EM_ELABORACAO').length,
+      apro: rows.filter(r => r.Status === 'APROVADO').length,
     }
   })
 
-  // fig4: área por empresa
+  // fig4: área por empresa (Terceiro | Fornecedor)
   const area_emp_data: AreaEmpEntry[] = empresas_ord.map(emp => {
-    const rows = rawPend.filter(r => abbrev(String(r[colRsPend] || '')) === emp)
+    const rows = tabela.filter(r => r.Fornecedor === emp)
     return {
       emp,
-      terceiros: rows.filter(r => String(r[colAreaPend] || '').trim() === 'TERCEIROS').length,
-      documentos: rows.filter(r => String(r[colAreaPend] || '').trim() === 'DOCUMENTOS').length,
+      terceiros:  rows.filter(r => r.Area === 'Terceiro').length,
+      documentos: rows.filter(r => r.Area === 'Fornecedor').length,
     }
   })
 
   // fig5: donut distribuição por área
-  const pend_terceiros = rawPend.filter(r => String(r[colAreaPend] || '').trim() === 'TERCEIROS').length
-  const pend_documentos = rawPend.filter(r => String(r[colAreaPend] || '').trim() === 'DOCUMENTOS').length
+  const pend_terceiros  = tabela.filter(r => r.Area === 'Terceiro').length
+  const pend_documentos = tabela.filter(r => r.Area === 'Fornecedor').length
   const pend_donut: BarEntry[] = [
-    { name: 'Terceiros', value: pend_terceiros },
+    { name: 'Terceiros',  value: pend_terceiros },
     { name: 'Documentais', value: pend_documentos },
   ]
 
