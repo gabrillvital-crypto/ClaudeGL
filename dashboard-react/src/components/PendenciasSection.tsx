@@ -77,7 +77,8 @@ function hasDateComp(comp: string): boolean {
 }
 
 /**
- * Ordem: A classificar primeiro → competências com data ASC (Jan → Fev → ...) → Sem competência
+ * Ordem: competências com data ASC (Jan → Fev → ...) → Sem competência → A classificar (ao final)
+ * Espelha _sortCompKeysLocal de exportUtils.ts
  */
 function sortCompKeys(keys: string[]): string[] {
   const withDate: [string, Date][] = []
@@ -92,7 +93,7 @@ function sortCompKeys(keys: string[]): string[] {
     else   outros.push(k)
   }
   withDate.sort(([, a], [, b]) => a.getTime() - b.getTime()) // crescente: Jan → Fev → ...
-  return [...aClass, ...withDate.map(([k]) => k), ...outros, ...semComp]
+  return [...withDate.map(([k]) => k), ...outros, ...semComp, ...aClass]
 }
 
 function groupByComp(rows: PendRow[]): Map<string, PendRow[]> {

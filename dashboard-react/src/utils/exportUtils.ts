@@ -600,10 +600,43 @@ export function exportRelatorioXLSX(
   wsR4['!cols'] = hdR4.map(() => ({ wch: 22 }))
   XLSX.utils.book_append_sheet(wb, wsR4, 'R4 - Empresa')
 
-  const hdPend = ['Fornecedor', 'Area', 'Documento', 'Competencia', 'Detalhe']
-  const wsPend = XLSX.utils.aoa_to_sheet([hdPend, ...pendRows.map(r => hdPend.map(h => (r as any)[h] ?? ''))])
-  wsPend['!cols'] = hdPend.map(() => ({ wch: 22 }))
-  XLSX.utils.book_append_sheet(wb, wsPend, 'Pendencias')
+  // ── Pendências: agrupadas por competência (mesma lógica do export da seção) ──
+  const _pendHeaders = ['Competência', 'Sit. Real', 'Área', 'Fornecedor', 'CNPJ', 'Terceiro', 'Documento', 'Detalhe']
+  const _pendColW   = [28, 16, 14, 38, 20, 35, 42, 60]
+  const _pendToRow  = (r: PendRow): (string | number)[] => [
+    r.Competencia || '—',
+    r.StatusReal,
+    r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+    r.Fornecedor,
+    r.CNPJ_Forn,
+    r.Terceiro || '—',
+    r.Documento,
+    r.Detalhe || '',
+  ]
+  const _pendGrouped = new Map<string, PendRow[]>()
+  for (const r of pendRows) {
+    const key = r.Competencia || 'A classificar'
+    if (!_pendGrouped.has(key)) _pendGrouped.set(key, [])
+    _pendGrouped.get(key)!.push(r)
+  }
+  const _pendKeys = _sortCompKeysLocal([..._pendGrouped.keys()])
+  const _pendMain: (string | number)[][] = [_pendHeaders]
+  for (const key of _pendKeys) {
+    const rws = _pendGrouped.get(key)!
+    const isAC = key === 'A classificar'
+    const isSC = key === 'Não possui competência'
+    const label = isAC
+      ? `⚠ A CLASSIFICAR (${rws.length} pendências)`
+      : isSC
+        ? `— SEM COMPETÊNCIA (${rws.length} pendências)`
+        : `📅 ${key}  —  ${rws.length} pendência${rws.length !== 1 ? 's' : ''}`
+    _pendMain.push([label, '', '', '', '', '', '', ''])
+    for (const r of rws) _pendMain.push(_pendToRow(r))
+    _pendMain.push(['', '', '', '', '', '', '', ''])
+  }
+  const wsPend = XLSX.utils.aoa_to_sheet(_pendMain)
+  wsPend['!cols'] = _pendColW.map(wch => ({ wch }))
+  XLSX.utils.book_append_sheet(wb, wsPend, 'Pendências')
 
   XLSX.writeFile(wb, `${filename}.xlsx`)
 }
@@ -658,17 +691,65 @@ export function exportRelatorioPDF(
   })
   y = (doc as any).lastAutoTable.finalY + 10
 
-  drawSection('Pendências')
-  autoTable(doc, {
-    startY: y,
-    head: [['Fornecedor', 'Área', 'Documento', 'Competência', 'Detalhe']],
-    body: pendRows.map(r => [r.Fornecedor, r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor', r.Documento, r.Competencia || '—', r.Detalhe || '—']),
-    styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
-    headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
-    alternateRowStyles: { fillColor: GRAY_LIGHT },
-    margin: { left: 10, right: 10 },
-    showHead: 'everyPage',
-  })
+  // ── Pendências: agrupadas por competência (crescente → sem comp → a classificar) ──
+  const _pgrouped = new Map<string, PendRow[]>()
+  for (const r of pendRows) {
+    const key = r.Competencia || 'A classificar'
+    if (!_pgrouped.has(key)) _pgrouped.set(key, [])
+    _pgrouped.get(key)!.push(r)
+  }
+  const _pkeys = _sortCompKeysLocal([..._pgrouped.keys()])
+
+  if (_pkeys.length === 0) {
+    drawSection('Pendências — nenhum registro')
+  } else {
+    for (const key of _pkeys) {
+      const rws = _pgrouped.get(key)!
+      const isAC = key === 'A classificar'
+      const isSC = key === 'Não possui competência'
+      const hColor: [number, number, number] = isAC ? [245, 158, 11] : isSC ? [108, 117, 125] : TEAL
+
+      if (y > (doc.internal.pageSize.getHeight() - 40)) { doc.addPage(); y = 0 }
+
+      // Header do grupo
+      doc.setFillColor(...hColor)
+      doc.rect(10, y, pageW - 20, 7, 'F')
+      doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.setTextColor(...WHITE)
+      const glabel = isAC ? 'A CLASSIFICAR' : isSC ? 'SEM COMPETÊNCIA' : key
+      doc.text(`${glabel}   (${rws.length} pendência${rws.length !== 1 ? 's' : ''})`, 13, y + 5)
+      doc.setTextColor(...TEXT_DARK)
+      y += 7
+
+      autoTable(doc, {
+        startY: y,
+        head: [['Sit. Real', 'Área', 'Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
+        body: rws.map(r => [
+          r.StatusReal,
+          r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+          r.Fornecedor,
+          r.Terceiro || '—',
+          r.Documento,
+          r.Competencia || '—',
+          r.Detalhe || '—',
+        ]),
+        styles: { fontSize: 6.5, cellPadding: 1.8, textColor: TEXT_DARK, font: 'helvetica', overflow: 'linebreak' },
+        headStyles: { fillColor: TEAL_LIGHT, textColor: TEAL, fontStyle: 'bold', fontSize: 7 },
+        alternateRowStyles: { fillColor: GRAY_LIGHT },
+        columnStyles: {
+          0: { cellWidth: 20, fontStyle: 'bold' },
+          1: { cellWidth: 16 },
+          2: { cellWidth: 36 },
+          3: { cellWidth: 30 },
+          4: { cellWidth: 36 },
+          5: { cellWidth: 24 },
+          6: { cellWidth: 'auto' },
+        },
+        margin: { left: 10, right: 10 },
+        showHead: 'everyPage',
+      })
+      y = (doc as any).lastAutoTable.finalY + 5
+    }
+  }
 
   addFooters(doc)
   doc.save(`${filename}.pdf`)
