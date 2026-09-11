@@ -14,7 +14,7 @@ DST2 = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\dashboard-react\public\
 # Vínculos: padrão de busca no Documentos → nomes fixos nos destinos
 VINCULOS = [
     {
-        "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documento___dados_*.csv",
+        "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documentos___dados_*.csv",
         "destino": "pendencias_zurich.csv",
         "label":   "Pendências",
     },
