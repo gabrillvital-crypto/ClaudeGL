@@ -3340,7 +3340,7 @@ function exportarPendPDF() {{
     if (y > 175) {{ doc.addPage(); y = 14; }}
 
     // Retângulo colorido de cabeçalho do grupo
-    const icon  = isAClass ? "⚠ " : isSemComp ? "— " : "📅 ";
+    const icon  = isAClass ? "[!] " : isSemComp ? "[-] " : "[+] ";
     const label = isAClass ? "A classificar"
                 : isSemComp ? "Sem competência / Eventualidades"
                 : key;
