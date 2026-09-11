@@ -313,8 +313,9 @@ function _sortCompKeysLocal(keys: string[]): string[] {
     if (d) withDate.push([k, d])
     else   outros.push(k)
   }
-  withDate.sort(([, a], [, b]) => b.getTime() - a.getTime())
-  return [...withDate.map(([k]) => k), ...outros, ...aClass, ...semComp]
+  // Ordem CRESCENTE: mais antiga → mais recente → sem competência → a classificar
+  withDate.sort(([, a], [, b]) => a.getTime() - b.getTime())
+  return [...withDate.map(([k]) => k), ...outros, ...semComp, ...aClass]
 }
 
 export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zurich') {
@@ -329,74 +330,54 @@ export function exportPendXLSXGrouped(rows: PendRow[], filename = 'pendencias_zu
   }
   const sortedKeys = _sortCompKeysLocal([...grouped.keys()])
 
-  const headers = ['Competência', 'Fornecedor', 'CNPJ', 'Área', 'Documento', 'Situação Real', 'Detalhe']
-  const colWidths = [28, 38, 20, 14, 40, 16, 60]
+  // Colunas: Competência | Sit. Real | Área | Fornecedor | CNPJ | Terceiro | Documento | Detalhe
+  const headers = ['Competência', 'Sit. Real', 'Área', 'Fornecedor', 'CNPJ', 'Terceiro', 'Documento', 'Detalhe']
+  const colWidths = [28, 16, 14, 38, 20, 35, 42, 60]
 
-  // ── Aba principal: agrupamento visual ──
+  const toRow = (r: PendRow): (string | number)[] => [
+    r.Competencia || '—',
+    r.StatusReal,
+    r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+    r.Fornecedor,
+    r.CNPJ_Forn,
+    r.Terceiro || '—',
+    r.Documento,
+    r.Detalhe || '',
+  ]
+
+  // ── Aba principal: agrupamento visual (competências crescentes → sem comp → a classificar) ──
   const mainData: (string | number)[][] = [headers]
   for (const key of sortedKeys) {
     const rws = grouped.get(key)!
     const isAClass  = key === 'A classificar'
     const isSemComp = key === 'Não possui competência'
-    // Linha de cabeçalho do grupo
     const groupLabel = isAClass
       ? `⚠ A CLASSIFICAR (${rws.length} pendências)`
       : isSemComp
-        ? `— SEM COMPETÊNCIA (${rws.length} pendências)`
+        ? `— SEM COMPETÊNCIA / EVENTUALIDADES (${rws.length} pendências)`
         : `📅 ${key}  —  ${rws.length} pendência${rws.length !== 1 ? 's' : ''}`
-    mainData.push([groupLabel, '', '', '', '', '', ''])
-    for (const r of rws) {
-      mainData.push([
-        r.Competencia || '—',
-        r.Fornecedor,
-        r.CNPJ_Forn,
-        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
-        r.Documento,
-        r.StatusReal,
-        r.Detalhe || '',
-      ])
-    }
-    mainData.push(['', '', '', '', '', '', '']) // espaço entre grupos
+    // Linha de cabeçalho do grupo (span de todas as colunas)
+    mainData.push([groupLabel, '', '', '', '', '', '', ''])
+    for (const r of rws) mainData.push(toRow(r))
+    mainData.push(['', '', '', '', '', '', '', '']) // espaço entre grupos
   }
 
   const ws = XLSX.utils.aoa_to_sheet(mainData)
   ws['!cols'] = colWidths.map(wch => ({ wch }))
   XLSX.utils.book_append_sheet(wb, ws, 'Pendências')
 
-  // ── Aba "A Classificar" separada ──
+  // ── Aba "A Classificar" separada (ao final, como na tela) ──
   const aClassRows = rows.filter(r => r.Competencia === 'A classificar')
   if (aClassRows.length > 0) {
-    const wsAC = XLSX.utils.aoa_to_sheet([
-      headers,
-      ...aClassRows.map(r => [
-        'A classificar',
-        r.Fornecedor,
-        r.CNPJ_Forn,
-        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
-        r.Documento,
-        r.StatusReal,
-        r.Detalhe || '',
-      ]),
-    ])
+    const wsAC = XLSX.utils.aoa_to_sheet([headers, ...aClassRows.map(toRow)])
     wsAC['!cols'] = colWidths.map(wch => ({ wch }))
     XLSX.utils.book_append_sheet(wb, wsAC, 'A Classificar')
   }
 
-  // ── Aba "Sem Competência" separada (se houver) ──
+  // ── Aba "Sem Competência" separada ──
   const semCompRows = rows.filter(r => r.Competencia === 'Não possui competência')
   if (semCompRows.length > 0) {
-    const wsSC = XLSX.utils.aoa_to_sheet([
-      headers,
-      ...semCompRows.map(r => [
-        'Não possui competência',
-        r.Fornecedor,
-        r.CNPJ_Forn,
-        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
-        r.Documento,
-        r.StatusReal,
-        r.Detalhe || '',
-      ]),
-    ])
+    const wsSC = XLSX.utils.aoa_to_sheet([headers, ...semCompRows.map(toRow)])
     wsSC['!cols'] = colWidths.map(wch => ({ wch }))
     XLSX.utils.book_append_sheet(wb, wsSC, 'Sem Competência')
   }
@@ -496,37 +477,40 @@ export function exportPendPDFGrouped(rows: PendRow[], geradoEm: string, filename
       return [100, 100, 100]
     }
 
+    // Colunas espelho da tela: Sit.Real | Área | Fornecedor | CNPJ | Terceiro | Documento | Competência | Detalhe
     autoTable(doc, {
       startY: y,
-      head: [['Situação Real', 'Fornecedor', 'CNPJ', 'Área', 'Documento', 'Competência', 'Detalhe']],
+      head: [['Sit. Real', 'Área', 'Fornecedor', 'CNPJ', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
       body: rws.map(r => [
         r.StatusReal,
+        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
         r.Fornecedor,
         r.CNPJ_Forn,
-        r.Area === 'Terceiro' || r.Area === 'TERCEIROS' ? 'Terceiro' : 'Fornecedor',
+        r.Terceiro || '—',
         r.Documento,
         r.Competencia || '—',
         r.Detalhe || '—',
       ]),
       styles: {
-        fontSize: 7, cellPadding: 2,
+        fontSize: 6.5, cellPadding: 1.8,
         textColor: TEXT_DARK, font: 'helvetica',
         overflow: 'linebreak',
       },
       headStyles: {
         fillColor: tableHeadFill,
         textColor: tableHeadText,
-        fontStyle: 'bold', fontSize: 7.5,
+        fontStyle: 'bold', fontSize: 7,
       },
       alternateRowStyles: { fillColor: GRAY_LIGHT },
       columnStyles: {
-        0: { cellWidth: 22, fontStyle: 'bold' },
-        1: { cellWidth: 42 },
-        2: { cellWidth: 28, fontSize: 6.5, textColor: [150, 150, 150] },
-        3: { cellWidth: 18 },
-        4: { cellWidth: 42 },
-        5: { cellWidth: 26 },
-        6: { cellWidth: 'auto' },
+        0: { cellWidth: 20, fontStyle: 'bold' },  // Sit. Real
+        1: { cellWidth: 16 },                      // Área
+        2: { cellWidth: 36 },                      // Fornecedor
+        3: { cellWidth: 24, fontSize: 6, textColor: [150, 150, 150] }, // CNPJ
+        4: { cellWidth: 30 },                      // Terceiro
+        5: { cellWidth: 36 },                      // Documento
+        6: { cellWidth: 24 },                      // Competência
+        7: { cellWidth: 'auto' },                  // Detalhe
       },
       didParseCell(data) {
         if (data.section === 'body' && data.column.index === 0) {
