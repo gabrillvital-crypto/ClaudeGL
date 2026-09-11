@@ -3295,8 +3295,83 @@ function exportarSitPDF() {{
   doc.save("situacao_documental_zurich.pdf");
 }}
 function exportarPendPDF() {{
-  downloadPDF(pendFiltrado, ["Fornecedor","CNPJ","Area","Terceiro","Documento","Competencia","Detalhe"],
-    "pendencias_zurich.pdf", "Detalhamento de Pendências — Zurich Airport");
+  const {{ jsPDF }} = window.jspdf;
+  const doc = new jsPDF({{ orientation: "landscape", unit: "mm", format: "a4" }});
+  const COR_T = [14, 143, 163];
+  const filtroLabel = _filtroAtivоLabel();
+  let y = 14;
+
+  // Cabeçalho geral
+  doc.setFontSize(13); doc.setTextColor(...COR_T);
+  doc.text("Detalhamento de Pendências — Zurich Airport", 14, y); y += 7;
+  doc.setFontSize(8); doc.setTextColor(120);
+  doc.text(filtroLabel, 14, y); y += 5;
+  const total = pendFiltrado.length;
+  const naoRes = pendFiltrado.filter(r => r["StatusReal"] === "Não resolvida").length;
+  const grupos = groupByComp(pendFiltrado);
+  const gKeys  = sortCompKeys(Object.keys(grupos));
+  doc.text(`Total: ${{total}} pendência${{total !== 1 ? "s" : ""}}  |  Não resolvidas: ${{naoRes}}  |  Grupos: ${{gKeys.length}}`, 14, y); y += 8;
+
+  // Mapeamento de Área para texto legível
+  const _areaLabel = a => a === "TERCEIROS" ? "Terceiro" : "Fornecedor";
+
+  // Colunas: Sit. Real | Área | Fornecedor | Terceiro | Documento | Competência | Detalhe
+  const HEAD = ["Sit. Real", "Área", "Fornecedor", "Terceiro", "Documento", "Competência", "Detalhe"];
+  const toRow = r => [
+    r["StatusReal"] || "",
+    _areaLabel(r["Area"] || ""),
+    (r["Fornecedor"] || "") + (r["CNPJ"] ? "\n" + r["CNPJ"] : ""),
+    r["Terceiro"] || "—",
+    r["Documento"] || "",
+    r["Competencia"] || "—",
+    r["Detalhe"] || "—",
+  ];
+
+  for (const key of gKeys) {{
+    const rws = grupos[key];
+    const isAClass  = key === "A classificar";
+    const isSemComp = key === "Não possui competência";
+
+    // Cor do grupo
+    const fillRGB = isAClass ? [245, 158, 11] : isSemComp ? [180, 180, 180] : COR_T;
+    const textRGB = isAClass ? [120, 60, 0]   : isSemComp ? [60, 60, 60]    : [255, 255, 255];
+
+    // Garante espaço na página para pelo menos o header do grupo
+    if (y > 175) {{ doc.addPage(); y = 14; }}
+
+    // Retângulo colorido de cabeçalho do grupo
+    const icon  = isAClass ? "⚠ " : isSemComp ? "— " : "📅 ";
+    const label = isAClass ? "A classificar"
+                : isSemComp ? "Sem competência / Eventualidades"
+                : key;
+    doc.setFillColor(...fillRGB);
+    doc.rect(10, y - 4, 277, 7, "F");
+    doc.setFontSize(9); doc.setTextColor(...textRGB); doc.setFont("helvetica", "bold");
+    doc.text(`${{icon}}${{label}}  (${{rws.length}} pendência${{rws.length !== 1 ? "s" : ""}})`, 13, y); y += 4;
+    doc.setFont("helvetica", "normal");
+
+    doc.autoTable({{
+      head: [HEAD],
+      body: rws.map(toRow),
+      startY: y,
+      styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
+      headStyles: {{ fillColor: fillRGB, textColor: textRGB, fontStyle: "bold" }},
+      alternateRowStyles: {{ fillColor: [240, 248, 250] }},
+      columnStyles: {{
+        0: {{ cellWidth: 20, fontStyle: "bold" }},  // Sit. Real
+        1: {{ cellWidth: 18 }},                     // Área
+        2: {{ cellWidth: 48 }},                     // Fornecedor
+        3: {{ cellWidth: 36 }},                     // Terceiro
+        4: {{ cellWidth: 40 }},                     // Documento
+        5: {{ cellWidth: 26 }},                     // Competência
+        6: {{ cellWidth: "auto" }},                 // Detalhe
+      }},
+      margin: {{ left: 10, right: 10 }},
+    }});
+    y = doc.lastAutoTable.finalY + 6;
+  }}
+
+  doc.save("pendencias_zurich.pdf");
 }}
 
 // ── MODO AGRUPADO ─────────────────────────────────────────────────────────────
@@ -3674,15 +3749,55 @@ function exportarRelatorioPDF() {{
 
   if (y > 175) {{ doc.addPage(); y = 14; }}
   _titulo("Pendências");
-  const hdPend = ["Fornecedor", "CNPJ", "Area", "Terceiro", "Documento", "Competencia", "Detalhe"];
-  doc.autoTable({{
-    head: [hdPend],
-    body: pendFiltrado.map(r => hdPend.map(h => String(r[h] ?? ""))),
-    startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
-    headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
-    alternateRowStyles: {{ fillColor: [240, 248, 250] }},
-    margin: {{ left: 10, right: 10 }},
-  }});
+  const _areaLbl  = a => a === "TERCEIROS" ? "Terceiro" : "Fornecedor";
+  const _pendHead = ["Sit. Real", "Área", "Fornecedor", "Terceiro", "Documento", "Competência", "Detalhe"];
+  const _pendRow  = r => [
+    r["StatusReal"] || "",
+    _areaLbl(r["Area"] || ""),
+    (r["Fornecedor"] || "") + (r["CNPJ"] ? "\n" + r["CNPJ"] : ""),
+    r["Terceiro"] || "—",
+    r["Documento"] || "",
+    r["Competencia"] || "—",
+    r["Detalhe"] || "—",
+  ];
+  const _pGrupos = groupByComp(pendFiltrado);
+  const _pKeys   = sortCompKeys(Object.keys(_pGrupos));
+
+  for (const key of _pKeys) {{
+    const rws = _pGrupos[key];
+    const isAC  = key === "A classificar";
+    const isSC  = key === "Não possui competência";
+    const fill  = isAC ? [245, 158, 11] : isSC ? [180, 180, 180] : [14, 143, 163];
+    const tcol  = isAC ? [120, 60, 0]   : isSC ? [60, 60, 60]    : [255, 255, 255];
+    const label = isAC ? "A classificar" : isSC ? "Sem competência / Eventualidades" : key;
+
+    if (y > 175) {{ doc.addPage(); y = 14; }}
+    doc.setFillColor(...fill);
+    doc.rect(10, y - 4, 277, 6, "F");
+    doc.setFontSize(8); doc.setTextColor(...tcol); doc.setFont("helvetica", "bold");
+    doc.text(`${{label}}  (${{rws.length}} pendência${{rws.length !== 1 ? "s" : ""}})`, 13, y); y += 3;
+    doc.setFont("helvetica", "normal");
+
+    doc.autoTable({{
+      head: [_pendHead],
+      body: rws.map(_pendRow),
+      startY: y,
+      styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
+      headStyles: {{ fillColor: fill, textColor: tcol, fontStyle: "bold" }},
+      alternateRowStyles: {{ fillColor: [240, 248, 250] }},
+      columnStyles: {{
+        0: {{ cellWidth: 20, fontStyle: "bold" }},
+        1: {{ cellWidth: 18 }},
+        2: {{ cellWidth: 44 }},
+        3: {{ cellWidth: 34 }},
+        4: {{ cellWidth: 38 }},
+        5: {{ cellWidth: 24 }},
+        6: {{ cellWidth: "auto" }},
+      }},
+      margin: {{ left: 10, right: 10 }},
+    }});
+    y = doc.lastAutoTable.finalY + 6;
+  }}
 
   doc.save("relatorio_zurich.pdf");
 }}
