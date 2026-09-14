@@ -152,15 +152,24 @@ _COLS_UNIF = [
 ]
 
 def _normalizar_pend_novo(df):
-    """Normaliza o novo CSV (TERCEIROS) para o schema unificado."""
+    """Normaliza o CSV de TERCEIROS para o schema unificado.
+    Suporta dois schemas:
+      Antigo: Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação |
+              Terceiro Razão Social | Terceiro CPF/CNPJ | Documento | Competência | Pendência
+      Novo  : Pe Nome Razaosocial | Pe Cpf Cnpj | Tb Solicitacao → So Situacao |
+              Tb Terceiro → Te Cpf Cnpj | Tb Terceiro → Te Razao Social |
+              Tdc Aprovacao Status | Tdc Texto Pendencia | Dc → Dc Titulo | Cpt → Cpt Descricao
+    """
     _rs   = next((c for c in df.columns if "fornecedor" in c.lower() and ("raz" in c.lower() or "social" in c.lower())), df.columns[0])
     _cnpj = next((c for c in df.columns if "fornecedor" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())),
-                 next((c for c in df.columns if "cpf" in c.lower() or "cnpj" in c.lower()), df.columns[1]))
+                 next((c for c in df.columns if ("cpf" in c.lower() or "cnpj" in c.lower()) and "terceiro" not in c.lower()), df.columns[1]))
     _sit  = next((c for c in df.columns if "solic" in c.lower()), None)
     _area = next((c for c in df.columns if "rea" in c.lower() and "pend" in c.lower()), None)
     _trs  = next((c for c in df.columns if "terceiro" in c.lower() and ("raz" in c.lower() or "social" in c.lower())), None)
     _tcnpj= next((c for c in df.columns if "terceiro" in c.lower() and ("cpf" in c.lower() or "cnpj" in c.lower())), None)
-    _doc  = "Documento" if "Documento" in df.columns else df.columns[5]
+    # Documento: coluna "Documento" (schema antigo) ou "Dc Titulo" / "titulo" (schema novo com arrow)
+    _doc  = "Documento" if "Documento" in df.columns else next(
+                (c for c in df.columns if "titulo" in c.lower()), df.columns[5])
     _comp = next((c for c in df.columns if "compet" in c.lower()), None)
     _pend = next((c for c in df.columns if "pend" in c.lower() and ("cia" in c.lower() or "ncia" in c.lower())), None)
     out = pd.DataFrame({
@@ -174,7 +183,11 @@ def _normalizar_pend_novo(df):
         "Competência":                 df[_comp].values if _comp else "",
         "Pendência":                   df[_pend].values if _pend else "",
     })
-    return out.fillna("")
+    out = out.fillna("")
+    # Solicitações CANCELADAS não são pendências ativas — excluir
+    if _sit:
+        out = out[out["Status da última solicitação"] != "CANCELADO"].copy()
+    return out
 
 def _normalizar_pend_antigo(df):
     """Normaliza o antigo CSV (schema Razão Social / Área da pendência / Marcas) para o schema unificado.

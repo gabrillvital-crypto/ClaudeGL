@@ -29,7 +29,8 @@ EQUIPE = [
 
 CLIENTES = [
     "Lactalis",
-    # adicione mais clientes BPO aqui conforme necessário
+    "Premier Pet",
+    # adicione mais clientes BPO/consultoria aqui conforme necessário
 ]
 
 CATEGORIAS = [
@@ -146,7 +147,7 @@ for r in range(TASK_ROW, MAX_ROW + 1):
 
     # Mês/Ano — fórmula automática a partir da data
     mc = ws.cell(row=r, column=COL_MES,
-                 value=f'=IF(A{r}="","",TEXT(A{r},"mmm/aaaa"))')
+                 value=f'=IF(A{r}="","",TEXT(A{r},"mmm/yyyy"))')
     mc.fill = fill("EBF7F9" if r % 2 == 0 else "F0FBFC")
     mc.font = fnt(italic=True, color="595959", size=9)
     mc.alignment = Alignment(horizontal="center", vertical="center")
@@ -269,8 +270,8 @@ dv_data = DataValidation(type="date",
     allow_blank=True, showDropDown=False,
     showErrorMessage=True, errorTitle="Data inválida",
     error="Digite a data no formato DD/MM/AAAA.",
-    showInputMessage=True, promptTitle="Data",
-    prompt="DD/MM/AAAA")
+    showInputMessage=True, promptTitle="Data da sessão",
+    prompt="Atalho rápido: Ctrl+; insere a data de hoje automaticamente.\nOu digite manualmente no formato DD/MM/AAAA.")
 ws.add_data_validation(dv_data)
 dv_data.sqref = f"A{TASK_ROW}:A{MAX_ROW}"
 
@@ -365,8 +366,7 @@ for idx, (membro, cor) in enumerate(zip(EQUIPE, EQUIPE_CORES)):
     ws_p.cell(row=r, column=2).border = border()
 
     hc = ws_p.cell(row=r, column=3,
-        value=f"=IFERROR(SUMIF('Registro de Horas'!$C${TASK_ROW}:$C${MAX_ROW},"
-              f'"{membro}","Registro de Horas"!$G${TASK_ROW}:$G${MAX_ROW}),0)')
+        value=f"=IFERROR(SUMIF('Registro de Horas'!$C${TASK_ROW}:$C${MAX_ROW},\"{membro}\",'Registro de Horas'!$G${TASK_ROW}:$G${MAX_ROW}),0)")
     hc.number_format = '0.0"h"'
     hc.font = fnt(bold=True, color=cor, size=12)
     hc.fill = fill("FFFFFF")
@@ -419,8 +419,7 @@ for idx, (cli, cor) in enumerate(zip(CLIENTES, CLI_CORES)):
     ws_p.cell(row=r, column=2).border = border()
 
     ch = ws_p.cell(row=r, column=3,
-        value=f"=IFERROR(SUMIF('Registro de Horas'!$D${TASK_ROW}:$D${MAX_ROW},"
-              f'"{cli}","Registro de Horas"!$G${TASK_ROW}:$G${MAX_ROW}),0)')
+        value=f"=IFERROR(SUMIF('Registro de Horas'!$D${TASK_ROW}:$D${MAX_ROW},\"{cli}\",'Registro de Horas'!$G${TASK_ROW}:$G${MAX_ROW}),0)")
     ch.number_format = '0.0"h"'
     ch.font = fnt(bold=True, color=cor, size=12)
     ch.fill = fill("FFFFFF")
@@ -483,8 +482,7 @@ for idx, cat in enumerate(CATEGORIAS):
     ws_p.cell(row=r, column=2).border = border()
 
     cath = ws_p.cell(row=r, column=3,
-        value=f"=IFERROR(SUMIF('Registro de Horas'!$E${TASK_ROW}:$E${MAX_ROW},"
-              f'"{cat}","Registro de Horas"!$G${TASK_ROW}:$G${MAX_ROW}),0)')
+        value=f"=IFERROR(SUMIF('Registro de Horas'!$E${TASK_ROW}:$E${MAX_ROW},\"{cat}\",'Registro de Horas'!$G${TASK_ROW}:$G${MAX_ROW}),0)")
     cath.number_format = '0.0"h"'
     cath.font = fnt(bold=True, color=cor_txt, size=12)
     cath.fill = fill("FFFFFF")
@@ -663,9 +661,10 @@ def cliente_block(ws, start_row, cliente, cor_header, cor_barra, reg_tab):
 
 # ── Renderizar bloco de cada cliente ──────────────────────────────────────
 CLIENTES_DASH = [
-    ("Lactalis", TEAL_ESCURO, TEAL),
-    # adicione mais clientes aqui conforme o BPO crescer:
-    # ("Cliente B", "27AE60", "2ECC71"),
+    ("Lactalis",    TEAL_ESCURO, TEAL),
+    ("Premier Pet", "27AE60",    "2ECC71"),
+    # adicione mais clientes aqui conforme o BPO/consultoria crescer:
+    # ("Cliente C", "C0392B", "E74C3C"),
 ]
 
 cur_row = 4
@@ -680,6 +679,199 @@ for c, w in dash_widths.items():
 
 # Dashboard como aba ativa
 wb.active = ws_d
+
+# ══════════════════════════════════════════════════════════════════════════
+# ABA COMO USAR
+# ══════════════════════════════════════════════════════════════════════════
+ws_g = wb.create_sheet("Como Usar")
+ws_g.sheet_view.showGridLines = False
+N_G = 8
+
+def g_cell(ws, row, col, val=None, bg="FFFFFF", bold=False, color="1A2A2A",
+           size=10, align="left", italic=False, wrap=True):
+    c = ws.cell(row=row, column=col, value=val)
+    c.fill = fill(bg)
+    c.font = fnt(bold=bold, color=color, size=size, italic=italic)
+    c.alignment = Alignment(horizontal=align, vertical="center", wrap_text=wrap)
+    c.border = border()
+    return c
+
+# ── Logo + Título ──────────────────────────────────────────────────────────
+if os.path.exists(LOGO_PATH):
+    logo_g = XLImage(LOGO_PATH)
+    logo_g.width  = 130
+    logo_g.height = 43
+    ws_g.add_image(logo_g, "A1")
+
+ws_g.merge_cells(f"A1:{get_column_letter(N_G)}1")
+ws_g["A1"] = "GUIA DE PREENCHIMENTO — FICHA DE HORAS BPO & CONSULTORIA"
+ws_g["A1"].fill = fill(TEAL_ESCURO)
+ws_g["A1"].font = fnt(bold=True, color="FFFFFF", size=15)
+ws_g["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws_g.row_dimensions[1].height = 52
+
+ws_g.merge_cells(f"A2:{get_column_letter(N_G)}2")
+ws_g["A2"] = "Leia antes de preencher — evita erros e mantém os painéis sempre corretos"
+ws_g["A2"].fill = fill(TEAL)
+ws_g["A2"].font = fnt(italic=True, color="FFFFFF", size=11)
+ws_g["A2"].alignment = Alignment(horizontal="center", vertical="center")
+ws_g.row_dimensions[2].height = 26
+ws_g.row_dimensions[3].height = 12
+
+# ── Seção 1: Atalho essencial (destaque) ──────────────────────────────────
+section_header(ws_g, 4, "ATALHO ESSENCIAL — DATA DE HOJE", N_G, bg=TEAL)
+
+ws_g.merge_cells(f"A5:{get_column_letter(N_G)}5")
+ws_g["A5"] = "Pressione   Ctrl + ;   na coluna Data para inserir a data de hoje sem digitar nada"
+ws_g["A5"].fill = fill("FFF8E1")
+ws_g["A5"].font = Font(name="Calibri", bold=True, color="7D4E00", size=14)
+ws_g["A5"].alignment = Alignment(horizontal="center", vertical="center")
+ws_g.row_dimensions[5].height = 40
+
+ws_g.merge_cells(f"A6:{get_column_letter(N_G)}6")
+ws_g["A6"] = "A coluna Mês/Ano é gerada automaticamente — não preencha manualmente."
+ws_g["A6"].fill = fill("E8F8F5")
+ws_g["A6"].font = fnt(italic=True, color="0A6A7A", size=10)
+ws_g["A6"].alignment = Alignment(horizontal="center", vertical="center")
+ws_g.row_dimensions[6].height = 22
+ws_g.row_dimensions[7].height = 12
+
+# ── Seção 2: Guia de campos ────────────────────────────────────────────────
+section_header(ws_g, 8, "GUIA DE CAMPOS — O QUE PREENCHER EM CADA COLUNA", N_G, bg=TEAL_ESCURO)
+
+for c_idx, h in enumerate(["Campo", "O que preencher", "Exemplo", "Formato", "Obrigatório?", "", "", ""], 1):
+    cell = ws_g.cell(row=9, column=c_idx, value=h if h else None)
+    cell.fill = fill(TEAL)
+    cell.font = fnt(bold=True, color="FFFFFF", size=10)
+    cell.alignment = Alignment(horizontal="center", vertical="center")
+    cell.border = border()
+ws_g.row_dimensions[9].height = 24
+
+CAMPOS_GUIA = [
+    ("A — Data",          "Data da sessão de trabalho",                      "09/09/2026",            "DD/MM/AAAA  (use Ctrl+;)",  "Sim",  "D5EFF2"),
+    ("B — Mês/Ano",       "Preenchido automaticamente a partir da data",      "set/2026",              "Automático",               "Auto", "EBF7F9"),
+    ("C — Responsável",   "Membro da equipe que realizou a atividade",        "Gabriel Vital",         "Dropdown",                 "Sim",  "D5EFF2"),
+    ("D — Cliente",       "Cliente ou projeto atendido",                      "Premier Pet",           "Dropdown / texto livre",   "Sim",  "EBF7F9"),
+    ("E — Categoria",     "Tipo de atividade realizada",                      "Análise",               "Dropdown",                 "Sim",  "D5EFF2"),
+    ("F — Descrição",     "O que foi feito, entregável ou pauta discutida",   "Revisão base CNPJs F2", "Texto livre",              "Sim",  "EBF7F9"),
+    ("G — Horas",         "Tempo dedicado em horas (0.5 = meia hora)",        "1.5",                   "Decimal (0.5 / 1 / 1.5…)", "Sim",  "D5EFF2"),
+    ("H — Observação",    "Contexto extra, links, pendências ou lembretes",   "Aguardando retorno",    "Texto livre",              "Não",  "EBF7F9"),
+]
+
+for idx, (campo, descricao, exemplo, formato, obrigatorio, bg) in enumerate(CAMPOS_GUIA):
+    r = 10 + idx
+    for c_idx, (val, extra_bold, extra_italic, txt_color) in enumerate([
+        (campo,       True,  False, TEAL_ESCURO),
+        (descricao,   False, False, "1A2A2A"),
+        (exemplo,     True,  False, "1A2A2A"),
+        (formato,     False, True,  "595959"),
+        (obrigatorio, True,  False, "C0392B" if obrigatorio == "Sim" else ("0A6A7A" if obrigatorio == "Auto" else "7F7F7F")),
+    ], 1):
+        cell = ws_g.cell(row=r, column=c_idx, value=val)
+        cell.fill = fill(bg)
+        cell.font = fnt(bold=extra_bold, italic=extra_italic, color=txt_color, size=9)
+        cell.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        cell.border = border()
+    # preenche colunas F-H com o mesmo fundo
+    for c_idx in (6, 7, 8):
+        ec = ws_g.cell(row=r, column=c_idx)
+        ec.fill = fill(bg)
+        ec.border = border()
+    ws_g.row_dimensions[r].height = 28
+
+ws_g.row_dimensions[10 + len(CAMPOS_GUIA)].height = 12
+
+# ── Seção 3: Fluxo passo a passo ──────────────────────────────────────────
+PASSO_ROW = 10 + len(CAMPOS_GUIA) + 1
+section_header(ws_g, PASSO_ROW, "FLUXO DE PREENCHIMENTO — PASSO A PASSO", N_G, bg=TEAL_ESCURO)
+
+PASSOS = [
+    ("1",  "Vá para a aba 'Registro de Horas' e localize a primeira linha vazia abaixo do último lançamento."),
+    ("2",  "Coluna A (Data): pressione Ctrl+; para inserir hoje sem digitar, ou use DD/MM/AAAA manualmente."),
+    ("3",  "Coluna B (Mês/Ano): não mexa — é calculada automaticamente."),
+    ("4",  "Coluna C (Responsável): clique e selecione seu nome no dropdown."),
+    ("5",  "Coluna D (Cliente): selecione o cliente no dropdown ou, se for novo, digite o nome."),
+    ("6",  "Coluna E (Categoria): escolha o tipo de atividade no dropdown (veja legenda abaixo)."),
+    ("7",  "Coluna F (Descrição): descreva o que foi feito. Seja específico — isso alimenta os relatórios."),
+    ("8",  "Coluna G (Horas): informe em decimal.  Exemplos: 1h = 1  |  1h30 = 1.5  |  45min = 0.75"),
+    ("9",  "Coluna H (Observação): opcional — links úteis, pendências ou contexto adicional."),
+    ("10", "Salve o arquivo com Ctrl+S para atualizar os painéis automaticamente."),
+]
+
+for idx, (num, texto) in enumerate(PASSOS):
+    r = PASSO_ROW + 1 + idx
+    bg = "EBF7F9" if idx % 2 == 0 else "FFFFFF"
+
+    nc = ws_g.cell(row=r, column=1, value=num)
+    nc.fill = fill(TEAL)
+    nc.font = fnt(bold=True, color="FFFFFF", size=11)
+    nc.alignment = Alignment(horizontal="center", vertical="center")
+    nc.border = border()
+
+    ws_g.merge_cells(f"B{r}:{get_column_letter(N_G)}{r}")
+    tc = ws_g.cell(row=r, column=2, value=texto)
+    tc.fill = fill(bg)
+    tc.font = fnt(size=10, color="1A2A2A")
+    tc.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+    tc.border = border()
+    ws_g.row_dimensions[r].height = 26
+
+ws_g.row_dimensions[PASSO_ROW + 1 + len(PASSOS)].height = 12
+
+# ── Seção 4: Legenda de categorias ────────────────────────────────────────
+CAT_ROW_G = PASSO_ROW + 1 + len(PASSOS) + 1
+section_header(ws_g, CAT_ROW_G, "LEGENDA DE CATEGORIAS", N_G, bg=TEAL)
+
+CAT_GUIA = [
+    ("Reunião",       "Call, alinhamento, kickoff, follow-up com cliente",             "FF9800", "FFF3E0"),
+    ("Análise",       "Diagnóstico de dados, pesquisa, levantamento de informações",   "1565C0", "E3F2FD"),
+    ("Configuração",  "Setup da plataforma, parametrização, testes e homologação",     "2E7D32", "E8F5E9"),
+    ("Documentação",  "Elaboração de guias, ATAs, playbooks, propostas e contratos",   "6A1B9A", "F3E5F5"),
+    ("Revisão",       "Revisão de entregas, QA, validação de resultados com o cliente","F9A825", "FFFDE7"),
+    ("Apresentação",  "QBR, demo, pitches, treinamentos apresentados ao cliente",      "AD1457", "FCE4EC"),
+    ("Suporte",       "Atendimento a dúvidas, tickets e problemas operacionais",       "00838F", "E0F7FA"),
+    ("Treinamento",   "Capacitação interna da equipe Efcaz",                          "4527A0", "EDE7F6"),
+]
+
+for idx, (cat, descricao, cor_txt, cor_bg) in enumerate(CAT_GUIA):
+    r = CAT_ROW_G + 1 + idx
+
+    ws_g.merge_cells(f"A{r}:B{r}")
+    catc = ws_g.cell(row=r, column=1, value=cat)
+    catc.fill = fill(cor_bg)
+    catc.font = fnt(bold=True, color=cor_txt, size=10)
+    catc.alignment = Alignment(horizontal="center", vertical="center")
+    catc.border = border()
+    ws_g.cell(row=r, column=2).fill = fill(cor_bg)
+    ws_g.cell(row=r, column=2).border = border()
+
+    ws_g.merge_cells(f"C{r}:{get_column_letter(N_G)}{r}")
+    descc = ws_g.cell(row=r, column=3, value=f"  {descricao}")
+    descc.fill = fill(cor_bg)
+    descc.font = fnt(size=10, color="1A2A2A")
+    descc.alignment = Alignment(horizontal="left", vertical="center")
+    descc.border = border()
+    ws_g.row_dimensions[r].height = 24
+
+# ── Nota de rodapé ─────────────────────────────────────────────────────────
+note_row_g = CAT_ROW_G + 1 + len(CAT_GUIA) + 1
+ws_g.row_dimensions[note_row_g - 1].height = 12
+ws_g.merge_cells(f"A{note_row_g}:{get_column_letter(N_G)}{note_row_g}")
+nc_g = ws_g[f"A{note_row_g}"]
+nc_g.value = ("Os painéis 'Dashboard por Cliente' e 'Painel Geral' atualizam automaticamente ao salvar (Ctrl+S). "
+              "Não edite as abas de painel manualmente. "
+              "Para adicionar um novo cliente, inclua-o na aba Listas (coluna C) e, se desejar card no dashboard, peça ao responsável pelo arquivo.")
+nc_g.font = fnt(italic=True, color="7F7F7F", size=9)
+nc_g.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+nc_g.border = border()
+ws_g.row_dimensions[note_row_g].height = 32
+
+# ── Largura das colunas e freeze ───────────────────────────────────────────
+guide_col_widths = {1: 20, 2: 38, 3: 22, 4: 22, 5: 14, 6: 8, 7: 8, 8: 8}
+for c, w in guide_col_widths.items():
+    ws_g.column_dimensions[get_column_letter(c)].width = w
+
+ws_g.freeze_panes = "A3"
 
 # ══════════════════════════════════════════════════════════════════════════
 # SALVAR

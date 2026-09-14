@@ -27,18 +27,20 @@ VINCULOS = [
     },
     {
         # Novo relatório: Pendências de documentos de FORNECEDOR
-        # Competência vem da coluna "Tb Marca Representacao - Mr → Mr Nome"
+        # Competência vem da coluna "Marcas e representações"
+        # DST1 também necessário: relatorio_fornecedores_zurich.py lê deste arquivo
         "padrao":  "zurich_airport___pendencias_de_documentos_de_fornecedor_*.csv",
         "destino": "pendencias_fornecedor_zurich.csv",
         "label":   "Pendências Fornecedor — docs (novo schema)",
-        "pastas":  ["DST2"],
+        "pastas":  ["DST1", "DST2"],
     },
     {
         # Novo relatório: Pendências de documentos de TERCEIROS
+        # DST1 também necessário: relatorio_fornecedores_zurich.py lê deste arquivo
         "padrao":  "zurich_airport___pendencias_de_documentos_de_terceiro_*.csv",
         "destino": "pendencias_terceiros_zurich.csv",
         "label":   "Pendências Terceiros — docs (novo schema)",
-        "pastas":  ["DST2"],
+        "pastas":  ["DST1", "DST2"],
     },
     {
         # Novo relatório: Pendências de CREDENCIAMENTO (Pe Nivel = CREDENCIAMENTO)
