@@ -770,8 +770,58 @@ export function processAllData(
     })
   }
 
-  const tabelaForn = buildPendForn(rawPendForn)
-  const tabelaTerc = buildPendTerc(rawPendTerc)
+  // ── Dedup de linhas brutas antes de construir as tabelas ──────────────────
+  // Mesma situação (Forn+Terc+Doc) pode aparecer 3-5x no CSV por re-submissões
+  // históricas. Deduplica nos dados brutos (espelha Python _normalizar_pend_novo).
+  // EM_ELABORACAO tem prioridade sobre APROVADO; entre múltiplos APROVADO, mantém o último.
+  function dedupRawRows(
+    rows: Record<string, string>[],
+    colCnpjF: string | null | undefined,
+    colCnpjT: string | null | undefined,
+    colDocDirect: string | null | undefined,
+    colPendText: string | null | undefined,
+    colSit: string | null | undefined,
+    area: 'DOCUMENTOS' | 'TERCEIROS'
+  ): Record<string, string>[] {
+    const map = new Map<string, Record<string, string>>()
+    for (const row of rows) {
+      const sit = String(row[colSit ?? ''] ?? '').trim()
+      if (sit === 'CANCELADO') continue
+      const cnpjF = normCNPJ(String(row[colCnpjF ?? ''] ?? ''))
+      const cnpjT = colCnpjT ? normCNPJ(String(row[colCnpjT] ?? '')) : ''
+      // Documento: coluna direta → fallback: primeira palavra antes da vírgula do texto de pendência
+      const docDirect = colDocDirect ? String(row[colDocDirect] ?? '').trim().toUpperCase().slice(0, 80) : ''
+      const doc = (docDirect && docDirect !== 'NAN')
+        ? docDirect
+        : colPendText
+          ? (() => {
+              const line = String(row[colPendText] ?? '').split('\n')[0].trim()
+              if (area === 'TERCEIROS') {
+                // "NOME TERC - NOME DOC, detalhe" → captura após " - "
+                const di = line.indexOf(' - ')
+                const after = di >= 0 ? line.slice(di + 3) : line
+                const ci = after.indexOf(',')
+                return (ci >= 0 ? after.slice(0, ci) : after).trim().toUpperCase().slice(0, 80)
+              }
+              // DOCUMENTOS: "NOME DOC, detalhe"
+              const ci = line.indexOf(',')
+              return (ci >= 0 ? line.slice(0, ci) : line).trim().toUpperCase().slice(0, 80)
+            })()
+          : ''
+      const key = `${cnpjF}|||${cnpjT}|||${doc}`
+      const existing = map.get(key)
+      if (!existing || sit === 'EM_ELABORACAO' || String(existing[colSit ?? ''] ?? '').trim() !== 'EM_ELABORACAO') {
+        map.set(key, row)
+      }
+    }
+    return [...map.values()]
+  }
+
+  const rawPendFornDedup = dedupRawRows(rawPendForn, colCNPJPendForn, null,          colDocPendForn, colPendTxtForn, colSitPendForn, 'DOCUMENTOS')
+  const rawPendTercDedup = dedupRawRows(rawPendTerc, colCNPJPendTercForn, colTercCNPJPendTerc, colDocPendTerc, colPendTxtTerc, colSitPendTerc, 'TERCEIROS')
+
+  const tabelaForn = buildPendForn(rawPendFornDedup)
+  const tabelaTerc = buildPendTerc(rawPendTercDedup)
   const tabelaCred = buildPendCred(rawPendCred)
   const tabela: PendRow[] = [...tabelaForn, ...tabelaTerc, ...tabelaCred]
   const competencias = [...new Set(tabela.map(r => r.Competencia).filter(c => c && c !== 'nan'))].sort()
