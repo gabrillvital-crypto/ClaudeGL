@@ -187,6 +187,19 @@ def _normalizar_pend_novo(df):
     # Solicitações CANCELADAS não são pendências ativas — excluir
     if _sit:
         out = out[out["Status da última solicitação"] != "CANCELADO"].copy()
+    # Deduplicação: a mesma situação (Forn+Terc+Doc) pode aparecer 4-5x no CSV
+    # por re-submissões históricas do mesmo documento. Mantém 1 linha por combinação:
+    # EM_ELABORACAO tem prioridade sobre APROVADO (estado ativo); entre múltiplos
+    # APROVADO, mantém o último (mais recente na ordem do CSV).
+    _dedup_k = ["Fornecedor CPF/CNPJ", "Terceiro CPF/CNPJ", "Documento"]
+    if all(c in out.columns for c in _dedup_k):
+        _prio = out["Status da última solicitação"].apply(
+            lambda s: 1 if str(s).strip() == "EM_ELABORACAO" else 0)
+        out = (out.assign(_prio=_prio)
+                  .sort_values("_prio", kind="stable")
+                  .drop_duplicates(subset=_dedup_k, keep="last")
+                  .drop(columns=["_prio"])
+                  .reset_index(drop=True))
     return out
 
 def _normalizar_pend_antigo(df):
@@ -277,7 +290,20 @@ def _normalizar_pend_fornecedor(df):
         "Competência":                  comps,
         "Pendência":                    df[_pend].values if _pend else "",
     })
-    return out.fillna("")
+    out = out.fillna("")
+    # Deduplicação: mesma situação (Forn+Doc) pode aparecer várias vezes por
+    # re-submissões históricas. Mantém 1 linha por combinação única:
+    # EM_ELABORACAO tem prioridade; entre múltiplos APROVADO, mantém o último.
+    _dedup_k = ["Fornecedor CPF/CNPJ", "Documento"]
+    if all(c in out.columns for c in _dedup_k):
+        _prio = out["Status da última solicitação"].apply(
+            lambda s: 1 if str(s).strip() == "EM_ELABORACAO" else 0)
+        out = (out.assign(_prio=_prio)
+                  .sort_values("_prio", kind="stable")
+                  .drop_duplicates(subset=_dedup_k, keep="last")
+                  .drop(columns=["_prio"])
+                  .reset_index(drop=True))
+    return out
 
 def _normalizar_pend_cred(df):
     """Normaliza o CSV de credenciamento (Pe Nivel / Pe Descricao / Tb Pessoa...) para o schema unificado.
