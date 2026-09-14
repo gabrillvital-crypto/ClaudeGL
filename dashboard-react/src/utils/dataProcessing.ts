@@ -805,31 +805,30 @@ export function processAllData(
       const cnpjF = normCNPJ(String(row[colCnpjF ?? ''] ?? ''))
       const cnpjT = colCnpjT ? normCNPJ(String(row[colCnpjT] ?? '')) : ''
       // Documento: coluna direta → fallback: primeira palavra antes da vírgula do texto de pendência
-      const docDirect = colDocDirect ? String(row[colDocDirect] ?? '').trim().toUpperCase().slice(0, 80) : ''
-      const doc = (docDirect && docDirect !== 'NAN')
-        ? docDirect
-        : colPendText
-          ? (() => {
-              const line = String(row[colPendText] ?? '').split('\n')[0].trim()
-              if (area === 'TERCEIROS') {
-                // "NOME TERC - NOME DOC, detalhe" → captura após " - "
-                const di = line.indexOf(' - ')
-                const after = di >= 0 ? line.slice(di + 3) : line
-                const ci = after.indexOf(',')
-                return (ci >= 0 ? after.slice(0, ci) : after).trim().toUpperCase().slice(0, 80)
-              }
-              // DOCUMENTOS: "NOME DOC, detalhe"
-              const ci = line.indexOf(',')
-              return (ci >= 0 ? line.slice(0, ci) : line).trim().toUpperCase().slice(0, 80)
-            })()
-          : ''
-        const key = cnpjF + '\x00' + cnpjT + '\x00' + doc
-      const existSit = colSit ? String(_rawIdx[key] != null ? (_rawRows[_rawIdx[key]][colSit] ?? '') : '').trim() : ''
-      if (_rawIdx[key] == null) {
+      const _dd = colDocDirect ? String(row[colDocDirect] ?? '').trim().toUpperCase().slice(0, 80) : ''
+      let doc = (_dd && _dd !== 'NAN') ? _dd : ''
+      if (!doc && colPendText) {
+        const _pt = colPendText   // local const garante narrowing para string no TypeScript
+        const _line = String(row[_pt] ?? '').split('\n')[0].trim()
+        if (area === 'TERCEIROS') {
+          const _di = _line.indexOf(' - ')
+          const _after = _di >= 0 ? _line.slice(_di + 3) : _line
+          const _ci = _after.indexOf(',')
+          doc = (_ci >= 0 ? _after.slice(0, _ci) : _after).trim().toUpperCase().slice(0, 80)
+        } else {
+          const _ci = _line.indexOf(',')
+          doc = (_ci >= 0 ? _line.slice(0, _ci) : _line).trim().toUpperCase().slice(0, 80)
+        }
+      }
+      const key = cnpjF + '\x00' + cnpjT + '\x00' + doc
+      if (!(key in _rawIdx)) {
         _rawIdx[key] = _rawRows.length
         _rawRows.push(row)
-      } else if (sit === 'EM_ELABORACAO' || existSit !== 'EM_ELABORACAO') {
-        _rawRows[_rawIdx[key]] = row
+      } else {
+        const existSit = colSit ? String(_rawRows[_rawIdx[key]][colSit] ?? '').trim() : ''
+        if (sit === 'EM_ELABORACAO' || existSit !== 'EM_ELABORACAO') {
+          _rawRows[_rawIdx[key]] = row
+        }
       }
     }
     return _rawRows
