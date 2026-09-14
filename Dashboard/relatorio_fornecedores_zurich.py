@@ -11,9 +11,11 @@ import os as _os
 # Pasta base onde o N8N salva os arquivos com nomes fixos
 BASE_DIR = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
-PENDENCIAS_CSV     = BASE_DIR + r"\pendencias_zurich.csv"                # schema combinado TERCEIROS (legado Python)
-PENDENCIAS_DOC_CSV = BASE_DIR + r"\pendencias_documentos_zurich.csv"     # schema antigo DOCUMENTOS (legado Python)
-PENDENCIAS_CRED_CSV = BASE_DIR + r"\pendencias_credenciamento_zurich.csv" # novo: CREDENCIAMENTO (exigências não-documentais)
+PENDENCIAS_CSV      = BASE_DIR + r"\pendencias_zurich.csv"                 # schema legado TERCEIROS (fallback)
+PENDENCIAS_TERC_CSV = BASE_DIR + r"\pendencias_terceiros_zurich.csv"       # novo: TERCEIROS dedicado
+PENDENCIAS_FORN_CSV = BASE_DIR + r"\pendencias_fornecedor_zurich.csv"      # novo: DOCUMENTOS de fornecedor
+PENDENCIAS_DOC_CSV  = BASE_DIR + r"\pendencias_documentos_zurich.csv"      # schema antigo DOCUMENTOS (legado)
+PENDENCIAS_CRED_CSV = BASE_DIR + r"\pendencias_credenciamento_zurich.csv"  # novo: CREDENCIAMENTO (exigências não-documentais)
 TERCEIROS_CSV      = BASE_DIR + r"\terceiros_zurich.csv"
 SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
 SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
@@ -126,7 +128,9 @@ def competencia_anterior_contrato(comp):
     yyyy = int(raw_y) if len(raw_y) == 4 else 2000 + int(raw_y)
     return yyyy < 2025 or (yyyy == 2025 and mm < 11)
 
-df_pend_raw = read_csv_safe(PENDENCIAS_CSV)
+# TERCEIROS: prioriza novo CSV dedicado; fallback ao legado combinado
+_terc_src   = PENDENCIAS_TERC_CSV if _os.path.exists(PENDENCIAS_TERC_CSV) else PENDENCIAS_CSV
+df_pend_raw = read_csv_safe(_terc_src)
 df_terc = read_csv_safe(TERCEIROS_CSV)
 df_sit  = read_csv_safe(SITUACAO_CSV)
 
@@ -200,6 +204,68 @@ def _normalizar_pend_antigo(df):
     })
     return out.fillna("")
 
+# Documentos que exigem competência nas pendências de fornecedor (espelha React DOCS_COM_COMP_PEND)
+_DOCS_COM_COMP_PEND = {
+    'GFD - GUIA DO FGTS DIGITAL MENSAL',
+    'DCTFWEB',
+    'FOPAG - (FOLHA DE PAGAMENTO + RESUMO)',
+    'COMPROVANTE BANCÁRIO DE PAGAMENTO DOS SALÁRIOS',
+    'KIT RESCISÃO',
+    'RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO',
+    'GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS',
+}
+_DOCS_SEM_COMP_PEND = {'ASO', 'ORDENS DE SERVIÇO', 'CAPACITAÇÃO DE ACORDO COM A ORDEM DE SERVIÇO'}
+
+def _extract_doc_forn(doc_val, pend_val):
+    """Extrai nome do documento: coluna Documento se preenchida, senão parse da primeira linha de Pendência.
+    Espelha React extractDoc(row, 'DOCUMENTOS'): tudo antes da primeira vírgula."""
+    d = str(doc_val).strip()
+    if d and d.lower() not in ('nan', 'none', ''):
+        return d.upper()[:80]
+    p = str(pend_val or '')
+    first_line = p.split('\n')[0].strip()
+    ci = first_line.find(',')
+    return (first_line[:ci] if ci >= 0 else first_line).strip().upper()[:80] or 'OUTROS'
+
+def _normalizar_pend_fornecedor(df):
+    """Normaliza o CSV de documentos de Fornecedor (novo schema) para o schema unificado.
+    Source: pendencias_fornecedor_zurich.csv — Area sempre DOCUMENTOS.
+    Competência: Marcas e representações apenas para os 7 docs da lista; demais → 'Não possui competência'.
+    Espelha React buildPendForn + DOCS_COM_COMP_PEND."""
+    _rs   = next((c for c in df.columns if "raz" in c.lower() and "terceiro" not in c.lower()), df.columns[0])
+    _cnpj = next((c for c in df.columns if ("cpf" in c.lower() or "cnpj" in c.lower()) and "terceiro" not in c.lower()), None)
+    _sit  = next((c for c in df.columns if "situa" in c.lower() and "solicit" in c.lower()), None)
+    _doc  = "Documento" if "Documento" in df.columns else None
+    _marc = next((c for c in df.columns if "marcas" in c.lower() or "representa" in c.lower()), None)
+    _pend = next((c for c in df.columns if "pend" in c.lower() and "rea" not in c.lower()), None)
+
+    docs_vals = df[_doc].values  if _doc  else [""] * len(df)
+    pend_vals = df[_pend].values if _pend else [""] * len(df)
+    marc_vals = df[_marc].values if _marc else [""] * len(df)
+
+    doc_names = [_extract_doc_forn(d, p) for d, p in zip(docs_vals, pend_vals)]
+    comps = []
+    for doc, marc in zip(doc_names, marc_vals):
+        is_sem = any(doc.startswith(s) for s in _DOCS_SEM_COMP_PEND) or doc in _DOCS_SEM_COMP_PEND
+        if is_sem or doc not in _DOCS_COM_COMP_PEND:
+            comps.append('Não possui competência')
+        else:
+            m = str(marc).strip()
+            comps.append(m if m and m.lower() not in ('nan', 'none', '') else '')
+
+    out = pd.DataFrame({
+        "Fornecedor Razão Social":      df[_rs].values,
+        "Fornecedor CPF/CNPJ":          df[_cnpj].values if _cnpj else "",
+        "Status da última solicitação": df[_sit].values if _sit else "APROVADO",
+        "Área da pendência":            "DOCUMENTOS",
+        "Terceiro Razão Social":        "",
+        "Terceiro CPF/CNPJ":            "",
+        "Documento":                    doc_names,
+        "Competência":                  comps,
+        "Pendência":                    df[_pend].values if _pend else "",
+    })
+    return out.fillna("")
+
 def _normalizar_pend_cred(df):
     """Normaliza o CSV de credenciamento (Pe Nivel / Pe Descricao / Tb Pessoa...) para o schema unificado.
     Todas as linhas recebem Area=CREDENCIAMENTO e Competencia='Não possui competência'."""
@@ -221,10 +287,15 @@ def _normalizar_pend_cred(df):
     })
     return out.fillna("")
 
+# TERCEIROS (novo CSV dedicado, ou legado combinado via df_pend_raw já carregado acima)
 _df_terc_norm = _normalizar_pend_novo(df_pend_raw)
-_df_doc_norm  = _normalizar_pend_antigo(read_csv_safe(PENDENCIAS_DOC_CSV)) if _os.path.exists(PENDENCIAS_DOC_CSV) else pd.DataFrame(columns=_COLS_UNIF)
+# DOCUMENTOS de Fornecedor: novo CSV dedicado (schema Razão Social + Marcas e representações)
+_df_forn_norm = _normalizar_pend_fornecedor(read_csv_safe(PENDENCIAS_FORN_CSV)) if _os.path.exists(PENDENCIAS_FORN_CSV) else pd.DataFrame(columns=_COLS_UNIF)
+# DOCUMENTOS legado (schema antigo combinado): só usado quando o novo CSV de fornecedor não existe
+_df_doc_norm  = _normalizar_pend_antigo(read_csv_safe(PENDENCIAS_DOC_CSV)) if (not _os.path.exists(PENDENCIAS_FORN_CSV) and _os.path.exists(PENDENCIAS_DOC_CSV)) else pd.DataFrame(columns=_COLS_UNIF)
+# CREDENCIAMENTO: exigências não-documentais
 _df_cred_norm = _normalizar_pend_cred(read_csv_safe(PENDENCIAS_CRED_CSV)) if _os.path.exists(PENDENCIAS_CRED_CSV) else pd.DataFrame(columns=_COLS_UNIF)
-df_pend = pd.concat([_df_terc_norm, _df_doc_norm, _df_cred_norm], ignore_index=True)
+df_pend = pd.concat([_df_terc_norm, _df_forn_norm, _df_doc_norm, _df_cred_norm], ignore_index=True)
 
 # Nomes fixos das colunas — usados em todo o processamento abaixo
 col_rs_pend   = "Fornecedor Razão Social"
