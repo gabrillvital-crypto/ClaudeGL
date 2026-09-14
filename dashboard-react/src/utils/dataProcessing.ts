@@ -637,15 +637,22 @@ export function processAllData(
     })
     // Dedup: mesma situação (Forn+Doc) pode aparecer 4-5x por re-submissões históricas.
     // EM_ELABORACAO tem prioridade; entre múltiplos APROVADO, mantém o último (mais recente).
-    const dedupMap = new Map<string, PendRow>()
+    // Usa objeto simples (em vez de Map) para máxima compatibilidade de runtime.
+    const _fIdx: Record<string, number> = {}
+    const _fUniq: PendRow[] = []
     for (const r of all) {
-      const key = `${r.CNPJ_Forn}|||${r.Documento}`
-      const existing = dedupMap.get(key)
-      if (!existing || r.Status === 'EM_ELABORACAO' || existing.Status !== 'EM_ELABORACAO') {
-        dedupMap.set(key, r)
+      const k = r.CNPJ_Forn + '\x00' + r.Documento
+      if (Object.prototype.hasOwnProperty.call(_fIdx, k)) {
+        const prev = _fUniq[_fIdx[k]]
+        if (r.Status === 'EM_ELABORACAO' || prev.Status !== 'EM_ELABORACAO') {
+          _fUniq[_fIdx[k]] = r
+        }
+      } else {
+        _fIdx[k] = _fUniq.length
+        _fUniq.push(r)
       }
     }
-    return [...dedupMap.values()]
+    return _fUniq
   }
 
   // ── Tabela de pendências — TERCEIRO ────────────────────────────────────────
@@ -716,15 +723,22 @@ export function processAllData(
     })
     // Dedup: mesma situação (Forn+Terc+Doc) pode aparecer 4-5x por re-submissões históricas.
     // EM_ELABORACAO tem prioridade; entre múltiplos APROVADO, mantém o último (mais recente).
-    const dedupMap = new Map<string, PendRow>()
+    // Usa objeto simples (em vez de Map) para máxima compatibilidade de runtime.
+    const _tIdx: Record<string, number> = {}
+    const _tUniq: PendRow[] = []
     for (const r of all) {
-      const key = `${r.CNPJ_Forn}|||${r.CNPJ_Terceiro ?? ''}|||${r.Documento}`
-      const existing = dedupMap.get(key)
-      if (!existing || r.Status === 'EM_ELABORACAO' || existing.Status !== 'EM_ELABORACAO') {
-        dedupMap.set(key, r)
+      const k = r.CNPJ_Forn + '\x00' + (r.CNPJ_Terceiro ?? '') + '\x00' + r.Documento
+      if (Object.prototype.hasOwnProperty.call(_tIdx, k)) {
+        const prev = _tUniq[_tIdx[k]]
+        if (r.Status === 'EM_ELABORACAO' || prev.Status !== 'EM_ELABORACAO') {
+          _tUniq[_tIdx[k]] = r
+        }
+      } else {
+        _tIdx[k] = _tUniq.length
+        _tUniq.push(r)
       }
     }
-    return [...dedupMap.values()]
+    return _tUniq
   }
 
   // ── Descoberta de colunas — Pendências Credenciamento ────────────────────
@@ -783,7 +797,8 @@ export function processAllData(
     colSit: string | null | undefined,
     area: 'DOCUMENTOS' | 'TERCEIROS'
   ): Record<string, string>[] {
-    const map = new Map<string, Record<string, string>>()
+    const _rawIdx: Record<string, number> = {}
+    const _rawRows: Record<string, string>[] = []
     for (const row of rows) {
       const sit = String(row[colSit ?? ''] ?? '').trim()
       if (sit === 'CANCELADO') continue
@@ -808,13 +823,16 @@ export function processAllData(
               return (ci >= 0 ? line.slice(0, ci) : line).trim().toUpperCase().slice(0, 80)
             })()
           : ''
-      const key = `${cnpjF}|||${cnpjT}|||${doc}`
-      const existing = map.get(key)
-      if (!existing || sit === 'EM_ELABORACAO' || String(existing[colSit ?? ''] ?? '').trim() !== 'EM_ELABORACAO') {
-        map.set(key, row)
+        const key = cnpjF + '\x00' + cnpjT + '\x00' + doc
+      const existSit = colSit ? String(_rawIdx[key] != null ? (_rawRows[_rawIdx[key]][colSit] ?? '') : '').trim() : ''
+      if (_rawIdx[key] == null) {
+        _rawIdx[key] = _rawRows.length
+        _rawRows.push(row)
+      } else if (sit === 'EM_ELABORACAO' || existSit !== 'EM_ELABORACAO') {
+        _rawRows[_rawIdx[key]] = row
       }
     }
-    return [...map.values()]
+    return _rawRows
   }
 
   const rawPendFornDedup = dedupRawRows(rawPendForn, colCNPJPendForn, null,          colDocPendForn, colPendTxtForn, colSitPendForn, 'DOCUMENTOS')
