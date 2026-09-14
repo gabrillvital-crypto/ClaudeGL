@@ -590,7 +590,7 @@ export function processAllData(
   //   B) novo:   Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação | Documento | Competência | Pendência
   // Em ambos, todas as linhas do arquivo são de DOCUMENTOS — Area = 'Fornecedor' fixo.
   function buildPendForn(rows: Record<string, string>[]): PendRow[] {
-    return rows.map(row => {
+    const all = rows.map(row => {
       // Nome do documento: coluna direta (schema B) ou parseado do texto (schema A)
       const docDireto = colDocPendForn ? String(row[colDocPendForn] ?? '').trim().toUpperCase().slice(0, 80) : ''
       const docUpper  = (docDireto && docDireto !== 'NAN') ? docDireto : extractDoc(row, 'DOCUMENTOS')
@@ -635,6 +635,17 @@ export function processAllData(
         StatusReal:  statusReal,
       }
     })
+    // Dedup: mesma situação (Forn+Doc) pode aparecer 4-5x por re-submissões históricas.
+    // EM_ELABORACAO tem prioridade; entre múltiplos APROVADO, mantém o último (mais recente).
+    const dedupMap = new Map<string, PendRow>()
+    for (const r of all) {
+      const key = `${r.CNPJ_Forn}|||${r.Documento}`
+      const existing = dedupMap.get(key)
+      if (!existing || r.Status === 'EM_ELABORACAO' || existing.Status !== 'EM_ELABORACAO') {
+        dedupMap.set(key, r)
+      }
+    }
+    return [...dedupMap.values()]
   }
 
   // ── Tabela de pendências — TERCEIRO ────────────────────────────────────────
@@ -643,7 +654,7 @@ export function processAllData(
   //         Status de aprovação do documento | Pendência
   // Todas as linhas são de TERCEIROS — Area = 'Terceiro' fixo.
   function buildPendTerc(rows: Record<string, string>[]): PendRow[] {
-    return rows.map(row => {
+    const all = rows.map(row => {
       const docUpper = String(row[colDocPendTerc] ?? '').trim().toUpperCase().slice(0, 80) || 'OUTROS'
       const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
         || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
@@ -703,6 +714,17 @@ export function processAllData(
         CNPJ_Terceiro: normCNPJ(row[colTercCNPJPendTerc] ?? '') || undefined,
       }
     })
+    // Dedup: mesma situação (Forn+Terc+Doc) pode aparecer 4-5x por re-submissões históricas.
+    // EM_ELABORACAO tem prioridade; entre múltiplos APROVADO, mantém o último (mais recente).
+    const dedupMap = new Map<string, PendRow>()
+    for (const r of all) {
+      const key = `${r.CNPJ_Forn}|||${r.CNPJ_Terceiro ?? ''}|||${r.Documento}`
+      const existing = dedupMap.get(key)
+      if (!existing || r.Status === 'EM_ELABORACAO' || existing.Status !== 'EM_ELABORACAO') {
+        dedupMap.set(key, r)
+      }
+    }
+    return [...dedupMap.values()]
   }
 
   // ── Descoberta de colunas — Pendências Credenciamento ────────────────────
