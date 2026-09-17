@@ -159,4 +159,29 @@ Dashboard mostra painel "Meus Terceiros" separado de "Meus Fornecedores"
 
 ---
 
+### Atualizações de Set/2026
+
+Fonte: e-mail interno Ricardo Pedroso da Silva, 14/09/2026.
+
+#### Campos Dinâmicos no Dossiê *(novo)*
+
+- Configurações > Campos Dinâmicos → campo **"Exibir no dossiê?"** → marcar **Sim**
+- Exibe um novo quadro **"Dados Complementares"** logo após Dados do Fornecedor no dossiê
+- **Restrição:** disponível somente para módulo **Fornecedores**, categorias Identificação e Endereço
+- Exemplo de uso: campo "Regime Tributário" preenchido como "Lucro Real" → aparece no dossiê
+
+#### Vencimento da Consulta do Serasa *(novo)*
+
+- Ao realizar consulta Serasa, agora é possível adicionar **data de vencimento** da consulta (opcional)
+- A data aparece acima das informações retornadas, com status de vencimento (ex: "A vencer")
+- Controla a periodicidade de renovação das consultas Serasa
+
+#### Melhorias de Jornada do Usuário (Set/2026)
+
+- **Menu lateral retrátil:** retrai automaticamente ao visualizar dados cadastrais ou interagir com solicitação
+- **Cor de fundo do menu de dados do fornecedor:** alterada para cinza (mais clareza visual)
+- **Campos removidos:** "Faturamento Estimado" e "% de Compras" das telas Fornecedores Relacionados e Principais Referências
+
+---
+
 > **Como adicionar:** salvar o PDF do artigo Movidesk em `../Documentos/` e registrar neste índice.
