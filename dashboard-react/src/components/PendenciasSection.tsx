@@ -280,11 +280,14 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
   const [pdfLoading, setPdfLoading]   = useState(false)
   const [viewMode, setViewMode]       = useState<'grouped' | 'flat'>('grouped')
   const [currentPage, setCurrentPage] = useState(1)
+  const [aClassPage, setAClassPage]   = useState(1)
 
   // Reset de página sempre que os dados mudarem (filtro aplicado)
   useEffect(() => { setCurrentPage(1) }, [data])
   // Reset de página ao mudar de view
   useEffect(() => { setCurrentPage(1) }, [viewMode])
+  // Reset paginação "A classificar" quando lista mudar
+  useEffect(() => { setAClassPage(1) }, [aClassificar])
 
   // ── Paginação ──────────────────────────────────────────────────────────
 
@@ -360,44 +363,59 @@ export function PendenciasSection({ data, aClassificar = [], geradoEm = '', isFo
     <div id="section-pendencias">
 
       {/* ── Alerta: registros "A classificar" ───────────────────────────── */}
-      {aClassificar.length > 0 && (
-        <div className="bg-[#fff8e1] border border-[#f59e0b] rounded-xl p-4 mb-4 flex items-start gap-3">
-          <span className="text-[#f59e0b] text-xl mt-0.5">⚠️</span>
-          <div className="w-full">
-            <p className="text-[13px] font-bold text-[#92400e] mb-1">
-              {aClassificar.length} pendência(s) classificadas como "A classificar"
-            </p>
-            <p className="text-[12px] text-[#78350f] mb-2">
-              Estes registros exigem competência mas o campo <strong>"Competência"</strong>{' '}
-              (ou <strong>"Marcas e representações"</strong>) está vazio <em>ou</em> com data
-              anterior ao início do contrato Zurich (novembro/2025). Verifique e preencha
-              na plataforma para que a competência seja registrada corretamente.
-            </p>
-            <div className="overflow-x-auto">
-              <table className="text-[12px] border-collapse w-full">
-                <thead>
-                  <tr className="bg-[#fef3c7]">
-                    {['Área', 'Fornecedor', 'Terceiro', 'Documento', 'Status Real'].map(h => (
-                      <th key={h} className="px-3 py-1.5 text-left font-semibold text-[#92400e] border border-[#fde68a]">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {aClassificar.map((r, i) => (
-                    <tr key={i} className="border-b border-[#fde68a]">
-                      <td className="px-3 py-1.5">{areaBadge(r.Area)}</td>
-                      <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
-                      <td className="px-3 py-1.5 text-[#555] italic">{r.Terceiro || '—'}</td>
-                      <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
-                      <td className="px-3 py-1.5"><StatusRealBadge s={r.StatusReal} /></td>
+      {aClassificar.length > 0 && (() => {
+        const acTotalPages = Math.max(1, Math.ceil(aClassificar.length / PAGE_SIZE))
+        const acSafePage   = Math.min(Math.max(1, aClassPage), acTotalPages)
+        const acStart      = (acSafePage - 1) * PAGE_SIZE
+        const acEnd        = Math.min(acSafePage * PAGE_SIZE, aClassificar.length)
+        const acPageRows   = aClassificar.slice(acStart, acEnd)
+        return (
+          <div className="bg-[#fff8e1] border border-[#f59e0b] rounded-xl p-4 mb-4 flex items-start gap-3">
+            <span className="text-[#f59e0b] text-xl mt-0.5">⚠️</span>
+            <div className="w-full">
+              <p className="text-[13px] font-bold text-[#92400e] mb-2">
+                {aClassificar.length} pendência(s) classificadas como "A classificar"
+              </p>
+              <div className="overflow-x-auto">
+                <table className="text-[12px] border-collapse w-full">
+                  <thead>
+                    <tr className="bg-[#fef3c7]">
+                      {['Área', 'Fornecedor', 'Terceiro', 'Documento', 'Status Real'].map(h => (
+                        <th key={h} className="px-3 py-1.5 text-left font-semibold text-[#92400e] border border-[#fde68a]">{h}</th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {acPageRows.map((r, i) => (
+                      <tr key={i} className="border-b border-[#fde68a]">
+                        <td className="px-3 py-1.5">{areaBadge(r.Area)}</td>
+                        <td className="px-3 py-1.5 text-[#78350f]">{r.Fornecedor}</td>
+                        <td className="px-3 py-1.5 text-[#555] italic">{r.Terceiro || '—'}</td>
+                        <td className="px-3 py-1.5 font-semibold text-[#78350f]">{r.Documento}</td>
+                        <td className="px-3 py-1.5"><StatusRealBadge s={r.StatusReal} /></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {acTotalPages > 1 && (
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#fde68a]">
+                  <span className="text-[11px] text-[#92400e]">
+                    {acStart + 1}–{acEnd} de {aClassificar.length}
+                  </span>
+                  <div className="flex gap-1">
+                    <button onClick={() => setAClassPage(1)}            disabled={acSafePage === 1}           className="px-2 py-0.5 text-[11px] rounded border border-[#f59e0b] text-[#92400e] disabled:opacity-40">«</button>
+                    <button onClick={() => setAClassPage(p => p - 1)}   disabled={acSafePage === 1}           className="px-2 py-0.5 text-[11px] rounded border border-[#f59e0b] text-[#92400e] disabled:opacity-40">‹</button>
+                    <span className="px-2 py-0.5 text-[11px] text-[#92400e]">{acSafePage} / {acTotalPages}</span>
+                    <button onClick={() => setAClassPage(p => p + 1)}   disabled={acSafePage === acTotalPages} className="px-2 py-0.5 text-[11px] rounded border border-[#f59e0b] text-[#92400e] disabled:opacity-40">›</button>
+                    <button onClick={() => setAClassPage(acTotalPages)} disabled={acSafePage === acTotalPages} className="px-2 py-0.5 text-[11px] rounded border border-[#f59e0b] text-[#92400e] disabled:opacity-40">»</button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* ── Barra de controles ──────────────────────────────────────────── */}
       <div className="bg-white rounded-xl shadow-sm p-4 mb-3 flex flex-wrap gap-3 items-center justify-between">
