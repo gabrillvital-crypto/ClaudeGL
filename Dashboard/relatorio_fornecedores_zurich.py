@@ -261,7 +261,8 @@ def _normalizar_pend_fornecedor(df):
     _rs   = next((c for c in df.columns if "raz" in c.lower() and "terceiro" not in c.lower()), df.columns[0])
     _cnpj = next((c for c in df.columns if ("cpf" in c.lower() or "cnpj" in c.lower()) and "terceiro" not in c.lower()), None)
     _sit  = next((c for c in df.columns if "situa" in c.lower() and "solicit" in c.lower()), None)
-    _doc  = "Documento" if "Documento" in df.columns else None
+    _doc  = "Documento" if "Documento" in df.columns else next(
+        (c for c in df.columns if "titulo" in c.lower()), None)
     _marc = next((c for c in df.columns if "marcas" in c.lower() or "representa" in c.lower()), None)
     _pend = next((c for c in df.columns if "pend" in c.lower() and "rea" not in c.lower()), None)
 
