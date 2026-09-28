@@ -79,7 +79,7 @@ export default function App() {
                         ? 'text-white'
                         : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
                     }`}
-                    style={active ? { background: 'rgba(20,179,204,0.22)', borderLeft: '3px solid #14B3CC', paddingLeft: '10px' } : {}}
+                    style={active ? { background: 'rgba(20,179,204,0.30)', borderLeft: '3px solid #7DE8F2', paddingLeft: '10px' } : {}}
                   >
                     <span className="text-sm leading-none">{t.emoji}</span>
                     <span>{t.label}</span>
