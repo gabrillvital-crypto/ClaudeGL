@@ -582,6 +582,192 @@ export function exportPendPDF({ rows, geradoEm, filename = 'pendencias' }: PendP
   doc.save(`${filename}.pdf`)
 }
 
+// ── Exportação Personalizada (módulos selecionáveis) ─────────────────────
+
+interface ExportPersonalizadoBase {
+  sitRows:     SitTerceiroRow[]
+  fornSitRows: FornSitRow[]
+  pendRows:    PendRow[]
+  includeR3:   boolean
+  includeR4:   boolean
+  includePend: boolean
+  filename?:   string
+}
+
+export function exportPersonalizadoXLSX(opts: ExportPersonalizadoBase) {
+  const { sitRows, fornSitRows, pendRows, includeR3, includeR4, includePend, filename = 'relatorio_zurich' } = opts
+  const wb = XLSX.utils.book_new()
+
+  if (includeR3) {
+    const hdR3 = ['Fornecedor', 'Aeroporto', 'Terceiro', 'Documento', 'Competencia', 'Status', 'Vencimento']
+    const wsR3 = XLSX.utils.aoa_to_sheet([hdR3, ...sitRows.map(r => hdR3.map(h => (r as any)[h] ?? ''))])
+    wsR3['!cols'] = hdR3.map(() => ({ wch: 22 }))
+    XLSX.utils.book_append_sheet(wb, wsR3, 'R3 - Terceiros')
+  }
+
+  if (includeR4) {
+    const hdR4 = ['Fornecedor', 'Documento', 'Competencia', 'Status', 'Vencimento']
+    const wsR4 = XLSX.utils.aoa_to_sheet([hdR4, ...fornSitRows.map(r => hdR4.map(h => (r as any)[h] ?? ''))])
+    wsR4['!cols'] = hdR4.map(() => ({ wch: 22 }))
+    XLSX.utils.book_append_sheet(wb, wsR4, 'R4 - Empresa')
+  }
+
+  if (includePend) {
+    const _pendHeaders = ['Competência', 'Sit. Real', 'Área', 'Fornecedor', 'CNPJ', 'Terceiro', 'Documento', 'Detalhe']
+    const _pendColW    = [28, 16, 14, 38, 20, 35, 42, 60]
+    const _pendToRow   = (r: PendRow): (string | number)[] => [
+      r.Competencia || '—',
+      r.StatusReal,
+      r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
+      r.Fornecedor,
+      r.CNPJ_Forn,
+      r.Terceiro || '—',
+      r.Documento,
+      r.Detalhe || '',
+    ]
+    const grouped = new Map<string, PendRow[]>()
+    for (const r of pendRows) {
+      const key = r.Competencia || 'A classificar'
+      if (!grouped.has(key)) grouped.set(key, [])
+      grouped.get(key)!.push(r)
+    }
+    const sortedKeys   = _sortCompKeysLocal([...grouped.keys()])
+    const mainData: (string | number)[][] = [_pendHeaders]
+    for (const key of sortedKeys) {
+      const rws   = grouped.get(key)!
+      const isAC  = key === 'A classificar'
+      const isSC  = key === 'Não possui competência'
+      const label = isAC
+        ? `⚠ A CLASSIFICAR (${rws.length} pendências)`
+        : isSC
+          ? `— SEM COMPETÊNCIA (${rws.length} pendências)`
+          : `📅 ${key}  —  ${rws.length} pendência${rws.length !== 1 ? 's' : ''}`
+      mainData.push([label, '', '', '', '', '', '', ''])
+      for (const r of rws) mainData.push(_pendToRow(r))
+      mainData.push(['', '', '', '', '', '', '', ''])
+    }
+    const wsPend = XLSX.utils.aoa_to_sheet(mainData)
+    wsPend['!cols'] = _pendColW.map(wch => ({ wch }))
+    XLSX.utils.book_append_sheet(wb, wsPend, 'Pendências')
+  }
+
+  if (wb.SheetNames.length === 0) return
+  XLSX.writeFile(wb, `${filename}.xlsx`)
+}
+
+export function exportPersonalizadoPDF(opts: ExportPersonalizadoBase & { geradoEm: string }) {
+  const { sitRows, fornSitRows, pendRows, includeR3, includeR4, includePend, geradoEm, filename = 'relatorio_zurich' } = opts
+  const doc   = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+  const pageW = doc.internal.pageSize.getWidth()
+  let   y     = 0
+
+  const drawSection = (title: string) => {
+    if (y > 170) { doc.addPage(); y = 0 }
+    doc.setFillColor(...TEAL_DARK)
+    doc.rect(0, y, pageW, 12, 'F')
+    doc.setFontSize(10); doc.setFont('helvetica', 'bold'); doc.setTextColor(...WHITE)
+    doc.text('EFCAZ', 10, y + 8)
+    doc.text(title, pageW / 2, y + 8, { align: 'center' })
+    doc.setFontSize(7); doc.setFont('helvetica', 'normal')
+    doc.text(geradoEm, pageW - 10, y + 8, { align: 'right' })
+    doc.setTextColor(...TEXT_DARK)
+    y += 16
+  }
+
+  if (includeR3) {
+    drawSection('R3 — Situação Documental por Terceiro')
+    autoTable(doc, {
+      startY: y,
+      head: [['Fornecedor', 'Aeroporto', 'Terceiro', 'Documento', 'Competência', 'Status', 'Vencimento']],
+      body: sitRows.map(r => [r.Fornecedor, r.Aeroporto || '—', r.Terceiro, r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
+      styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
+      headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: GRAY_LIGHT },
+      margin: { left: 10, right: 10 },
+      showHead: 'everyPage',
+    })
+    y = (doc as any).lastAutoTable.finalY + 10
+  }
+
+  if (includeR4) {
+    drawSection('R4 — Situação Documental da Empresa')
+    autoTable(doc, {
+      startY: y,
+      head: [['Fornecedor', 'Documento', 'Competência', 'Status', 'Vencimento']],
+      body: fornSitRows.map(r => [r.Fornecedor, r.Documento, r.Competencia || '—', r.Status, r.Vencimento || '—']),
+      styles: { fontSize: 7, cellPadding: 2, font: 'helvetica' },
+      headStyles: { fillColor: TEAL, textColor: WHITE, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: GRAY_LIGHT },
+      margin: { left: 10, right: 10 },
+      showHead: 'everyPage',
+    })
+    y = (doc as any).lastAutoTable.finalY + 10
+  }
+
+  if (includePend) {
+    const grouped = new Map<string, PendRow[]>()
+    for (const r of pendRows) {
+      const key = r.Competencia || 'A classificar'
+      if (!grouped.has(key)) grouped.set(key, [])
+      grouped.get(key)!.push(r)
+    }
+    const sortedKeys = _sortCompKeysLocal([...grouped.keys()])
+
+    if (sortedKeys.length === 0) {
+      drawSection('Pendências — nenhum registro')
+    } else {
+      for (const key of sortedKeys) {
+        const rws   = grouped.get(key)!
+        const isAC  = key === 'A classificar'
+        const isSC  = key === 'Não possui competência'
+        const hColor: [number, number, number] = isAC ? [245, 158, 11] : isSC ? [108, 117, 125] : TEAL
+
+        if (y > (doc.internal.pageSize.getHeight() - 40)) { doc.addPage(); y = 0 }
+
+        doc.setFillColor(...hColor)
+        doc.rect(10, y, pageW - 20, 7, 'F')
+        doc.setFontSize(8); doc.setFont('helvetica', 'bold'); doc.setTextColor(...WHITE)
+        const glabel = isAC ? 'A CLASSIFICAR' : isSC ? 'SEM COMPETÊNCIA' : key
+        doc.text(`${glabel}   (${rws.length} pendência${rws.length !== 1 ? 's' : ''})`, 13, y + 5)
+        doc.setTextColor(...TEXT_DARK)
+        y += 7
+
+        autoTable(doc, {
+          startY: y,
+          head: [['Sit. Real', 'Área', 'Fornecedor', 'Terceiro', 'Documento', 'Competência', 'Detalhe']],
+          body: rws.map(r => [
+            r.StatusReal,
+            r.Area === 'Terceiro' ? 'Terceiro' : r.Area === 'Credenciamento' ? 'Credenciamento' : 'Fornecedor',
+            r.Fornecedor,
+            r.Terceiro || '—',
+            r.Documento,
+            r.Competencia || '—',
+            r.Detalhe || '—',
+          ]),
+          styles: { fontSize: 6.5, cellPadding: 1.8, textColor: TEXT_DARK, font: 'helvetica', overflow: 'linebreak' },
+          headStyles: { fillColor: TEAL_LIGHT, textColor: TEAL, fontStyle: 'bold', fontSize: 7 },
+          alternateRowStyles: { fillColor: GRAY_LIGHT },
+          columnStyles: {
+            0: { cellWidth: 20, fontStyle: 'bold' },
+            1: { cellWidth: 16 },
+            2: { cellWidth: 36 },
+            3: { cellWidth: 30 },
+            4: { cellWidth: 36 },
+            5: { cellWidth: 24 },
+            6: { cellWidth: 'auto' },
+          },
+          margin: { left: 10, right: 10 },
+          showHead: 'everyPage',
+        })
+        y = (doc as any).lastAutoTable.finalY + 5
+      }
+    }
+  }
+
+  addFooters(doc)
+  doc.save(`${filename}.pdf`)
+}
+
 // ── Exportação Global (R3 + R4 + Pendências) ─────────────────────────────
 
 export function exportRelatorioXLSX(
