@@ -82,3 +82,81 @@ export async function extractTasks(rawText, defaultTab = 'profissional') {
 export async function refineText(rawText) {
   return callClaude(REFINE_PROMPT.replace('{text}', rawText))
 }
+
+// ── Extração com vínculo de cliente ──────────────────────────────────────────
+
+const EXTRACT_CLIENTS_PROMPT = `Você é um assistente de organização de tarefas para um CS Manager.
+Analise o texto abaixo e extraia TODAS as tarefas/atividades mencionadas.
+
+Retorne APENAS um JSON array válido com objetos contendo exatamente estes campos:
+- "title": título conciso e acionável (máx 80 chars)
+- "priority": "alta" | "media" | "baixa"
+- "notes": horário ou contexto adicional (ou "" se não houver)
+- "tab": "profissional" | "pessoal"
+- "client": nome EXATO de um cliente da lista abaixo, ou "" se nenhum for identificado
+
+Lista de clientes disponíveis:
+{clients_list}
+
+Regras de cliente:
+- Compare nomes mencionados no texto com a lista acima (ignore maiúsculas, acentos parciais, abreviações óbvias)
+- Se houver correspondência clara, use o nome EXATO como aparece na lista
+- Se o texto mencionar algo como "reunião Zurich", "proposta Dock", "alinhamento Premier Pet" → identifique o cliente
+- Se não houver cliente identificável, retorne "client": ""
+
+Critérios de prioridade:
+- hoje / amanhã / horário específico / urgente → "alta"
+- prazo em dias / esta semana → "media"
+- sem prazo definido → "baixa"
+
+Critérios de aba:
+- trabalho / cliente / empresa / reunião / projeto → "profissional"
+- compras / família / saúde / casa → "pessoal"
+- dúvida → {default_tab}
+
+Sem texto antes ou depois do JSON. Se não houver tarefas, retorne [].
+
+Texto:
+{text}`
+
+function parseJson(raw) {
+  const cleaned = raw.startsWith('```')
+    ? raw.split('\n').filter(l => !l.trim().startsWith('```')).join('\n').trim()
+    : raw
+  return JSON.parse(cleaned)
+}
+
+export async function extractTasksWithClients(rawText, clients = [], defaultTab = 'profissional') {
+  const clientsList = clients.length
+    ? clients.map(c => c.name).join(', ')
+    : '(sem clientes cadastrados)'
+
+  const prompt = EXTRACT_CLIENTS_PROMPT
+    .replace('{text}', rawText)
+    .replace('{clients_list}', clientsList)
+    .replace('{default_tab}', defaultTab)
+
+  const raw = await callClaude(prompt)
+  const items = parseJson(raw)
+
+  // Monta mapa nome→id para lookup rápido (case-insensitive)
+  const clientMap = {}
+  for (const c of clients) {
+    clientMap[c.name.toLowerCase()] = c
+  }
+
+  return items
+    .filter(t => t?.title)
+    .map(t => {
+      const clientName  = String(t.client || '').trim()
+      const matchedClient = clientMap[clientName.toLowerCase()] || null
+      return {
+        title:     String(t.title).slice(0, 80),
+        priority:  ['alta', 'media', 'baixa'].includes(t.priority) ? t.priority : 'media',
+        notes:     String(t.notes || ''),
+        tab:       ['profissional', 'pessoal'].includes(t.tab) ? t.tab : defaultTab,
+        client_id: matchedClient ? matchedClient.id : null,
+        client_name: matchedClient ? matchedClient.name : '',
+      }
+    })
+}

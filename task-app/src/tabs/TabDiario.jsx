@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import {
   getDailyLog, saveDailyLog, fetchDailyLogs,
   fetchTasksCompletedToday, fetchTasksForDate,
-  addTask, setTaskStatus,
+  addTask, setTaskStatus, fetchClients,
 } from '../lib/firebase'
-import { extractTasks } from '../lib/claude'
+import { extractTasksWithClients } from '../lib/claude'
 import { TEAL, TEAL_SOFT, isoToday, fmtDate } from '../lib/utils'
 
 const TODAY    = isoToday()
@@ -89,10 +89,18 @@ function ExtractedList({ items, onToggle, onCreate, creating, label, btnColor })
                 onChange={() => onToggle(i)}
                 style={{ marginTop:2, accentColor: TEAL, flexShrink:0 }} />
               <div style={{ flex:1, minWidth:0 }}>
-                <span style={{ fontSize:13, color: t.selected ? '#1E293B' : '#94A3B8',
-                               textDecoration: t.selected ? 'none' : 'line-through' }}>
-                  {t.title}
-                </span>
+                <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
+                  <span style={{ fontSize:13, color: t.selected ? '#1E293B' : '#94A3B8',
+                                 textDecoration: t.selected ? 'none' : 'line-through' }}>
+                    {t.title}
+                  </span>
+                  {t.client_name && (
+                    <span style={{ fontSize:10, padding:'2px 7px', borderRadius:10, fontWeight:600,
+                                   background:'rgba(20,179,204,0.12)', color:'#0E8FA3', flexShrink:0 }}>
+                      🔗 {t.client_name}
+                    </span>
+                  )}
+                </div>
                 {t.notes && (
                   <span style={{ display:'block', fontSize:11, color:'#94A3B8', marginTop:1 }}>{t.notes}</span>
                 )}
@@ -130,6 +138,7 @@ export default function TabDiario() {
   const [doneTasks,     setDoneTasks]     = useState([])
   const [tomorrowTasks, setTomorrowTasks] = useState([])
   const [history,       setHistory]       = useState([])
+  const [clients,       setClients]       = useState([])
 
   const [doneFreeText, setDoneFreeText] = useState('')
   const [plannedText,  setPlannedText]  = useState('')
@@ -153,15 +162,17 @@ export default function TabDiario() {
     setLoading(true)
     setError(null)
     try {
-      const [logData, done, tomorrow, hist] = await Promise.all([
+      const [logData, done, tomorrow, hist, clientList] = await Promise.all([
         getDailyLog(TODAY),
         fetchTasksCompletedToday(),
         fetchTasksForDate(TOMORROW),
         fetchDailyLogs(30),
+        fetchClients(),
       ])
       setDoneTasks(done)
       setTomorrowTasks(tomorrow)
       setHistory(hist)
+      setClients(clientList)
       if (logData) {
         setLog(logData)
         setDoneFreeText(logData.done_free_text || '')
@@ -205,7 +216,7 @@ export default function TabDiario() {
     setExtractingDone(true)
     setExtractedDone([])
     try {
-      const items = await extractTasks(doneFreeText, 'profissional')
+      const items = await extractTasksWithClients(doneFreeText, clients, 'profissional')
       setExtractedDone(items.map(t => ({ ...t, selected: true })))
     } catch (err) {
       alert('Erro na extração: ' + err.message)
@@ -220,7 +231,7 @@ export default function TabDiario() {
     setCreatingDone(true)
     try {
       for (const t of selecionados) {
-        const task = await addTask({ tab: t.tab, title: t.title, notes: t.notes, priority: t.priority })
+        const task = await addTask({ tab: t.tab, title: t.title, notes: t.notes, priority: t.priority, client_id: t.client_id || null })
         await setTaskStatus(task.id, 'done')
       }
       setExtractedDone([])
@@ -240,7 +251,7 @@ export default function TabDiario() {
     setExtractingPlan(true)
     setExtractedPlan([])
     try {
-      const items = await extractTasks(plannedText, 'profissional')
+      const items = await extractTasksWithClients(plannedText, clients, 'profissional')
       setExtractedPlan(items.map(t => ({ ...t, selected: true })))
     } catch (err) {
       alert('Erro na extração: ' + err.message)
@@ -255,7 +266,7 @@ export default function TabDiario() {
     setCreatingPlan(true)
     try {
       for (const t of selecionados) {
-        await addTask({ tab: t.tab, title: t.title, notes: t.notes, priority: t.priority, deadline: TOMORROW })
+        await addTask({ tab: t.tab, title: t.title, notes: t.notes, priority: t.priority, deadline: TOMORROW, client_id: t.client_id || null })
       }
       setExtractedPlan([])
       const tomorrow = await fetchTasksForDate(TOMORROW)
