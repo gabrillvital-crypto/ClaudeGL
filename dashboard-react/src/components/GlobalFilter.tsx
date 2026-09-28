@@ -34,9 +34,7 @@ interface Props {
   totalNaoResolvidas: number
   totalTodas: number
   onClear: () => void
-  onExportXLSX?: () => void
-  onExportPDF?: () => void
-  onExportCSV?: () => void
+  onOpenExport?: () => void
 }
 
 export function GlobalFilter({
@@ -46,7 +44,7 @@ export function GlobalFilter({
   selectedAeroportoSet, onAeroportoToggle,
   selectedStatusTerc, onStatusTercChange,
   filtroSit, onFiltroSitChange, totalNaoResolvidas, totalTodas,
-  onClear, onExportXLSX, onExportPDF, onExportCSV,
+  onClear, onOpenExport,
 }: Props) {
   const active = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all' || filtroSit !== 'nao_resolvidas'
 
@@ -155,29 +153,17 @@ export function GlobalFilter({
         ✕ Limpar filtros
       </button>
 
-      {(onExportXLSX || onExportPDF || onExportCSV) && (
+      {onOpenExport && (
         <div className="ml-auto">
           <label className="block text-[11px] font-bold text-white/85 uppercase tracking-wide mb-1">Exportar relatório</label>
-          <div className="flex gap-1.5">
-            {onExportXLSX && (
-              <button onClick={onExportXLSX} title="Excel com 3 abas (R3, R4, Pendências)"
-                className="bg-white/15 border border-white/40 text-white rounded px-3 py-1.5 text-[12px] font-semibold hover:bg-white/30 transition-colors">
-                Excel
-              </button>
-            )}
-            {onExportPDF && (
-              <button onClick={onExportPDF} title="PDF combinado (R3, R4, Pendências)"
-                className="bg-white/15 border border-white/40 text-white rounded px-3 py-1.5 text-[12px] font-semibold hover:bg-white/30 transition-colors">
-                PDF
-              </button>
-            )}
-            {onExportCSV && (
-              <button onClick={onExportCSV} title="CSV único com coluna Seção"
-                className="bg-white/15 border border-white/40 text-white rounded px-3 py-1.5 text-[12px] font-semibold hover:bg-white/30 transition-colors">
-                CSV
-              </button>
-            )}
-          </div>
+          <button
+            onClick={onOpenExport}
+            title="Selecionar módulos e formato de exportação"
+            className="flex items-center gap-2 bg-white text-[#0A6A7A] rounded px-4 py-1.5 text-[12px] font-bold hover:bg-white/90 transition-colors shadow-sm"
+          >
+            <span>📋</span>
+            <span>Exportar Relatório</span>
+          </button>
         </div>
       )}
 

@@ -5,6 +5,7 @@ import TabHoje from './tabs/TabHoje'
 import TabAtividades from './tabs/TabAtividades'
 import TabEmAndamento from './tabs/TabEmAndamento'
 import TabEntrada from './tabs/TabEntrada'
+import TabDiario from './tabs/TabDiario'
 import TaskDetailModal from './components/TaskDetailModal'
 import ReportModal from './components/ReportModal'
 
@@ -15,12 +16,13 @@ const TABS = [
   { id: 'andamento',    label: 'Andamento',     emoji: '▶' },
   { id: 'atividades',   label: 'Concluídas',    emoji: '✅' },
   { id: 'entrada',      label: 'Entrada IA',    emoji: '✨' },
+  { id: 'diario',       label: 'Diário',        emoji: '📋' },
 ]
 
 const TAB_GROUPS = [
   { label: 'Áreas',       ids: ['pessoal', 'profissional'] },
   { label: 'Focado',      ids: ['hoje', 'andamento'] },
-  { label: 'Ferramentas', ids: ['atividades', 'entrada'] },
+  { label: 'Ferramentas', ids: ['atividades', 'entrada', 'diario'] },
 ]
 
 export default function App() {
@@ -131,6 +133,7 @@ export default function App() {
           {activeTab === 'entrada' && (
             <TabEntrada onSaved={() => { refresh(); setActiveTab('profissional') }} />
           )}
+          {activeTab === 'diario' && <TabDiario />}
         </div>
       </main>
 

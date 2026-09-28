@@ -12,6 +12,8 @@ import { SituacaoEmpresaSection } from './components/SituacaoEmpresaSection'
 import { PendenciasSection } from './components/PendenciasSection'
 import { ContratosSection } from './components/ContratosSection'
 import { exportRelatorioXLSX, exportRelatorioPDF, exportRelatorioCSV } from './utils/exportUtils'
+import { ExportModal } from './components/ExportModal'
+import { CompetenciasSection } from './components/CompetenciasSection'
 
 const KPI_STATUS_MAP: Record<string, { sit: string[]; forn: string[] }> = {
   docs_aprovados:    { sit: ['Aprovado'],            forn: ['Aprovado'] },
@@ -53,7 +55,8 @@ function fmtCNPJ(digits: string): string {
 export function App() {
   const { data, state, error } = useDashboardData()
   const { selectedFornSet, toggleForn, selectedCompSet, toggleComp, clearComp, selectedStatusSet, toggleStatus, clearStatus, selectedAeroportoSet, toggleAeroporto, selectedStatusTerc, setSelectedStatusTerc, filtroSit, setFiltroSit, clearAll, matchesForn } = useGlobalFilter()
-  const [activeKpi, setActiveKpi] = useState<string | null>(null)
+  const [activeKpi,        setActiveKpi]        = useState<string | null>(null)
+  const [showExportModal,  setShowExportModal]  = useState(false)
   const toggleKpi = useCallback((key: string) => setActiveKpi(prev => prev === key ? null : key), [])
 
   const hasFilter = selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatusSet.size > 0 || selectedAeroportoSet.size > 0 || selectedStatusTerc !== 'all'
@@ -308,6 +311,18 @@ export function App() {
     }
   }, [data, hasFilter, fornSitFiltered])
 
+  // Resumo legível dos filtros ativos — exibido na modal de exportação
+  const filterSummary = useMemo(() => {
+    const parts: string[] = []
+    if (selectedFornSet.size > 0)      parts.push(`${selectedFornSet.size} fornecedor(es)`)
+    if (selectedCompSet.size > 0)      parts.push(`${selectedCompSet.size} competência(s)`)
+    if (selectedStatusSet.size > 0)    parts.push(`${selectedStatusSet.size} status`)
+    if (selectedAeroportoSet.size > 0) parts.push(`aeroporto: ${[...selectedAeroportoSet].join(' + ')}`)
+    if (selectedStatusTerc !== 'all')  parts.push(`terceiros: ${selectedStatusTerc === 'Ativo' ? 'Ativos' : 'Inativos'}`)
+    if (filtroSit === 'todas')         parts.push('pendências: todas')
+    return parts.join(' · ')
+  }, [selectedFornSet, selectedCompSet, selectedStatusSet, selectedAeroportoSet, selectedStatusTerc, filtroSit])
+
   if (state === 'loading' || state === 'idle') {
     return (
       <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
@@ -365,9 +380,7 @@ export function App() {
         totalNaoResolvidas={data ? data.tabela.filter(r => r.StatusReal !== 'Resolvida').length : 0}
         totalTodas={data ? data.tabela.length : 0}
         onClear={clearAll}
-        onExportXLSX={() => exportRelatorioXLSX(sitFiltered, fornSitFiltered, tabelaFiltered)}
-        onExportPDF={() => exportRelatorioPDF(sitFiltered, fornSitFiltered, tabelaFiltered, data.geradoEm)}
-        onExportCSV={() => exportRelatorioCSV(sitFiltered, fornSitFiltered, tabelaFiltered)}
+        onOpenExport={() => setShowExportModal(true)}
       />
 
       <div className="max-w-[1400px] mx-auto px-5 py-6">
@@ -377,6 +390,11 @@ export function App() {
 
         {/* 3 donuts de conformidade */}
         <ConformidadeCharts sitData={sitFiltered} fornData={fornSitFiltered} />
+
+        {/* Evolução por competência — Relatório de Competências */}
+        <Section title="Evolução de Terceiros por Competência">
+          <CompetenciasSection />
+        </Section>
 
         {/* Situação R3 — Drill-Down interativo + Modo Agrupado */}
         <Section title="Situação Documental por Terceiro — Drill-Down Interativo">
@@ -443,6 +461,18 @@ export function App() {
         </footer>
 
       </div>
+
+      {/* Modal de exportação personalizada */}
+      <ExportModal
+        open={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        sitRows={sitFiltered}
+        fornSitRows={fornSitFiltered}
+        pendRows={tabelaFiltered}
+        geradoEm={data.geradoEm}
+        filterSummary={filterSummary}
+        hasFilter={hasFilter}
+      />
     </div>
   )
 }
