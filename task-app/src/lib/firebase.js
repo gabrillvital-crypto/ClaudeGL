@@ -270,8 +270,11 @@ export async function saveDailyLog(date, fields) {
 }
 
 export async function fetchDailyLogs(days = 30) {
-  const snap = await getDocs(query(collection(db, 'daily_logs'), orderBy('date', 'desc')))
-  return snap.docs.map(docToObj).slice(0, days)
+  const snap = await getDocs(collection(db, 'daily_logs'))
+  return snap.docs
+    .map(docToObj)
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, days)
 }
 
 export async function fetchTasksCompletedToday() {
