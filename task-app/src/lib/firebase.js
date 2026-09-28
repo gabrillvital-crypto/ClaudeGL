@@ -106,6 +106,29 @@ export async function seedClientsIfEmpty() {
   clientsCache = null
 }
 
+export async function ensureClientsUpToDate() {
+  const snap = await getDocs(collection(db, 'clients'))
+  if (snap.empty) return seedClientsIfEmpty()
+  const found = new Set(snap.docs.map(d => (d.data().name || '').toLowerCase().trim()))
+  const missing = [
+    { name: 'Alpargatas', tier: 'A' },
+    { name: 'Lactalis', tier: 'A' },
+    { name: 'Supera Promo', tier: 'A' },
+    { name: 'SEA1 OFFSHORE', tier: 'A' },
+    { name: 'PDV Marketing', tier: 'A' },
+    { name: 'Unimed Vale dos Sinos', tier: 'B' },
+    { name: 'Tegram', tier: 'B' },
+  ]
+  let added = false
+  for (const c of missing) {
+    if (!found.has(c.name.toLowerCase())) {
+      await addDoc(collection(db, 'clients'), { ...c, status_cs: '', notes_cs: '' })
+      added = true
+    }
+  }
+  if (added) clientsCache = null
+}
+
 // ── Tasks ────────────────────────────────────────────────────────────────────
 
 export async function fetchTasks(tab, showDone = false, prioFilter = 'todos') {
@@ -305,6 +328,9 @@ export async function fetchDoneRange(tabFilter, dateFrom, dateTo) {
   )
   if (tabFilter !== 'todas') tasks = tasks.filter(t => t.tab === tabFilter)
   tasks.sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))
+
+  const clientsMap = await getClientsMap()
+  tasks = tasks.map(t => attachClient({ ...t }, clientsMap))
 
   return Promise.all(tasks.map(async (task) => {
     const cSnap = await getDocs(query(collection(db, 'checklist_items'), where('task_id', '==', task.id)))
