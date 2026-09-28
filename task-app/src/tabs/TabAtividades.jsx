@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react'
 import { fetchTasksDone, setTaskStatus } from '../lib/firebase'
-import { PRIORITY, fmtDateTime } from '../lib/utils'
+import { PRIORITY, TEAL, fmtDateTime } from '../lib/utils'
 
 export default function TabAtividades({ refresh }) {
   const [tasks, setTasks] = useState([])
@@ -29,7 +29,7 @@ export default function TabAtividades({ refresh }) {
             key={p}
             onClick={() => setPrio(p)}
             className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${prio === p ? 'text-white' : 'bg-gray-100 text-gray-500'}`}
-            style={prio === p ? { background: '#059669' } : {}}
+            style={prio === p ? { background: TEAL } : {}}
           >
             {p === 'todos' ? 'Todos' : p === 'alta' ? 'Alta' : p === 'media' ? 'MÃ©dia' : 'Baixa'}
           </button>

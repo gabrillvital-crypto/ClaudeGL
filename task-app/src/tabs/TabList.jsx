@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { fetchTasks, addTask, setTaskStatus, fetchChecklist, fetchChecklistBulk } from '../lib/firebase'
 import TaskCard from '../components/TaskCard'
 import DatePicker from '../components/DatePicker'
+import { TEAL, TEAL_SOFT } from '../lib/utils'
 
 export default function TabList({ tab, onOpenTask }) {
   const [tasks, setTasks] = useState([])
@@ -148,7 +149,7 @@ export default function TabList({ tab, onOpenTask }) {
               onClick={() => setShowDateAdd(true)}
               className="text-xs px-2.5 py-1 rounded-lg font-medium transition-all"
               style={newDeadline
-                ? { background: '#E6F4F7', color: '#14B3CC', border: '1px solid #14B3CC' }
+                ? { background: TEAL_SOFT, color: TEAL, border: `1px solid ${TEAL}` }
                 : { background: '#F1F5F9', color: '#64748B', border: '1px solid transparent' }
               }
             >

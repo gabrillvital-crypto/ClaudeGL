@@ -4,7 +4,7 @@ import {
   fetchChecklist, addChecklistItem, toggleChecklistItem, deleteChecklistItem,
   fetchClients,
 } from '../lib/firebase'
-import { PRIORITY, IN_PROGRESS_COLOR, fmtDate } from '../lib/utils'
+import { PRIORITY, IN_PROGRESS_COLOR, TEAL, TEAL_SOFT, fmtDate } from '../lib/utils'
 import DatePicker from './DatePicker'
 
 export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted }) {
@@ -195,7 +195,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
                 onClick={() => setShowDatePicker(true)}
                 className="text-xs px-3 py-2 rounded-lg border"
                 style={task.deadline
-                  ? { background: '#e0f7fa', color: '#14B3CC', borderColor: '#14B3CC' }
+                  ? { background: TEAL_SOFT, color: TEAL, borderColor: TEAL }
                   : { background: '#f3f4f6', color: '#6b7280', borderColor: '#e5e7eb' }
                 }
               >
@@ -239,7 +239,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
             <button
               onClick={save}
               className="mt-1 text-xs font-bold px-3 py-1 rounded-lg"
-              style={{ background: '#e0f7fa', color: '#14B3CC' }}
+              style={{ background: TEAL_SOFT, color: TEAL }}
             >âœ“ Salvar nota</button>
           </div>
 

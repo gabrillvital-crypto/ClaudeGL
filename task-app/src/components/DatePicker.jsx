@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TEAL, TEAL_SOFT } from '../lib/utils'
 
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
                  'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
@@ -107,7 +108,7 @@ export default function DatePicker({ value, onChange, onClose }) {
           <button
             onClick={() => { onChange(todayStr); onClose() }}
             className="text-xs font-semibold px-3 py-1 rounded-full"
-            style={{ background: '#e0f7fa', color: '#14B3CC' }}
+            style={{ background: TEAL_SOFT, color: TEAL }}
           >
             Hoje
           </button>

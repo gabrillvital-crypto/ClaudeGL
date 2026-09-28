@@ -8,6 +8,7 @@ import TabEntrada from './tabs/TabEntrada'
 import TabDiario from './tabs/TabDiario'
 import TaskDetailModal from './components/TaskDetailModal'
 import ReportModal from './components/ReportModal'
+import EfcazIcon from './components/EfcazIcon'
 
 const TABS = [
   { id: 'pessoal',      label: 'Pessoal',      emoji: '👤' },
@@ -46,11 +47,8 @@ export default function App() {
         {/* Logo */}
         <div className="px-4 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-              style={{ background: '#14B3CC' }}
-            >
-              <span className="text-white text-xs font-bold tracking-tight">GE</span>
+            <div className="shrink-0 flex items-center justify-center w-9 h-9">
+              <EfcazIcon size={36} />
             </div>
             <div>
               <p className="text-white font-semibold text-sm leading-tight">Gestão Efcaz</p>

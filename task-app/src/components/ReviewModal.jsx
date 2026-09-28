@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PRIORITY, fmtDate } from '../lib/utils'
+import { PRIORITY, TEAL, TEAL_SOFT, fmtDate } from '../lib/utils'
 import DatePicker from './DatePicker'
 
 const PRIO_LABELS = { alta: 'Alta', media: 'Média', baixa: 'Baixa' }
@@ -71,7 +71,7 @@ export default function ReviewModal({ tasks, onConfirm, onClose }) {
                   onClick={() => setShowDateFor(showDateFor === i ? null : i)}
                   className="text-xs px-2 py-1 rounded-lg border"
                   style={row.deadline
-                    ? { background: '#e0f7fa', color: '#14B3CC', borderColor: '#14B3CC' }
+                    ? { background: TEAL_SOFT, color: TEAL, borderColor: TEAL }
                     : { background: '#f3f4f6', color: '#6b7280', borderColor: '#e5e7eb' }
                   }
                 >
