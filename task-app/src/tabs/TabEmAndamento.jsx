@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { fetchTasksInProgress, setTaskStatus } from '../lib/firebase'
 import TaskCard from '../components/TaskCard'
 
@@ -22,13 +22,13 @@ export default function TabEmAndamento({ onOpenTask, refresh }) {
   return (
     <div className="px-4 pb-4 pt-3 overflow-y-auto h-full">
       {loading ? (
-        <p className="text-center text-gray-400 mt-8 text-sm">Carregandoâ€¦</p>
+        <p className="text-center text-gray-400 mt-8 text-sm">Carregando…</p>
       ) : tasks.length === 0 ? (
         <p className="text-center text-gray-400 mt-12 text-sm">Nenhuma tarefa em andamento</p>
       ) : (
         <>
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-bold text-amber-600 uppercase tracking-wide">â–¶ Em andamento</span>
+            <span className="text-xs font-bold text-amber-600 uppercase tracking-wide">▶ Em andamento</span>
             <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">{tasks.length}</span>
           </div>
           {tasks.map(t => (
@@ -39,4 +39,3 @@ export default function TabEmAndamento({ onOpenTask, refresh }) {
     </div>
   )
 }
-
