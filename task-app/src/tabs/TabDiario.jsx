@@ -68,32 +68,47 @@ function ProductivityChart({ history }) {
 
 // ── Lista de tarefas extraídas pela IA ───────────────────────────────────────
 
-function ExtractedList({ items, onToggle, onCreate, creating, label, btnColor }) {
+function ExtractedList({ items, onToggle, onCreate, creating, label, btnColor, doneMode }) {
   if (!items.length) return null
   const PRIO = { alta:{ bg:'#FDECEA', color:'#B83232' }, media:{ bg:'#FDF4DC', color:'#8B6A10' }, baixa:{ bg:'#E8F7EE', color:'#27875A' } }
+  const naoSelecionados = items.filter(t => !t.selected).length
 
   return (
     <div style={{ marginTop:12, background:'#F8FAFC', border:'1px solid #E2E8F0', borderRadius:8, padding:12 }}>
       <p style={{ margin:'0 0 10px', fontSize:11, fontWeight:700, color:'#64748B', textTransform:'uppercase', letterSpacing:'0.07em' }}>
         ✨ {items.length} item{items.length !== 1 ? 's' : ''} identificado{items.length !== 1 ? 's' : ''} pela IA
       </p>
+
+      {/* Legenda: doneMode explica o comportamento dos desmarcados */}
+      {doneMode && (
+        <div style={{ display:'flex', gap:16, marginBottom:10, fontSize:11, color:'#64748B' }}>
+          <span>✅ <strong>Marcado</strong> = realizado hoje</span>
+          <span>➡️ <strong>Desmarcado</strong> = tarefa para amanhã</span>
+        </div>
+      )}
+
       <div style={{ display:'flex', flexDirection:'column', gap:6, marginBottom:12 }}>
         {items.map((t, i) => {
           const p = PRIO[t.priority] || PRIO.media
           return (
             <label key={i} style={{ display:'flex', alignItems:'flex-start', gap:8, cursor:'pointer',
                                     padding:'6px 8px', borderRadius:6,
-                                    background: t.selected ? '#fff' : '#F1F5F9',
-                                    border: `1px solid ${t.selected ? '#E2E8F0' : 'transparent'}` }}>
+                                    background: t.selected ? '#fff' : '#FFF8E7',
+                                    border: `1px solid ${t.selected ? '#E2E8F0' : '#FDE68A'}` }}>
               <input type="checkbox" checked={t.selected}
                 onChange={() => onToggle(i)}
                 style={{ marginTop:2, accentColor: TEAL, flexShrink:0 }} />
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
-                  <span style={{ fontSize:13, color: t.selected ? '#1E293B' : '#94A3B8',
-                                 textDecoration: t.selected ? 'none' : 'line-through' }}>
+                  <span style={{ fontSize:13, color: t.selected ? '#1E293B' : '#92400E' }}>
                     {t.title}
                   </span>
+                  {!t.selected && doneMode && (
+                    <span style={{ fontSize:10, padding:'2px 7px', borderRadius:10, fontWeight:600,
+                                   background:'#FEF3C7', color:'#92400E', flexShrink:0 }}>
+                      → amanhã
+                    </span>
+                  )}
                   {t.client_name && (
                     <span style={{ fontSize:10, padding:'2px 7px', borderRadius:10, fontWeight:600,
                                    background:'rgba(20,179,204,0.12)', color:'#0E8FA3', flexShrink:0 }}>
@@ -113,11 +128,20 @@ function ExtractedList({ items, onToggle, onCreate, creating, label, btnColor })
           )
         })}
       </div>
-      <button onClick={onCreate} disabled={creating || !items.some(t => t.selected)}
+
+      {/* Aviso de quantos vão para amanhã */}
+      {doneMode && naoSelecionados > 0 && (
+        <p style={{ margin:'0 0 8px', fontSize:11, color:'#92400E',
+                    background:'#FEF3C7', borderRadius:6, padding:'6px 10px' }}>
+          ➡️ {naoSelecionados} item{naoSelecionados !== 1 ? 's' : ''} desmarcado{naoSelecionados !== 1 ? 's' : ''} será{naoSelecionados !== 1 ? 'ão' : ''} criado{naoSelecionados !== 1 ? 's' : ''} como tarefa para amanhã
+        </p>
+      )}
+
+      <button onClick={onCreate} disabled={creating}
         style={{
           width:'100%', padding:'8px 0', borderRadius:7, border:'none',
-          fontSize:13, fontWeight:700, color:'#fff', cursor:'pointer',
-          background: creating || !items.some(t => t.selected) ? '#94A3B8' : btnColor,
+          fontSize:13, fontWeight:700, color:'#fff', cursor: creating ? 'not-allowed' : 'pointer',
+          background: creating ? '#94A3B8' : btnColor,
           transition:'background .15s',
         }}>
         {creating ? '⏳ Criando...' : label}
@@ -226,17 +250,27 @@ export default function TabDiario() {
   }
 
   async function handleCreateDone() {
-    const selecionados = extractedDone.filter(t => t.selected)
-    if (!selecionados.length) return
+    if (!extractedDone.length) return
+    const selecionados  = extractedDone.filter(t => t.selected)
+    const naoRealizados = extractedDone.filter(t => !t.selected)
     setCreatingDone(true)
     try {
+      // Marcados → tarefas concluídas hoje
       for (const t of selecionados) {
         const task = await addTask({ tab: t.tab, title: t.title, notes: t.notes, priority: t.priority, client_id: t.client_id || null })
         await setTaskStatus(task.id, 'done')
       }
+      // Desmarcados → tarefas pendentes para amanhã
+      for (const t of naoRealizados) {
+        await addTask({ tab: t.tab, title: t.title, notes: t.notes, priority: t.priority, deadline: TOMORROW, client_id: t.client_id || null })
+      }
       setExtractedDone([])
-      const done = await fetchTasksCompletedToday()
+      const [done, tomorrow] = await Promise.all([
+        fetchTasksCompletedToday(),
+        fetchTasksForDate(TOMORROW),
+      ])
       setDoneTasks(done)
+      setTomorrowTasks(tomorrow)
     } catch (err) {
       alert('Erro ao criar tarefas: ' + err.message)
     } finally {
@@ -471,8 +505,9 @@ export default function TabDiario() {
               onToggle={i => setExtractedDone(d => d.map((t, idx) => idx === i ? { ...t, selected: !t.selected } : t))}
               onCreate={handleCreateDone}
               creating={creatingDone}
-              label="✅ Criar como tarefas concluídas"
+              label="✅ Confirmar realizações"
               btnColor="#22C55E"
+              doneMode
             />
 
             {/* Energia */}
