@@ -246,6 +246,53 @@ export async function fetchChecklistBulk(taskIds) {
   return all
 }
 
+// ── Diário de Produtividade ───────────────────────────────────────────────────
+
+export async function getDailyLog(date) {
+  const snap = await getDocs(query(collection(db, 'daily_logs'), where('date', '==', date)))
+  if (snap.empty) return null
+  return docToObj(snap.docs[0])
+}
+
+export async function saveDailyLog(date, fields) {
+  const snap = await getDocs(query(collection(db, 'daily_logs'), where('date', '==', date)))
+  const now = new Date().toISOString()
+  const data = { ...fields, date, updated_at: now }
+  if (snap.empty) {
+    data.created_at = now
+    const ref = await addDoc(collection(db, 'daily_logs'), data)
+    return { id: ref.id, ...data }
+  } else {
+    const d = snap.docs[0]
+    await updateDoc(d.ref, data)
+    return { id: d.id, ...d.data(), ...data }
+  }
+}
+
+export async function fetchDailyLogs(days = 30) {
+  const snap = await getDocs(query(collection(db, 'daily_logs'), orderBy('date', 'desc')))
+  return snap.docs.map(docToObj).slice(0, days)
+}
+
+export async function fetchTasksCompletedToday() {
+  const today = new Date().toISOString().split('T')[0]
+  const snap = await getDocs(query(collection(db, 'tasks'), where('status', '==', 'done')))
+  const tasks = snap.docs.map(docToObj).filter(t => t.completed_at && t.completed_at.startsWith(today))
+  const map = await getClientsMap()
+  return tasks.map(t => attachClient({ ...t }, map))
+}
+
+export async function fetchTasksForDate(date) {
+  const snap = await getDocs(query(
+    collection(db, 'tasks'),
+    where('deadline', '==', date),
+    where('status', '==', 'pending')
+  ))
+  const tasks = snap.docs.map(docToObj)
+  const map = await getClientsMap()
+  return sortTasks(tasks.map(t => attachClient({ ...t }, map)))
+}
+
 // ── Relatório ────────────────────────────────────────────────────────────────
 
 export async function fetchDoneRange(tabFilter, dateFrom, dateTo) {
