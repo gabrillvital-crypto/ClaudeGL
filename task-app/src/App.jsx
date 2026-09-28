@@ -76,10 +76,13 @@ export default function App() {
                     onClick={() => setActiveTab(id)}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg mb-0.5 transition-colors text-left font-medium ${
                       active
-                        ? 'text-white'
+                        ? ''
                         : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
                     }`}
-                    style={active ? { background: '#14B3CC' } : {}}
+                    style={active
+                      ? { background: 'rgba(20,179,204,0.15)', color: '#14B3CC', borderLeft: '3px solid #14B3CC', paddingLeft: '10px' }
+                      : {}
+                    }
                   >
                     <span className="text-sm leading-none">{t.emoji}</span>
                     <span>{t.label}</span>

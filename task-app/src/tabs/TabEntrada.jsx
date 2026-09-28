@@ -1,7 +1,8 @@
-﻿import { useState, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { extractTasks, refineText } from '../lib/claude'
 import { addTask } from '../lib/firebase'
 import ReviewModal from '../components/ReviewModal'
+import { TEAL, TEAL_SOFT, NAVY } from '../lib/utils'
 
 export default function TabEntrada({ onSaved }) {
   const [text, setText] = useState('')
@@ -61,7 +62,7 @@ export default function TabEntrada({ onSaved }) {
 
   function startVoice() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SR) { setError('Voz nÃ£o suportada neste navegador. Use Chrome ou Edge.'); return }
+    if (!SR) { setError('Voz não suportada neste navegador. Use Chrome ou Edge.'); return }
     const rec = new SR()
     rec.lang = 'pt-BR'
     rec.continuous = true
@@ -85,31 +86,45 @@ export default function TabEntrada({ onSaved }) {
   }
 
   return (
-    <div className="flex flex-col h-full px-4 py-4 gap-3">
+    <div className="flex flex-col h-full px-5 py-5 gap-4">
+
       {/* Header */}
       <div>
         <p className="text-sm font-bold text-gray-700 mb-1">Smart Ingestion</p>
-        <p className="text-xs text-gray-400">Cole texto de reuniÃµes, WhatsApp ou fale â€” a IA extrai as tarefas automaticamente.</p>
+        <p className="text-xs text-gray-400">
+          Cole texto de reuniões, WhatsApp ou fale — a IA extrai as tarefas automaticamente.
+        </p>
       </div>
 
       {/* Seletor de destino */}
       <div className="flex items-center gap-2">
-        <span className="text-xs text-gray-500 font-medium">Destino padrÃ£o:</span>
+        <span className="text-xs text-gray-500 font-medium">Destino padrão:</span>
         <button
           onClick={() => setDefaultTab('profissional')}
-          className={`text-xs px-3 py-1 rounded-full font-bold transition-colors ${defaultTab === 'profissional' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600'}`}
+          className="text-xs px-3 py-1 rounded-full font-bold transition-colors"
+          style={defaultTab === 'profissional'
+            ? { background: TEAL, color: '#fff' }
+            : { background: TEAL_SOFT, color: TEAL }
+          }
         >Profissional</button>
         <button
           onClick={() => setDefaultTab('pessoal')}
-          className={`text-xs px-3 py-1 rounded-full font-bold transition-colors ${defaultTab === 'pessoal' ? 'bg-pink-600 text-white' : 'bg-pink-50 text-pink-600'}`}
+          className="text-xs px-3 py-1 rounded-full font-bold transition-colors"
+          style={defaultTab === 'pessoal'
+            ? { background: NAVY, color: '#fff' }
+            : { background: 'rgba(21,60,92,0.08)', color: NAVY }
+          }
         >Pessoal</button>
       </div>
 
-      {/* Ãrea de texto */}
-      <div className="flex-1 flex flex-col gap-2">
+      {/* Área de texto */}
+      <div className="flex-1 flex flex-col gap-3">
         <textarea
-          className="flex-1 min-h-[180px] text-sm border border-gray-200 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-teal-DEFAULT"
-          placeholder="Cole texto aqui ou use o microfoneâ€¦"
+          className="flex-1 min-h-[180px] text-sm border border-gray-200 rounded-xl px-4 py-3 resize-none focus:outline-none"
+          style={{ outline: 'none' }}
+          onFocus={e => { e.target.style.border = `1.5px solid ${TEAL}` }}
+          onBlur={e => { e.target.style.border = '1px solid #e5e7eb' }}
+          placeholder="Cole texto aqui ou use o microfone…"
           value={text}
           onChange={e => setText(e.target.value)}
         />
@@ -118,30 +133,35 @@ export default function TabEntrada({ onSaved }) {
           <p className="text-xs text-red-500 px-1">{error}</p>
         )}
 
-        {/* AÃ§Ãµes */}
-        <div className="flex gap-2 flex-wrap">
+        {/* Ações */}
+        <div className="flex gap-2 flex-wrap items-center">
           <button
             onClick={recording ? stopVoice : startVoice}
-            className={`text-xs font-bold px-4 py-2 rounded-xl transition-colors ${recording ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+            className={`text-xs font-bold px-4 py-2 rounded-xl transition-colors ${
+              recording
+                ? 'bg-red-100 text-red-600 animate-pulse'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
           >
-            {recording ? 'â¹ Parar gravaÃ§Ã£o' : 'ðŸŽ¤ Gravar voz'}
+            {recording ? '⏹ Parar gravação' : '🎤 Gravar voz'}
           </button>
 
           <button
             onClick={handleRefine}
             disabled={loading || !text.trim()}
-            className="text-xs font-bold px-4 py-2 rounded-xl bg-purple-50 text-purple-600 hover:bg-purple-100 disabled:opacity-40"
+            className="text-xs font-bold px-4 py-2 rounded-xl disabled:opacity-40 transition-colors"
+            style={{ background: TEAL_SOFT, color: TEAL }}
           >
-            âœ¨ Aprimorar texto
+            ✨ Aprimorar texto
           </button>
 
           <button
             onClick={handleExtract}
             disabled={loading || !text.trim()}
-            className="ml-auto text-sm font-bold px-6 py-2 rounded-xl text-white disabled:opacity-40"
-            style={{ background: '#14B3CC' }}
+            className="ml-auto text-sm font-bold px-6 py-2 rounded-xl text-white disabled:opacity-40 transition-colors"
+            style={{ background: loading ? '#94A3B8' : TEAL }}
           >
-            {loading ? 'Extraindoâ€¦' : 'â†’ Extrair tarefas'}
+            {loading ? 'Extraindo…' : '→ Extrair tarefas'}
           </button>
         </div>
       </div>
@@ -156,4 +176,3 @@ export default function TabEntrada({ onSaved }) {
     </div>
   )
 }
-
