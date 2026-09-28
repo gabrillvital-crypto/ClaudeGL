@@ -13,6 +13,7 @@ import { PendenciasSection } from './components/PendenciasSection'
 import { ContratosSection } from './components/ContratosSection'
 import { exportRelatorioXLSX, exportRelatorioPDF, exportRelatorioCSV } from './utils/exportUtils'
 import { ExportModal } from './components/ExportModal'
+import { CompetenciasSection } from './components/CompetenciasSection'
 
 const KPI_STATUS_MAP: Record<string, { sit: string[]; forn: string[] }> = {
   docs_aprovados:    { sit: ['Aprovado'],            forn: ['Aprovado'] },
@@ -389,6 +390,11 @@ export function App() {
 
         {/* 3 donuts de conformidade */}
         <ConformidadeCharts sitData={sitFiltered} fornData={fornSitFiltered} />
+
+        {/* Evolução por competência — Relatório de Competências */}
+        <Section title="Evolução de Terceiros por Competência">
+          <CompetenciasSection />
+        </Section>
 
         {/* Situação R3 — Drill-Down interativo + Modo Agrupado */}
         <Section title="Situação Documental por Terceiro — Drill-Down Interativo">
