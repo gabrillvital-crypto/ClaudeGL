@@ -16,6 +16,7 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
   const [recording, setRecording] = useState(false)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState('')
+  const [loadError, setLoadError] = useState('')
   const recRef = useRef(null)
 
   useEffect(() => {
@@ -24,9 +25,15 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
   }, [taskId])
 
   async function load() {
-    const [t, ck] = await Promise.all([getTask(taskId), fetchChecklist(taskId)])
-    setTask(t)
-    setChecklist(ck)
+    setLoadError('')
+    try {
+      const [t, ck] = await Promise.all([getTask(taskId), fetchChecklist(taskId)])
+      setTask(t)
+      setChecklist(ck)
+    } catch (e) {
+      console.error('Erro ao carregar tarefa:', e)
+      setLoadError(e.message || 'Erro ao carregar tarefa')
+    }
   }
 
   function setField(f, v) { setTask(t => ({ ...t, [f]: v })) }
@@ -113,6 +120,23 @@ export default function TaskDetailModal({ taskId, onClose, onSaved, onDeleted })
     recRef.current?.stop()
     setRecording(false)
   }
+
+  if (loadError) return (
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30">
+      <div className="bg-white rounded-2xl p-8 max-w-sm text-center space-y-3">
+        <p className="text-red-500 text-sm">Não foi possível carregar a tarefa.</p>
+        <p className="text-gray-400 text-xs break-words">{loadError}</p>
+        <div className="flex gap-2 justify-center">
+          <button onClick={load} className="text-xs font-bold px-3 py-2 rounded-lg text-white" style={{ background: TEAL }}>
+            Tentar de novo
+          </button>
+          <button onClick={onClose} className="text-xs font-bold px-3 py-2 rounded-lg border border-gray-200 text-gray-500">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 
   if (!task) return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30">

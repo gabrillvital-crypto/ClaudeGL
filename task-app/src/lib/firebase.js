@@ -10,7 +10,6 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
 } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -215,18 +214,17 @@ export async function fetchChecklist(taskId) {
   const snap = await getDocs(query(
     collection(db, 'checklist_items'),
     where('task_id', '==', taskId),
-    orderBy('position'),
   ))
-  return snap.docs.map(docToObj)
+  return snap.docs.map(docToObj).sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
 }
 
 export async function addChecklistItem(taskId, text) {
   const snap = await getDocs(query(
     collection(db, 'checklist_items'),
     where('task_id', '==', taskId),
-    orderBy('position', 'desc')
   ))
-  const position = snap.empty ? 1 : (snap.docs[0].data().position ?? 0) + 1
+  const positions = snap.docs.map(d => d.data().position ?? 0)
+  const position = positions.length ? Math.max(...positions) + 1 : 1
   const ref = await addDoc(collection(db, 'checklist_items'), {
     task_id: taskId, text, is_done: false, position
   })
