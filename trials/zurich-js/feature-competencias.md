@@ -55,6 +55,17 @@ A seção agora respeita o filtro global de fornecedor do topo do dash.
 
 ---
 
+## Ajuste 30/09/2026 (3) — Regulares × Pendências pelas colunas do relatório
+
+A plataforma corrigiu a divisão entre Regulares e Com pendências. Na base de 30/09, Regulares + Com pendências = Qtd Terceiros em todas as linhas.
+- **Pendências** agora soma a coluna "Com pendências".
+- **Aprovados** virou **Regulares** e soma a coluna "Regulares".
+- **% Aprovado** virou **% Regular** (regulares ÷ total). O card da série virou "% regulares (série)".
+- O "Status da solicitação" (APROVADO / EM_ELABORACAO) deixou de ser usado nos números.
+- Isso resolve boa parte do alerta abaixo, que fica como histórico.
+
+---
+
 ## ⚠️ ALERTA — Interpretação dos dados
 
 **Antes de aplicar ao main, validar com Débora as seguintes questões:**

@@ -20,9 +20,9 @@ interface CompRow {
   label: string        // "Dezembro/2025"
   fornecedores: number // distintos
   total: number
-  elaboracao: number
-  aprovado: number
-  pct: number          // % aprovado
+  pendencias: number   // soma de "Com pendências"
+  regulares: number    // soma de "Regulares"
+  pct: number          // % regular
   declarados: number   // fornecedores com declaração de não atividade no mês
   semNumero: boolean   // todos os fornecedores do mês declararam → exibe "-"
 }
@@ -86,9 +86,9 @@ function ProgBar({ pct }: { pct: number }) {
 
 // ── Badge de status ──────────────────────────────────────────────────────────
 
-function StatusBadge({ value, type }: { value: number; type: 'elab' | 'aprov' }) {
+function StatusBadge({ value, type }: { value: number; type: 'pend' | 'reg' }) {
   if (value === 0) return <span className="text-[#aaa]">—</span>
-  const cls = type === 'aprov'
+  const cls = type === 'reg'
     ? 'bg-green-100 text-green-700'
     : 'bg-amber-100 text-amber-700'
   return (
@@ -148,7 +148,7 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
     if (!rows.length) return []
 
     const map = new Map<string, {
-      elaboracao: number; aprovado: number; fornSet: Set<string>; declSet: Set<string>
+      pendencias: number; regulares: number; fornSet: Set<string>; declSet: Set<string>
     }>()
 
     for (const r of rows) {
@@ -163,7 +163,7 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
       const key  = parseKey(comp)
       if (!key) continue  // "A classificar" → fora da série temporal
 
-      if (!map.has(key)) map.set(key, { elaboracao: 0, aprovado: 0, fornSet: new Set(), declSet: new Set() })
+      if (!map.has(key)) map.set(key, { pendencias: 0, regulares: 0, fornSet: new Set(), declSet: new Set() })
       const e = map.get(key)!
 
       // Fornecedor declarou não atividade → sem números nessa competência
@@ -172,25 +172,26 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
         continue
       }
 
-      const qtd  = parseInt(raw['Qtd Terceiros'] || '0', 10) || 0
-
-      const status = (raw['Status da solicitação'] ?? '').trim()
-      if (status === 'APROVADO') e.aprovado   += qtd
-      else                        e.elaboracao += qtd
+      // Divisão oficial do relatório: Regulares + Com pendências = Qtd Terceiros
+      const num = (v: string | undefined) => parseInt((v ?? '').trim() || '0', 10) || 0
+      const reg  = num(raw['Regulares'])
+      const pend = num(raw['Com pendências'])
+      e.regulares  += reg
+      e.pendencias += pend
       if (cnpj) e.fornSet.add(cnpj)
     }
 
     return [...map.entries()]
       .map(([key, v]) => {
-        const total = v.elaboracao + v.aprovado
+        const total = v.pendencias + v.regulares
         return {
           compKey:     key,
           label:       keyToLabel(key),
           fornecedores: v.fornSet.size,
           total,
-          elaboracao:  v.elaboracao,
-          aprovado:    v.aprovado,
-          pct:         total > 0 ? Math.round(v.aprovado / total * 100) : 0,
+          pendencias:  v.pendencias,
+          regulares:   v.regulares,
+          pct:         total > 0 ? Math.round(v.regulares / total * 100) : 0,
           declarados:  v.declSet.size,
           semNumero:   total === 0 && v.declSet.size > 0,
         }
@@ -204,8 +205,8 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
   const totalDecl  = tableData.reduce((s, r) => s + r.declarados, 0)
   const mesesDecl  = tableData.filter(r => r.declarados > 0).length
   const totalAll   = tableData.reduce((s, r) => s + r.total, 0)
-  const totalAprov = tableData.reduce((s, r) => s + r.aprovado, 0)
-  const pctGeral   = totalAll > 0 ? Math.round(totalAprov / totalAll * 100) : 0
+  const totalReg   = tableData.reduce((s, r) => s + r.regulares, 0)
+  const pctGeral   = totalAll > 0 ? Math.round(totalReg / totalAll * 100) : 0
   const lastRow    = tableData[tableData.length - 1]
 
   // ── Paginação ─────────────────────────────────────────────────────────────
@@ -262,7 +263,7 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
           pctGeral >= 50 ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'
         }`}>
           <p className={`text-[11px] font-bold uppercase tracking-wide ${pctGeral >= 50 ? 'text-green-600' : 'text-amber-600'}`}>
-            % aprovados (série)
+            % regulares (série)
           </p>
           <p className={`text-[22px] font-bold mt-0.5 ${pctGeral >= 50 ? 'text-green-700' : 'text-amber-700'}`}>
             {pctGeral}%
@@ -283,8 +284,8 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
                 <th className="px-4 py-3 text-center font-bold">Qtd Fornecedores</th>
                 <th className="px-4 py-3 text-center font-bold">Total Terceiros</th>
                 <th className="px-4 py-3 text-center font-bold">Pendências</th>
-                <th className="px-4 py-3 text-center font-bold">Aprovados</th>
-                <th className="px-4 py-3 text-left font-bold min-w-[160px]">% Aprovado</th>
+                <th className="px-4 py-3 text-center font-bold">Regulares</th>
+                <th className="px-4 py-3 text-left font-bold min-w-[160px]">% Regular</th>
               </tr>
             </thead>
             <tbody>
@@ -313,10 +314,10 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
                     {row.semNumero ? '-' : row.total.toLocaleString('pt-BR')}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    {row.semNumero ? <span className="text-gray-400">-</span> : <StatusBadge value={row.elaboracao} type="elab" />}
+                    {row.semNumero ? <span className="text-gray-400">-</span> : <StatusBadge value={row.pendencias} type="pend" />}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    {row.semNumero ? <span className="text-gray-400">-</span> : <StatusBadge value={row.aprovado} type="aprov" />}
+                    {row.semNumero ? <span className="text-gray-400">-</span> : <StatusBadge value={row.regulares} type="reg" />}
                   </td>
                   <td className="px-4 py-3">
                     {row.semNumero ? <span className="text-gray-400">-</span> : <ProgBar pct={row.pct} />}
