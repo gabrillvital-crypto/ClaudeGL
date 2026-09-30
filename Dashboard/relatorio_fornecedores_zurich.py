@@ -1621,6 +1621,55 @@ html = f"""<!DOCTYPE html>
     font-family: Calibri, Arial, sans-serif; cursor: pointer; font-weight: 700;
   }}
   #global-filtro-bar .btn-gf-limpar:hover {{ background: rgba(255,255,255,.35); }}
+  #global-filtro-bar .btn-gf-export-main {{
+    display: flex; align-items: center; gap: 8px; background: white; color: {COR_TEAL_ESCURO};
+    border: none; border-radius: 4px; padding: 7px 16px; font-size: 12px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.15); transition: background .15s;
+  }}
+  #global-filtro-bar .btn-gf-export-main:hover {{ background: rgba(255,255,255,.9); }}
+
+  /* MODAL DE EXPORTAÇÃO (espelha ExportModal.tsx) */
+  #exp-overlay {{ position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center;
+                  background: rgba(0,0,0,.5); backdrop-filter: blur(3px); }}
+  #exp-overlay.open {{ display: flex; }}
+  .exp-box {{ background: white; border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,.25); width: 100%; max-width: 512px; margin: 0 16px; overflow: hidden; }}
+  .exp-head {{ background: {COR_TEAL_ESCURO}; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }}
+  .exp-head h2 {{ color: white; font-size: 18px; font-weight: 700; margin: 0; }}
+  .exp-head p  {{ color: rgba(255,255,255,.65); font-size: 12px; margin: 2px 0 0; }}
+  .exp-close {{ background: none; border: none; color: rgba(255,255,255,.6); font-size: 20px; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }}
+  .exp-close:hover {{ color: white; background: rgba(255,255,255,.15); }}
+  .exp-body {{ padding: 24px; display: flex; flex-direction: column; gap: 20px; }}
+  .exp-ctx {{ border-radius: 12px; padding: 12px 16px; font-size: 12px; }}
+  .exp-ctx.on  {{ background: #e8f6f8; border: 1px solid rgba(14,143,163,.4); color: #1a4f5c; }}
+  .exp-ctx.off {{ background: #f9fafb; border: 1px solid #e5e7eb; color: #6b7280; }}
+  .exp-ctx b.t {{ display: block; font-size: 11px; color: {COR_TEAL_ESCURO}; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }}
+  .exp-sec {{ font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .4px; margin: 0 0 10px; }}
+  .exp-mod {{ display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 12px; border: 1px solid #e5e7eb;
+              background: #f9fafb; cursor: pointer; margin-bottom: 8px; user-select: none; transition: all .15s; }}
+  .exp-mod:hover {{ border-color: rgba(14,143,163,.4); background: #f0fafb; }}
+  .exp-mod.sel {{ background: #e8f6f8; border-color: {COR_TEAL}; box-shadow: 0 1px 2px rgba(0,0,0,.05); }}
+  .exp-mod input {{ margin-top: 2px; width: 16px; height: 16px; accent-color: {COR_TEAL}; cursor: pointer; flex-shrink: 0; }}
+  .exp-mod-top {{ display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }}
+  .exp-mod-lbl {{ font-size: 13px; font-weight: 600; color: #374151; }}
+  .exp-mod.sel .exp-mod-lbl {{ color: {COR_TEAL_ESCURO}; }}
+  .exp-mod-cnt {{ font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #e5e7eb; color: #6b7280; }}
+  .exp-mod.sel .exp-mod-cnt {{ background: rgba(14,143,163,.2); color: {COR_TEAL_ESCURO}; }}
+  .exp-mod-desc {{ font-size: 11px; color: #9ca3af; margin-top: 2px; }}
+  .exp-warn {{ font-size: 11px; color: #ef4444; margin-top: 6px; display: none; }}
+  .exp-fmts {{ display: flex; gap: 8px; }}
+  .exp-fmt {{ flex: 1; padding: 12px 16px; border-radius: 12px; text-align: left; border: 1px solid #d1d5db; background: white; color: #4b5563; cursor: pointer; transition: all .15s; }}
+  .exp-fmt:hover {{ border-color: rgba(14,143,163,.5); background: #f0fafb; }}
+  .exp-fmt.sel {{ background: {COR_TEAL}; color: white; border-color: {COR_TEAL}; }}
+  .exp-fmt b {{ display: block; font-size: 13px; }}
+  .exp-fmt span {{ font-size: 10px; color: #9ca3af; }}
+  .exp-fmt.sel span {{ color: rgba(255,255,255,.7); }}
+  .exp-foot {{ padding: 16px 24px; background: #f9fafb; border-top: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }}
+  .exp-cancel {{ background: none; border: none; color: #9ca3af; font-size: 13px; font-weight: 500; cursor: pointer; }}
+  .exp-cancel:hover {{ color: #4b5563; }}
+  .exp-go {{ padding: 10px 24px; border-radius: 12px; border: none; font-size: 13px; font-weight: 700; background: {COR_TEAL}; color: white; cursor: pointer; }}
+  .exp-go:hover {{ background: {COR_TEAL_ESCURO}; }}
+  .exp-go:disabled {{ background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }}
+
   #global-filtro-bar .btn-gf-export {{
     background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.4);
     color: white; border-radius: 6px; padding: 6px 14px; font-size: 12px;
@@ -1822,11 +1871,10 @@ html = f"""<!DOCTYPE html>
   </div>
   <div style="align-self:flex-end;margin-left:auto">
     <label style="font-size:11px;font-weight:700;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:block">Exportar relatório</label>
-    <div style="display:flex;gap:6px">
-      <button class="btn-gf-export" onclick="exportarRelatorioXLSX()" title="Exportar todas as seções em Excel (3 abas)">&#128196; Excel</button>
-      <button class="btn-gf-export" onclick="exportarRelatorioPDF()" title="Exportar todas as seções em PDF">&#128196; PDF</button>
-      <button class="btn-gf-export" onclick="exportarRelatorioCSV()" title="Exportar todas as seções em CSV">&#128196; CSV</button>
-    </div>
+    <button class="btn-gf-export-main" onclick="abrirExportModal()" title="Selecionar módulos e formato de exportação">
+      <span>&#128203;</span><span>Exportar Relatório</span>
+    </button>
+  </div>
   </div>
   <span id="gf-hint"></span>
   <span style="font-size:11px;color:rgba(255,255,255,.6);align-self:center;white-space:nowrap;margin-left:6px">Gerado em {DATA_HOJE}</span>
@@ -2321,6 +2369,35 @@ html = f"""<!DOCTYPE html>
 
 <div class="footer">
   Dashboard gerado automaticamente pela plataforma Efcaz &mdash; {DATA_HOJE} &mdash; Uso interno
+</div>
+
+<!-- MODAL DE EXPORTAÇÃO -->
+<div id="exp-overlay" onclick="if (event.target === this) fecharExportModal()">
+  <div class="exp-box">
+    <div class="exp-head">
+      <div><h2>Exportar Relatório</h2><p>Selecione os módulos e o formato de saída</p></div>
+      <button class="exp-close" onclick="fecharExportModal()">&#10005;</button>
+    </div>
+    <div class="exp-body">
+      <div id="exp-ctx"></div>
+      <div>
+        <p class="exp-sec">Módulos a incluir</p>
+        <div id="exp-mods"></div>
+        <p class="exp-warn" id="exp-warn">&#9888; Selecione ao menos um módulo para exportar</p>
+      </div>
+      <div>
+        <p class="exp-sec">Formato de saída</p>
+        <div class="exp-fmts">
+          <button class="exp-fmt sel" data-fmt="xlsx" onclick="setExportFmt('xlsx')"><b>&#128202; Excel (.xlsx)</b><span>Uma aba por módulo</span></button>
+          <button class="exp-fmt" data-fmt="pdf" onclick="setExportFmt('pdf')"><b>&#128196; PDF</b><span>Documento único paginado</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="exp-foot">
+      <button class="exp-cancel" onclick="fecharExportModal()">Cancelar</button>
+      <button class="exp-go" id="exp-go" onclick="gerarExportacao()">Gerar Relatório</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2924,7 +3001,9 @@ function buildAeroportoFilter() {{
         if (gfAeroportoSet.has(aero)) {{
           const c = (t.cnpj || '').replace(/\D/g,'');
           if (c) terceirosCPFs.add(c);
-          fornCNPJs.add(f.cnpj);
+          // guarda o CNPJ nos dois formatos (com e sem zeros à esquerda) — as tabelas usam ambos
+          const fc = cnpjKey(f.cnpj);
+          if (fc) {{ fornCNPJs.add(fc); fornCNPJs.add(fc.padStart(14, "0")); }}
           if (t.nome) terceirosNomes.add(t.nome.toUpperCase().trim());
         }}
       }});
@@ -2944,11 +3023,15 @@ function toggleAeroporto(code) {{
   applyGlobalFilter();
 }}
 
+// CNPJ só com dígitos e sem zeros à esquerda: pendências vêm com 14 dígitos, R3/R4 e a lista
+// de fornecedores vêm sem o zero inicial — sem isso a TOP SERVICE (00973749...) não casava
+const cnpjKey = v => String(v || "").replace(/\D/g, "").replace(/^0+/, "");
+
 function matchesForn(rowNome, rowCNPJ) {{
   if (selectedFornSet.size === 0) return true;
   for (const raw of selectedFornSet) {{
     const {{nome, cnpj}} = parseFornVal(raw);
-    if (rowNome === nome && (!cnpj || !rowCNPJ || rowCNPJ === cnpj)) return true;
+    if (rowNome === nome && (!cnpj || !rowCNPJ || cnpjKey(rowCNPJ) === cnpjKey(cnpj))) return true;
   }}
   return false;
 }}
@@ -4088,31 +4171,38 @@ function _filtroAtivоLabel() {{
   return parts.length ? "Filtro: " + parts.join(" · ") : "Todos os fornecedores e competências";
 }}
 
-function exportarRelatorioXLSX() {{
+function exportarRelatorioXLSX(inc = {{ r3: true, r4: true, pend: true }}) {{
   const wb = XLSX.utils.book_new();
+
+  if (inc.r3) {{
 
   const hdR3 = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   const wsR3Data = [hdR3.map(hdLbl), ...sitFiltrado.map(r => hdR3.map(h => r[h] ?? ""))];
   const wsR3 = XLSX.utils.aoa_to_sheet(wsR3Data);
   wsR3["!cols"] = hdR3.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsR3, "R3 - Terceiros");
+  }}
+  if (inc.r4) {{
 
   const hdR4 = ["Fornecedor", "Documento", "Competencia", "Status", "Vencimento"];
   const wsR4Data = [hdR4.map(hdLbl), ...fornSitFiltrado.map(r => hdR4.map(h => r[h] ?? ""))];
   const wsR4 = XLSX.utils.aoa_to_sheet(wsR4Data);
   wsR4["!cols"] = hdR4.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsR4, "R4 - Empresa");
+  }}
+  if (inc.pend) {{
 
   const hdPend = ["Fornecedor", "CNPJ", "Area", "Terceiro", "Documento", "Competencia", "Detalhe"];
   const wsPendData = [hdPend.map(hdLbl), ...pendFiltrado.map(r => hdPend.map(h => r[h] ?? ""))];
   const wsPend = XLSX.utils.aoa_to_sheet(wsPendData);
   wsPend["!cols"] = hdPend.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsPend, "Pendências");
+  }}
 
   XLSX.writeFile(wb, "relatorio_zurich.xlsx");
 }}
 
-function exportarRelatorioPDF() {{
+function exportarRelatorioPDF(inc = {{ r3: true, r4: true, pend: true }}) {{
   const {{ jsPDF }} = window.jspdf;
   const doc = new jsPDF({{ orientation: "landscape", unit: "mm", format: "a4" }});
   const filtroLabel = _filtroAtivоLabel();
@@ -4128,6 +4218,11 @@ function exportarRelatorioPDF() {{
     doc.text(filtroLabel, 14, y); y += 6;
   }};
 
+  let _primeira = true;
+  const _novaSecao = () => {{ if (!_primeira && y > 175) {{ doc.addPage(); y = 14; }} _primeira = false; }};
+
+  if (inc.r3) {{
+  _novaSecao();
   _titulo("Situação Documental dos Terceiros");
   const hdR3 = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
@@ -4140,8 +4235,10 @@ function exportarRelatorioPDF() {{
     margin: {{ left: 10, right: 10 }},
   }});
   y = doc.lastAutoTable.finalY + 10;
+  }}
 
-  if (y > 175) {{ doc.addPage(); y = 14; }}
+  if (inc.r4) {{
+  _novaSecao();
   _titulo("Situação Documental da Empresa");
   const hdR4 = ["Fornecedor", "CNPJ", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
@@ -4153,8 +4250,10 @@ function exportarRelatorioPDF() {{
     margin: {{ left: 10, right: 10 }},
   }});
   y = doc.lastAutoTable.finalY + 10;
+  }}
 
-  if (y > 175) {{ doc.addPage(); y = 14; }}
+  if (inc.pend) {{
+  _novaSecao();
   _titulo("Pendências");
   const _areaLbl  = a => a === "TERCEIROS" ? "Terceiro" : "Fornecedor";
   const _pendHead = ["Sit. Real", "Área", "Fornecedor", "Terceiro", "Documento", "Competência", "Detalhe"];
@@ -4205,9 +4304,77 @@ function exportarRelatorioPDF() {{
     }});
     y = doc.lastAutoTable.finalY + 6;
   }}
+  }}
 
   doc.save("relatorio_zurich.pdf");
 }}
+
+// ── MODAL DE EXPORTAÇÃO ───────────────────────────────────────────────────────
+const EXP_MODS = [
+  {{ key: "r3",   icon: "&#128101;", label: "Situação Documental — Terceiros (R3)",
+     desc: "Status de documentação por terceiro credenciado, agrupado por fornecedor" }},
+  {{ key: "r4",   icon: "&#127970;", label: "Situação Documental — Empresa (R4)",
+     desc: "Documentação corporativa dos fornecedores (FGTS, Certidões, etc.)" }},
+  {{ key: "pend", icon: "&#128203;", label: "Detalhamento de Pendências",
+     desc: "Pendências agrupadas por competência, com situação e área" }},
+];
+const expSel = new Set(["r3", "r4", "pend"]);
+let expFmt = "xlsx";
+
+function _expFiltroAtivo() {{
+  return selectedFornSet.size > 0 || selectedCompSet.size > 0 || selectedStatSet.size > 0
+      || gfAeroportoSet.size > 0 || gfStatusTerc !== "all" || !!activeKpiKey;
+}}
+
+function renderExportModal() {{
+  const ctx = document.getElementById("exp-ctx");
+  if (_expFiltroAtivo()) {{
+    ctx.className = "exp-ctx on";
+    ctx.innerHTML = '<b class="t">&#128269; Filtro ativo — exportação com dados filtrados</b>' + _filtroAtivоLabel().replace(/^Filtro: /, "");
+  }} else {{
+    ctx.className = "exp-ctx off";
+    ctx.innerHTML = 'Nenhum filtro ativo — o relatório incluirá <b style="color:#374151">todos os fornecedores</b>';
+  }}
+  const counts = {{ r3: sitFiltrado.length, r4: fornSitFiltrado.length, pend: pendFiltrado.length }};
+  document.getElementById("exp-mods").innerHTML = EXP_MODS.map(m => `
+    <label class="exp-mod${{expSel.has(m.key) ? " sel" : ""}}">
+      <input type="checkbox" ${{expSel.has(m.key) ? "checked" : ""}} onchange="toggleExportMod('${{m.key}}')">
+      <div style="flex:1;min-width:0">
+        <div class="exp-mod-top">
+          <span class="exp-mod-lbl">${{m.icon}} ${{m.label}}</span>
+          <span class="exp-mod-cnt">${{counts[m.key].toLocaleString("pt-BR")}} reg.</span>
+        </div>
+        <div class="exp-mod-desc">${{m.desc}}</div>
+      </div>
+    </label>`).join("");
+  document.querySelectorAll(".exp-fmt").forEach(b => b.classList.toggle("sel", b.dataset.fmt === expFmt));
+  const n = expSel.size;
+  document.getElementById("exp-warn").style.display = n === 0 ? "block" : "none";
+  const go = document.getElementById("exp-go");
+  go.disabled = n === 0;
+  go.textContent = "Gerar Relatório" + (n > 0 ? ` (${{n}} módulo${{n !== 1 ? "s" : ""}})` : "");
+}}
+
+function abrirExportModal()  {{ renderExportModal(); document.getElementById("exp-overlay").classList.add("open"); }}
+function fecharExportModal() {{ document.getElementById("exp-overlay").classList.remove("open"); }}
+function toggleExportMod(k)  {{ expSel.has(k) ? expSel.delete(k) : expSel.add(k); renderExportModal(); }}
+function setExportFmt(f)     {{ expFmt = f; renderExportModal(); }}
+
+function gerarExportacao() {{
+  if (expSel.size === 0) return;
+  const go = document.getElementById("exp-go");
+  go.disabled = true; go.textContent = "Gerando...";
+  setTimeout(() => {{
+    const inc = {{ r3: expSel.has("r3"), r4: expSel.has("r4"), pend: expSel.has("pend") }};
+    try {{
+      if (expFmt === "xlsx") exportarRelatorioXLSX(inc);
+      else                   exportarRelatorioPDF(inc);
+      fecharExportModal();
+    }} finally {{ renderExportModal(); }}
+  }}, 30);
+}}
+
+document.addEventListener("keydown", e => {{ if (e.key === "Escape") fecharExportModal(); }});
 
 function exportarRelatorioCSV() {{
   const areaLbl = a => a === "TERCEIROS" ? "Terceiro" : a === "CREDENCIAMENTO" ? "Credenciamento" : "Fornecedor";
