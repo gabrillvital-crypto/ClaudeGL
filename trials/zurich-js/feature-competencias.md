@@ -15,7 +15,7 @@ dos terceiros por competência, com base no **Relatório de Competências** expo
 | Chip | Dado |
 |---|---|
 | Competências com dados | Qtde de meses com terceiros registrados na série |
-| Pico de terceiros | Mês com maior volume + quantidade |
+| Declaração de não atividade | Total de declarações (coluna H) na série — substituiu "Pico de terceiros" em 30/09 |
 | Total acumulado | Soma de todos os terceiros na série |
 | % Aprovados (série) | Percentual de submissões aprovadas; último mês no subtítulo |
 
@@ -25,7 +25,7 @@ dos terceiros por competência, com base no **Relatório de Competências** expo
 | Competência | Mês por extenso (ex: "Dezembro/2025") — ordenado cronologicamente |
 | Qtd Fornecedores | Quantos CNPJs distintos têm registros naquele mês |
 | Total Terceiros | Soma de Qtd Terceiros de todas as submissões do mês |
-| Em Elaboração 🟡 | Terceiros em submissões com status EM_ELABORACAO |
+| Pendências 🟡 | Terceiros em submissões com status EM_ELABORACAO (antes "Em Elaboração") |
 | Aprovados 🟢 | Terceiros em submissões com status APROVADO |
 | % Aprovado | Barra de progresso colorida: 🔴 <40% · 🟡 40–70% · 🟢 >70% |
 
@@ -41,6 +41,17 @@ A seção agora respeita o filtro global de fornecedor do topo do dash.
 - Ao trocar o filtro, a paginação volta para a página 1.
 - Se o fornecedor selecionado não tiver competências, a seção mostra: "Fornecedor selecionado não possui competências neste relatório".
 - Arquivos: `App.tsx` (passa `selectedFornSet`) e `CompetenciasSection.tsx`.
+
+---
+
+## Ajuste 30/09/2026 (2) — Pendências, não atividade e nova base
+
+- Coluna "Em Elaboração" renomeada para **Pendências**. A regra de cálculo não mudou: soma os terceiros das solicitações que não estão como APROVADO.
+- Card "Pico de terceiros" substituído por **Declaração de não atividade**, que lê a coluna H "Possui declaração de não atividade?". Mostra o total de declarações na série e em quantas competências aparecem.
+- Linha de fornecedor com "Sim" na coluna H, ou com "-" em Qtd Terceiros, **não soma números**.
+- Se todos os fornecedores de uma competência declararam não atividade, a linha mostra "-" nas colunas numéricas. Com declaração parcial, aparece "N s/ atividade" abaixo de Qtd Fornecedores.
+- CNPJ normalizado para 14 dígitos nos dois lados do filtro.
+- Base atualizada: relatório exportado em 30/09/2026, com 644 linhas e 46 CNPJs. Nenhuma declaração de não atividade nesta base.
 
 ---
 
@@ -124,7 +135,7 @@ import { CompetenciasSection } from './components/CompetenciasSection'
 - Competência `"A classificar"` (não tem data, não entra na série temporal)
 
 ### Novo: `public/data/competencias_zurich.csv`
-Base de 28/09/2026. Atualizar a cada novo relatório exportado da plataforma.
+Base de 30/09/2026. Atualizar a cada novo relatório exportado da plataforma.
 
 ---
 

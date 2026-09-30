@@ -12,6 +12,7 @@ interface RawRow {
   'Qtd Terceiros': string
   Regulares: string
   'Com pendências': string
+  'Possui declaração de não atividade?': string
 }
 
 interface CompRow {
@@ -22,6 +23,8 @@ interface CompRow {
   elaboracao: number
   aprovado: number
   pct: number          // % aprovado
+  declarados: number   // fornecedores com declaração de não atividade no mês
+  semNumero: boolean   // todos os fornecedores do mês declararam → exibe "-"
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -48,6 +51,19 @@ function keyToLabel(key: string): string {
 }
 
 const PAGE_SIZE = 10
+
+// CNPJ só com dígitos e 14 posições (planilhas às vezes perdem o zero à esquerda)
+const normCNPJ = (v: string) => {
+  const d = (v ?? '').replace(/\D/g, '')
+  return d ? d.padStart(14, '0') : ''
+}
+
+// Declaração de não atividade: coluna H = "Sim", ou números vindos como "-"
+function isDeclarado(raw: Record<string, string>): boolean {
+  const decl = (raw['Possui declaração de não atividade?'] ?? '').trim().toLowerCase()
+  const qtd  = (raw['Qtd Terceiros'] ?? '').trim()
+  return decl === 'sim' || qtd === '-'
+}
 
 // ── Barra de progresso inline ────────────────────────────────────────────────
 
@@ -102,7 +118,7 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
     const nomes = new Set<string>()
     selectedFornSet.forEach(raw => {
       const { nome, cnpj } = parseFornVal(raw)
-      const d = cnpj.replace(/\D/g, '')
+      const d = normCNPJ(cnpj)
       if (d) cnpjs.add(d)
       else if (nome) nomes.add(normNome(nome))
     })
@@ -132,12 +148,12 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
     if (!rows.length) return []
 
     const map = new Map<string, {
-      elaboracao: number; aprovado: number; fornSet: Set<string>
+      elaboracao: number; aprovado: number; fornSet: Set<string>; declSet: Set<string>
     }>()
 
     for (const r of rows) {
       const raw = (r as unknown as Record<string, string>)
-      const cnpj = (raw['Fornecedor CPF/CNPJ'] ?? '').replace(/\D/g, '')
+      const cnpj = normCNPJ(raw['Fornecedor CPF/CNPJ'] ?? '')
       if (fornFilter.active) {
         const nome = normNome(raw['Fornecedor'] ?? '')
         if (!fornFilter.cnpjs.has(cnpj) && !fornFilter.nomes.has(nome)) continue
@@ -147,9 +163,16 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
       const key  = parseKey(comp)
       if (!key) continue  // "A classificar" → fora da série temporal
 
-      const qtd  = parseInt(raw['Qtd Terceiros'] || '0', 10) || 0
-      if (!map.has(key)) map.set(key, { elaboracao: 0, aprovado: 0, fornSet: new Set() })
+      if (!map.has(key)) map.set(key, { elaboracao: 0, aprovado: 0, fornSet: new Set(), declSet: new Set() })
       const e = map.get(key)!
+
+      // Fornecedor declarou não atividade → sem números nessa competência
+      if (isDeclarado(raw)) {
+        e.declSet.add(cnpj || normNome(raw['Fornecedor'] ?? ''))
+        continue
+      }
+
+      const qtd  = parseInt(raw['Qtd Terceiros'] || '0', 10) || 0
 
       const status = (raw['Status da solicitação'] ?? '').trim()
       if (status === 'APROVADO') e.aprovado   += qtd
@@ -168,16 +191,18 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
           elaboracao:  v.elaboracao,
           aprovado:    v.aprovado,
           pct:         total > 0 ? Math.round(v.aprovado / total * 100) : 0,
+          declarados:  v.declSet.size,
+          semNumero:   total === 0 && v.declSet.size > 0,
         }
       })
-      .filter(p => p.total > 0)
+      .filter(p => p.total > 0 || p.declarados > 0)
       .sort((a, b) => keyToDate(a.compKey).getTime() - keyToDate(b.compKey).getTime())
   }, [rows, fornFilter])
 
   // ── KPIs ─────────────────────────────────────────────────────────────────
   const totalMeses = tableData.length
-  const peak       = tableData.reduce((mx, r) => r.total > mx.total ? r : mx,
-    { label: '—', total: 0 } as CompRow)
+  const totalDecl  = tableData.reduce((s, r) => s + r.declarados, 0)
+  const mesesDecl  = tableData.filter(r => r.declarados > 0).length
   const totalAll   = tableData.reduce((s, r) => s + r.total, 0)
   const totalAprov = tableData.reduce((s, r) => s + r.aprovado, 0)
   const pctGeral   = totalAll > 0 ? Math.round(totalAprov / totalAll * 100) : 0
@@ -218,9 +243,13 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
         </div>
 
         <div className="flex-1 min-w-[130px] bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Pico de terceiros</p>
-          <p className="text-[17px] font-bold text-gray-700 mt-0.5 leading-tight">{peak.label}</p>
-          <p className="text-[11px] text-gray-400">{peak.total.toLocaleString('pt-BR')} terceiros</p>
+          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Declaração de não atividade</p>
+          <p className="text-[22px] font-bold text-gray-700 mt-0.5">{totalDecl.toLocaleString('pt-BR')}</p>
+          <p className="text-[11px] text-gray-400">
+            {totalDecl === 0
+              ? 'nenhuma declaração na série'
+              : `declaração(ões) em ${mesesDecl} competência(s)`}
+          </p>
         </div>
 
         <div className="flex-1 min-w-[130px] bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
@@ -253,7 +282,7 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
                 <th className="px-4 py-3 text-left font-bold">Competência</th>
                 <th className="px-4 py-3 text-center font-bold">Qtd Fornecedores</th>
                 <th className="px-4 py-3 text-center font-bold">Total Terceiros</th>
-                <th className="px-4 py-3 text-center font-bold">Em Elaboração</th>
+                <th className="px-4 py-3 text-center font-bold">Pendências</th>
                 <th className="px-4 py-3 text-center font-bold">Aprovados</th>
                 <th className="px-4 py-3 text-left font-bold min-w-[160px]">% Aprovado</th>
               </tr>
@@ -270,19 +299,27 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
                     {row.label}
                   </td>
                   <td className="px-4 py-3 text-center text-gray-600">
-                    {row.fornecedores}
+                    {row.semNumero ? '-' : row.fornecedores}
+                    {row.declarados > 0 && (
+                      <span
+                        className="block text-[10px] text-gray-400"
+                        title="Fornecedores com declaração de não atividade nesta competência"
+                      >
+                        {row.declarados} s/ atividade
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-center font-bold text-gray-700">
-                    {row.total.toLocaleString('pt-BR')}
+                    {row.semNumero ? '-' : row.total.toLocaleString('pt-BR')}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <StatusBadge value={row.elaboracao} type="elab" />
+                    {row.semNumero ? <span className="text-gray-400">-</span> : <StatusBadge value={row.elaboracao} type="elab" />}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <StatusBadge value={row.aprovado} type="aprov" />
+                    {row.semNumero ? <span className="text-gray-400">-</span> : <StatusBadge value={row.aprovado} type="aprov" />}
                   </td>
                   <td className="px-4 py-3">
-                    <ProgBar pct={row.pct} />
+                    {row.semNumero ? <span className="text-gray-400">-</span> : <ProgBar pct={row.pct} />}
                   </td>
                 </tr>
               ))}
@@ -330,7 +367,8 @@ export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProp
 
       <p className="text-[11px] text-gray-400 mt-2 text-center">
         Fonte: Relatório de Competências — plataforma Efcaz &nbsp;·&nbsp;
-        Competências futuras (zero terceiros) e "A classificar" excluídas da série
+        Competências futuras (zero terceiros) e "A classificar" excluídas da série &nbsp;·&nbsp;
+        "-" = fornecedor com declaração de não atividade
       </p>
 
     </div>
