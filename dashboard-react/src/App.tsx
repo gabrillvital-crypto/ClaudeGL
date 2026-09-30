@@ -401,9 +401,9 @@ export function App() {
           <CompetenciasSection selectedFornSet={selectedFornSet} />
         </Section>
 
-        {/* Situação R3 — Drill-Down interativo + Modo Agrupado */}
-        <Section title="Situação Documental por Terceiro — Drill-Down Interativo">
-          <R3Section data={sitFiltered} geradoEm={data.geradoEm} />
+        {/* Situação R3 — KPIs + tabela paginada / Modo Agrupado (mesmo layout do relatório Python) */}
+        <Section title="Situação Documental por Terceiro">
+          <R3Section data={sitFiltered} totalGeral={data.sit_tabela.length} geradoEm={data.geradoEm} />
         </Section>
 
         {/* Situação R4 */}
