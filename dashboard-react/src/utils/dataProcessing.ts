@@ -304,7 +304,9 @@ export function processAllData(
   const colAnaliseR3 = sitCols.find(c => c.toLowerCase().includes('lise') && c.toLowerCase().includes('doc')) ?? null
   // Coluna "Situação última solicitação"
   const colSitSolicR3 = sitCols.find(c => c.toLowerCase().includes('ltima') && c.toLowerCase().includes('solic')) ?? null
-  // Coluna "Marcas e Representações" → Competência R3
+  // Competência R3 — fonte principal: coluna H "Competência" (campo estruturado novo, desde set/2026)
+  // Fallback: "Marcas e Representações" (campo antigo) só se a coluna H vier vazia ou não existir
+  const colCompSit   = sitCols.find(c => c.toLowerCase().includes('compet')) ?? null
   const colMarcasSit = sitCols.find(c => c.toLowerCase().includes('marcas')) ?? null
 
   // Lookup: normCNPJ(terceiro CPF) → aeroportos (do relatório de terceiros cadastrados)
@@ -345,7 +347,9 @@ export function processAllData(
     .map(row => {
       const status = mapStatusR3(row, colAnaliseR3, colSitSolicR3)
       if (!status) return null
-      const comp = colMarcasSit ? String(row[colMarcasSit] ?? '').trim().replace(/^nan$/, '') : ''
+      const compH  = colCompSit   ? String(row[colCompSit]   ?? '').trim().replace(/^nan$/, '') : ''
+      const compG  = colMarcasSit ? String(row[colMarcasSit] ?? '').trim().replace(/^nan$/, '') : ''
+      const comp   = compH || compG
       const docNome = String(row['Documento'] ?? '').trim()
       const docLower = docNome.toLowerCase()
       const venc = DOCS_SEM_VENCIMENTO.has(docLower)
