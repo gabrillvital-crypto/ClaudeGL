@@ -2051,7 +2051,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div class="kpi-card yellow">
       <div class="kpi-val" id="sit-kpi-nao-anex">{total_nao_anex_r3}</div>
-      <div class="kpi-label">Nao<br>Anexado</div>
+      <div class="kpi-label">Não<br>Anexado</div>
     </div>
     <div class="kpi-card yellow">
       <div class="kpi-val" id="sit-kpi-aguard-sub">{total_aguard_r3_elab}</div>
@@ -2131,7 +2131,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div class="kpi-card yellow">
       <div class="kpi-val" id="r4-kpi-nao-anex">{r4_nao_anex}</div>
-      <div class="kpi-label">Nao<br>Anexado</div>
+      <div class="kpi-label">Não<br>Anexado</div>
     </div>
     <div class="kpi-card orange">
       <div class="kpi-val" id="r4-kpi-em-analise">{r4_em_analise}</div>
@@ -3879,18 +3879,25 @@ function renderSitAgrupado(dados) {{
     const key = r["Fornecedor"] + "|||" + r["Terceiro"];
     if (!grupos[key]) grupos[key] = {{ fornecedor: r["Fornecedor"], terceiro: r["Terceiro"], docs: [], temNC: false }};
     grupos[key].docs.push(r);
-    if (r["Status"] !== "Conforme") grupos[key].temNC = true;
+    if (r["Status"] !== "Aprovado") grupos[key].temNC = true;
   }});
-  const corSit = {{ "Conforme": {{bg:"#d4edda",fg:"#155724"}}, "Vencido": {{bg:"#ffeaea",fg:"#721c24"}}, "Pendente": {{bg:"#fff3cd",fg:"#856404"}} }};
+  // Cor do documento conforme o status (mesmas cores dos badges da tabela)
+  const corSit = {{
+    "Aprovado":             {{bg:"#d4edda", fg:"#28A745"}},
+    "Reprovado":            {{bg:"#ffeaea", fg:"#DC3545"}},
+    "Não anexado":          {{bg:"#fff3cd", fg:"#856404"}},
+    "Aguardando Submissão": {{bg:"#fff3cd", fg:"#856404"}},
+    "Em Análise":           {{bg:"#e8f4f7", fg:"#0E8FA3"}},
+  }};
   const html = Object.values(grupos).map(g => {{
     const docsHtml = g.docs.map(d => {{
       const c = corSit[d["Status"]] || {{bg:"#eee",fg:"#333"}};
       const venc = d["Vencimento"] ? ` <span class="grupo-doc-venc">(${{d["Vencimento"]}})</span>` : "";
-      return `<span class="grupo-doc-badge" style="background:${{c.bg}};color:${{c.fg}}">${{d["Documento"]}}${{venc}}</span>`;
+      return `<span class="grupo-doc-badge" title="${{d["Status"]}}" style="background:${{c.bg}};color:${{c.fg}}">${{d["Documento"]}}${{venc}}</span>`;
     }}).join("");
     return `<div class="grupo-card${{g.temNC ? " nc" : ""}}">
       <div class="grupo-header">
-        <div>
+        <div style="flex:1">
           <div class="grupo-fornecedor">${{g.fornecedor}}</div>
           <div class="grupo-nome">${{g.terceiro}}</div>
         </div>
