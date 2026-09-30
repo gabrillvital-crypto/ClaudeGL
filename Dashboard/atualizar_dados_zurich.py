@@ -15,16 +15,8 @@ DST2 = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\dashboard-react\public\
 # "pastas": lista de pastas destino. Padrão: [DST1, DST2] (Python + React).
 #           Use ["DST2"] para arquivos exclusivos do dashboard React.
 VINCULOS = [
-    {
-        # Relatório combinado de pendências → Python usa esse arquivo diretamente (schema legado)
-        # ⚠️ Agora opcional: se os 3 novos relatórios separados existirem, o Python pode ser
-        #    atualizado futuramente para consumi-los também.
-        "padrao":  "zurich_airport___pendencias_por_solicitacao_com_documentos___dados_*.csv",
-        "destino": "pendencias_zurich.csv",
-        "label":   "Pendências (combinado — Python legado)",
-        "pastas":  ["DST1"],
-        "opcional": True,
-    },
+    # O relatório combinado de pendências (pendencias_por_solicitacao_com_documentos) foi aposentado
+    # em 30/09/2026 — substituído pelos 3 relatórios abaixo (fornecedor, terceiro e credenciamento).
     {
         # Novo relatório: Pendências de documentos de FORNECEDOR
         # Competência vem da coluna "Marcas e representações"

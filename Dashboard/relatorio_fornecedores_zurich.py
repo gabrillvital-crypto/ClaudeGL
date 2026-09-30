@@ -11,7 +11,6 @@ import os as _os
 # Pasta base onde o N8N salva os arquivos com nomes fixos
 BASE_DIR = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\data"
 
-PENDENCIAS_CSV      = BASE_DIR + r"\pendencias_zurich.csv"                 # schema legado TERCEIROS (fallback)
 PENDENCIAS_TERC_CSV = BASE_DIR + r"\pendencias_terceiros_zurich.csv"       # novo: TERCEIROS dedicado
 PENDENCIAS_FORN_CSV = BASE_DIR + r"\pendencias_fornecedor_zurich.csv"      # novo: DOCUMENTOS de fornecedor
 PENDENCIAS_DOC_CSV  = BASE_DIR + r"\pendencias_documentos_zurich.csv"      # schema antigo DOCUMENTOS (legado)
@@ -129,9 +128,11 @@ def competencia_anterior_contrato(comp):
     yyyy = int(raw_y) if len(raw_y) == 4 else 2000 + int(raw_y)
     return yyyy < 2025 or (yyyy == 2025 and mm < 11)
 
-# TERCEIROS: prioriza novo CSV dedicado; fallback ao legado combinado
-_terc_src   = PENDENCIAS_TERC_CSV if _os.path.exists(PENDENCIAS_TERC_CSV) else PENDENCIAS_CSV
-df_pend_raw = read_csv_safe(_terc_src)
+# TERCEIROS: relatório dedicado de pendências de terceiros (o combinado foi aposentado em 30/09/2026)
+if not _os.path.exists(PENDENCIAS_TERC_CSV):
+    raise FileNotFoundError(f"Relatório de pendências de terceiros não encontrado: {PENDENCIAS_TERC_CSV}. "
+                            "Rode atualizar_dados_zurich.py com o export 'pendencias_de_documentos_de_terceiro'.")
+df_pend_raw = read_csv_safe(PENDENCIAS_TERC_CSV)
 df_terc = read_csv_safe(TERCEIROS_CSV)
 df_sit  = read_csv_safe(SITUACAO_CSV)
 
