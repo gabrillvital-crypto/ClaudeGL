@@ -1332,6 +1332,12 @@ html = f"""<!DOCTYPE html>
   .kpi-card.gray   .kpi-val {{ color: {COR_CINZA}; }}
   .kpi-label {{ font-size: 11px; color: #666; margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }}
 
+  .pizza-grid {{ display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 20px; margin-bottom: 28px; align-items: stretch; }}
+  .pizza-card {{ padding: 16px 10px 8px; margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; }}
+  .pizza-card-lg {{ box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(14,143,163,.6), 0 6px 16px rgba(0,0,0,.10); }}
+  .pizza-title {{ font-size: 11px; font-weight: 700; color: {COR_TEAL}; text-align: center; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }}
+  @media (max-width: 900px) {{ .pizza-grid {{ grid-template-columns: 1fr; }} }}
+
   .section-title {{
     font-size: 16px; font-weight: 700; color: {COR_TEAL};
     margin: 28px 0 14px; padding-bottom: 8px;
@@ -1740,7 +1746,7 @@ html = f"""<!DOCTYPE html>
   </div>
   <div class="badge">
     <span class="badge-data">Gerado em {DATA_HOJE}</span>
-    Referencia: {DATA_HOJE[:10]}
+    Referência: {DATA_HOJE[:10]}
   </div>
 </div>
 
@@ -1829,75 +1835,75 @@ html = f"""<!DOCTYPE html>
 <div class="container">
 
   <!-- KPIs -->
-  <div class="kpi-grid" style="margin-bottom:20px;grid-template-columns:repeat(4,1fr)">
+  <div class="kpi-grid" id="kpi-grid-main" style="margin-bottom:28px;grid-template-columns:repeat(5,1fr)">
     <!-- Bloco 1: globais — somem quando filtro especifico ativo -->
     <div class="kpi-card" id="kpi-card-total-forn"
-         data-tooltip="Número total de empresas fornecedoras cadastradas na base.">
+         data-tooltip="Número total de empresas fornecedoras cadastradas na base da plataforma.">
       <div class="kpi-val" id="kpi-total-forn">{total_forn_geral}</div>
       <div class="kpi-label">Total de<br>Fornecedores</div>
     </div>
     <div class="kpi-card teal" id="kpi-card-exec-plat"
-         data-tooltip="Quantidade de fornecedores que possuem contratos ativos e movimentações na plataforma.">
+         data-tooltip="Fornecedores que possuem documentação ativa em R3 (terceiros) ou R4 (corporativo) — estão operando na plataforma.">
       <div class="kpi-val" id="kpi-exec-plat">{total_forn_com_execucao}</div>
       <div class="kpi-label">Fornecedores com<br>Execução na Plataforma</div>
     </div>
     <!-- Bloco 2: docs esperados — somem quando filtro de competência ativo -->
     <div class="kpi-card" id="kpi-card-docs-esp-forn"
-         data-tooltip="Quantidade total de documentos que a empresa contratada precisa enviar para a plataforma.">
+         data-tooltip="Total de documentos corporativos que o fornecedor precisa enviar (R4). Inclui todos os status.">
       <div class="kpi-val" id="kpi-docs-esp-forn">{r4_total}</div>
       <div class="kpi-label">Docs Esperados<br>Fornecedor</div>
     </div>
     <div class="kpi-card" id="kpi-card-docs-esp-terc"
-         data-tooltip="Quantidade total de documentos exigidos dos funcionários ou prestadores vinculados ao fornecedor.">
+         data-tooltip="Total de documentos exigidos dos funcionários ou prestadores vinculados ao fornecedor (R3). Inclui todos os status.">
       <div class="kpi-val" id="kpi-docs-esp-terc">{total_docs_sit}</div>
       <div class="kpi-label">Docs Esperados<br>Terceiros</div>
     </div>
     <!-- Bloco 3: status — atualizam com filtro -->
     <div class="kpi-card green" data-kpi-key="docs_aprovados" onclick="toggleKpiCard('docs_aprovados')"
-         data-tooltip="Documentos que já foram analisados e validados com sucesso. Clique para filtrar as tabelas.">
+         data-tooltip="Documentos que foram analisados e validados pela equipe de conformidade. Estão em dia. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-aprov">{int(total_conformes) + r4_aprovado}</div>
       <div class="kpi-label">Documentos<br>Aprovados</div>
     </div>
     <div class="kpi-card red" data-kpi-key="docs_reprovados" onclick="toggleKpiCard('docs_reprovados')"
          data-tooltip="Total de documentos em situação de não conformidade: Reprovado, Irregular ou Alerta — em R3 (terceiros) e R4 (corporativo). Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-nao-aprov">{int(total_reprovados_docs) + r4_reprovado + r4_irregular + r4_alerta}</div>
-      <div class="kpi-label">Documentos<br>Reprovados</div>
+      <div class="kpi-label">Documentos<br>Não Aprovados</div>
     </div>
     <div class="kpi-card yellow" data-kpi-key="docs_nao_enviados" onclick="toggleKpiCard('docs_nao_enviados')"
-         data-tooltip="Documentos obrigatórios que ainda estão pendentes de anexo. Clique para filtrar as tabelas.">
+         data-tooltip="Documentos obrigatórios ainda pendentes de envio pelo fornecedor ou terceiro. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-nao-env">{total_nao_anex_r3 + r4_nao_anex}</div>
       <div class="kpi-label">Documentos<br>Não Enviados</div>
     </div>
     <div class="kpi-card yellow" data-kpi-key="docs_aguard_sub" onclick="toggleKpiCard('docs_aguard_sub')"
-         data-tooltip="Documentos inseridos mas ainda não submetidos para análise. Clique para filtrar as tabelas.">
+         data-tooltip="Documentos inseridos na plataforma pelo fornecedor, mas ainda não submetidos para análise. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-aguard-sub">{total_aguard_r3_elab}</div>
       <div class="kpi-label">Aguardando<br>Submissão</div>
     </div>
     <div class="kpi-card orange" data-kpi-key="docs_em_analise" onclick="toggleKpiCard('docs_em_analise')"
-         data-tooltip="Documentos já submetidos aguardando validação da equipe de conformidade. Clique para filtrar as tabelas.">
+         data-tooltip="Documentos já submetidos pelos fornecedores aguardando validação da equipe de conformidade. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-em-anal">{total_aguard_r3_real + r4_em_analise}</div>
       <div class="kpi-label">Documentos<br>Em Análise</div>
     </div>
     <div class="kpi-card red" data-kpi-key="docs_vencidos" onclick="toggleKpiCard('docs_vencidos')"
-         data-tooltip="Documentos de fornecedores com prazo vencido — exigem renovação imediata. Clique para filtrar as tabelas.">
+         data-tooltip="Documentos de fornecedores (R4) com prazo vencido — exigem renovação ou substituição imediata. Clique para filtrar as tabelas.">
       <div class="kpi-val" id="kpi-docs-vencido">{r4_vencido}</div>
       <div class="kpi-label">Documentos<br>Vencidos</div>
     </div>
   </div>
 
-  <!-- 3 GRÁFICOS DE CONFORMIDADE -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px">
-    <div class="chart-card" id="pizza-geral-card" style="padding:14px 10px">
-      <div style="font-size:11px;font-weight:700;color:{COR_TEAL};text-align:center;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Conformidade<br>Geral</div>
-      <div id="fig-pizza-geral" style="height:240px"></div>
+  <!-- 3 GRÁFICOS DE CONFORMIDADE — Fornecedores | ★ Geral (destaque) | Terceiros -->
+  <div class="pizza-grid">
+    <div class="chart-card pizza-card" id="pizza-forn-card">
+      <div class="pizza-title">Conformidade Fornecedores</div>
+      <div id="fig-pizza-forn" style="height:250px"></div>
     </div>
-    <div class="chart-card" id="pizza-forn-card" style="padding:14px 10px">
-      <div style="font-size:11px;font-weight:700;color:{COR_TEAL};text-align:center;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Conformidade<br>Fornecedores</div>
-      <div id="fig-pizza-forn" style="height:240px"></div>
+    <div class="chart-card pizza-card pizza-card-lg" id="pizza-geral-card">
+      <div class="pizza-title" style="font-size:13px">&#9733; Conformidade Geral</div>
+      <div id="fig-pizza-geral" style="height:320px"></div>
     </div>
-    <div class="chart-card" id="pizza-card" style="padding:14px 10px">
-      <div style="font-size:11px;font-weight:700;color:{COR_TEAL};text-align:center;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Conformidade<br>Terceiros</div>
-      <div id="fig-pizza" style="height:240px"></div>
+    <div class="chart-card pizza-card" id="pizza-card">
+      <div class="pizza-title">Conformidade Terceiros</div>
+      <div id="fig-pizza" style="height:250px"></div>
     </div>
   </div>
 
@@ -1970,77 +1976,10 @@ html = f"""<!DOCTYPE html>
 
   </div><!-- /auditoria-section (oculto) -->
 
-  <!-- CONTRATOS POR FORNECEDOR -->
-  <div class="section-title">Contratos por Fornecedor — Drill-down Interativo
-    <span class="section-toggle" onclick="toggleSection('ct-section', this)">&#9660; Expandir</span>
-  </div>
-  <div id="ct-section" class="section-collapsible collapsed">
-  <div class="chart-card">
-    <p style="font-size:13px;color:#666;margin-bottom:12px;">
-      Clique num fornecedor para ver seus contratos. Clique no contrato para ver os terceiros vinculados.
-    </p>
-
-    <!-- L1: grid de cards de fornecedores -->
-    <div id="ct-level1">
-      <div class="ct-search-wrap">
-        <div class="ct-search-field">
-          <label for="ct-search">Buscar Fornecedor</label>
-          <input type="text" id="ct-search" placeholder="Nome ou CNPJ..." oninput="ctRenderL1()">
-        </div>
-        <div class="ct-search-field">
-          <label for="ct-search-cont">Buscar Contrato</label>
-          <input type="text" id="ct-search-cont" placeholder="Código do contrato..." oninput="ctRenderL1()">
-        </div>
-        <button onclick="ctClearSearch()" style="background:{COR_TEAL};color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;height:36px">Limpar</button>
-        <span id="ct-l1-count" style="font-size:12px;color:#999;align-self:center"></span>
-      </div>
-      <div class="ct-cards-grid" id="ct-cards"></div>
-    </div>
-
-    <!-- L2: contratos do fornecedor -->
-    <div id="ct-level2" style="display:none">
-      <div class="drill-breadcrumb" id="ct-breadcrumb2"></div>
-      <div id="ct-chip-filter" class="ct-chip-filter"></div>
-      <div id="ct-contract-list"></div>
-      <div style="display:flex;gap:8px;margin-top:14px">
-        <span class="export-label" style="align-self:center">Exportar:</span>
-        <button class="btn-action btn-export"     onclick="ctExportL2XLSX()">Excel</button>
-        <button class="btn-action btn-export-csv" onclick="ctExportL2CSV()">CSV</button>
-        <button class="btn-action btn-export-pdf" onclick="ctExportL2PDF()">PDF</button>
-      </div>
-    </div>
-
-    <!-- L3: terceiros do contrato -->
-    <div id="ct-level3" style="display:none">
-      <div class="drill-breadcrumb" id="ct-breadcrumb3"></div>
-      <div class="tabela-wrap">
-        <table id="ct-terc-table" style="width:100%">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>CPF/CNPJ</th>
-              <th>Cargo</th>
-              <th>Aeroporto</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="ct-terc-body"></tbody>
-        </table>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:14px">
-        <span class="export-label" style="align-self:center">Exportar:</span>
-        <button class="btn-action btn-export"     onclick="ctExportL3XLSX()">Excel</button>
-        <button class="btn-action btn-export-csv" onclick="ctExportL3CSV()">CSV</button>
-        <button class="btn-action btn-export-pdf" onclick="ctExportL3PDF()">PDF</button>
-      </div>
-    </div>
-
-  </div>
-  </div><!-- /ct-section -->
 
   <!-- SITUACAO DOCUMENTAL POR TRABALHADOR -->
   <div class="section-title">
-    Situação Documental por Terceiro
+    Situação Documental por Terceiro — Drill-Down Interativo
     <span class="section-toggle" onclick="toggleSection('sit-section', this)">▼ Expandir</span>
   </div>
   <div id="sit-section" class="section-collapsible collapsed">
@@ -2048,7 +1987,7 @@ html = f"""<!DOCTYPE html>
   <div class="kpi-grid" style="margin-bottom:16px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="kpi-card red">
       <div class="kpi-val" id="sit-kpi-nc">{pct_nao_conform}%</div>
-      <div class="kpi-label">% Nao Conf.<br>Geral</div>
+      <div class="kpi-label">% Não Conf.<br>Geral</div>
     </div>
     <div class="kpi-card green">
       <div class="kpi-val" id="sit-kpi-c">{pct_conformidade}%</div>
@@ -2128,7 +2067,7 @@ html = f"""<!DOCTYPE html>
   <div class="kpi-grid" style="margin-bottom:16px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
     <div class="kpi-card red">
       <div class="kpi-val" id="r4-kpi-nc">{r4_pct_nc}%</div>
-      <div class="kpi-label">% Nao Conf.<br>Empresa</div>
+      <div class="kpi-label">% Não Conf.<br>Empresa</div>
     </div>
     <div class="kpi-card green">
       <div class="kpi-val" id="r4-kpi-c">{r4_pct_c}%</div>
@@ -2148,7 +2087,7 @@ html = f"""<!DOCTYPE html>
     </div>
     <div class="kpi-card orange">
       <div class="kpi-val" id="r4-kpi-em-analise">{r4_em_analise}</div>
-      <div class="kpi-label">Em<br>Analise</div>
+      <div class="kpi-label">Em<br>Análise</div>
     </div>
     <div class="kpi-card red">
       <div class="kpi-val" id="r4-kpi-vencido">{r4_vencido}</div>
@@ -2199,11 +2138,11 @@ html = f"""<!DOCTYPE html>
 
   </div><!-- /forn-sit-section -->
 
-  <!-- DETALHAMENTO DAS PENDENCIAS — apenas Nao Resolvidas -->
+  <!-- DETALHAMENTO DAS PENDÊNCIAS — apenas não resolvidas -->
   <div class="section-title">
-    Pendencias Nao Resolvidas
-    <span style="background:{COR_VERMELHO};color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:700">{total_nao_resolvidas}</span>
-    <span style="background:#6C757D;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px">de {total_pendencias} no historico</span>
+    Detalhamento das Pendências (com Competência)
+    <span style="background:{COR_VERMELHO};color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:700">{total_nao_resolvidas} não resolvidas</span>
+    <span style="background:#6C757D;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px">de {total_pendencias} no histórico</span>
     <span class="section-toggle" onclick="toggleSection('pend-section', this)">▼ Expandir</span>
   </div>
   <div id="pend-section" class="section-collapsible collapsed">
@@ -2284,16 +2223,83 @@ html = f"""<!DOCTYPE html>
 
     <!-- Paginação fundo -->
     <div id="pend-pagination" style="margin-top:10px"></div>
+  </div><!-- /chart-card pendências -->
   </div><!-- /pend-section -->
 
-</div>
+  <!-- CONTRATOS POR FORNECEDOR -->
+  <div class="section-title">Contratos por Fornecedor — Drill-Down Interativo
+    <span class="section-toggle" onclick="toggleSection('ct-section', this)">&#9660; Expandir</span>
+  </div>
+  <div id="ct-section" class="section-collapsible collapsed">
+  <div class="chart-card">
+    <p style="font-size:13px;color:#666;margin-bottom:12px;">
+      Clique num fornecedor para ver seus contratos. Clique no contrato para ver os terceiros vinculados.
+    </p>
 
-<!-- ── FORNECEDORES SEM EXECUÇÃO ─────────────────────────────────────────── -->
-<div class="section-header" style="margin-top:24px">
-  Fornecedor sem interação com a plataforma
-  <span style="background:#6C757D;color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px">{total_sem_execucao}</span>
-  <span class="section-toggle" onclick="toggleSection('sem-exec-section', this)">&#9660; Expandir</span>
-</div>
+    <!-- L1: grid de cards de fornecedores -->
+    <div id="ct-level1">
+      <div class="ct-search-wrap">
+        <div class="ct-search-field">
+          <label for="ct-search">Buscar Fornecedor</label>
+          <input type="text" id="ct-search" placeholder="Nome ou CNPJ..." oninput="ctRenderL1()">
+        </div>
+        <div class="ct-search-field">
+          <label for="ct-search-cont">Buscar Contrato</label>
+          <input type="text" id="ct-search-cont" placeholder="Código do contrato..." oninput="ctRenderL1()">
+        </div>
+        <button onclick="ctClearSearch()" style="background:{COR_TEAL};color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;height:36px">Limpar</button>
+        <span id="ct-l1-count" style="font-size:12px;color:#999;align-self:center"></span>
+      </div>
+      <div class="ct-cards-grid" id="ct-cards"></div>
+    </div>
+
+    <!-- L2: contratos do fornecedor -->
+    <div id="ct-level2" style="display:none">
+      <div class="drill-breadcrumb" id="ct-breadcrumb2"></div>
+      <div id="ct-chip-filter" class="ct-chip-filter"></div>
+      <div id="ct-contract-list"></div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <span class="export-label" style="align-self:center">Exportar:</span>
+        <button class="btn-action btn-export"     onclick="ctExportL2XLSX()">Excel</button>
+        <button class="btn-action btn-export-csv" onclick="ctExportL2CSV()">CSV</button>
+        <button class="btn-action btn-export-pdf" onclick="ctExportL2PDF()">PDF</button>
+      </div>
+    </div>
+
+    <!-- L3: terceiros do contrato -->
+    <div id="ct-level3" style="display:none">
+      <div class="drill-breadcrumb" id="ct-breadcrumb3"></div>
+      <div class="tabela-wrap">
+        <table id="ct-terc-table" style="width:100%">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF/CNPJ</th>
+              <th>Cargo</th>
+              <th>Aeroporto</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ct-terc-body"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <span class="export-label" style="align-self:center">Exportar:</span>
+        <button class="btn-action btn-export"     onclick="ctExportL3XLSX()">Excel</button>
+        <button class="btn-action btn-export-csv" onclick="ctExportL3CSV()">CSV</button>
+        <button class="btn-action btn-export-pdf" onclick="ctExportL3PDF()">PDF</button>
+      </div>
+    </div>
+
+  </div>
+  </div><!-- /ct-section -->
+
+
+  <!-- ── FORNECEDORES SEM EXECUÇÃO ─────────────────────────────────────────── -->
+  <div class="section-title">
+    Fornecedor sem interação com a plataforma — {total_sem_execucao}
+    <span class="section-toggle" onclick="toggleSection('sem-exec-section', this)">&#9660; Expandir</span>
+  </div>
 <div id="sem-exec-section" class="section-collapsible collapsed">
   <p style="font-size:12px;color:#666;margin:0 0 12px 0">
     Cadastrados na plataforma mas sem nenhuma interação registrada em R3 (terceiros) ou R4 (corporativo). Verificar se estão ativos e se devem ser engajados.
@@ -2309,6 +2315,8 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
 </div>
+
+</div><!-- /container -->
 
 <div class="footer">
   Dashboard gerado automaticamente pela plataforma Efcaz &mdash; {DATA_HOJE} &mdash; Uso interno
@@ -2514,27 +2522,28 @@ function _makePizzaTrace(conforme, naoConforme, hole) {{
     labels: ["Conforme " + pctConf + "%", "Não Conforme " + pctNaoConf + "%"],
     values: [conforme, naoConforme],
     hole: hole || 0,
+    sort: false, direction: "clockwise",   // Conforme primeiro, como no dash JS
     marker: {{ colors: [COR_CONF, COR_NAO_CONF] }},
     textinfo: "none",
     hovertemplate: "<b>%{{label}}</b><br>%{{value}} docs (%{{percent}})<extra></extra>"
   }};
 }}
-function _makePizzaLayout(annotations) {{
+function _makePizzaLayout(annotations, height) {{
   return {{
     paper_bgcolor: "white", plot_bgcolor: "white",
     font: {{ family: "Calibri, Arial", size: 11 }},
     margin: {{ l: 10, r: 10, t: 10, b: 40 }},
-    height: 240, showlegend: true,
+    height: height || 250, showlegend: true,
     legend: {{ orientation: "h", y: -0.12, x: 0.5, xanchor: "center", font: {{ size: 11 }} }},
     annotations: annotations || []
   }};
 }}
-function _pizzaAnnotation(conforme, naoConforme) {{
+function _pizzaAnnotation(conforme, naoConforme, fontSize) {{
   const total = conforme + naoConforme;
   const pct = total > 0 ? (conforme / total * 100).toFixed(1) : "0.0";
   return [{{ text: "<b>" + pct + "%</b><br><span style='font-size:10px'>conforme</span>",
     x: 0.5, y: 0.5, xanchor: "center", yanchor: "middle",
-    showarrow: false, font: {{ size: 15, color: "#1a2a35", family: "Calibri, Arial" }} }}];
+    showarrow: false, font: {{ size: fontSize || 17, color: "#1a2a35", family: "Calibri, Arial" }} }}];
 }}
 function renderPizza(sitData) {{
   const conforme    = sitData.filter(r => r.Status === "Aprovado").length;
@@ -2558,7 +2567,7 @@ function renderPizzaGeral(sitData, fornSitData) {{
   const total = conforme + naoConforme;
   const pct   = total > 0 ? (conforme / total * 100).toFixed(1) : "0.0";
   Plotly.newPlot("fig-pizza-geral", [_makePizzaTrace(conforme, naoConforme, 0.58)],
-    _makePizzaLayout(_pizzaAnnotation(conforme, naoConforme)), {{ displayModeBar: false, responsive: true }});
+    _makePizzaLayout(_pizzaAnnotation(conforme, naoConforme, 22), 320), {{ displayModeBar: false, responsive: true }});
 }}
 
 // ── SELECTS FORNECEDOR ────────────────────────────────────────────────────────
@@ -3279,7 +3288,7 @@ document.addEventListener("click", e => {{
 function badgeStatus(s) {{
   if (!s) return "";
   if (s === "EM_ELABORACAO") return '<span class="badge badge-pendente_env">Pendente (nao enviado)</span>';
-  return '<span class="badge badge-em_analise">Em Analise</span>';
+  return '<span class="badge badge-em_analise">Em Análise</span>';
 }}
 function badgeArea(a) {{
   if (!a) return "";
@@ -3475,7 +3484,7 @@ function exportarFornSitPDF() {{
   // Cabeçalho
   doc.setFontSize(14);
   doc.setTextColor(14, 143, 163);
-  doc.text("Situacao Documental da Empresa — Zurich Airport", 14, 14);
+  doc.text("Situação Documental da Empresa — Zurich Airport", 14, 14);
   doc.setFontSize(9);
   doc.setTextColor(120);
   doc.text("Gerado em: " + new Date().toLocaleString("pt-BR"), 14, 20);
@@ -3490,8 +3499,8 @@ function exportarFornSitPDF() {{
 
   // KPI cards — lê valores atuais do DOM (respeitam filtro ativo)
   const kpiLabels = [
-    "% Nao Conf.", "% Conf.", "Docs Aprovados", "Docs Reprovados",
-    "Nao Analisado", "Fornecedores"
+    "% Não Conf.", "% Conf.", "Docs Aprovados", "Docs Reprovados",
+    "Não Analisado", "Fornecedores"
   ];
   const kpiIds = [
     "r4-kpi-nc", "r4-kpi-c", "r4-kpi-aprov", "r4-kpi-reprov",
@@ -3526,7 +3535,7 @@ function exportarFornSitPDF() {{
   // Tabela de dados
   const headers = ["Fornecedor", "Documento", "Status", "Vencimento"];
   doc.autoTable({{
-    head: [headers],
+    head: [headers.map(hdLbl)],
     body: fornSitFiltrado.map(r => headers.map(h => String(r[h] ?? ""))),
     startY: y1 + 3,
     styles: {{ font: "helvetica", fontSize: 8, cellPadding: 2 }},
@@ -3556,8 +3565,12 @@ function csvEscape(v) {{
   const s = String(v ?? "");
   return s.includes(",") || s.includes('"') || s.includes("\\n") ? '"' + s.replace(/"/g, '""') + '"' : s;
 }}
+// Rótulo exibido no cabeçalho dos exports (a chave do dado continua a mesma)
+const HD_LBL = {{ Competencia: "Competência", Area: "Área", Secao: "Seção", CNPJ_Forn: "CNPJ" }};
+const hdLbl = h => HD_LBL[h] || h;
+
 function downloadCSV(rows, headers, filename) {{
-  const lines = [headers.join(","), ...rows.map(r => headers.map(h => csvEscape(r[h])).join(","))];
+  const lines = [headers.map(hdLbl).join(","), ...rows.map(r => headers.map(h => csvEscape(r[h])).join(","))];
   const blob = new Blob([lines.join("\\n")], {{type: "text/csv;charset=utf-8;"}});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a"); a.href = url; a.download = filename;
@@ -3574,7 +3587,7 @@ function exportarPend() {{
 
 // ── EXPORTAR EXCEL ────────────────────────────────────────────────────────────
 function downloadXLSX(rows, headers, filename) {{
-  const wsData = [headers, ...rows.map(r => headers.map(h => r[h] ?? ""))];
+  const wsData = [headers.map(hdLbl), ...rows.map(r => headers.map(h => r[h] ?? ""))];
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(wsData);
   const colWidths = headers.map(h => ({{wch: Math.max(h.length, 18)}}) );
@@ -3602,7 +3615,7 @@ function downloadPDF(rows, headers, filename, title) {{
   doc.setTextColor(100);
   doc.text("Gerado em: " + new Date().toLocaleString("pt-BR"), 14, 20);
   doc.autoTable({{
-    head: [headers],
+    head: [headers.map(hdLbl)],
     body: rows.map(r => headers.map(h => String(r[h] ?? ""))),
     startY: 25,
     styles: {{ font: "helvetica", fontSize: 8, cellPadding: 2 }},
@@ -3633,7 +3646,7 @@ function exportarSitPDF() {{
   doc.text(empLabel, 14, 25);
 
   // KPI summary — lê valores atuais do DOM (respeitam filtro ativo)
-  const kpiLabels = ["% Nao Conf.", "% Conforme", "Aprovados", "Reprovados", "Nao Anexado", "Ag. Submissão", "Em Análise", "Terceiros"];
+  const kpiLabels = ["% Não Conf.", "% Conforme", "Aprovados", "Reprovados", "Não Anexado", "Ag. Submissão", "Em Análise", "Terceiros"];
   const kpiIds    = ["sit-kpi-nc", "sit-kpi-c", "sit-kpi-aprov", "sit-kpi-reprov", "sit-kpi-nao-anex", "sit-kpi-aguard-sub", "sit-kpi-aguard-real", "sit-kpi-terc"];
   const kpiVals   = kpiIds.map(id => document.getElementById(id)?.textContent?.trim() || "—");
 
@@ -3665,7 +3678,7 @@ function exportarSitPDF() {{
   // Tabela de dados
   const headers = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Status", "Competencia", "Vencimento"];
   doc.autoTable({{
-    head: [headers],
+    head: [headers.map(hdLbl)],
     body: sitFiltrado.map(r => headers.map(h => String(r[h] ?? ""))),
     startY: y1 + 3,
     styles: {{ font: "helvetica", fontSize: 8, cellPadding: 2 }},
@@ -4078,22 +4091,22 @@ function exportarRelatorioXLSX() {{
   const wb = XLSX.utils.book_new();
 
   const hdR3 = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
-  const wsR3Data = [hdR3, ...sitFiltrado.map(r => hdR3.map(h => r[h] ?? ""))];
+  const wsR3Data = [hdR3.map(hdLbl), ...sitFiltrado.map(r => hdR3.map(h => r[h] ?? ""))];
   const wsR3 = XLSX.utils.aoa_to_sheet(wsR3Data);
   wsR3["!cols"] = hdR3.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsR3, "R3 - Terceiros");
 
   const hdR4 = ["Fornecedor", "Documento", "Competencia", "Status", "Vencimento"];
-  const wsR4Data = [hdR4, ...fornSitFiltrado.map(r => hdR4.map(h => r[h] ?? ""))];
+  const wsR4Data = [hdR4.map(hdLbl), ...fornSitFiltrado.map(r => hdR4.map(h => r[h] ?? ""))];
   const wsR4 = XLSX.utils.aoa_to_sheet(wsR4Data);
   wsR4["!cols"] = hdR4.map(h => ({{wch: Math.max(h.length, 18)}}));
   XLSX.utils.book_append_sheet(wb, wsR4, "R4 - Empresa");
 
   const hdPend = ["Fornecedor", "CNPJ", "Area", "Terceiro", "Documento", "Competencia", "Detalhe"];
-  const wsPendData = [hdPend, ...pendFiltrado.map(r => hdPend.map(h => r[h] ?? ""))];
+  const wsPendData = [hdPend.map(hdLbl), ...pendFiltrado.map(r => hdPend.map(h => r[h] ?? ""))];
   const wsPend = XLSX.utils.aoa_to_sheet(wsPendData);
   wsPend["!cols"] = hdPend.map(h => ({{wch: Math.max(h.length, 18)}}));
-  XLSX.utils.book_append_sheet(wb, wsPend, "Pendencias");
+  XLSX.utils.book_append_sheet(wb, wsPend, "Pendências");
 
   XLSX.writeFile(wb, "relatorio_zurich.xlsx");
 }}
@@ -4117,7 +4130,7 @@ function exportarRelatorioPDF() {{
   _titulo("Situação Documental dos Terceiros");
   const hdR3 = ["Fornecedor", "Aeroporto", "Terceiro", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
-    head: [hdR3],
+    head: [hdR3.map(hdLbl)],
     body: sitFiltrado.map(r => hdR3.map(h => String(r[h] ?? ""))),
     startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
     headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
@@ -4131,7 +4144,7 @@ function exportarRelatorioPDF() {{
   _titulo("Situação Documental da Empresa");
   const hdR4 = ["Fornecedor", "CNPJ", "Documento", "Competencia", "Status", "Vencimento"];
   doc.autoTable({{
-    head: [hdR4],
+    head: [hdR4.map(hdLbl)],
     body: fornSitFiltrado.map(r => hdR4.map(h => String(r[h] ?? ""))),
     startY: y, styles: {{ font: "helvetica", fontSize: 7, cellPadding: 2 }},
     headStyles: {{ fillColor: [14, 143, 163], textColor: 255, fontStyle: "bold" }},
@@ -4196,12 +4209,12 @@ function exportarRelatorioPDF() {{
 }}
 
 function exportarRelatorioCSV() {{
-  const hdR3  = ["Secao","Fornecedor","CNPJ","Aeroporto","Terceiro","Documento","Competencia","Status","Vencimento"];
+  const hdR3  = ["Seção","Fornecedor","CNPJ","Aeroporto","Terceiro","Documento","Competência","Status","Vencimento"];
   const rows = [
     hdR3,
     ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Aeroporto"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
     ...fornSitFiltrado.map(r=> ["R4-Empresa",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
-    ...pendFiltrado.map(r   => ["Pendencias",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Area"]||"",      r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
+    ...pendFiltrado.map(r   => ["Pendências",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Area"]||"",      r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
   ];
   const lines = rows.map(r => r.map(v => csvEscape(v)).join(","));
   const blob = new Blob([lines.join("\\n")], {{type: "text/csv;charset=utf-8;"}});
@@ -4275,6 +4288,13 @@ function applyGlobalFilter() {{
     const el = document.getElementById(id);
     if (el) el.style.display = displayEsp;
   }});
+
+  // Colunas da grade de KPIs conforme a quantidade visível (igual ao React)
+  const kpiGrid = document.getElementById("kpi-grid-main");
+  if (kpiGrid) {{
+    const nVis = [...kpiGrid.children].filter(c => c.style.display !== "none").length;
+    kpiGrid.style.gridTemplateColumns = nVis <= 6 ? "repeat(3,1fr)" : nVis <= 8 ? "repeat(4,1fr)" : "repeat(5,1fr)";
+  }}
 }}
 
 function limparGlobalFiltro() {{
@@ -4336,11 +4356,11 @@ with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
     f.write(html)
 
 print(f"Dashboard gerado: {OUTPUT_HTML}")
-print(f"  Fornecedores com pendencias : {total_fornecedores}")
-print(f"  Total pendencias (historico): {total_pendencias}")
-print(f"  Nao resolvidas (StatusReal) : {total_nao_resolvidas}")
+print(f"  Fornecedores com pendências : {total_fornecedores}")
+print(f"  Total pendências (histórico): {total_pendencias}")
+print(f"  Não resolvidas (StatusReal) : {total_nao_resolvidas}")
 print(f"  % Conformidade geral        : {pct_conformidade}%")
-print(f"  % Nao conformidade          : {pct_nao_conform}%")
+print(f"  % Não conformidade          : {pct_nao_conform}%")
 print(f"  Docs reprovados (KPI)       : {int(total_reprovados_docs) + r4_reprovado + r4_irregular + r4_alerta}")
 print(f"    R3 reprovados             : {total_reprovados_docs}")
 print(f"    R4 (reprov+irreg+alerta)  : {r4_reprovado + r4_irregular + r4_alerta}")
@@ -4349,6 +4369,6 @@ print(f"  Docs conformes              : {total_conformes}")
 print(f"  Trabalhadores ativos        : {total_trab_ativo}")
 print(f"  --- R4 Empresa ---")
 print(f"  Fornecedores (R4)           : {r4_fornecedores}")
-print(f"  % Nao conf empresa          : {r4_pct_nc}%")
-print(f"  Docs em analise empresa     : {r4_em_analise}")
+print(f"  % Não conf. empresa         : {r4_pct_nc}%")
+print(f"  Docs em análise empresa     : {r4_em_analise}")
 print(f"  Docs vencidos empresa       : {r4_vencido}")
