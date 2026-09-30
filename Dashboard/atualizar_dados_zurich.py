@@ -72,6 +72,13 @@ VINCULOS = [
         "label":   "Busca automática",
     },
     {
+        # Relatório de Competências da plataforma → seção "Evolução de Terceiros por Competência"
+        "padrao":  "zurich_airport___relatorio_de_competencias___dados_*.csv",
+        "destino": "competencias_zurich.csv",
+        "label":   "Relatório de Competências",
+        "pastas":  ["DST1", "DST2"],
+    },
+    {
         "padrao":  "relatorio_de_codigos_de_contrato_dos_fornecedores___dados_*.csv",
         "destinos": ["codigos_contrato_fornecedores_zurich.csv", "contratos_zurich.csv"],
         "label":   "Contratos / Códigos de contrato",

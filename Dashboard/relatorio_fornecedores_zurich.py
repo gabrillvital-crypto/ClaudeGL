@@ -21,6 +21,7 @@ SITUACAO_CSV       = BASE_DIR + r"\situacao_terceiro_zurich.csv"
 SITUACAO_FORN_CSV  = BASE_DIR + r"\situacao_fornecedor_zurich.csv"
 FORNECEDORES_CSV   = BASE_DIR + r"\codigos_contrato_fornecedores_zurich.csv"
 BUSCA_AUTO_CSV     = BASE_DIR + r"\busca_automatica_zurich.csv"
+COMPETENCIAS_CSV   = BASE_DIR + r"\competencias_zurich.csv"                # Relatório de Competências da plataforma
 OUTPUT_HTML        = r"C:\Users\gabriel.evangelista\Documents\ClaudeGL\Dashboard\relatorio_fornecedores_zurich.html"
 
 # ── CORES ─────────────────────────────────────────────────────────────────────
@@ -567,22 +568,23 @@ tabela["CNPJ"] = df_pend[col_cnpj_pend].apply(_norm_cnpj_pad).values if col_cnpj
 col_trab_rs = "Terceiro Razão Social" if "Terceiro Razão Social" in df_sit_calc.columns else "Terceiro Razao Social"
 col_trab_cpf = "Terceiro CPF/CNPJ"
 col_dat_venc = "Data de Vencimento"
+# Competência R3 — fonte principal: coluna H "Competência" (campo estruturado novo, desde set/2026)
+# Reserva: "Marcas e Representações" só quando a coluna H vier vazia ou não existir (espelha React)
+col_comp_sit   = next((c for c in df_sit_calc.columns if "compet" in c.lower()), None)
 col_marcas_sit = next((c for c in df_sit_calc.columns if "marcas" in c.lower()), None)
 
+def _txt_comp(v):
+    s = "" if pd.isna(v) else str(v).strip()
+    return "" if s == "nan" else s
+
+_comp_h = df_sit_calc[col_comp_sit].apply(_txt_comp)   if col_comp_sit   else pd.Series("", index=df_sit_calc.index)
+_comp_g = df_sit_calc[col_marcas_sit].apply(_txt_comp) if col_marcas_sit else pd.Series("", index=df_sit_calc.index)
+_comp_r3 = _comp_h.where(_comp_h != "", _comp_g)
+
 _cols_sit = ["Empresa", col_trab_rs, "Terceiro CPF/CNPJ", "Fornecedor CPF/CNPJ", "Documento", "Status_Final", col_dat_venc]
-if col_marcas_sit:
-    _cols_sit.append(col_marcas_sit)
 sit_tabela = df_sit_calc[_cols_sit].copy()
-_col_names = ["Fornecedor", "Terceiro", "CNPJ_Terceiro", "CNPJ_Forn", "Documento", "Status", "Vencimento"]
-if col_marcas_sit:
-    _col_names.append("Competencia")
-sit_tabela.columns = _col_names
-if "Competencia" not in sit_tabela.columns:
-    sit_tabela["Competencia"] = "A classificar"
-else:
-    sit_tabela["Competencia"] = sit_tabela["Competencia"].fillna("").replace("nan", "").apply(
-        lambda v: normalize_competencia(v.strip()) if v.strip() else "A classificar"
-    )
+sit_tabela.columns = ["Fornecedor", "Terceiro", "CNPJ_Terceiro", "CNPJ_Forn", "Documento", "Status", "Vencimento"]
+sit_tabela["Competencia"] = _comp_r3.apply(lambda v: normalize_competencia(v) if v else "A classificar").values
 def _norm_cnpj(v):
     s = str(v).strip()
     if s in ("", "nan", "0", "None"): return ""
@@ -758,16 +760,7 @@ if _sit_forn_ok:
     if "Competencia" not in forn_sit_tabela.columns:
         forn_sit_tabela["Competencia"] = ""
     else:
-        forn_sit_tabela["Competencia"] = forn_sit_tabela["Competencia"].fillna("").replace("nan", "").apply(
-            lambda v: normalize_competencia(v.strip()) if str(v).strip() else ""
-        )
-    # Docs de busca automática não exibem Competência — apenas Vencimento é relevante
-    if _busca_auto_map and "CNPJ" in forn_sit_tabela.columns:
-        _is_auto_mask = forn_sit_tabela.apply(
-            lambda row: (re.sub(r'\D', '', str(row.get("CNPJ", ""))), str(row.get("Documento", "")).strip().upper()) in _busca_auto_map,
-            axis=1
-        )
-        forn_sit_tabela.loc[_is_auto_mask, "Competencia"] = ""
+        forn_sit_tabela["Competencia"] = forn_sit_tabela["Competencia"].fillna("").astype(str).str.strip().replace("nan", "")
     # Apenas estes docs exibem Competência no R4 — todos os demais ficam em branco
     _DOCS_COM_COMP_R4 = {
         "GFD - GUIA DO FGTS DIGITAL MENSAL",
@@ -778,9 +771,28 @@ if _sit_forn_ok:
         "RECIBO DE FÉRIAS + COMPROVANTE DE PAGAMENTO",
         "GRRF - GUIA DE RECOLHIMENTO RESCISÓRIO DO FGTS",
     }
-    _doc_upper_r4 = forn_sit_tabela["Documento"].str.strip().str.upper()
-    _sem_comp_r4  = ~_doc_upper_r4.isin({d.upper() for d in _DOCS_COM_COMP_R4})
-    forn_sit_tabela.loc[_sem_comp_r4, "Competencia"] = ""
+    # Regra R4 — competência vem EXCLUSIVAMENTE de "Marcas e Representações" (espelha React):
+    #  • busca automática ou doc fora dos 7 autorizados → '' (não possui competência)
+    #  • doc dos 7 com campo vazio ou data anterior a nov/2025 → 'A classificar'
+    #  • doc dos 7 com data válida → competência normalizada
+    _doc_upper_r4 = forn_sit_tabela["Documento"].astype(str).str.strip().str.upper()
+    if _busca_auto_map and "CNPJ" in forn_sit_tabela.columns:
+        _is_auto_r4 = pd.Series(
+            [(re.sub(r'\D', '', str(c)), d) in _busca_auto_map
+             for c, d in zip(forn_sit_tabela["CNPJ"], _doc_upper_r4)],
+            index=forn_sit_tabela.index)
+    else:
+        _is_auto_r4 = pd.Series(False, index=forn_sit_tabela.index)
+    _com_comp_r4 = _doc_upper_r4.isin(_DOCS_COM_COMP_R4) & ~_is_auto_r4
+
+    def _comp_r4(raw):
+        norm = normalize_competencia(raw) if raw else ""
+        if not norm or norm == "A classificar" or competencia_anterior_contrato(norm):
+            return "A classificar"
+        return norm
+    forn_sit_tabela["Competencia"] = [
+        _comp_r4(c) if ok else "" for c, ok in zip(forn_sit_tabela["Competencia"], _com_comp_r4)
+    ]
     forn_sit_tabela["Vencimento"] = pd.to_datetime(
         forn_sit_tabela["Vencimento"], errors="coerce"
     ).dt.strftime("%d/%m/%Y").fillna("")
@@ -1204,6 +1216,51 @@ def fig_div(fig, div_id):
     return fig.to_html(full_html=False, include_plotlyjs=False, div_id=div_id)
 
 DATA_HOJE = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+# ── EVOLUÇÃO DE TERCEIROS POR COMPETÊNCIA (Relatório de Competências) ─────────
+# Espelha dashboard-react/src/components/CompetenciasSection.tsx. O Python só entrega
+# as linhas enxutas; a agregação roda no JS para respeitar o filtro global de fornecedor.
+# Linha: [nome normalizado, CNPJ 14 dígitos, chave "MM/YY" (ou "" se sem data), regulares, pendências, declarou não atividade]
+def _read_csv_str(path):
+    for enc in ["utf-8-sig", "latin-1"]:
+        try:
+            df = pd.read_csv(path, encoding=enc, sep=None, engine="python", dtype=str, keep_default_na=False)
+            df.columns = df.columns.str.strip()
+            return df
+        except Exception:
+            continue
+    raise RuntimeError(f"Nao foi possivel ler: {path}")
+
+def _num_comp(v):
+    # Igual ao parseInt do React: dígitos iniciais, senão 0
+    m = re.match(r"^\s*(-?\d+)", str(v))
+    return int(m.group(1)) if m else 0
+
+comp_rel_rows = []
+if _os.path.exists(COMPETENCIAS_CSV):
+    _df_comp = _read_csv_str(COMPETENCIAS_CSV)
+    _cc = lambda *terms: next((c for c in _df_comp.columns if all(t in c.lower() for t in terms)), None)
+    _c_nome, _c_cnpj = _cc("fornecedor"), _cc("cpf")
+    if _c_nome == _c_cnpj:
+        _c_nome = next((c for c in _df_comp.columns if c.strip().lower() == "fornecedor"), _c_nome)
+    _c_comp, _c_qtd  = _cc("compet"), _cc("qtd")
+    _c_reg,  _c_pend = _cc("regulares"), _cc("com pend")
+    _c_decl = _cc("possui", "atividade")
+    for _, _r in _df_comp.iterrows():
+        _cnpj = re.sub(r"\D", "", str(_r.get(_c_cnpj, "")))   # CNPJ com 14 dígitos (NÃO usar _norm_cnpj)
+        _cnpj = _cnpj.zfill(14) if _cnpj else ""
+        _m = re.match(r"^(\d{2})/(\d{2})", str(_r.get(_c_comp, "")).strip())
+        _decl = (str(_r.get(_c_decl, "")).strip().lower() == "sim"
+                 or str(_r.get(_c_qtd, "")).strip() == "-")
+        comp_rel_rows.append([
+            str(_r.get(_c_nome, "")).strip().upper(),
+            _cnpj,
+            f"{_m.group(1)}/{_m.group(2)}" if _m else "",
+            _num_comp(_r.get(_c_reg, "")),
+            _num_comp(_r.get(_c_pend, "")),
+            1 if _decl else 0,
+        ])
+comp_rel_json = json.dumps(comp_rel_rows, ensure_ascii=False)
 competencias_opts = "".join(f'<option value="{c}">{c}</option>' for c in competencias_lista)
 # contratos_json já calculado acima
 
@@ -1364,6 +1421,39 @@ html = f"""<!DOCTYPE html>
   .badge-reprovado          {{ background: #ffeaea; color: {COR_VERMELHO}; }}
   .badge-competencia     {{ background: #e8f4f8; color: {COR_TEAL}; font-size: 11px; padding: 2px 7px; border-radius: 8px; }}
   .badge-sem-competencia {{ background: #f0f0f0; color: #999; font-size: 11px; padding: 2px 7px; border-radius: 8px; font-style: italic; }}
+  /* EVOLUÇÃO POR COMPETÊNCIA */
+  .ce-kpis {{ display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }}
+  .ce-kpi {{ flex: 1; min-width: 150px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 16px; }}
+  .ce-kpi.teal  {{ background: #e8f6f8; border-color: rgba(14,143,163,.3); }}
+  .ce-kpi.green {{ background: #f0fdf4; border-color: #bbf7d0; }}
+  .ce-kpi.amber {{ background: #fffbeb; border-color: #fde68a; }}
+  .ce-kpi-lbl {{ font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .4px; }}
+  .ce-kpi.teal  .ce-kpi-lbl {{ color: {COR_TEAL}; }}
+  .ce-kpi.green .ce-kpi-lbl {{ color: #16a34a; }}
+  .ce-kpi.amber .ce-kpi-lbl {{ color: #d97706; }}
+  .ce-kpi-val {{ font-size: 22px; font-weight: 700; color: #374151; margin-top: 2px; }}
+  .ce-kpi.teal  .ce-kpi-val {{ color: {COR_TEAL_ESCURO}; }}
+  .ce-kpi.green .ce-kpi-val {{ color: #15803d; }}
+  .ce-kpi.amber .ce-kpi-val {{ color: #b45309; }}
+  .ce-kpi-sub {{ font-size: 11px; color: #9ca3af; }}
+  .ce-table {{ width: 100%; border-collapse: collapse; font-size: 13px; }}
+  .ce-table th {{ background: {COR_TEAL}; color: white; padding: 10px 14px; font-weight: 700; text-align: center; }}
+  .ce-table th:first-child, .ce-table th:last-child {{ text-align: left; }}
+  .ce-table td {{ padding: 10px 14px; border-bottom: 1px solid #e5eef1; text-align: center; color: #4b5563; }}
+  .ce-table tr:nth-child(even) td {{ background: #f0f8fa; }}
+  .ce-table tr:hover td {{ background: #d4eef3; }}
+  .ce-table td.ce-comp {{ text-align: left; font-weight: 600; color: {COR_TEAL_ESCURO}; text-transform: uppercase; letter-spacing: .3px; }}
+  .ce-badge {{ display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }}
+  .ce-badge.pend {{ background: #fef3c7; color: #b45309; }}
+  .ce-badge.reg  {{ background: #dcfce7; color: #15803d; }}
+  .ce-bar {{ display: flex; align-items: center; gap: 8px; min-width: 130px; }}
+  .ce-bar-track {{ flex: 1; height: 8px; background: #f3f4f6; border-radius: 999px; overflow: hidden; }}
+  .ce-bar-fill {{ height: 100%; border-radius: 999px; }}
+  .ce-pag {{ display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-top: 1px solid #e5eef1; background: #f9fafb; }}
+  .ce-pag button {{ border: none; background: transparent; padding: 3px 9px; border-radius: 5px; font-size: 12px; font-weight: 700; color: {COR_TEAL_ESCURO}; cursor: pointer; }}
+  .ce-pag button:hover:not(:disabled) {{ background: #e8f6f8; }}
+  .ce-pag button:disabled {{ opacity: .3; cursor: default; }}
+  .ce-pag button.active {{ background: {COR_TEAL}; color: white; }}
   .badge-a-classificar   {{ background: #fff3cd; color: #856404; font-size: 11px; padding: 2px 7px; border-radius: 8px; font-style: italic; }}
   .badge-irregular     {{ background: #fff0e0; color: #b35a00; }}
   .badge-alerta        {{ background: #fef3c7; color: #d97706; }}
@@ -1810,6 +1900,14 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- EVOLUÇÃO DE TERCEIROS POR COMPETÊNCIA (Relatório de Competências — espelha CompetenciasSection.tsx) -->
+  <div class="section-title">Evolução de Terceiros por Competência
+    <span class="section-toggle" onclick="toggleSection('comp-evol-section', this)">&#9660; Expandir</span>
+  </div>
+  <div id="comp-evol-section" class="section-collapsible collapsed">
+    <div id="comp-evol-body"></div>
+  </div>
+
   <!-- ALERTA DE AUDITORIA — OCULTO NA VERSÃO RELATORIO_FORNECEDORES (pós-validação Débora) -->
   <!-- <div class="section-title">Alertas de Auditoria -->
   <div id="auditoria-section" class="section-collapsible collapsed" style="display:none!important">
@@ -2224,6 +2322,139 @@ const FORN_CNPJ_MAP  = {forn_cnpj_json};
 const ALL_CADASTRO   = {all_cadastro_names_json};
 const SEM_EXEC       = {sem_exec_json};
 const CONTRATOS      = {contratos_json};
+// Relatório de Competências: [nome, cnpj14, "MM/YY", regulares, pendências, declarou não atividade]
+const COMP_REL       = {comp_rel_json};
+
+// ── EVOLUÇÃO DE TERCEIROS POR COMPETÊNCIA ─────────────────────────────────────
+// Espelha dashboard-react/src/components/CompetenciasSection.tsx
+const CE_PAGE_SIZE = 10;
+const CE_MESES = {{"01":"Janeiro","02":"Fevereiro","03":"Março","04":"Abril","05":"Maio","06":"Junho",
+                  "07":"Julho","08":"Agosto","09":"Setembro","10":"Outubro","11":"Novembro","12":"Dezembro"}};
+let cePage = 0;
+let ceFornSig = null;
+let ceData = [];
+
+function ceNormCNPJ(v) {{
+  const d = String(v || "").replace(/\D/g, "");
+  return d ? d.padStart(14, "0") : "";
+}}
+
+// Filtro global → CNPJs com 14 dígitos; item sem CNPJ na chave usa o CNPJ do FORN_CNPJ_MAP;
+// sem nenhum CNPJ, cai para o nome normalizado (trim + maiúsculas)
+function ceFornFilter() {{
+  const cnpjs = new Set(), nomes = new Set();
+  selectedFornSet.forEach(raw => {{
+    const {{nome, cnpj}} = parseFornVal(raw);
+    const lista = cnpj ? [cnpj] : (FORN_CNPJ_MAP[nome] || []);
+    const norm = lista.map(ceNormCNPJ).filter(Boolean);
+    if (norm.length) norm.forEach(c => cnpjs.add(c));
+    else if (nome) nomes.add(nome.trim().toUpperCase());
+  }});
+  return {{ active: selectedFornSet.size > 0, cnpjs, nomes }};
+}}
+
+function ceAggregate() {{
+  const flt = ceFornFilter();
+  const map = new Map();
+  COMP_REL.forEach(([nome, cnpj, key, reg, pend, decl]) => {{
+    if (flt.active && !flt.cnpjs.has(cnpj) && !flt.nomes.has(nome)) return;
+    if (!key) return;  // "A classificar" → fora da série temporal
+    if (!map.has(key)) map.set(key, {{ reg: 0, pend: 0, forn: new Set(), decl: new Set() }});
+    const e = map.get(key);
+    // Fornecedor declarou não atividade → sem números nessa competência
+    if (decl) {{ e.decl.add(cnpj || nome); return; }}
+    e.reg  += reg;
+    e.pend += pend;
+    if (cnpj) e.forn.add(cnpj);
+  }});
+  const ord = k => {{ const [mm, yy] = k.split("/"); return (2000 + parseInt(yy, 10)) * 100 + parseInt(mm, 10); }};
+  return [...map.entries()].map(([key, v]) => {{
+    const total = v.reg + v.pend;
+    const [mm, yy] = key.split("/");
+    return {{
+      key, label: (CE_MESES[mm] || mm) + "/" + (2000 + parseInt(yy, 10)),
+      fornecedores: v.forn.size, total, pendencias: v.pend, regulares: v.reg,
+      pct: total > 0 ? Math.round(v.reg / total * 100) : 0,
+      declarados: v.decl.size, semNumero: total === 0 && v.decl.size > 0,
+    }};
+  }}).filter(r => r.total > 0 || r.declarados > 0)
+    .sort((a, b) => ord(a.key) - ord(b.key));
+}}
+
+function ceBadge(v, tipo) {{
+  if (v === 0) return '<span style="color:#aaa">—</span>';
+  return '<span class="ce-badge ' + tipo + '">' + v.toLocaleString("pt-BR") + '</span>';
+}}
+
+function ceBar(pct) {{
+  const cor = pct >= 70 ? "#10B981" : pct >= 40 ? "#F59E0B" : "#EF4444";
+  return '<div class="ce-bar"><div class="ce-bar-track"><div class="ce-bar-fill" style="width:' + pct + '%;background:' + cor + '"></div></div>'
+       + '<span style="font-size:12px;font-weight:700;width:36px;text-align:right;color:' + cor + '">' + pct + '%</span></div>';
+}}
+
+function renderCompEvol() {{
+  const box = document.getElementById("comp-evol-body");
+  if (!box) return;
+  const sig = [...selectedFornSet].sort().join("§");
+  if (sig !== ceFornSig) {{ ceFornSig = sig; cePage = 0; ceData = ceAggregate(); }}
+  const rows = ceData;
+  if (!rows.length) {{
+    box.innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;font-size:13px">'
+      + (selectedFornSet.size > 0 ? "Fornecedor selecionado não possui competências neste relatório"
+                                  : "Nenhum dado — adicione competencias_zurich.csv em Dashboard/data/")
+      + '</div>';
+    return;
+  }}
+  const totalDecl = rows.reduce((s, r) => s + r.declarados, 0);
+  const mesesDecl = rows.filter(r => r.declarados > 0).length;
+  const totalAll  = rows.reduce((s, r) => s + r.total, 0);
+  const totalReg  = rows.reduce((s, r) => s + r.regulares, 0);
+  const pctGeral  = totalAll > 0 ? Math.round(totalReg / totalAll * 100) : 0;
+  const last      = rows[rows.length - 1];
+  const pages     = Math.ceil(rows.length / CE_PAGE_SIZE);
+  if (cePage > pages - 1) cePage = Math.max(0, pages - 1);
+  const pageRows  = rows.slice(cePage * CE_PAGE_SIZE, (cePage + 1) * CE_PAGE_SIZE);
+  const traco     = '<span style="color:#9ca3af">-</span>';
+
+  let html = '<div class="ce-kpis">'
+    + '<div class="ce-kpi teal"><div class="ce-kpi-lbl">Competências com dados</div><div class="ce-kpi-val">' + rows.length + '</div><div class="ce-kpi-sub">meses na série</div></div>'
+    + '<div class="ce-kpi"><div class="ce-kpi-lbl">Declaração de não atividade</div><div class="ce-kpi-val">' + totalDecl.toLocaleString("pt-BR") + '</div><div class="ce-kpi-sub">'
+    +   (totalDecl === 0 ? "nenhuma declaração na série" : "declaração(ões) em " + mesesDecl + " competência(s)") + '</div></div>'
+    + '<div class="ce-kpi"><div class="ce-kpi-lbl">Total acumulado</div><div class="ce-kpi-val">' + totalAll.toLocaleString("pt-BR") + '</div><div class="ce-kpi-sub">terceiros na série</div></div>'
+    + '<div class="ce-kpi ' + (pctGeral >= 50 ? "green" : "amber") + '"><div class="ce-kpi-lbl">% regulares (série)</div><div class="ce-kpi-val">' + pctGeral + '%</div><div class="ce-kpi-sub">'
+    +   (last ? "Últ. mês: " + last.label.split("/")[0] + " " + last.pct + "%" : "") + '</div></div>'
+    + '</div>';
+
+  html += '<div class="chart-card" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="ce-table"><thead><tr>'
+    + '<th>Competência</th><th>Qtd Fornecedores</th><th>Total Terceiros</th><th>Pendências</th><th>Regulares</th><th style="min-width:160px">% Regular</th>'
+    + '</tr></thead><tbody>';
+  pageRows.forEach(r => {{
+    html += '<tr><td class="ce-comp">' + r.label + '</td>'
+      + '<td>' + (r.semNumero ? "-" : r.fornecedores)
+      +   (r.declarados > 0 ? '<span style="display:block;font-size:10px;color:#9ca3af" title="Fornecedores com declaração de não atividade nesta competência">' + r.declarados + ' s/ atividade</span>' : '') + '</td>'
+      + '<td style="font-weight:700;color:#374151">' + (r.semNumero ? "-" : r.total.toLocaleString("pt-BR")) + '</td>'
+      + '<td>' + (r.semNumero ? traco : ceBadge(r.pendencias, "pend")) + '</td>'
+      + '<td>' + (r.semNumero ? traco : ceBadge(r.regulares, "reg")) + '</td>'
+      + '<td style="text-align:left">' + (r.semNumero ? traco : ceBar(r.pct)) + '</td></tr>';
+  }});
+  html += '</tbody></table></div>';
+  if (pages > 1) {{
+    const ini = cePage * CE_PAGE_SIZE + 1, fim = Math.min((cePage + 1) * CE_PAGE_SIZE, rows.length);
+    let btns = '<button onclick="ceGo(0)"' + (cePage === 0 ? " disabled" : "") + '>⟪</button>'
+             + '<button onclick="ceGo(' + (cePage - 1) + ')"' + (cePage === 0 ? " disabled" : "") + '>‹</button>';
+    for (let i = 0; i < pages; i++)
+      btns += '<button onclick="ceGo(' + i + ')"' + (i === cePage ? ' class="active"' : '') + '>' + (i + 1) + '</button>';
+    btns += '<button onclick="ceGo(' + (cePage + 1) + ')"' + (cePage === pages - 1 ? " disabled" : "") + '>›</button>'
+          + '<button onclick="ceGo(' + (pages - 1) + ')"' + (cePage === pages - 1 ? " disabled" : "") + '>⟫</button>';
+    html += '<div class="ce-pag"><span style="font-size:12px;color:#9ca3af">' + ini + '–' + fim + ' de ' + rows.length + ' competências</span><div>' + btns + '</div></div>';
+  }}
+  html += '</div><p style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:center">'
+    + 'Fonte: Relatório de Competências — plataforma Efcaz &nbsp;·&nbsp; '
+    + 'Competências futuras e "A classificar" excluídas &nbsp;·&nbsp; "-" = declaração de não atividade</p>';
+  box.innerHTML = html;
+}}
+
+function ceGo(p) {{ cePage = p; renderCompEvol(); }}
 
 // ── KPI DINAMICO ──────────────────────────────────────────────────────────────
 function updateKPICards() {{
@@ -2790,17 +3021,24 @@ document.addEventListener("click", e => {{
   }}
 }});
 
-function matchesCompGlobal(rowComp) {{
+// R3/R4: doc sem competência ('') só casa com "Não possui competência" — nunca com "A classificar".
+// "A classificar" = só docs que deveriam ter competência e vieram sem data válida.
+// Pendências (DADOS) já chegam com a competência preenchida pelo Python; vazio → "A classificar".
+function matchesCompGlobal(rowComp, semComp = "Não possui competência") {{
   if (selectedCompSet.size === 0) return true;
-  return selectedCompSet.has(rowComp || "A classificar");
+  return selectedCompSet.has(rowComp || semComp);
 }}
 
 function buildCompMultiSelect() {{
-  const comps = [...new Set([
-    ...SIT.map(r => r["Competencia"] || "A classificar"),
-    ...FORN_SIT.map(r => r["Competencia"]).filter(Boolean),
-    ...DADOS.map(r => r["Competencia"] || "A classificar")
-  ])].filter(Boolean).sort();
+  const seen = new Set([
+    ...SIT.map(r => r["Competencia"]),
+    ...FORN_SIT.map(r => r["Competencia"]),
+    ...DADOS.map(r => r["Competencia"])
+  ].filter(Boolean));
+  // Docs R3/R4 sem competência ficam acessíveis pela opção "Não possui competência"
+  if (SIT.some(r => !r["Competencia"]) || FORN_SIT.some(r => !r["Competencia"]))
+    seen.add("Não possui competência");
+  const comps = [...seen].sort();
   const list = document.getElementById("gfc-multi-list");
   list.innerHTML = "";
   comps.forEach(comp => {{
@@ -3147,7 +3385,7 @@ function filtrarTabela() {{
   const aeroFltPend = buildAeroportoFilter();
   pendFiltrado = DADOS.filter(r => {{
     if (!matchesForn(r["Fornecedor"], r["CNPJ"])) return false;
-    if (!matchesCompGlobal(r["Competencia"])) return false;
+    if (!matchesCompGlobal(r["Competencia"], "A classificar")) return false;
     if (aeroFltPend) {{
       // Ambas as áreas (TERCEIROS e DOCUMENTOS) filtram pelo CNPJ do fornecedor
       // fornCNPJs contém CNPJs de fornecedores que possuem terceiros no aeroporto selecionado
@@ -3196,7 +3434,10 @@ function filtrarFornSit() {{
         ${{r["CNPJ"] ? '<div style="font-size:11px;color:#999;font-family:monospace;margin-top:2px">' + fmtDoc(r["CNPJ"]) + '</div>' : ''}}
       </td>
       <td>${{cleanDoc(r["Documento"])}}</td>
-      <td>${{r["Competencia"] ? '<span class="badge-competencia">' + r["Competencia"] + '</span>' : '<span style="color:#aaa">—</span>'}}</td>
+      <td>${{!r["Competencia"] ? '<span style="color:#aaa">—</span>'
+            : r["Competencia"] === "A classificar"
+              ? '<span class="badge-a-classificar" style="font-style:normal;font-weight:700" title="Documento exige competência, mas o campo veio vazio ou com data anterior ao contrato (nov/2025)">A classificar</span>'
+              : '<span class="badge-competencia">' + r["Competencia"] + '</span>'}}</td>
       <td>${{badgeSit(r["Status"])}}</td>
       <td>${{r["Vencimento"] || "—"}}</td>
     </tr>
@@ -3989,6 +4230,7 @@ function applyGlobalFilter() {{
   filtrarFornSit();
   updateKPICards();
   ctRenderL1();
+  renderCompEvol();
 
   // Expande secoes quando filtro ativo
   if (fCount > 0 || cCount > 0 || sCount > 0) {{
@@ -4064,6 +4306,7 @@ function limparGlobalFiltro() {{
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildFornMultiSelect();
 buildCompMultiSelect();
+renderCompEvol();
 buildStatMultiSelect();
 
 // ── TABELA SEM EXECUÇÃO ──────────────────────────────────────────────────────
