@@ -31,10 +31,8 @@ function badge(s: string) {
 
 function badgeComp(c: string) {
   if (!c) return <span className="text-[#aaa]">—</span>
-  const cls = c === 'A classificar'
-    ? 'bg-amber-100 text-amber-700 font-bold'
-    : 'bg-[#e8f4f8] text-[#0E8FA3]'
-  return <span className={`inline-block px-2 py-0.5 rounded-lg text-[11px] ${cls}`}>{c}</span>
+  // Mesmo badge para todas as competências, inclusive "A classificar" (igual ao relatório Python)
+  return <span className="inline-block px-2 py-0.5 rounded-lg text-[11px] bg-[#e8f4f8] text-[#0E8FA3]">{c}</span>
 }
 
 function KPI({ value, label, color }: { value: string | number; label: string; color?: 'red' | 'green' | 'yellow' | 'orange' }) {
