@@ -1979,7 +1979,7 @@ html = f"""<!DOCTYPE html>
 
   <!-- SITUACAO DOCUMENTAL POR TRABALHADOR -->
   <div class="section-title">
-    Situação Documental por Terceiro — Drill-Down Interativo
+    Situação Documental por Terceiro
     <span class="section-toggle" onclick="toggleSection('sit-section', this)">▼ Expandir</span>
   </div>
   <div id="sit-section" class="section-collapsible collapsed">
