@@ -133,6 +133,9 @@ export function App() {
     data.sit_tabela.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
     data.forn_sit.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
     data.tabela.forEach(r => { if (r.Competencia) seen.add(r.Competencia) })
+    // Docs R3/R4 sem competência ficam acessíveis pela opção "Não possui competência"
+    if (data.sit_tabela.some(r => !r.Competencia) || data.forn_sit.some(r => !r.Competencia))
+      seen.add('Não possui competência')
     return [...seen].sort().map(c => ({ key: c, label: c }))
   }, [data])
 
@@ -142,8 +145,9 @@ export function App() {
     let rows = selectedFornSet.size > 0
       ? data.sit_tabela.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn))
       : data.sit_tabela
+    // Doc sem competência só aparece quando "Não possui competência" está selecionado
     if (selectedCompSet.size > 0)
-      rows = rows.filter(r => selectedCompSet.has(r.Competencia))
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'Não possui competência'))
     if (activeKpi) {
       const sitStatuses = KPI_STATUS_MAP[activeKpi]?.sit ?? []
       if (sitStatuses.length > 0)
@@ -169,8 +173,9 @@ export function App() {
   const fornSitFiltered = useMemo(() => {
     if (!data) return []
     let rows = hasFilter ? data.forn_sit.filter(r => matchesForn(r.Fornecedor, r.CNPJ_Forn)) : data.forn_sit
+    // R4: '' = doc sem competência (fora dos 7 ou busca automática) — nunca entra em "A classificar"
     if (selectedCompSet.size > 0)
-      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'A classificar'))
+      rows = rows.filter(r => selectedCompSet.has(r.Competencia || 'Não possui competência'))
     if (activeKpi) {
       const fornStatuses = KPI_STATUS_MAP[activeKpi]?.forn ?? []
       if (fornStatuses.length > 0)

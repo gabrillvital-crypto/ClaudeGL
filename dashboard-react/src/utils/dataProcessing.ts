@@ -468,14 +468,24 @@ export function processAllData(
       if (!status) return null
       const rawComp = colMarcasR4 ? String(row[colMarcasR4] ?? '').trim() : ''
       const docAllowsComp = DOCS_COM_COMP_R4.has(doc.toUpperCase().trim())
+      // Regra R4 — competência vem EXCLUSIVAMENTE de "Marcas e Representações":
+      //  • busca automática ou doc fora dos 7 autorizados → '' (não possui competência)
+      //  • doc dos 7 com campo vazio ou data anterior a nov/2025 → 'A classificar'
+      //  • doc dos 7 com data válida → competência normalizada
+      const compNormR4 = (rawComp && rawComp !== 'nan') ? normalizeCompetencia(rawComp) : ''
+      const competenciaR4 = (autoEntry || !docAllowsComp)
+        ? ''
+        : (!compNormR4 || compNormR4 === 'A classificar' || competenciaAnteriorContrato(compNormR4))
+          ? 'A classificar'
+          : compNormR4
       return {
         Fornecedor: abbrev(String(row[colR4RS] || '')),
         CNPJ_Forn: cnpj,
         Documento: doc,
         Status: status,
         Vencimento: fmtDate(row['Data de Vencimento']),
-        // Competência só aparece para os 4 docs autorizados e nunca para busca_auto
-        Competencia: (autoEntry || !docAllowsComp) ? '' : ((rawComp && rawComp !== 'nan') ? normalizeCompetencia(rawComp) : ''),
+        // Competência só aparece para os 7 docs autorizados e nunca para busca_auto
+        Competencia: competenciaR4,
       }
     })
     .filter((r) => r !== null) as FornSitRow[]
@@ -593,6 +603,7 @@ export function processAllData(
   //   A) antigo: Razão Social | CPF/CNPJ | Situação da solicitação | Área | Documento | Marcas e rep. | Pendência
   //   B) novo:   Fornecedor Razão Social | Fornecedor CPF/CNPJ | Status da última solicitação | Documento | Competência | Pendência
   // Em ambos, todas as linhas do arquivo são de DOCUMENTOS — Area = 'Fornecedor' fixo.
+  const colMarcasPendForn = findCol(pendFornCols, 'marc')
   function buildPendForn(rows: Record<string, string>[]): PendRow[] {
     const all = rows.map(row => {
       // Nome do documento: coluna direta (schema B) ou parseado do texto (schema A)
@@ -602,12 +613,12 @@ export function processAllData(
       const isSemCompPend = DOCS_SEM_COMP_PEND.has(docUpper)
         || [...DOCS_SEM_COMP_PEND].some(base => docUpper.startsWith(base))
 
-      // Competência: tenta "Competência" e "Marcas e representações" (readCompetencia)
+      // Competência de documento do FORNECEDOR: exclusivamente "Marcas e representações"
       let competencia: string
       if (isSemCompPend || !DOCS_COM_COMP_PEND.has(docUpper)) {
         competencia = 'Não possui competência'
       } else {
-        const compRaw  = readCompetencia(row, pendFornCols)
+        const compRaw  = colMarcasPendForn ? String(row[colMarcasPendForn] ?? '').trim().replace(/^nan$/, '') : ''
         const compNorm = normalizeCompetencia(compRaw)
         if (!compNorm || competenciaAnteriorContrato(compNorm)) {
           competencia = 'A classificar'

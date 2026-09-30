@@ -140,7 +140,11 @@ export function SituacaoEmpresaSection({
                   <td className="px-3 py-2">{r.Documento}</td>
                   <td className="px-3 py-2">
                     {r.Competencia
-                      ? <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#e8f4f7] text-[#0E8FA3]">{r.Competencia}</span>
+                      ? <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                          r.Competencia === 'A classificar'
+                            ? 'bg-amber-100 text-amber-700'
+                            : 'bg-[#e8f4f7] text-[#0E8FA3]'
+                        }`}>{r.Competencia}</span>
                       : <span className="text-[#aaa]">—</span>}
                   </td>
                   <td className="px-3 py-2">{badge(r.Status)}</td>
