@@ -2171,7 +2171,8 @@ html = f"""<!DOCTYPE html>
     </div>
   </div>
   <script>
-  (function(){{
+  // Roda após o script principal, onde badgeArea é definida
+  document.addEventListener("DOMContentLoaded", function(){{
     const PEND_AC = {pend_a_classificar_json};
     const tbody = document.getElementById("tbody-a-classificar");
     if (!tbody) return;
@@ -2187,7 +2188,7 @@ html = f"""<!DOCTYPE html>
         <td style="padding:5px 10px">${{r.Area === "TERCEIROS" ? (r.Terceiro ? '<span style="font-size:12px">' + r.Terceiro + '</span>' : "Terceiros") : badgeArea(r.Area || "TERCEIROS")}}</td>
         <td style="padding:5px 10px">${{badgeSR(r.StatusReal)}}</td>
       </tr>`).join("");
-  }})();
+  }});
   </script>
 
   <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap">
@@ -4209,12 +4210,14 @@ function exportarRelatorioPDF() {{
 }}
 
 function exportarRelatorioCSV() {{
-  const hdR3  = ["Seção","Fornecedor","CNPJ","Aeroporto","Terceiro","Documento","Competência","Status","Vencimento"];
+  const areaLbl = a => a === "TERCEIROS" ? "Terceiro" : a === "CREDENCIAMENTO" ? "Credenciamento" : "Fornecedor";
+  // Mesma grade de colunas para as 3 seções (cada linha tem exatamente o nº de colunas do cabeçalho)
+  const hd = ["Seção","Fornecedor","CNPJ","Aeroporto","Área","Terceiro","Documento","Competência","Status","Vencimento","Detalhe"];
   const rows = [
-    hdR3,
-    ...sitFiltrado.map(r    => ["R3-Terceiros",  r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Aeroporto"]||"", r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
-    ...fornSitFiltrado.map(r=> ["R4-Empresa",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||""]),
-    ...pendFiltrado.map(r   => ["Pendências",    r["Fornecedor"]||"", r["CNPJ"]||"",       "",                 r["Area"]||"",      r["Terceiro"]||"",  r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Detalhe"]||""]),
+    hd,
+    ...sitFiltrado.map(r    => ["R3-Terceiros", r["Fornecedor"]||"", r["CNPJ_Forn"]||"", r["Aeroporto"]||"", "",                        r["Terceiro"]||"", r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||"", ""]),
+    ...fornSitFiltrado.map(r=> ["R4-Empresa",   r["Fornecedor"]||"", r["CNPJ"]||"",      "",                 "",                        "",                r["Documento"]||"", r["Competencia"]||"", r["Status"]||"", r["Vencimento"]||"", ""]),
+    ...pendFiltrado.map(r   => ["Pendências",   r["Fornecedor"]||"", r["CNPJ"]||"",      "",                 areaLbl(r["Area"]||""), r["Terceiro"]||"", r["Documento"]||"", r["Competencia"]||"", r["StatusReal"]||r["Status"]||"", "", r["Detalhe"]||""]),
   ];
   const lines = rows.map(r => r.map(v => csvEscape(v)).join(","));
   const blob = new Blob([lines.join("\\n")], {{type: "text/csv;charset=utf-8;"}});
