@@ -393,7 +393,7 @@ export function App() {
 
         {/* Evolução por competência — Relatório de Competências */}
         <Section title="Evolução de Terceiros por Competência">
-          <CompetenciasSection />
+          <CompetenciasSection selectedFornSet={selectedFornSet} />
         </Section>
 
         {/* Situação R3 — Drill-Down interativo + Modo Agrupado */}

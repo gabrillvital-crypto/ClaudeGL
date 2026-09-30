@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import Papa from 'papaparse'
+import { parseFornVal } from '../hooks/useGlobalFilter'
 
 // ── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -83,11 +84,34 @@ function StatusBadge({ value, type }: { value: number; type: 'elab' | 'aprov' })
 
 // ── Componente principal ─────────────────────────────────────────────────────
 
-export function CompetenciasSection() {
+interface CompetenciasSectionProps {
+  selectedFornSet: Set<string>
+}
+
+export function CompetenciasSection({ selectedFornSet }: CompetenciasSectionProps) {
   const [rows,    setRows]    = useState<RawRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error,   setError]   = useState<string | null>(null)
   const [page,    setPage]    = useState(0)
+
+  // Filtro global: casa por CNPJ (estável entre relatórios); se a seleção não
+  // tiver CNPJ, cai para o nome normalizado
+  const normNome = (n: string) => n.trim().toUpperCase()
+  const fornFilter = useMemo(() => {
+    const cnpjs = new Set<string>()
+    const nomes = new Set<string>()
+    selectedFornSet.forEach(raw => {
+      const { nome, cnpj } = parseFornVal(raw)
+      const d = cnpj.replace(/\D/g, '')
+      if (d) cnpjs.add(d)
+      else if (nome) nomes.add(normNome(nome))
+    })
+    return { active: selectedFornSet.size > 0, cnpjs, nomes }
+  }, [selectedFornSet])
+
+  useEffect(() => {
+    setPage(0)
+  }, [selectedFornSet])
 
   useEffect(() => {
     fetch('/data/competencias_zurich.csv')
@@ -113,12 +137,17 @@ export function CompetenciasSection() {
 
     for (const r of rows) {
       const raw = (r as unknown as Record<string, string>)
+      const cnpj = (raw['Fornecedor CPF/CNPJ'] ?? '').replace(/\D/g, '')
+      if (fornFilter.active) {
+        const nome = normNome(raw['Fornecedor'] ?? '')
+        if (!fornFilter.cnpjs.has(cnpj) && !fornFilter.nomes.has(nome)) continue
+      }
+
       const comp = raw['Competência'] ?? raw['Competencia'] ?? ''
       const key  = parseKey(comp)
       if (!key) continue  // "A classificar" → fora da série temporal
 
       const qtd  = parseInt(raw['Qtd Terceiros'] || '0', 10) || 0
-      const cnpj = raw['Fornecedor CPF/CNPJ'] ?? ''
       if (!map.has(key)) map.set(key, { elaboracao: 0, aprovado: 0, fornSet: new Set() })
       const e = map.get(key)!
 
@@ -143,7 +172,7 @@ export function CompetenciasSection() {
       })
       .filter(p => p.total > 0)
       .sort((a, b) => keyToDate(a.compKey).getTime() - keyToDate(b.compKey).getTime())
-  }, [rows])
+  }, [rows, fornFilter])
 
   // ── KPIs ─────────────────────────────────────────────────────────────────
   const totalMeses = tableData.length
@@ -170,6 +199,8 @@ export function CompetenciasSection() {
     <div className="text-center py-8 text-gray-400 text-sm">
       {error
         ? <><span className="text-red-400">⚠ Erro:</span> {error}</>
+        : fornFilter.active
+        ? 'Fornecedor selecionado não possui competências neste relatório'
         : 'Nenhum dado — adicione competencias_zurich.csv em public/data/'
       }
     </div>

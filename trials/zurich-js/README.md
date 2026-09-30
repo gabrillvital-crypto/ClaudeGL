@@ -31,6 +31,7 @@ Ou cherry-pick por feature (ver commits abaixo):
 | Exportação Modal | `3e5fcc9` |
 | Competências (gráfico) | `c9c4e59` |
 | Competências (tabela final) | `0425bd7` |
+| Competências (filtro global de fornecedor) | ver `git log` — 30/09/2026 |
 
 ```bash
 # Aplicar só a exportação modal, por exemplo:

@@ -33,6 +33,17 @@ dos terceiros por competência, com base no **Relatório de Competências** expo
 
 ---
 
+## Ajuste 30/09/2026 — Filtro global de fornecedor
+
+A seção agora respeita o filtro global de fornecedor do topo do dash.
+- Casa por **CNPJ** (só dígitos), porque o nome no Relatório de Competências pode divergir do nome em R3/R4/contratos.
+- Se o item selecionado não tiver CNPJ, cai para o **nome normalizado** (trim + maiúsculas).
+- Ao trocar o filtro, a paginação volta para a página 1.
+- Se o fornecedor selecionado não tiver competências, a seção mostra: "Fornecedor selecionado não possui competências neste relatório".
+- Arquivos: `App.tsx` (passa `selectedFornSet`) e `CompetenciasSection.tsx`.
+
+---
+
 ## ⚠️ ALERTA — Interpretação dos dados
 
 **Antes de aplicar ao main, validar com Débora as seguintes questões:**
